@@ -19,7 +19,7 @@ import textwrap
 from absl.testing import absltest
 from absl.testing import parameterized
 
-from funsearch.implementation import code_manipulation
+from funsearch import code_manipulation
 
 _IMPORTS: str = '''\
 import itertools

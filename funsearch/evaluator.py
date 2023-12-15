@@ -19,8 +19,8 @@ from collections.abc import Sequence
 import copy
 from typing import Any
 
-from funsearch.implementation import code_manipulation
-from funsearch.implementation import programs_database
+from funsearch import code_manipulation
+from funsearch import programs_database
 
 
 class _FunctionLineVisitor(ast.NodeVisitor):

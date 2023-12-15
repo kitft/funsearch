@@ -17,11 +17,11 @@
 from collections.abc import Sequence
 from typing import Any
 
-from funsearch.implementation import code_manipulation
-from funsearch.implementation import config as config_lib
-from funsearch.implementation import evaluator
-from funsearch.implementation import programs_database
-from funsearch.implementation import sampler
+from funsearch import code_manipulation
+from funsearch import config as config_lib
+from funsearch import evaluator
+from funsearch import programs_database
+from funsearch import sampler
 
 
 def _extract_function_names(specification: str) -> tuple[str, str]:

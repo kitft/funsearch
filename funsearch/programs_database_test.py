@@ -19,9 +19,9 @@ from absl.testing import absltest
 from absl.testing import parameterized
 import numpy as np
 
-from funsearch.implementation import code_manipulation
-from funsearch.implementation import config
-from funsearch.implementation import programs_database
+from funsearch import code_manipulation
+from funsearch import config
+from funsearch import programs_database
 
 _SKELETON = '''
 """Finds large cap sets."""

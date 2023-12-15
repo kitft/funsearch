@@ -18,8 +18,8 @@ from collections.abc import Collection, Sequence
 
 import numpy as np
 
-from funsearch.implementation import evaluator
-from funsearch.implementation import programs_database
+from funsearch import evaluator
+from funsearch import programs_database
 
 
 class LLM:

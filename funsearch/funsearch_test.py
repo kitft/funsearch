@@ -16,7 +16,7 @@
 from absl.testing import absltest
 from absl.testing import parameterized
 
-from funsearch.implementation import funsearch
+from funsearch import funsearch
 
 _PY_PROMPT = '''\
 import itertools

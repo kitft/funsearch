@@ -24,8 +24,8 @@ from absl import logging
 import numpy as np
 import scipy
 
-from funsearch.implementation import code_manipulation
-from funsearch.implementation import config as config_lib
+from funsearch import code_manipulation
+from funsearch import config as config_lib
 
 Signature = tuple[float, ...]
 ScoresPerTest = Mapping[Any, float]
