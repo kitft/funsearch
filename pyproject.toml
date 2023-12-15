@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["funsearch"]
+
+[project]
+name = "funsearch"
+dynamic = [
+  "version",
+]
+description = "FunSearch algorithm: Mathematical discoveries from program search with large language models"
+readme = "README.md"
+requires-python = ">=3.8"
+
+classifiers = [
+  "Intended Audience :: Science/Research",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+  "absl-py==2.0.0",
+  "scipy==1.11.4",
+  "numpy==1.26.2",
+]
+
