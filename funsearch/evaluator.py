@@ -21,6 +21,7 @@ from typing import Any
 
 from funsearch import code_manipulation
 from funsearch import programs_database
+from funsearch import sandbox
 
 
 class _FunctionLineVisitor(ast.NodeVisitor):
@@ -85,20 +86,6 @@ def _sample_to_program(
   return evolved_function, str(program)
 
 
-class Sandbox:
-  """Sandbox for executing generated code."""
-
-  def run(
-      self,
-      program: str,
-      function_to_run: str,
-      test_input: str,
-      timeout_seconds: int,
-  ) -> tuple[Any, bool]:
-    """Returns `function_to_run(test_input)` and whether execution succeeded."""
-    raise NotImplementedError(
-        'Must provide a sandbox for executing untrusted code.')
-
 
 def _calls_ancestor(program: str, function_to_evolve: str) -> bool:
   """Returns whether the generated function is calling an earlier version."""
@@ -118,6 +105,7 @@ class Evaluator:
   def __init__(
       self,
       database: programs_database.ProgramsDatabase,
+      sbox: sandbox.Sandbox,
       template: code_manipulation.Program,
       function_to_evolve: str,
       function_to_run: str,
@@ -130,7 +118,7 @@ class Evaluator:
     self._function_to_run = function_to_run
     self._inputs = inputs
     self._timeout_seconds = timeout_seconds
-    self._sandbox = Sandbox()
+    self._sandbox = sbox
 
   def analyse(
       self,

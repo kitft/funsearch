@@ -15,7 +15,7 @@
 
 """A single-threaded implementation of the FunSearch pipeline."""
 from collections.abc import Sequence
-from typing import Any
+from typing import Any, Callable
 
 from funsearch import code_manipulation
 from funsearch import config as config_lib
@@ -37,7 +37,7 @@ def _extract_function_names(specification: str) -> tuple[str, str]:
   return evolve_functions[0], run_functions[0]
 
 
-def main(specification: str, inputs: Sequence[Any], config: config_lib.Config):
+def main(specification: str, inputs: Sequence[Any], config: config_lib.Config, sandbox_creator: Callable):
   """Launches a FunSearch experiment."""
   function_to_evolve, function_to_run = _extract_function_names(specification)
 
@@ -49,6 +49,7 @@ def main(specification: str, inputs: Sequence[Any], config: config_lib.Config):
   for _ in range(config.num_evaluators):
     evaluators.append(evaluator.Evaluator(
         database,
+        sandbox_creator(),
         template,
         function_to_evolve,
         function_to_run,
