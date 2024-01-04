@@ -14,6 +14,8 @@
 # ==============================================================================
 
 """A programs database that implements the evolutionary algorithm."""
+import pathlib
+import pickle
 from collections.abc import Mapping, Sequence
 import copy
 import dataclasses
@@ -100,6 +102,35 @@ class ProgramsDatabase:
         [None] * config.num_islands)
 
     self._last_reset_time: float = time.time()
+    self._program_counter = 0
+    self._backups_done = 0
+    self.creation_time = int(time.time())
+
+  def save(self, file):
+    """Save database to a file"""
+    data = {}
+    keys = ["_islands", "_best_score_per_island", "_best_program_per_island", "_best_scores_per_test_per_island"]
+    for key in keys:
+      data[key] = getattr(self, key)
+    pickle.dump(data, file)
+
+  def load(self, file):
+    """Load previously saved database"""
+    data = pickle.load(file)
+    for key in data.keys():
+      setattr(self, key, data[key])
+
+  def backup(self):
+    filename = f"program_db_{self._function_to_evolve}_{self._backups_done}.pickle"
+    p = pathlib.Path(self._config.backup_folder)
+    if not p.exists():
+      p.mkdir(parents=True, exist_ok=True)
+    filepath = p / filename
+    print(f"Saving backup to {filepath}.")
+
+    with open(filepath, mode="wb") as f:
+      self.save(f)
+    self._backups_done += 1
 
   def get_prompt(self) -> Prompt:
     """Returns a prompt containing implementations from one chosen island."""
@@ -143,6 +174,13 @@ class ProgramsDatabase:
     if (time.time() - self._last_reset_time > self._config.reset_period):
       self._last_reset_time = time.time()
       self.reset_islands()
+
+    # Backup every N iterations
+    if self._program_counter > 0:
+      self._program_counter += 1
+      if self._program_counter > self._config.backup_period:
+        self._program_counter = 0
+        self.backup()
 
   def reset_islands(self) -> None:
     """Resets the weaker half of islands."""

@@ -14,6 +14,7 @@
 # ==============================================================================
 
 import copy
+import tempfile
 
 from absl.testing import absltest
 from absl.testing import parameterized
@@ -121,6 +122,20 @@ class ProgramsDatabaseTest(parameterized.TestCase):
         scores_per_test={'unused': -1})
     # Verify the first prompt.
     self.assertEqual(database.get_prompt().code, _EXPECTED_INITIAL_PROMPT)
+
+    # Test saving database
+    with tempfile.TemporaryFile() as f:
+      database.save(f)
+
+      f.seek(0)
+      db2 = programs_database.ProgramsDatabase(
+        config=config.ProgramsDatabaseConfig(functions_per_prompt=5),
+        template=template,
+        function_to_evolve=function_to_evolve,
+      )
+      # Make sure the loaded database works as the original
+      db2.load(f)
+      self.assertEqual(db2.get_prompt().code, _EXPECTED_INITIAL_PROMPT)
 
   def test_generate_prompt(self):
     """Tests that we build the prompt shown in the paper."""
