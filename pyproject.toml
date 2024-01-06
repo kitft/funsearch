@@ -22,7 +22,10 @@ classifiers = [
 ]
 dependencies = [
   "absl-py==2.0.0",
+  "click==8.1",
   "cloudpickle==3.0.0",
+  "llm==0.12",
+  "python-dotenv==1.0.0",
   "scipy==1.11.4",
   "numpy==1.26.2",
 ]

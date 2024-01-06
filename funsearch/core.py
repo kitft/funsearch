@@ -37,33 +37,19 @@ def _extract_function_names(specification: str) -> tuple[str, str]:
   return evolve_functions[0], run_functions[0]
 
 
-def main(specification: str, inputs: Sequence[Any], config: config_lib.Config, sandbox_creator: Callable):
+def run(samplers, database, iterations: int = -1):
   """Launches a FunSearch experiment."""
-  function_to_evolve, function_to_run = _extract_function_names(specification)
 
-  template = code_manipulation.text_to_program(specification)
-  database = programs_database.ProgramsDatabase(
-      config.programs_database, template, function_to_evolve)
+  try:
+    # This loop can be executed in parallel on remote sampler machines. As each
+    # sampler enters an infinite loop, without parallelization only the first
+    # sampler will do any work.
+    while iterations != 0:
+      for s in samplers:
+        s.sample()
+      if iterations > 0:
+        iterations -= 1
+  except KeyboardInterrupt:
+    print("Keyboard interrupt. Stopping.")
+  database.backup()
 
-  evaluators = []
-  for _ in range(config.num_evaluators):
-    evaluators.append(evaluator.Evaluator(
-        database,
-        sandbox_creator(),
-        template,
-        function_to_evolve,
-        function_to_run,
-        inputs,
-    ))
-  # We send the initial implementation to be analysed by one of the evaluators.
-  initial = template.get_function(function_to_evolve).body
-  evaluators[0].analyse(initial, island_id=None, version_generated=None)
-
-  samplers = [sampler.Sampler(database, evaluators, config.samples_per_prompt)
-              for _ in range(config.num_samplers)]
-
-  # This loop can be executed in parallel on remote sampler machines. As each
-  # sampler enters an infinite loop, without parallelization only the first
-  # sampler will do any work.
-  for s in samplers:
-    s.sample()
