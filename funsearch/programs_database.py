@@ -82,6 +82,7 @@ class ProgramsDatabase:
       config: config_lib.ProgramsDatabaseConfig,
       template: code_manipulation.Program,
       function_to_evolve: str,
+      identifier: str = "",
   ) -> None:
     self._config: config_lib.ProgramsDatabaseConfig = config
     self._template: code_manipulation.Program = template
@@ -104,7 +105,7 @@ class ProgramsDatabase:
     self._last_reset_time: float = time.time()
     self._program_counter = 0
     self._backups_done = 0
-    self.creation_time = int(time.time())
+    self.identifier = identifier
 
   def save(self, file):
     """Save database to a file"""
@@ -121,7 +122,7 @@ class ProgramsDatabase:
       setattr(self, key, data[key])
 
   def backup(self):
-    filename = f"program_db_{self._function_to_evolve}_{self._backups_done}.pickle"
+    filename = f"program_db_{self._function_to_evolve}_{self.identifier}_{self._backups_done}.pickle"
     p = pathlib.Path(self._config.backup_folder)
     if not p.exists():
       p.mkdir(parents=True, exist_ok=True)

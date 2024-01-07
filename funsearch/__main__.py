@@ -84,7 +84,7 @@ def main(spec_file, inputs, model_name, output_path, load_backup, iterations, sa
 
   conf = config.Config(num_evaluators=1)
   database = programs_database.ProgramsDatabase(
-      conf.programs_database, template, function_to_evolve)
+    conf.programs_database, template, function_to_evolve, identifier=timestamp)
   if load_backup:
     database.load(load_backup)
 
