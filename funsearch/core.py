@@ -15,14 +15,8 @@
 
 """A single-threaded implementation of the FunSearch pipeline."""
 import logging
-from collections.abc import Sequence
-from typing import Any, Callable
 
 from funsearch import code_manipulation
-from funsearch import config as config_lib
-from funsearch import evaluator
-from funsearch import programs_database
-from funsearch import sampler
 
 
 def _extract_function_names(specification: str) -> tuple[str, str]:

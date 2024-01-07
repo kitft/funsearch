@@ -1,6 +1,4 @@
-import ast
 import logging
-from typing import Any
 
 import ast
 import os
@@ -10,7 +8,6 @@ from typing import Any
 
 import cloudpickle
 
-from funsearch import evaluator
 
 CONTAINER_MAIN = (pathlib.Path(__file__).parent / "container" / "container_main.py").absolute()
 
