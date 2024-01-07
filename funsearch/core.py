@@ -14,6 +14,7 @@
 # ==============================================================================
 
 """A single-threaded implementation of the FunSearch pipeline."""
+import logging
 from collections.abc import Sequence
 from typing import Any, Callable
 
@@ -50,6 +51,6 @@ def run(samplers, database, iterations: int = -1):
       if iterations > 0:
         iterations -= 1
   except KeyboardInterrupt:
-    print("Keyboard interrupt. Stopping.")
+    logging.info("Keyboard interrupt. Stopping.")
   database.backup()
 

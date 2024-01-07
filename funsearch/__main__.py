@@ -1,3 +1,5 @@
+import logging
+import os
 import pathlib
 import sys
 import time
@@ -10,6 +12,10 @@ from dotenv import load_dotenv
 sys.path.append(str(Path(__file__).parent.parent))
 
 from funsearch import config, core, sandbox, sampler, programs_database, code_manipulation, evaluator
+
+
+LOGLEVEL = os.environ.get('LOGLEVEL', 'INFO').upper()
+logging.basicConfig(level=LOGLEVEL)
 
 
 @click.command()
@@ -34,6 +40,7 @@ def main(spec_file, model_name, output_path, load_backup, iterations, samplers):
   log_path = pathlib.Path(output_path) / str(timestamp)
   if not log_path.exists():
     log_path.mkdir(parents=True)
+    logging.info(f"Writing logs to {log_path}")
 
   model = llm.get_model(model_name)
   model.key = model.get_key()

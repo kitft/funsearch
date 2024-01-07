@@ -1,4 +1,5 @@
 import ast
+import logging
 from typing import Any
 
 import ast
@@ -72,7 +73,7 @@ class ContainerSandbox(Sandbox):
         cls.executable = "docker"
 
     dockerfile = pathlib.Path(__file__).parent / "container" / "Dockerfile"
-    print("Building container image")
+    logging.debug("Building container image")
     extra = ""
     if extra_pip_packages:
       extra = f"--build-arg INSTALL_PACKAGES={extra_pip_packages}"
@@ -127,7 +128,7 @@ class ContainerSandbox(Sandbox):
              f"{IMAGE_NAME}:latest /usr/local/bin/python3 "
              f"/main.py /workspace/prog.pickle /input.pickle /workspace/output.pickle"
              f"  2> {error_file}")
-      print(f"Executing: {cmd}")
+      logging.debug(f"Executing: {cmd}")
       retcode = os.system(cmd)
       self.call_count += 1
 
@@ -140,14 +141,16 @@ class ContainerSandbox(Sandbox):
         out = cloudpickle.load(f)
         return out, True
     except Exception as e:
-      print(f"Could not execute code: {e}")
-      self._save_diagnostics(program, mount_path)
+      logging.debug(f"Could not execute code: {e}")
+    self._save_diagnostics(program, mount_path)
 
-  def _save_diagnostics(self, program: str, output_path: pathlib.Path):
+  @staticmethod
+  def _save_diagnostics(program: str, output_path: pathlib.Path):
     filepath = output_path / "program.py"
-    print(f"Writing program to {filepath}")
+    logging.debug(f"Writing program to {filepath}")
     with open(filepath, "w+") as f:
       f.write(program)
+
 
 def test_container_sandbox():
   test_prog = """

@@ -1,9 +1,10 @@
+import logging
 import pickle
 import sys
 
 
 def main(prog_file: str, input_file: str, output_file: str):
-  print(f"Running main(): {prog_file}, {input_file}, {output_file}")
+  logging.debug(f"Running main(): {prog_file}, {input_file}, {output_file}")
   with open(prog_file, "rb") as f:
     func = pickle.load(f)
 
@@ -12,7 +13,7 @@ def main(prog_file: str, input_file: str, output_file: str):
 
       ret = func(input_data)
       with open(output_file, "wb") as of:
-        print(f"Writing output to {output_file}")
+        logging.debug(f"Writing output to {output_file}")
         pickle.dump(ret, of)
 
 
