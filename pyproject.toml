@@ -12,7 +12,7 @@ dynamic = [
 ]
 description = "FunSearch algorithm: Mathematical discoveries from program search with large language models"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 
 classifiers = [
   "Intended Audience :: Science/Research",
@@ -30,3 +30,5 @@ dependencies = [
   "numpy==1.26.2",
 ]
 
+[project.scripts]
+funsearch = "funsearch.__main__:main"
