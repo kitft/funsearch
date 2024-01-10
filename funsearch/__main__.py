@@ -102,6 +102,8 @@ def main(spec_file, inputs, model_name, output_path, load_backup, iterations, sa
   # We send the initial implementation to be analysed by one of the evaluators.
   initial = template.get_function(function_to_evolve).body
   evaluators[0].analyse(initial, island_id=None, version_generated=None)
+  assert len(database._islands[0]._clusters) > 0, ("Initial analysis failed. Make sure that Sandbox works! "
+                                                   "See e.g. the error files under sandbox data.")
 
   samplers = [sampler.Sampler(database, evaluators, lm)
               for _ in range(samplers)]
