@@ -49,8 +49,13 @@ def parse_input(filename_or_data: str):
     data = [f(v) for v in data]
   return data
 
+@click.group()
+@click.pass_context
+def main(ctx):
+  pass
 
-@click.command()
+
+@main.command()
 @click.argument("spec_file", type=click.File("r"))
 @click.argument('inputs')
 @click.option('--model_name', default="gpt-3.5-turbo-instruct", help='LLM model')
@@ -59,7 +64,7 @@ def parse_input(filename_or_data: str):
 @click.option('--iterations', default=-1, type=click.INT, help='Max iterations per sampler')
 @click.option('--samplers', default=15, type=click.INT, help='Samplers')
 @click.option('--sandbox_type', default="ContainerSandbox", type=click.Choice(SANDBOX_NAMES), help='Sandbox type')
-def main(spec_file, inputs, model_name, output_path, load_backup, iterations, samplers, sandbox_type):
+def run(spec_file, inputs, model_name, output_path, load_backup, iterations, samplers, sandbox_type):
   """ Execute function-search algorithm:
 
 \b
@@ -125,6 +130,25 @@ def main(spec_file, inputs, model_name, output_path, load_backup, iterations, sa
               for _ in range(samplers)]
 
   core.run(samplers, database, iterations)
+
+
+@main.command()
+@click.argument("db_file", type=click.File("rb"))
+def ls(db_file):
+  """List programs from a stored database (usually in data/backups/ )"""
+  conf = config.Config(num_evaluators=1)
+
+  # A bit silly way to list programs. This probably does not work if config has changed any way
+  database = programs_database.ProgramsDatabase(
+    conf.programs_database, None, "", identifier="")
+  database.load(db_file)
+
+  progs = database.get_best_programs_per_island()
+  print("Found {len(progs)} programs")
+  for i, (prog, score) in enumerate(progs):
+    print(f"{i}: Program with score {score}")
+    print(prog)
+    print("\n")
 
 
 if __name__ == '__main__':

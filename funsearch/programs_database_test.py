@@ -178,6 +178,10 @@ class ProgramsDatabaseTest(parameterized.TestCase):
     expected_scores[7] = 17
     self.assertSequenceEqual(database._best_score_per_island, expected_scores)
 
+    progs = list(database.get_best_programs_per_island())
+    assert progs[0][1] == 17
+    assert progs[-1][1] == -2
+
     np.random.seed(0)
     database.reset_islands()
     expected_kept = set([0, 2, 3, 4, 7])
