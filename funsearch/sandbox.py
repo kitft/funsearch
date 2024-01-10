@@ -8,13 +8,12 @@ from typing import Any
 
 import cloudpickle
 
-
 CONTAINER_MAIN = (pathlib.Path(__file__).parent / "container" / "container_main.py").absolute()
 
 IMAGE_NAME = "funsearch_sandbox"
 
 
-class Sandbox:
+class DummySandbox:
   """Base class for Sandboxes that execute the generated code.
 
   Note: this base class executes the code but does not offer any sandboxing!!!
@@ -25,9 +24,10 @@ class Sandbox:
 
   sandboxes = 0
 
-  def __init__(self):
-    self.id = Sandbox.sandboxes
-    Sandbox.sandboxes += 1
+  def __init__(self, **kwargs):
+    self.id = DummySandbox.sandboxes
+
+    DummySandbox.sandboxes += 1
 
   def run(
           self,
@@ -40,7 +40,7 @@ class Sandbox:
 
     # The same "program" seems to be now repeatedly parsed using AST and then compiled.
     # This could probably be simplified quite a bit.
-    namespace = Sandbox.compile_code(program)
+    namespace = DummySandbox.compile_code(program)
     return namespace[function_to_run](test_input)
 
   @staticmethod
@@ -53,7 +53,7 @@ class Sandbox:
     return namespace
 
 
-class ExternalProcessSandbox(Sandbox):
+class ExternalProcessSandbox(DummySandbox):
   """Sandbox that executes the code in a separate Python process in the same host.
 
   Note: This does not provide real safety and should be only used in an environment where the host process is
@@ -109,7 +109,7 @@ class ExternalProcessSandbox(Sandbox):
       with open(input_path, "wb") as f:
         cloudpickle.dump(test_input, f)
     try:
-      namespace = Sandbox.compile_code(program)
+      namespace = DummySandbox.compile_code(program)
 
       prog_file = (call_data_folder / f"prog.pickle").absolute()
       with open(prog_file, "wb+") as f:

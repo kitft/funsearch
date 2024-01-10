@@ -105,7 +105,7 @@ class Evaluator:
   def __init__(
       self,
       database: programs_database.ProgramsDatabase,
-      sbox: sandbox.Sandbox,
+      sbox: sandbox.DummySandbox,
       template: code_manipulation.Program,
       function_to_evolve: str,
       function_to_run: str,

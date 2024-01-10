@@ -16,6 +16,20 @@ LOGLEVEL = os.environ.get('LOGLEVEL', 'INFO').upper()
 logging.basicConfig(level=LOGLEVEL)
 
 
+def get_all_subclasses(cls):
+  all_subclasses = []
+
+  for subclass in cls.__subclasses__():
+    all_subclasses.append(subclass)
+    all_subclasses.extend(get_all_subclasses(subclass))
+
+  return all_subclasses
+
+
+SANDBOX_TYPES = get_all_subclasses(sandbox.DummySandbox) + [sandbox.DummySandbox]
+SANDBOX_NAMES = [c.__name__ for c in SANDBOX_TYPES]
+
+
 def parse_input(filename_or_data: str):
   if len(filename_or_data) == 0:
     raise Exception("No input data specified")
@@ -44,7 +58,8 @@ def parse_input(filename_or_data: str):
 @click.option('--load_backup', default=None, type=click.File("rb"), help='Use existing program database')
 @click.option('--iterations', default=-1, type=click.INT, help='Max iterations per sampler')
 @click.option('--samplers', default=15, type=click.INT, help='Samplers')
-def main(spec_file, inputs, model_name, output_path, load_backup, iterations, samplers):
+@click.option('--sandbox_type', default="ContainerSandbox", type=click.Choice(SANDBOX_NAMES), help='Sandbox type')
+def main(spec_file, inputs, model_name, output_path, load_backup, iterations, samplers, sandbox_type):
   """ Execute function-search algorithm:
 
 \b
@@ -90,9 +105,10 @@ def main(spec_file, inputs, model_name, output_path, load_backup, iterations, sa
 
   inputs = parse_input(inputs)
 
+  sandbox_class = next(c for c in SANDBOX_TYPES if c.__name__ == sandbox_type)
   evaluators = [evaluator.Evaluator(
     database,
-    sandbox.ContainerSandbox(log_path, "numpy", 20),
+    sandbox_class(base_path=log_path),
     template,
     function_to_evolve,
     function_to_run,
