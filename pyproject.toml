@@ -3,7 +3,7 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["funsearch"]
+packages = ["funsearch", "funsearch.container"]
 
 [project]
 name = "funsearch"

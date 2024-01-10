@@ -84,7 +84,7 @@ class ExternalProcessSandbox(DummySandbox):
     for future runs.
     """
     prog_path = call_data_path / "prog.pickle"
-    output_file = call_data_path/ "output.pickle"
+    output_file = call_data_path / "output.pickle"
     cmd = (f"{self.python_path} {CONTAINER_MAIN} {prog_path} {input_path} {output_file}"
            f"  2> {error_file_path}")
     logging.debug(f"Executing: {cmd}")
