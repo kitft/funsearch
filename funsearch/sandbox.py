@@ -23,6 +23,12 @@ class Sandbox:
   Even in sandboxed host, the executed code could theoretically affect later executions.
   """
 
+  sandboxes = 0
+
+  def __init__(self):
+    self.id = Sandbox.sandboxes
+    Sandbox.sandboxes += 1
+
   def run(
           self,
           program: str,
@@ -47,47 +53,22 @@ class Sandbox:
     return namespace
 
 
-class ContainerSandbox(Sandbox):
-  """Basic sandbox that runs unsafe code in Podman or Docker container.
-  - the sandbox should be safe against inadvertent bad code by LLM but not against malicious attacks.
-  - does not require any other dependencies on the host than Podman/Docker
-  - does not support multithreading
-  - might provide easier or more lightweight debugging experience than some other fancier sandbox environments
+class ExternalProcessSandbox(Sandbox):
+  """Sandbox that executes the code in a separate Python process in the same host.
+
+  Note: This does not provide real safety and should be only used in an environment where the host process is
+  in some kind of safe sandbox itself (i.e., a container).
+  This kind of sandbox merely makes it more probable that single invalid call does not break the whole
+  funsearch algorithm. It might be easier to set up and thus nice environment to tune the prompts and other code.
   """
-  executable = "podman"
-  containers = 0
-  image_built = False
 
-  @classmethod
-  def build_image(cls, extra_pip_packages: str = ""):
-    version = sys.version.split(" ")[0]
-    ret = os.system("podman --version")
-    if ret != 0:
-      ret = os.system("docker --version")
-      if ret != 0:
-        raise Exception("Could not find Podman or Docker. Can not use ContainerSandbox.")
-      else:
-        cls.executable = "docker"
-
-    dockerfile = pathlib.Path(__file__).parent / "container" / "Dockerfile"
-    logging.debug("Building container image")
-    extra = ""
-    if extra_pip_packages:
-      extra = f"--build-arg INSTALL_PACKAGES={extra_pip_packages}"
-    os.system(f"{cls.executable} build --build-arg PYTHON_VERSION={version} {extra} -t {IMAGE_NAME} -f {dockerfile}")
-    cls.image_built = True
-
-  def __init__(self, base_path: pathlib.Path, extra_pip_packages: str = "", timeout_secs=30):
-    if not ContainerSandbox.image_built:
-      ContainerSandbox.build_image(extra_pip_packages)
-
-    super(ContainerSandbox).__init__()
-    self.timeout_secs = timeout_secs
-    self.id = ContainerSandbox.containers
-    ContainerSandbox.containers += 1
-    self.call_count = 0
+  def __init__(self, base_path: pathlib.Path, timeout_secs: int = 30, python_path: str = "python"):
+    super(ExternalProcessSandbox, self).__init__()
 
     self.output_path = pathlib.Path(base_path) / f"sandbox{self.id}"
+    self.timeout_secs = timeout_secs
+    self.python_path = python_path
+    self.call_count = 0
 
     self.input_path = self.output_path / "inputs"
     for p in [self.output_path, self.input_path]:
@@ -102,13 +83,9 @@ class ContainerSandbox(Sandbox):
     Everything except the /workspace folder will be read-only so that the environment remains good
     for future runs.
     """
-    cmd = (f"{self.executable} run "
-           f"--timeout={self.timeout_secs} "
-           f"-v {CONTAINER_MAIN}:/main.py:ro "
-           f"-v {call_data_path}:/workspace "
-           f"-v {input_path}:/input.pickle:ro "
-           f"{IMAGE_NAME}:latest /usr/local/bin/python3 "
-           f"/main.py /workspace/prog.pickle /input.pickle /workspace/output.pickle"
+    prog_path = call_data_path / "prog.pickle"
+    output_file = call_data_path/ "output.pickle"
+    cmd = (f"{self.python_path} {CONTAINER_MAIN} {prog_path} {input_path} {output_file}"
            f"  2> {error_file_path}")
     logging.debug(f"Executing: {cmd}")
     return os.system(cmd)
@@ -163,18 +140,56 @@ class ContainerSandbox(Sandbox):
       f.write(program)
 
 
-def test_container_sandbox():
-  test_prog = """
-print("running!")
-def x(y):
-  print(f"Received {y}")
-  return y + 1
-   """
-  sandbox = ContainerSandbox("/tmp/")
-  ret, success = sandbox.run(test_prog, "x", 10, 1)
-  assert success
-  assert ret == 11
+class ContainerSandbox(ExternalProcessSandbox):
+  """Basic sandbox that runs unsafe code in Podman or Docker container.
+  - the sandbox should be safe against inadvertent bad code by LLM but not against malicious attacks.
+  - does not require any other dependencies on the host than Podman/Docker
+  - does not support multithreading
+  - might provide easier or more lightweight debugging experience than some other fancier sandbox environments
+  """
+  executable = "podman"
+  image_built = False
 
+  @classmethod
+  def build_image(cls, extra_pip_packages):
+    version = sys.version.split(" ")[0]
+    ret = os.system("podman --version")
+    if ret != 0:
+      ret = os.system("docker --version")
+      if ret != 0:
+        raise Exception("Could not find Podman or Docker. Can not use ContainerSandbox.")
+      else:
+        cls.executable = "docker"
 
-if __name__ == "__main__":
-  test_container_sandbox()
+    dockerfile = pathlib.Path(__file__).parent / "container" / "Dockerfile"
+    logging.debug("Building container image")
+    extra = ""
+    if extra_pip_packages:
+      extra = f"--build-arg INSTALL_PACKAGES='{extra_pip_packages}'"
+    os.system(f"{cls.executable} build --build-arg PYTHON_VERSION={version} {extra} -t {IMAGE_NAME} -f {dockerfile}")
+    cls.image_built = True
+
+  def __init__(self, base_path: pathlib.Path, extra_pip_packages: str = "numpy", timeout_secs=30):
+    super(ContainerSandbox, self).__init__(base_path, timeout_secs)
+
+    if not ContainerSandbox.image_built:
+      ContainerSandbox.build_image(extra_pip_packages)
+
+  def _exec(self, call_data_path: pathlib.Path, input_path: pathlib.Path, error_file_path: pathlib.Path):
+    """Use podman/docker to execute python in a container.
+    - The main.py shall execute the LLM generated method from prog.pickle file providing
+      input.pickle as the input for the method.
+    - main.py writes the output of the method into output.pickle.
+    Everything except the /workspace folder will be read-only so that the environment remains good
+    for future runs.
+    """
+    cmd = (f"{self.executable} run "
+           f"--timeout={self.timeout_secs} "
+           f"-v {CONTAINER_MAIN}:/main.py:ro "
+           f"-v {call_data_path}:/workspace "
+           f"-v {input_path}:/input.pickle:ro "
+           f"{IMAGE_NAME}:latest /usr/local/bin/python3 "
+           f"/main.py /workspace/prog.pickle /input.pickle /workspace/output.pickle"
+           f"  2> {error_file_path}")
+    logging.debug(f"Executing: {cmd}")
+    return os.system(cmd)
