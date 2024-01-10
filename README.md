@@ -1,5 +1,38 @@
 # FunSearch
 
+
+Usage:
+
+On a host computer with Podman or Docker installed (Podman/Docker is used as a sandbox to execute LLM generated code):
+
+```
+pip install .
+
+# Set the environment variable OPENAI_API_KEY=sk-xxxx or create .env file.
+# "gpt-3.5-turbo-instruct" model is used by default.
+# Refer to 'llm' package docs to use other models.
+
+funsearch run examples/cap_set_spec.py examples/cap_set_input_data.json
+```
+
+Alternatively, you can run FunSearch itself fully in container:
+```
+podman build . -t funsearch
+
+# Create a folder to share with the container
+mkdir data
+podman run -it -v ./data:/workspace/data funsearch
+
+funsearch run examples/cap_set_spec.py examples/cap_set_input_data.json --sandbox_type ExternalProcessSandbox
+```
+In this case the LLM generated code is executed in the same container (in a separate python process).
+
+---
+
+The repository contains a number of sample problems that can be solved with FunSearch.
+Currently, only the cap set problem (examples/cap_set_spec.py) has been written in the form that can be directly
+used with the 'funsearch' executable.
+
 This repository accompanies the publication
 
 > Romera-Paredes, B. et al. [Mathematical discoveries from program search with large language models](https://www.nature.com/articles/s41586-023-06924-6). *Nature* (2023)
