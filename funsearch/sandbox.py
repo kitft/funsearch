@@ -88,8 +88,30 @@ class ContainerSandbox(Sandbox):
     self.call_count = 0
 
     self.output_path = pathlib.Path(base_path) / f"sandbox{self.id}"
-    if not self.output_path.exists():
-      self.output_path.mkdir(parents=True)
+
+    self.input_path = self.output_path / "inputs"
+    for p in [self.output_path, self.input_path]:
+      if not p.exists():
+        p.mkdir(parents=True)
+
+  def _exec(self, call_data_path: pathlib.Path, input_path: pathlib.Path, error_file_path: pathlib.Path):
+    """Use podman/docker to execute python in a container.
+    - The main.py shall execute the LLM generated method from prog.pickle file providing
+      input.pickle as the input for the method.
+    - main.py writes the output of the method into output.pickle.
+    Everything except the /workspace folder will be read-only so that the environment remains good
+    for future runs.
+    """
+    cmd = (f"{self.executable} run "
+           f"--timeout={self.timeout_secs} "
+           f"-v {CONTAINER_MAIN}:/main.py:ro "
+           f"-v {call_data_path}:/workspace "
+           f"-v {input_path}:/input.pickle:ro "
+           f"{IMAGE_NAME}:latest /usr/local/bin/python3 "
+           f"/main.py /workspace/prog.pickle /input.pickle /workspace/output.pickle"
+           f"  2> {error_file_path}")
+    logging.debug(f"Executing: {cmd}")
+    return os.system(cmd)
 
   def run(
           self,
@@ -99,47 +121,39 @@ class ContainerSandbox(Sandbox):
           timeout_seconds: int,
   ) -> tuple[Any, bool]:
 
-    mount_path = (self.output_path / f"call{self.call_count}").absolute()
-    if not mount_path.exists():
-      mount_path.mkdir()
+    call_data_folder = (self.output_path / f"call{self.call_count}").absolute()
+    if not call_data_folder.exists():
+      call_data_folder.mkdir()
 
     input_hash = hash(test_input)
-    input_path = (self.output_path / f"{input_hash}.pickle").absolute()
+    input_path = (self.input_path / f"{input_hash}.pickle").absolute()
+
     if not input_path.exists():
       with open(input_path, "wb") as f:
         cloudpickle.dump(test_input, f)
     try:
       namespace = Sandbox.compile_code(program)
 
-      prog_file = (mount_path / f"prog.pickle").absolute()
+      prog_file = (call_data_folder / f"prog.pickle").absolute()
       with open(prog_file, "wb+") as f:
         cloudpickle.dump(namespace[function_to_run], f)
 
       error_file = self.output_path / f"stderr_{self.call_count}.log"
 
-      cmd = (f"/usr/bin/podman run "
-             f"--timeout={self.timeout_secs} "
-             f"-v {CONTAINER_MAIN}:/main.py "
-             f"-v {mount_path}:/workspace "
-             f"-v {input_path}:/input.pickle "
-             f"{IMAGE_NAME}:latest /usr/local/bin/python3 "
-             f"/main.py /workspace/prog.pickle /input.pickle /workspace/output.pickle"
-             f"  2> {error_file}")
-      logging.debug(f"Executing: {cmd}")
-      retcode = os.system(cmd)
+      retcode = self._exec(call_data_folder, input_path, error_file)
       self.call_count += 1
 
       if retcode != 0:
-        self._save_diagnostics(program, mount_path)
+        self._save_diagnostics(program, call_data_folder)
         return None, False
 
-      output_file = mount_path / f"output.pickle"
+      output_file = call_data_folder / f"output.pickle"
       with open(output_file, "rb") as f:
         out = cloudpickle.load(f)
         return out, True
     except Exception as e:
       logging.debug(f"Could not execute code: {e}")
-    self._save_diagnostics(program, mount_path)
+    self._save_diagnostics(program, call_data_folder)
 
   @staticmethod
   def _save_diagnostics(program: str, output_path: pathlib.Path):
