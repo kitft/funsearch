@@ -165,8 +165,12 @@ class ContainerSandbox(ExternalProcessSandbox):
     logging.debug("Building container image")
     extra = ""
     if extra_pip_packages:
-      extra = f"--build-arg INSTALL_PACKAGES='{extra_pip_packages}'"
-    os.system(f"{cls.executable} build --build-arg PYTHON_VERSION={version} {extra} -t {IMAGE_NAME} -f {dockerfile}")
+      extra = f"--build-arg INSTALL_PACKAGES=\"{extra_pip_packages}\""
+
+    cmd = (f"{cls.executable} build --build-arg PYTHON_VERSION={version} {extra} "
+           f"-t {IMAGE_NAME} -f {dockerfile} {CONTAINER_MAIN.parent}")
+    logging.debug(f"Executing: {cmd}")
+    os.system(cmd)
     cls.image_built = True
 
   def __init__(self, base_path: pathlib.Path, extra_pip_packages: str = "numpy", timeout_secs=30):
@@ -184,7 +188,7 @@ class ContainerSandbox(ExternalProcessSandbox):
     for future runs.
     """
     cmd = (f"{self.executable} run "
-           f"--timeout={self.timeout_secs} "
+           f"--stop-timeout={self.timeout_secs} "
            f"-v {CONTAINER_MAIN}:/main.py:ro "
            f"-v {call_data_path}:/workspace "
            f"-v {input_path}:/input.pickle:ro "
