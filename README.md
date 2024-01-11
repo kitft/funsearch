@@ -3,29 +3,62 @@
 
 Usage:
 
-On a host computer with Podman or Docker installed (Podman/Docker is used as a sandbox to execute LLM generated code):
 
-```
-pip install .
+You can run FunSearch in container using Podman or Docker
 
-# Set the environment variable OPENAI_API_KEY=sk-xxxx or create .env file.
-# "gpt-3.5-turbo-instruct" model is used by default.
-# Refer to 'llm' package docs to use other models.
-
-funsearch run examples/cap_set_spec.py examples/cap_set_input_data.json
-```
-
-Alternatively, you can run FunSearch itself fully in container:
 ```
 podman build . -t funsearch
+
 
 # Create a folder to share with the container
 mkdir data
 podman run -it -v ./data:/workspace/data funsearch
 
-funsearch run examples/cap_set_spec.py examples/cap_set_input_data.json --sandbox_type ExternalProcessSandbox
+# Set the environment variable OPENAI_API_KEY=sk-xxxx or create .env file.
+# "gpt-3.5-turbo-instruct" model is used by default.
+# Refer to 'llm' package docs to use other models.
+
+funsearch run examples/cap_set_spec.py 11 --sandbox_type ExternalProcessSandbox
 ```
-In this case the LLM generated code is executed in the same container (in a separate python process).
+In here we are searching for the algorithm to find maximum cap sets for dimension 11.
+You should see output something like
+```
+root@11c22cd7aeac:/workspace# funsearch run examples/cap_set_spec.py 11 --sandbox_type ExternalProcessSandbox
+INFO:root:Writing logs to data/1704956206
+INFO:absl:Best score of island 0 increased to 2048
+INFO:absl:Best score of island 1 increased to 2048
+INFO:absl:Best score of island 2 increased to 2048
+INFO:absl:Best score of island 3 increased to 2048
+INFO:absl:Best score of island 4 increased to 2048
+INFO:absl:Best score of island 5 increased to 2048
+INFO:absl:Best score of island 6 increased to 2048
+INFO:absl:Best score of island 7 increased to 2048
+INFO:absl:Best score of island 8 increased to 2048
+INFO:absl:Best score of island 9 increased to 2048
+INFO:absl:Best score of island 5 increased to 2053
+INFO:absl:Best score of island 1 increased to 2049
+INFO:absl:Best score of island 8 increased to 2684
+^C^CINFO:root:Keyboard interrupt. Stopping.
+INFO:absl:Saving backup to data/backups/program_db_priority_1704956206_0.pickle.
+```
+
+Note that in the last command we use the ExternalProcessSandbox that is not fully safe
+but makes it a bit less likely that invalid code from LLM would break the search.
+
+
+Alternatively, you can run the main Python process on a host computer outside of any container and let
+the process build and run separate sandbox containers (still requires Podman/Docker).
+
+```
+pip install .
+
+funsearch run examples/cap_set_spec.py 11
+```
+
+For more complex input data, you can provide the input also as a .json or .pickle file.
+
+Currently, the search is only using single thread with no asyncio and is somewhat slow
+for challenging tasks.  
 
 ---
 
