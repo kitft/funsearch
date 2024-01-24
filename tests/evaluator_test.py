@@ -12,13 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-
+import pathlib
 import textwrap
 
 from absl.testing import absltest
 from absl.testing import parameterized
 
 from funsearch import evaluator
+
+TESTS_FOLDER = pathlib.Path(__file__).parent
 
 
 class EvaluatorTest(parameterized.TestCase):
@@ -84,6 +86,17 @@ def new_f():'''
     )
     actual = evaluator._trim_function_body(code)
     self.assertEqual(actual, code)
+
+
+  def test_trim_function_other_llms(self):
+    files = list((TESTS_FOLDER / "example_responses").glob("*.txt"))
+    assert len(files) > 1, "Could not find all test files"
+    for f in files:
+      name = f.name
+      response = f.read_text()
+      actual = evaluator._trim_function_body(response)
+      expected = (TESTS_FOLDER / "example_response_parsed" / name).read_text()
+      self.assertEqual(expected, actual, f"{name}: Parsed code does not match")
 
 
 if __name__ == '__main__':

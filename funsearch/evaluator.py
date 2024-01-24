@@ -15,13 +15,23 @@
 
 """Class for evaluating programs proposed by the Sampler."""
 import ast
+import re
 from collections.abc import Sequence
 import copy
-from typing import Any
+from typing import Any, Tuple
 
 from funsearch import code_manipulation
 from funsearch import programs_database
 from funsearch import sandbox
+
+"""
+  Regex to find all methods named 'priority_vX'.
+  With each match, start from the 'def priority_vX(' and continue until there's a new line with any of
+  - a new 'def'
+  - ` or ' or # without indentation
+"""
+METHOD_MATCHER = re.compile(r"def priority_v\d\(.*?\) -> float:(?:\s*(?:[ \t]*(?!def|#|`|').*(?:\n|$)))+")
+METHOD_NAME_MATCHER = re.compile(r"priority_v\d+")
 
 
 class _FunctionLineVisitor(ast.NodeVisitor):
@@ -44,11 +54,34 @@ class _FunctionLineVisitor(ast.NodeVisitor):
     return self._function_end_line
 
 
+def _find_method_implementation(generated_code: str) -> Tuple[str, str]:
+  """Find the last 'def priority_vX()' method from generated code.
+
+  Return the code and the name of the method.
+  """
+  matches = METHOD_MATCHER.findall(generated_code)
+  if not matches:
+    return "", ""
+  last_match = matches[-1]
+  name = METHOD_NAME_MATCHER.search(last_match).group()
+  return last_match, name
+
+
 def _trim_function_body(generated_code: str) -> str:
   """Extracts the body of the generated function, trimming anything after it."""
   if not generated_code:
     return ''
-  code = f'def fake_function_header():\n{generated_code}'
+  if not type(generated_code) is str:
+    generated_code = str(generated_code)
+
+  method_name = "fake_function_header"
+  # Check is the response only a continuation for our prompt or full method implementation with header
+  if "def priority_v" in generated_code:
+    code, method_name = _find_method_implementation(generated_code)
+  else:
+    code = f'def {method_name}():\n{generated_code}'
+
+  # Finally parse the code to make sure it's valid Python
   tree = None
   # We keep trying and deleting code from the end until the parser succeeds.
   while tree is None:
@@ -60,7 +93,7 @@ def _trim_function_body(generated_code: str) -> str:
     # Nothing could be saved from `generated_code`
     return ''
 
-  visitor = _FunctionLineVisitor('fake_function_header')
+  visitor = _FunctionLineVisitor(method_name)
   visitor.visit(tree)
   body_lines = code.splitlines()[1:visitor.function_end_line]
   return '\n'.join(body_lines) + '\n\n'
