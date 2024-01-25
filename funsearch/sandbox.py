@@ -131,6 +131,7 @@ class ExternalProcessSandbox(DummySandbox):
     except Exception as e:
       logging.debug(f"Could not execute code: {e}")
     self._save_diagnostics(program, call_data_folder)
+    return None, False
 
   @staticmethod
   def _save_diagnostics(program: str, output_path: pathlib.Path):
