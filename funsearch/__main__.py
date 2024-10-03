@@ -58,11 +58,11 @@ def main(ctx):
 @main.command()
 @click.argument("spec_file", type=click.File("r"))
 @click.argument('inputs')
-@click.option('--model_name', default="gpt-3.5-turbo-instruct", help='LLM model')
+@click.option('--model_name', default="mistral/codestral-latest", help='LLM model')
 @click.option('--output_path', default="./data/", type=click.Path(file_okay=False), help='path for logs and data')
 @click.option('--load_backup', default=None, type=click.File("rb"), help='Use existing program database')
 @click.option('--iterations', default=-1, type=click.INT, help='Max iterations per sampler')
-@click.option('--samplers', default=15, type=click.INT, help='Samplers')
+@click.option('--samplers', default=1, type=click.INT, help='Samplers: 1 due to single-threaded implementation')
 @click.option('--sandbox_type', default="ContainerSandbox", type=click.Choice(SANDBOX_NAMES), help='Sandbox type')
 @click.option('--num_islands', default=10, type=click.INT, help='Number of islands')
 def run(spec_file, inputs, model_name, output_path, load_backup, iterations, samplers, sandbox_type, num_islands):

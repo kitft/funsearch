@@ -1,6 +1,9 @@
 # FunSearch
 Forked from https://github.com/google-deepmind/funsearch via https://github.com/jonppe/funsearch
 
+
+Currently, the search is only single-threaded with no async.
+
 Usage:
 You can run FunSearch containerised using Docker (or Podman). You must pass your MISTRAL_API_KEY to the container when you run it.
 
@@ -18,10 +21,27 @@ docker run -it -v ./data:/workspace/data -e MISTRAL_API_KEY=$MISTRAL_API_KEY fun
 # A good one to use for testing, as an extremely cheap model, is 'mistral/mistral-tiny-latest'. 
 # The best one for our use case is probably 'mistral/codestral-latest', which is 4x more expensive per output token.
 
+`funsearch run` takes two arguments:
+
+1. `SPEC_FILE`: A Python module that provides the basis of the LLM prompt as well as the evaluation metric.
+   - Example: See `examples/cap_set_spec.py`
+
+2. `INPUTS`: Can be one of the following:
+   - A filename ending in .json or .pickle
+   - Comma-separated input data
+   - The files are expected to contain a list with at least one element
+   - Elements will be passed to the `solve()` method one by one
+
+Examples of valid INPUTS:
+- 8
+- 8,9,10
+- ./examples/cap_set_input_data.json`
+
 funsearch run examples/cap_set_spec.py 11 --sandbox_type ExternalProcessSandbox --model_name mistral/codestral-latest --samplers 1 --num_islands 10
 
-As we are single-threaded, we can only set the #of samplers to 1 (i.e. --samplers 1)
-We may choose the number of islands via --num_islands
+This implementation is single-threaded, so we can only set the #of samplers to 1 (i.e. --samplers 1)
+We choose the number of islands via --num_islands
+Any parameters not listed here can be modified in funsearch/config.py
 
 
 Here are the rest of the run params:
@@ -76,10 +96,6 @@ pip install .
 funsearch run examples/cap_set_spec.py 11
 ```
 
-For more complex input data, you can provide the input also as a .json or .pickle file.
-
-Currently, the search is only using single thread with no async and is somewhat slow
-for challenging tasks.  
 
 ---
 
