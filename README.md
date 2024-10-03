@@ -2,19 +2,23 @@
 Forked from https://github.com/google-deepmind/funsearch via https://github.com/jonppe/funsearch
 
 Usage:
-You can run FunSearch in container using Podman or Docker. You must pass your MISTRAL_API_KEY to the container.
+You can run FunSearch containerised using Docker (or Podman). You must pass your MISTRAL_API_KEY to the container when you run it.
+
+First install docker. Then, whilst in the project directory, run:
 
 ```
 export MISTRAL_API_KEY=<######your_key#####>    #i.e. export MISTRAL_API_KEY=SfD6...
-podman build . -t funsearch --build-arg MISTRAL_API_KEY=$MISTRAL_API_KEY
+docker build . -t funsearch 
 
 # Create a folder to share with the container
 mkdir data
-podman run -it -v ./data:/workspace/data funsearch
+docker run -it -v ./data:/workspace/data -e MISTRAL_API_KEY=$MISTRAL_API_KEY funsearch
 
-#'llm models' will list the available models. Run the search with the desired model using the '--model_name' attribute. A good one to use for testing, as an extremely cheap model, is 'mistral/mistral-tiny-latest'. The best one for our use case is probably 'mistral/codestral-latest', which is 4x more expensive per output token.
+#'llm models' will list the available models. Run the search with the desired model using the '--model_name' attribute.
+# A good one to use for testing, as an extremely cheap model, is 'mistral/mistral-tiny-latest'. 
+# The best one for our use case is probably 'mistral/codestral-latest', which is 4x more expensive per output token.
 
-funsearch run examples/cap_set_spec.py 11 --sandbox_type ExternalProcessSandbox --model_name <model_name> --samplers 1 --num_islands 10
+funsearch run examples/cap_set_spec.py 11 --sandbox_type ExternalProcessSandbox --model_name mistral/codestral-latest --samplers 1 --num_islands 10
 
 As we are single-threaded, we can only set the #of samplers to 1 (i.e. --samplers 1)
 We may choose the number of islands via --num_islands
@@ -35,8 +39,8 @@ You can adjust these parameters to customize your FunSearch run. For example:
 
 
 ```
-In here we are searching for the algorithm to find maximum cap sets for dimension 11.
-You should see output something like
+Here, we are searching for the algorithm to find maximum cap sets for dimension 11.
+You should see something like:
 ```
 root@11c22cd7aeac:/workspace# funsearch run examples/cap_set_spec.py 11 --sandbox_type ExternalProcessSandbox --model_name mistral/codestral-latest
 INFO:root:Writing logs to data/1704956206
@@ -57,8 +61,9 @@ INFO:absl:Best score of island 8 increased to 2684
 INFO:absl:Saving backup to data/backups/program_db_priority_1704956206_0.pickle.
 ```
 
-Note that in the last command we use the ExternalProcessSandbox that is not fully safe
-but makes it a bit less likely that invalid code from LLM would break the search.
+Note that in the last command, we use the ExternalProcessSandbox. This is not fully 'safe'.
+However, it makes it a bit less likely that invalid code from LLM would break the search.
+The default is ContainerSandbox. However, when running the entire thing inside a podman container
 
 
 Alternatively, you can run the main Python process on a host computer outside of any container and let

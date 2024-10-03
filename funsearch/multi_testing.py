@@ -4,6 +4,9 @@ import time
 from typing import Any, Callable
 import jax.random as random
 
+#generic multi-threading code for testing- implemented three worker types: sampler, evaluator and a database for storing programs
+#THIS IS NOT FUNCTIONAL YET
+
 class ProgramDatabase:
     def __init__(self):
         self.programs = {}
@@ -58,9 +61,15 @@ class Evaluator(threading.Thread):
         super().__init__()
         self.evaluator_id = evaluator_id
         self.proposal_queue = proposal_queue
-        self.evaluation_results = evaluation_queue
+        self.evaluation_results = evaluation_results  # Fixed typo: evaluation_queue -> evaluation_results
         self.rng_key = rng_key
         self.running = True
+        # This code initializes an Evaluator thread with:
+        # - A unique ID
+        # - A queue for receiving program proposals to evaluate
+        # - A queue for sending back evaluation results
+        # - A random number generator key for reproducibility
+        # - A flag to control the thread's execution
 
     def run(self):
         while self.running:

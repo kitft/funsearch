@@ -1,0 +1,9 @@
+Sure, I can help with that. The function `priority_v1` is meant to be an improved version of `priority_v0`. I'll modify the function to return a priority that's calculated as the sum of the elements in the tuple, normalized by the length of the tuple. This way, tuples with larger values will have higher priority. Here's the updated function:
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return sum(el) / n
+```
+
+This function will return the average value of the elements in the tuple. Tuples with higher average values will be preferred for addition to the cap set.

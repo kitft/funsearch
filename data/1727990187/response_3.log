@@ -1,0 +1,44 @@
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # Prioritize sets with more 2s
+  return el.count(2)
+
+def priority_v2(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v1`."""
+  # Prioritize sets with more 2s and less 0s
+  return el.count(2) - el.count(0)
+
+def priority_v3(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v2`."""
+  # Prioritize sets with more 2s, less 0s and more unique elements
+  return el.count(2) - el.count(0) + len(set(el))
+
+def priority_v4(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v3`."""
+  # Prioritize sets with more 2s, less 0s, more unique elements and less 1s
+  return el.count(2) - el.count(0) + len(set(el)) - el.count(1)
+
+def priority_v5(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v4`."""
+  # Prioritize sets with more 2s, less 0s, more unique elements, less 1s and higher sum
+  return el.count(2) - el.count(0) + len(set(el)) - el.count(1) + sum(el)
+
+def priority_v6(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v5`."""
+  # Prioritize sets with more 2s, less 0s, more unique elements, less 1s, higher sum and lower variance
+  return el.count(2) - el.count(0) + len(set(el)) - el.count(1) + sum(el) - np.var(el)
+
+def priority_v7(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v6`."""
+  # Prioritize sets with more 2s, less 0s, more unique elements, less 1s, higher sum, lower variance and higher product
+  return el.count(2) - el.count(0) + len(set(el)) - el.count(1) + sum(el) - np.var(el) + np.prod(el)
+
+def priority_v8(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v7`."""
+  # Prioritize sets with more 2s, less 0s, more unique elements, less 1s, higher sum, lower variance, higher product and less repetitions
+  return el.count(2) - el.count(0) + len(set(el)) - el.count(1) + sum(el) - np.var(el) + np.prod(el) - max(el.count(i) for i in set(el))
+
+def priority_v9(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v8`."""
+  # Prioritize sets with more 2s, less 0s, more unique elements, less 1s, higher sum, lower variance, higher product, less repetitions and higher number of runs of 2s
+  return el.count(2) - el.count(0) + len(set(el)) - el.count(1) + sum(el) - np.var(el) + np.prod(el) - max(el.count(i) for i in set(el)) + max(len(list(group)) for key, group in itertools.groupby(el) if key == 2)
