@@ -81,13 +81,10 @@ INFO:absl:Best score of island 8 increased to 2684
 INFO:absl:Saving backup to data/backups/program_db_priority_1704956206_0.pickle.
 ```
 
-Note that in the last command, we use the ExternalProcessSandbox. This is not fully 'safe'.
-However, it makes it a bit less likely that invalid code from LLM would break the search.
-The default is ContainerSandbox. However, when running the entire thing inside a podman container
-
+Note that in the last command, we use the ExternalProcessSandbox. This is not fully 'safe', but does make it a bit less likely that invalid code from LLM could break things. The default is ContainerSandbox. However, as we are running the entire thing inside a Docker container, this is not strictly necessary.
 
 Alternatively, you can run the main Python process on a host computer outside of any container and let
-the process build and run separate sandbox containers (still requires Podman/Docker).
+the process build and run separate sandbox containers (still requires Docker(/Podman)).
 This variant could be also used, e.g., in Colab quite safely since the environment is some kind of container itself.
 
 ```
