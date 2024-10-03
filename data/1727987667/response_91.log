@@ -1,0 +1,25 @@
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1` where we give a higher priority to numbers that are close to the square root of `n`.
+  This is because numbers close to the square root of `n` are more likely to be part of a large Salem-Spencer progression.
+  """
+  sqrt_n = np.sqrt(n)
+  return k / n * (1 - np.abs(k - sqrt_n) / sqrt_n)
+
+
+def priority_v3(k: int, n: int, salem_spencer_set: set[int]) -> float:
+  """Improved version of `priority_v2` where we give a higher priority to numbers that are likely to form a large Salem-Spencer progression with the numbers already in the set.
+  """
+  priority = priority_v2(k, n)
+  for s in salem_spencer_set:
+    priority *= (1 - np.abs(k - s) / n)
+  return priority
+
+
+def find_large_salem_spencer_progression(n: int, size: int) -> list[int]:
+  """Finds a large Salem-Spencer progression of size `size` from the first `n` integers.
+  """
+  salem_spencer_set = set()
+  while len(salem_spencer_set) < size:
+    priorities = [priority_v3(k, n, salem_spencer_set) for k in range(1, n + 1) if k not in salem_spencer_set]
+    salem_spencer_set.add(np.argmax(priorities) + 1)
+  return sorted(list(salem_spencer_set))

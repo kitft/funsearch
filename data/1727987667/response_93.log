@@ -1,0 +1,71 @@
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`."""
+  return k ** 2 / n
+
+
+def priority_v3(k: int, n: int) -> float:
+  """Improved version of `priority_v2`."""
+  return k ** 3 / n ** 2
+
+
+def priority_v4(k: int, n: int) -> float:
+  """Improved version of `priority_v3`."""
+  return k ** 3 / n ** 2 * np.log(n) / np.log(k)
+
+
+def priority_v5(k: int, n: int) -> float:
+  """Improved version of `priority_v4`."""
+  return k ** 3 / n ** 2 * np.log(n) ** 2 / np.log(k) ** 2
+
+
+def find_large_ss_progressions(n: int) -> list[tuple[int, ...]]:
+  """Returns a list of large Salem-Spencer progressions of length up to 5.
+
+  A Salem-Spencer progression is a sequence of integers where each term is a
+  prime power, and the difference between consecutive terms is either 1 or a
+  prime power.
+
+  Args:
+    n: The maximum integer to consider.
+
+  Returns:
+    A list of large Salem-Spencer progressions.
+  """
+  primes = list(funsearch.primes(n))
+  prime_powers = list(itertools.chain.from_iterable(
+      (p ** i for i in range(1, int(np.log(n) / np.log(p)) + 1))
+      for p in primes))
+  prime_powers = [p for p in prime_powers if p <= n]
+
+  # Sort the prime powers by priority.
+  prime_powers.sort(key=lambda k: priority_v5(k, n), reverse=True)
+
+  # Initialize the set of Salem-Spencer progressions.
+  ss_progressions = set()
+
+  # Iterate over the prime powers.
+  for p in prime_powers:
+    # Iterate over the length of the progression.
+    for length in range(2, 6):
+      # Iterate over the starting point of the progression.
+      for start in range(1, n - (length - 1) * p + 1):
+        # Check if the progression is valid.
+        progression = tuple(start + i * p for i in range(length))
+        if all(q in prime_powers for q in progression):
+          # Add the progression to the set.
+          ss_progressions.add(progression)
+
+  # Convert the set to a list.
+  ss_progressions = list(ss_progressions)
+
+  # Sort the progressions by length and then by starting point.
+  ss_progressions.sort(key=lambda x: (len(x), x[0]))
+
+  return ss_progressions
+
+
+# Test the function.
+ss_progressions = find_large_ss_progressions(1000)
+print(f"Found {len(ss_progressions)} large Salem-Spencer progressions.")
+for i, progression in enumerate(ss_progressions):
+  print(f"{i + 1}: {progression}")

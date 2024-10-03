@@ -1,0 +1,2791 @@
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`."""
+  return (k + 1) / (n + 1)
+
+
+def priority_v3(k: int, n: int) -> float:
+  """Improved version of `priority_v2`."""
+  return (k + 2) / (n + 2)
+
+
+def priority_v4(k: int, n: int) -> float:
+  """Improved version of `priority_v3`."""
+  return (k + 3) / (n + 3)
+
+
+def priority_v5(k: int, n: int) -> float:
+  """Improved version of `priority_v4`."""
+  return (k + 4) / (n + 4)
+
+
+def priority_v6(k: int, n: int) -> float:
+  """Improved version of `priority_v5`."""
+  return (k + 5) / (n + 5)
+
+
+def priority_v7(k: int, n: int) -> float:
+  """Improved version of `priority_v6`."""
+  return (k + 6) / (n + 6)
+
+
+def priority_v8(k: int, n: int) -> float:
+  """Improved version of `priority_v7`."""
+  return (k + 7) / (n + 7)
+
+
+def priority_v9(k: int, n: int) -> float:
+  """Improved version of `priority_v8`."""
+  return (k + 8) / (n + 8)
+
+
+def priority_v10(k: int, n: int) -> float:
+  """Improved version of `priority_v9`."""
+  return (k + 9) / (n + 9)
+
+
+def priority_v11(k: int, n: int) -> float:
+  """Improved version of `priority_v10`."""
+  return (k + 10) / (n + 10)
+
+
+def priority_v12(k: int, n: int) -> float:
+  """Improved version of `priority_v11`."""
+  return (k + 11) / (n + 11)
+
+
+def priority_v13(k: int, n: int) -> float:
+  """Improved version of `priority_v12`."""
+  return (k + 12) / (n + 12)
+
+
+def priority_v14(k: int, n: int) -> float:
+  """Improved version of `priority_v13`."""
+  return (k + 13) / (n + 13)
+
+
+def priority_v15(k: int, n: int) -> float:
+  """Improved version of `priority_v14`."""
+  return (k + 14) / (n + 14)
+
+
+def priority_v16(k: int, n: int) -> float:
+  """Improved version of `priority_v15`."""
+  return (k + 15) / (n + 15)
+
+
+def priority_v17(k: int, n: int) -> float:
+  """Improved version of `priority_v16`."""
+  return (k + 16) / (n + 16)
+
+
+def priority_v18(k: int, n: int) -> float:
+  """Improved version of `priority_v17`."""
+  return (k + 17) / (n + 17)
+
+
+def priority_v19(k: int, n: int) -> float:
+  """Improved version of `priority_v18`."""
+  return (k + 18) / (n + 18)
+
+
+def priority_v20(k: int, n: int) -> float:
+  """Improved version of `priority_v19`."""
+  return (k + 19) / (n + 19)
+
+
+def priority_v21(k: int, n: int) -> float:
+  """Improved version of `priority_v20`."""
+  return (k + 20) / (n + 20)
+
+
+def priority_v22(k: int, n: int) -> float:
+  """Improved version of `priority_v21`."""
+  return (k + 21) / (n + 21)
+
+
+def priority_v23(k: int, n: int) -> float:
+  """Improved version of `priority_v22`."""
+  return (k + 22) / (n + 22)
+
+
+def priority_v24(k: int, n: int) -> float:
+  """Improved version of `priority_v23`."""
+  return (k + 23) / (n + 23)
+
+
+def priority_v25(k: int, n: int) -> float:
+  """Improved version of `priority_v24`."""
+  return (k + 24) / (n + 24)
+
+
+def priority_v26(k: int, n: int) -> float:
+  """Improved version of `priority_v25`."""
+  return (k + 25) / (n + 25)
+
+
+def priority_v27(k: int, n: int) -> float:
+  """Improved version of `priority_v26`."""
+  return (k + 26) / (n + 26)
+
+
+def priority_v28(k: int, n: int) -> float:
+  """Improved version of `priority_v27`."""
+  return (k + 27) / (n + 27)
+
+
+def priority_v29(k: int, n: int) -> float:
+  """Improved version of `priority_v28`."""
+  return (k + 28) / (n + 28)
+
+
+def priority_v30(k: int, n: int) -> float:
+  """Improved version of `priority_v29`."""
+  return (k + 29) / (n + 29)
+
+
+def priority_v31(k: int, n: int) -> float:
+  """Improved version of `priority_v30`."""
+  return (k + 30) / (n + 30)
+
+
+def priority_v32(k: int, n: int) -> float:
+  """Improved version of `priority_v31`."""
+  return (k + 31) / (n + 31)
+
+
+def priority_v33(k: int, n: int) -> float:
+  """Improved version of `priority_v32`."""
+  return (k + 32) / (n + 32)
+
+
+def priority_v34(k: int, n: int) -> float:
+  """Improved version of `priority_v33`."""
+  return (k + 33) / (n + 33)
+
+
+def priority_v35(k: int, n: int) -> float:
+  """Improved version of `priority_v34`."""
+  return (k + 34) / (n + 34)
+
+
+def priority_v36(k: int, n: int) -> float:
+  """Improved version of `priority_v35`."""
+  return (k + 35) / (n + 35)
+
+
+def priority_v37(k: int, n: int) -> float:
+  """Improved version of `priority_v36`."""
+  return (k + 36) / (n + 36)
+
+
+def priority_v38(k: int, n: int) -> float:
+  """Improved version of `priority_v37`."""
+  return (k + 37) / (n + 37)
+
+
+def priority_v39(k: int, n: int) -> float:
+  """Improved version of `priority_v38`."""
+  return (k + 38) / (n + 38)
+
+
+def priority_v40(k: int, n: int) -> float:
+  """Improved version of `priority_v39`."""
+  return (k + 39) / (n + 39)
+
+
+def priority_v41(k: int, n: int) -> float:
+  """Improved version of `priority_v40`."""
+  return (k + 40) / (n + 40)
+
+
+def priority_v42(k: int, n: int) -> float:
+  """Improved version of `priority_v41`."""
+  return (k + 41) / (n + 41)
+
+
+def priority_v43(k: int, n: int) -> float:
+  """Improved version of `priority_v42`."""
+  return (k + 42) / (n + 42)
+
+
+def priority_v44(k: int, n: int) -> float:
+  """Improved version of `priority_v43`."""
+  return (k + 43) / (n + 43)
+
+
+def priority_v45(k: int, n: int) -> float:
+  """Improved version of `priority_v44`."""
+  return (k + 44) / (n + 44)
+
+
+def priority_v46(k: int, n: int) -> float:
+  """Improved version of `priority_v45`."""
+  return (k + 45) / (n + 45)
+
+
+def priority_v47(k: int, n: int) -> float:
+  """Improved version of `priority_v46`."""
+  return (k + 46) / (n + 46)
+
+
+def priority_v48(k: int, n: int) -> float:
+  """Improved version of `priority_v47`."""
+  return (k + 47) / (n + 47)
+
+
+def priority_v49(k: int, n: int) -> float:
+  """Improved version of `priority_v48`."""
+  return (k + 48) / (n + 48)
+
+
+def priority_v50(k: int, n: int) -> float:
+  """Improved version of `priority_v49`."""
+  return (k + 49) / (n + 49)
+
+
+def priority_v51(k: int, n: int) -> float:
+  """Improved version of `priority_v50`."""
+  return (k + 50) / (n + 50)
+
+
+def priority_v52(k: int, n: int) -> float:
+  """Improved version of `priority_v51`."""
+  return (k + 51) / (n + 51)
+
+
+def priority_v53(k: int, n: int) -> float:
+  """Improved version of `priority_v52`."""
+  return (k + 52) / (n + 52)
+
+
+def priority_v54(k: int, n: int) -> float:
+  """Improved version of `priority_v53`."""
+  return (k + 53) / (n + 53)
+
+
+def priority_v55(k: int, n: int) -> float:
+  """Improved version of `priority_v54`."""
+  return (k + 54) / (n + 54)
+
+
+def priority_v56(k: int, n: int) -> float:
+  """Improved version of `priority_v55`."""
+  return (k + 55) / (n + 55)
+
+
+def priority_v57(k: int, n: int) -> float:
+  """Improved version of `priority_v56`."""
+  return (k + 56) / (n + 56)
+
+
+def priority_v58(k: int, n: int) -> float:
+  """Improved version of `priority_v57`."""
+  return (k + 57) / (n + 57)
+
+
+def priority_v59(k: int, n: int) -> float:
+  """Improved version of `priority_v58`."""
+  return (k + 58) / (n + 58)
+
+
+def priority_v60(k: int, n: int) -> float:
+  """Improved version of `priority_v59`."""
+  return (k + 59) / (n + 59)
+
+
+def priority_v61(k: int, n: int) -> float:
+  """Improved version of `priority_v60`."""
+  return (k + 60) / (n + 60)
+
+
+def priority_v62(k: int, n: int) -> float:
+  """Improved version of `priority_v61`."""
+  return (k + 61) / (n + 61)
+
+
+def priority_v63(k: int, n: int) -> float:
+  """Improved version of `priority_v62`."""
+  return (k + 62) / (n + 62)
+
+
+def priority_v64(k: int, n: int) -> float:
+  """Improved version of `priority_v63`."""
+  return (k + 63) / (n + 63)
+
+
+def priority_v65(k: int, n: int) -> float:
+  """Improved version of `priority_v64`."""
+  return (k + 64) / (n + 64)
+
+
+def priority_v66(k: int, n: int) -> float:
+  """Improved version of `priority_v65`."""
+  return (k + 65) / (n + 65)
+
+
+def priority_v67(k: int, n: int) -> float:
+  """Improved version of `priority_v66`."""
+  return (k + 66) / (n + 66)
+
+
+def priority_v68(k: int, n: int) -> float:
+  """Improved version of `priority_v67`."""
+  return (k + 67) / (n + 67)
+
+
+def priority_v69(k: int, n: int) -> float:
+  """Improved version of `priority_v68`."""
+  return (k + 68) / (n + 68)
+
+
+def priority_v70(k: int, n: int) -> float:
+  """Improved version of `priority_v69`."""
+  return (k + 69) / (n + 69)
+
+
+def priority_v71(k: int, n: int) -> float:
+  """Improved version of `priority_v70`."""
+  return (k + 70) / (n + 70)
+
+
+def priority_v72(k: int, n: int) -> float:
+  """Improved version of `priority_v71`."""
+  return (k + 71) / (n + 71)
+
+
+def priority_v73(k: int, n: int) -> float:
+  """Improved version of `priority_v72`."""
+  return (k + 72) / (n + 72)
+
+
+def priority_v74(k: int, n: int) -> float:
+  """Improved version of `priority_v73`."""
+  return (k + 73) / (n + 73)
+
+
+def priority_v75(k: int, n: int) -> float:
+  """Improved version of `priority_v74`."""
+  return (k + 74) / (n + 74)
+
+
+def priority_v76(k: int, n: int) -> float:
+  """Improved version of `priority_v75`."""
+  return (k + 75) / (n + 75)
+
+
+def priority_v77(k: int, n: int) -> float:
+  """Improved version of `priority_v76`."""
+  return (k + 76) / (n + 76)
+
+
+def priority_v78(k: int, n: int) -> float:
+  """Improved version of `priority_v77`."""
+  return (k + 77) / (n + 77)
+
+
+def priority_v79(k: int, n: int) -> float:
+  """Improved version of `priority_v78`."""
+  return (k + 78) / (n + 78)
+
+
+def priority_v80(k: int, n: int) -> float:
+  """Improved version of `priority_v79`."""
+  return (k + 79) / (n + 79)
+
+
+def priority_v81(k: int, n: int) -> float:
+  """Improved version of `priority_v80`."""
+  return (k + 80) / (n + 80)
+
+
+def priority_v82(k: int, n: int) -> float:
+  """Improved version of `priority_v81`."""
+  return (k + 81) / (n + 81)
+
+
+def priority_v83(k: int, n: int) -> float:
+  """Improved version of `priority_v82`."""
+  return (k + 82) / (n + 82)
+
+
+def priority_v84(k: int, n: int) -> float:
+  """Improved version of `priority_v83`."""
+  return (k + 83) / (n + 83)
+
+
+def priority_v85(k: int, n: int) -> float:
+  """Improved version of `priority_v84`."""
+  return (k + 84) / (n + 84)
+
+
+def priority_v86(k: int, n: int) -> float:
+  """Improved version of `priority_v85`."""
+  return (k + 85) / (n + 85)
+
+
+def priority_v87(k: int, n: int) -> float:
+  """Improved version of `priority_v86`."""
+  return (k + 86) / (n + 86)
+
+
+def priority_v88(k: int, n: int) -> float:
+  """Improved version of `priority_v87`."""
+  return (k + 87) / (n + 87)
+
+
+def priority_v89(k: int, n: int) -> float:
+  """Improved version of `priority_v88`."""
+  return (k + 88) / (n + 88)
+
+
+def priority_v90(k: int, n: int) -> float:
+  """Improved version of `priority_v89`."""
+  return (k + 89) / (n + 89)
+
+
+def priority_v91(k: int, n: int) -> float:
+  """Improved version of `priority_v90`."""
+  return (k + 90) / (n + 90)
+
+
+def priority_v92(k: int, n: int) -> float:
+  """Improved version of `priority_v91`."""
+  return (k + 91) / (n + 91)
+
+
+def priority_v93(k: int, n: int) -> float:
+  """Improved version of `priority_v92`."""
+  return (k + 92) / (n + 92)
+
+
+def priority_v94(k: int, n: int) -> float:
+  """Improved version of `priority_v93`."""
+  return (k + 93) / (n + 93)
+
+
+def priority_v95(k: int, n: int) -> float:
+  """Improved version of `priority_v94`."""
+  return (k + 94) / (n + 94)
+
+
+def priority_v96(k: int, n: int) -> float:
+  """Improved version of `priority_v95`."""
+  return (k + 95) / (n + 95)
+
+
+def priority_v97(k: int, n: int) -> float:
+  """Improved version of `priority_v96`."""
+  return (k + 96) / (n + 96)
+
+
+def priority_v98(k: int, n: int) -> float:
+  """Improved version of `priority_v97`."""
+  return (k + 97) / (n + 97)
+
+
+def priority_v99(k: int, n: int) -> float:
+  """Improved version of `priority_v98`."""
+  return (k + 98) / (n + 98)
+
+
+def priority_v100(k: int, n: int) -> float:
+  """Improved version of `priority_v99`."""
+  return (k + 99) / (n + 99)
+
+
+def priority_v101(k: int, n: int) -> float:
+  """Improved version of `priority_v100`."""
+  return (k + 100) / (n + 100)
+
+
+def priority_v102(k: int, n: int) -> float:
+  """Improved version of `priority_v101`."""
+  return (k + 101) / (n + 101)
+
+
+def priority_v103(k: int, n: int) -> float:
+  """Improved version of `priority_v102`."""
+  return (k + 102) / (n + 102)
+
+
+def priority_v104(k: int, n: int) -> float:
+  """Improved version of `priority_v103`."""
+  return (k + 103) / (n + 103)
+
+
+def priority_v105(k: int, n: int) -> float:
+  """Improved version of `priority_v104`."""
+  return (k + 104) / (n + 104)
+
+
+def priority_v106(k: int, n: int) -> float:
+  """Improved version of `priority_v105`."""
+  return (k + 105) / (n + 105)
+
+
+def priority_v107(k: int, n: int) -> float:
+  """Improved version of `priority_v106`."""
+  return (k + 106) / (n + 106)
+
+
+def priority_v108(k: int, n: int) -> float:
+  """Improved version of `priority_v107`."""
+  return (k + 107) / (n + 107)
+
+
+def priority_v109(k: int, n: int) -> float:
+  """Improved version of `priority_v108`."""
+  return (k + 108) / (n + 108)
+
+
+def priority_v110(k: int, n: int) -> float:
+  """Improved version of `priority_v109`."""
+  return (k + 109) / (n + 109)
+
+
+def priority_v111(k: int, n: int) -> float:
+  """Improved version of `priority_v110`."""
+  return (k + 110) / (n + 110)
+
+
+def priority_v112(k: int, n: int) -> float:
+  """Improved version of `priority_v111`."""
+  return (k + 111) / (n + 111)
+
+
+def priority_v113(k: int, n: int) -> float:
+  """Improved version of `priority_v112`."""
+  return (k + 112) / (n + 112)
+
+
+def priority_v114(k: int, n: int) -> float:
+  """Improved version of `priority_v113`."""
+  return (k + 113) / (n + 113)
+
+
+def priority_v115(k: int, n: int) -> float:
+  """Improved version of `priority_v114`."""
+  return (k + 114) / (n + 114)
+
+
+def priority_v116(k: int, n: int) -> float:
+  """Improved version of `priority_v115`."""
+  return (k + 115) / (n + 115)
+
+
+def priority_v117(k: int, n: int) -> float:
+  """Improved version of `priority_v116`."""
+  return (k + 116) / (n + 116)
+
+
+def priority_v118(k: int, n: int) -> float:
+  """Improved version of `priority_v117`."""
+  return (k + 117) / (n + 117)
+
+
+def priority_v119(k: int, n: int) -> float:
+  """Improved version of `priority_v118`."""
+  return (k + 118) / (n + 118)
+
+
+def priority_v120(k: int, n: int) -> float:
+  """Improved version of `priority_v119`."""
+  return (k + 119) / (n + 119)
+
+
+def priority_v121(k: int, n: int) -> float:
+  """Improved version of `priority_v120`."""
+  return (k + 120) / (n + 120)
+
+
+def priority_v122(k: int, n: int) -> float:
+  """Improved version of `priority_v121`."""
+  return (k + 121) / (n + 121)
+
+
+def priority_v123(k: int, n: int) -> float:
+  """Improved version of `priority_v122`."""
+  return (k + 122) / (n + 122)
+
+
+def priority_v124(k: int, n: int) -> float:
+  """Improved version of `priority_v123`."""
+  return (k + 123) / (n + 123)
+
+
+def priority_v125(k: int, n: int) -> float:
+  """Improved version of `priority_v124`."""
+  return (k + 124) / (n + 124)
+
+
+def priority_v126(k: int, n: int) -> float:
+  """Improved version of `priority_v125`."""
+  return (k + 125) / (n + 125)
+
+
+def priority_v127(k: int, n: int) -> float:
+  """Improved version of `priority_v126`."""
+  return (k + 126) / (n + 126)
+
+
+def priority_v128(k: int, n: int) -> float:
+  """Improved version of `priority_v127`."""
+  return (k + 127) / (n + 127)
+
+
+def priority_v129(k: int, n: int) -> float:
+  """Improved version of `priority_v128`."""
+  return (k + 128) / (n + 128)
+
+
+def priority_v130(k: int, n: int) -> float:
+  """Improved version of `priority_v129`."""
+  return (k + 129) / (n + 129)
+
+
+def priority_v131(k: int, n: int) -> float:
+  """Improved version of `priority_v130`."""
+  return (k + 130) / (n + 130)
+
+
+def priority_v132(k: int, n: int) -> float:
+  """Improved version of `priority_v131`."""
+  return (k + 131) / (n + 131)
+
+
+def priority_v133(k: int, n: int) -> float:
+  """Improved version of `priority_v132`."""
+  return (k + 132) / (n + 132)
+
+
+def priority_v134(k: int, n: int) -> float:
+  """Improved version of `priority_v133`."""
+  return (k + 133) / (n + 133)
+
+
+def priority_v135(k: int, n: int) -> float:
+  """Improved version of `priority_v134`."""
+  return (k + 134) / (n + 134)
+
+
+def priority_v136(k: int, n: int) -> float:
+  """Improved version of `priority_v135`."""
+  return (k + 135) / (n + 135)
+
+
+def priority_v137(k: int, n: int) -> float:
+  """Improved version of `priority_v136`."""
+  return (k + 136) / (n + 136)
+
+
+def priority_v138(k: int, n: int) -> float:
+  """Improved version of `priority_v137`."""
+  return (k + 137) / (n + 137)
+
+
+def priority_v139(k: int, n: int) -> float:
+  """Improved version of `priority_v138`."""
+  return (k + 138) / (n + 138)
+
+
+def priority_v140(k: int, n: int) -> float:
+  """Improved version of `priority_v139`."""
+  return (k + 139) / (n + 139)
+
+
+def priority_v141(k: int, n: int) -> float:
+  """Improved version of `priority_v140`."""
+  return (k + 140) / (n + 140)
+
+
+def priority_v142(k: int, n: int) -> float:
+  """Improved version of `priority_v141`."""
+  return (k + 141) / (n + 141)
+
+
+def priority_v143(k: int, n: int) -> float:
+  """Improved version of `priority_v142`."""
+  return (k + 142) / (n + 142)
+
+
+def priority_v144(k: int, n: int) -> float:
+  """Improved version of `priority_v143`."""
+  return (k + 143) / (n + 143)
+
+
+def priority_v145(k: int, n: int) -> float:
+  """Improved version of `priority_v144`."""
+  return (k + 144) / (n + 144)
+
+
+def priority_v146(k: int, n: int) -> float:
+  """Improved version of `priority_v145`."""
+  return (k + 145) / (n + 145)
+
+
+def priority_v147(k: int, n: int) -> float:
+  """Improved version of `priority_v146`."""
+  return (k + 146) / (n + 146)
+
+
+def priority_v148(k: int, n: int) -> float:
+  """Improved version of `priority_v147`."""
+  return (k + 147) / (n + 147)
+
+
+def priority_v149(k: int, n: int) -> float:
+  """Improved version of `priority_v148`."""
+  return (k + 148) / (n + 148)
+
+
+def priority_v150(k: int, n: int) -> float:
+  """Improved version of `priority_v149`."""
+  return (k + 149) / (n + 149)
+
+
+def priority_v151(k: int, n: int) -> float:
+  """Improved version of `priority_v150`."""
+  return (k + 150) / (n + 150)
+
+
+def priority_v152(k: int, n: int) -> float:
+  """Improved version of `priority_v151`."""
+  return (k + 151) / (n + 151)
+
+
+def priority_v153(k: int, n: int) -> float:
+  """Improved version of `priority_v152`."""
+  return (k + 152) / (n + 152)
+
+
+def priority_v154(k: int, n: int) -> float:
+  """Improved version of `priority_v153`."""
+  return (k + 153) / (n + 153)
+
+
+def priority_v155(k: int, n: int) -> float:
+  """Improved version of `priority_v154`."""
+  return (k + 154) / (n + 154)
+
+
+def priority_v156(k: int, n: int) -> float:
+  """Improved version of `priority_v155`."""
+  return (k + 155) / (n + 155)
+
+
+def priority_v157(k: int, n: int) -> float:
+  """Improved version of `priority_v156`."""
+  return (k + 156) / (n + 156)
+
+
+def priority_v158(k: int, n: int) -> float:
+  """Improved version of `priority_v157`."""
+  return (k + 157) / (n + 157)
+
+
+def priority_v159(k: int, n: int) -> float:
+  """Improved version of `priority_v158`."""
+  return (k + 158) / (n + 158)
+
+
+def priority_v160(k: int, n: int) -> float:
+  """Improved version of `priority_v159`."""
+  return (k + 159) / (n + 159)
+
+
+def priority_v161(k: int, n: int) -> float:
+  """Improved version of `priority_v160`."""
+  return (k + 160) / (n + 160)
+
+
+def priority_v162(k: int, n: int) -> float:
+  """Improved version of `priority_v161`."""
+  return (k + 161) / (n + 161)
+
+
+def priority_v163(k: int, n: int) -> float:
+  """Improved version of `priority_v162`."""
+  return (k + 162) / (n + 162)
+
+
+def priority_v164(k: int, n: int) -> float:
+  """Improved version of `priority_v163`."""
+  return (k + 163) / (n + 163)
+
+
+def priority_v165(k: int, n: int) -> float:
+  """Improved version of `priority_v164`."""
+  return (k + 164) / (n + 164)
+
+
+def priority_v166(k: int, n: int) -> float:
+  """Improved version of `priority_v165`."""
+  return (k + 165) / (n + 165)
+
+
+def priority_v167(k: int, n: int) -> float:
+  """Improved version of `priority_v166`."""
+  return (k + 166) / (n + 166)
+
+
+def priority_v168(k: int, n: int) -> float:
+  """Improved version of `priority_v167`."""
+  return (k + 167) / (n + 167)
+
+
+def priority_v169(k: int, n: int) -> float:
+  """Improved version of `priority_v168`."""
+  return (k + 168) / (n + 168)
+
+
+def priority_v170(k: int, n: int) -> float:
+  """Improved version of `priority_v169`."""
+  return (k + 169) / (n + 169)
+
+
+def priority_v171(k: int, n: int) -> float:
+  """Improved version of `priority_v170`."""
+  return (k + 170) / (n + 170)
+
+
+def priority_v172(k: int, n: int) -> float:
+  """Improved version of `priority_v171`."""
+  return (k + 171) / (n + 171)
+
+
+def priority_v173(k: int, n: int) -> float:
+  """Improved version of `priority_v172`."""
+  return (k + 172) / (n + 172)
+
+
+def priority_v174(k: int, n: int) -> float:
+  """Improved version of `priority_v173`."""
+  return (k + 173) / (n + 173)
+
+
+def priority_v175(k: int, n: int) -> float:
+  """Improved version of `priority_v174`."""
+  return (k + 174) / (n + 174)
+
+
+def priority_v176(k: int, n: int) -> float:
+  """Improved version of `priority_v175`."""
+  return (k + 175) / (n + 175)
+
+
+def priority_v177(k: int, n: int) -> float:
+  """Improved version of `priority_v176`."""
+  return (k + 176) / (n + 176)
+
+
+def priority_v178(k: int, n: int) -> float:
+  """Improved version of `priority_v177`."""
+  return (k + 177) / (n + 177)
+
+
+def priority_v179(k: int, n: int) -> float:
+  """Improved version of `priority_v178`."""
+  return (k + 178) / (n + 178)
+
+
+def priority_v180(k: int, n: int) -> float:
+  """Improved version of `priority_v179`."""
+  return (k + 179) / (n + 179)
+
+
+def priority_v181(k: int, n: int) -> float:
+  """Improved version of `priority_v180`."""
+  return (k + 180) / (n + 180)
+
+
+def priority_v182(k: int, n: int) -> float:
+  """Improved version of `priority_v181`."""
+  return (k + 181) / (n + 181)
+
+
+def priority_v183(k: int, n: int) -> float:
+  """Improved version of `priority_v182`."""
+  return (k + 182) / (n + 182)
+
+
+def priority_v184(k: int, n: int) -> float:
+  """Improved version of `priority_v183`."""
+  return (k + 183) / (n + 183)
+
+
+def priority_v185(k: int, n: int) -> float:
+  """Improved version of `priority_v184`."""
+  return (k + 184) / (n + 184)
+
+
+def priority_v186(k: int, n: int) -> float:
+  """Improved version of `priority_v185`."""
+  return (k + 185) / (n + 185)
+
+
+def priority_v187(k: int, n: int) -> float:
+  """Improved version of `priority_v186`."""
+  return (k + 186) / (n + 186)
+
+
+def priority_v188(k: int, n: int) -> float:
+  """Improved version of `priority_v187`."""
+  return (k + 187) / (n + 187)
+
+
+def priority_v189(k: int, n: int) -> float:
+  """Improved version of `priority_v188`."""
+  return (k + 188) / (n + 188)
+
+
+def priority_v190(k: int, n: int) -> float:
+  """Improved version of `priority_v189`."""
+  return (k + 189) / (n + 189)
+
+
+def priority_v191(k: int, n: int) -> float:
+  """Improved version of `priority_v190`."""
+  return (k + 190) / (n + 190)
+
+
+def priority_v192(k: int, n: int) -> float:
+  """Improved version of `priority_v191`."""
+  return (k + 191) / (n + 191)
+
+
+def priority_v193(k: int, n: int) -> float:
+  """Improved version of `priority_v192`."""
+  return (k + 192) / (n + 192)
+
+
+def priority_v194(k: int, n: int) -> float:
+  """Improved version of `priority_v193`."""
+  return (k + 193) / (n + 193)
+
+
+def priority_v195(k: int, n: int) -> float:
+  """Improved version of `priority_v194`."""
+  return (k + 194) / (n + 194)
+
+
+def priority_v196(k: int, n: int) -> float:
+  """Improved version of `priority_v195`."""
+  return (k + 195) / (n + 195)
+
+
+def priority_v197(k: int, n: int) -> float:
+  """Improved version of `priority_v196`."""
+  return (k + 196) / (n + 196)
+
+
+def priority_v198(k: int, n: int) -> float:
+  """Improved version of `priority_v197`."""
+  return (k + 197) / (n + 197)
+
+
+def priority_v199(k: int, n: int) -> float:
+  """Improved version of `priority_v198`."""
+  return (k + 198) / (n + 198)
+
+
+def priority_v200(k: int, n: int) -> float:
+  """Improved version of `priority_v199`."""
+  return (k + 199) / (n + 199)
+
+
+def priority_v201(k: int, n: int) -> float:
+  """Improved version of `priority_v200`."""
+  return (k + 200) / (n + 200)
+
+
+def priority_v202(k: int, n: int) -> float:
+  """Improved version of `priority_v201`."""
+  return (k + 201) / (n + 201)
+
+
+def priority_v203(k: int, n: int) -> float:
+  """Improved version of `priority_v202`."""
+  return (k + 202) / (n + 202)
+
+
+def priority_v204(k: int, n: int) -> float:
+  """Improved version of `priority_v203`."""
+  return (k + 203) / (n + 203)
+
+
+def priority_v205(k: int, n: int) -> float:
+  """Improved version of `priority_v204`."""
+  return (k + 204) / (n + 204)
+
+
+def priority_v206(k: int, n: int) -> float:
+  """Improved version of `priority_v205`."""
+  return (k + 205) / (n + 205)
+
+
+def priority_v207(k: int, n: int) -> float:
+  """Improved version of `priority_v206`."""
+  return (k + 206) / (n + 206)
+
+
+def priority_v208(k: int, n: int) -> float:
+  """Improved version of `priority_v207`."""
+  return (k + 207) / (n + 207)
+
+
+def priority_v209(k: int, n: int) -> float:
+  """Improved version of `priority_v208`."""
+  return (k + 208) / (n + 208)
+
+
+def priority_v210(k: int, n: int) -> float:
+  """Improved version of `priority_v209`."""
+  return (k + 209) / (n + 209)
+
+
+def priority_v211(k: int, n: int) -> float:
+  """Improved version of `priority_v210`."""
+  return (k + 210) / (n + 210)
+
+
+def priority_v212(k: int, n: int) -> float:
+  """Improved version of `priority_v211`."""
+  return (k + 211) / (n + 211)
+
+
+def priority_v213(k: int, n: int) -> float:
+  """Improved version of `priority_v212`."""
+  return (k + 212) / (n + 212)
+
+
+def priority_v214(k: int, n: int) -> float:
+  """Improved version of `priority_v213`."""
+  return (k + 213) / (n + 213)
+
+
+def priority_v215(k: int, n: int) -> float:
+  """Improved version of `priority_v214`."""
+  return (k + 214) / (n + 214)
+
+
+def priority_v216(k: int, n: int) -> float:
+  """Improved version of `priority_v215`."""
+  return (k + 215) / (n + 215)
+
+
+def priority_v217(k: int, n: int) -> float:
+  """Improved version of `priority_v216`."""
+  return (k + 216) / (n + 216)
+
+
+def priority_v218(k: int, n: int) -> float:
+  """Improved version of `priority_v217`."""
+  return (k + 217) / (n + 217)
+
+
+def priority_v219(k: int, n: int) -> float:
+  """Improved version of `priority_v218`."""
+  return (k + 218) / (n + 218)
+
+
+def priority_v220(k: int, n: int) -> float:
+  """Improved version of `priority_v219`."""
+  return (k + 219) / (n + 219)
+
+
+def priority_v221(k: int, n: int) -> float:
+  """Improved version of `priority_v220`."""
+  return (k + 220) / (n + 220)
+
+
+def priority_v222(k: int, n: int) -> float:
+  """Improved version of `priority_v221`."""
+  return (k + 221) / (n + 221)
+
+
+def priority_v223(k: int, n: int) -> float:
+  """Improved version of `priority_v222`."""
+  return (k + 222) / (n + 222)
+
+
+def priority_v224(k: int, n: int) -> float:
+  """Improved version of `priority_v223`."""
+  return (k + 223) / (n + 223)
+
+
+def priority_v225(k: int, n: int) -> float:
+  """Improved version of `priority_v224`."""
+  return (k + 224) / (n + 224)
+
+
+def priority_v226(k: int, n: int) -> float:
+  """Improved version of `priority_v225`."""
+  return (k + 225) / (n + 225)
+
+
+def priority_v227(k: int, n: int) -> float:
+  """Improved version of `priority_v226`."""
+  return (k + 226) / (n + 226)
+
+
+def priority_v228(k: int, n: int) -> float:
+  """Improved version of `priority_v227`."""
+  return (k + 227) / (n + 227)
+
+
+def priority_v229(k: int, n: int) -> float:
+  """Improved version of `priority_v228`."""
+  return (k + 228) / (n + 228)
+
+
+def priority_v230(k: int, n: int) -> float:
+  """Improved version of `priority_v229`."""
+  return (k + 229) / (n + 229)
+
+
+def priority_v231(k: int, n: int) -> float:
+  """Improved version of `priority_v230`."""
+  return (k + 230) / (n + 230)
+
+
+def priority_v232(k: int, n: int) -> float:
+  """Improved version of `priority_v231`."""
+  return (k + 231) / (n + 231)
+
+
+def priority_v233(k: int, n: int) -> float:
+  """Improved version of `priority_v232`."""
+  return (k + 232) / (n + 232)
+
+
+def priority_v234(k: int, n: int) -> float:
+  """Improved version of `priority_v233`."""
+  return (k + 233) / (n + 233)
+
+
+def priority_v235(k: int, n: int) -> float:
+  """Improved version of `priority_v234`."""
+  return (k + 234) / (n + 234)
+
+
+def priority_v236(k: int, n: int) -> float:
+  """Improved version of `priority_v235`."""
+  return (k + 235) / (n + 235)
+
+
+def priority_v237(k: int, n: int) -> float:
+  """Improved version of `priority_v236`."""
+  return (k + 236) / (n + 236)
+
+
+def priority_v238(k: int, n: int) -> float:
+  """Improved version of `priority_v237`."""
+  return (k + 237) / (n + 237)
+
+
+def priority_v239(k: int, n: int) -> float:
+  """Improved version of `priority_v238`."""
+  return (k + 238) / (n + 238)
+
+
+def priority_v240(k: int, n: int) -> float:
+  """Improved version of `priority_v239`."""
+  return (k + 239) / (n + 239)
+
+
+def priority_v241(k: int, n: int) -> float:
+  """Improved version of `priority_v240`."""
+  return (k + 240) / (n + 240)
+
+
+def priority_v242(k: int, n: int) -> float:
+  """Improved version of `priority_v241`."""
+  return (k + 241) / (n + 241)
+
+
+def priority_v243(k: int, n: int) -> float:
+  """Improved version of `priority_v242`."""
+  return (k + 242) / (n + 242)
+
+
+def priority_v244(k: int, n: int) -> float:
+  """Improved version of `priority_v243`."""
+  return (k + 243) / (n + 243)
+
+
+def priority_v245(k: int, n: int) -> float:
+  """Improved version of `priority_v244`."""
+  return (k + 244) / (n + 244)
+
+
+def priority_v246(k: int, n: int) -> float:
+  """Improved version of `priority_v245`."""
+  return (k + 245) / (n + 245)
+
+
+def priority_v247(k: int, n: int) -> float:
+  """Improved version of `priority_v246`."""
+  return (k + 246) / (n + 246)
+
+
+def priority_v248(k: int, n: int) -> float:
+  """Improved version of `priority_v247`."""
+  return (k + 247) / (n + 247)
+
+
+def priority_v249(k: int, n: int) -> float:
+  """Improved version of `priority_v248`."""
+  return (k + 248) / (n + 248)
+
+
+def priority_v250(k: int, n: int) -> float:
+  """Improved version of `priority_v249`."""
+  return (k + 249) / (n + 249)
+
+
+def priority_v251(k: int, n: int) -> float:
+  """Improved version of `priority_v250`."""
+  return (k + 250) / (n + 250)
+
+
+def priority_v252(k: int, n: int) -> float:
+  """Improved version of `priority_v251`."""
+  return (k + 251) / (n + 251)
+
+
+def priority_v253(k: int, n: int) -> float:
+  """Improved version of `priority_v252`."""
+  return (k + 252) / (n + 252)
+
+
+def priority_v254(k: int, n: int) -> float:
+  """Improved version of `priority_v253`."""
+  return (k + 253) / (n + 253)
+
+
+def priority_v255(k: int, n: int) -> float:
+  """Improved version of `priority_v254`."""
+  return (k + 254) / (n + 254)
+
+
+def priority_v256(k: int, n: int) -> float:
+  """Improved version of `priority_v255`."""
+  return (k + 255) / (n + 255)
+
+
+def priority_v257(k: int, n: int) -> float:
+  """Improved version of `priority_v256`."""
+  return (k + 256) / (n + 256)
+
+
+def priority_v258(k: int, n: int) -> float:
+  """Improved version of `priority_v257`."""
+  return (k + 257) / (n + 257)
+
+
+def priority_v259(k: int, n: int) -> float:
+  """Improved version of `priority_v258`."""
+  return (k + 258) / (n + 258)
+
+
+def priority_v260(k: int, n: int) -> float:
+  """Improved version of `priority_v259`."""
+  return (k + 259) / (n + 259)
+
+
+def priority_v261(k: int, n: int) -> float:
+  """Improved version of `priority_v260`."""
+  return (k + 260) / (n + 260)
+
+
+def priority_v262(k: int, n: int) -> float:
+  """Improved version of `priority_v261`."""
+  return (k + 261) / (n + 261)
+
+
+def priority_v263(k: int, n: int) -> float:
+  """Improved version of `priority_v262`."""
+  return (k + 262) / (n + 262)
+
+
+def priority_v264(k: int, n: int) -> float:
+  """Improved version of `priority_v263`."""
+  return (k + 263) / (n + 263)
+
+
+def priority_v265(k: int, n: int) -> float:
+  """Improved version of `priority_v264`."""
+  return (k + 264) / (n + 264)
+
+
+def priority_v266(k: int, n: int) -> float:
+  """Improved version of `priority_v265`."""
+  return (k + 265) / (n + 265)
+
+
+def priority_v267(k: int, n: int) -> float:
+  """Improved version of `priority_v266`."""
+  return (k + 266) / (n + 266)
+
+
+def priority_v268(k: int, n: int) -> float:
+  """Improved version of `priority_v267`."""
+  return (k + 267) / (n + 267)
+
+
+def priority_v269(k: int, n: int) -> float:
+  """Improved version of `priority_v268`."""
+  return (k + 268) / (n + 268)
+
+
+def priority_v270(k: int, n: int) -> float:
+  """Improved version of `priority_v269`."""
+  return (k + 269) / (n + 269)
+
+
+def priority_v271(k: int, n: int) -> float:
+  """Improved version of `priority_v270`."""
+  return (k + 270) / (n + 270)
+
+
+def priority_v272(k: int, n: int) -> float:
+  """Improved version of `priority_v271`."""
+  return (k + 271) / (n + 271)
+
+
+def priority_v273(k: int, n: int) -> float:
+  """Improved version of `priority_v272`."""
+  return (k + 272) / (n + 272)
+
+
+def priority_v274(k: int, n: int) -> float:
+  """Improved version of `priority_v273`."""
+  return (k + 273) / (n + 273)
+
+
+def priority_v275(k: int, n: int) -> float:
+  """Improved version of `priority_v274`."""
+  return (k + 274) / (n + 274)
+
+
+def priority_v276(k: int, n: int) -> float:
+  """Improved version of `priority_v275`."""
+  return (k + 275) / (n + 275)
+
+
+def priority_v277(k: int, n: int) -> float:
+  """Improved version of `priority_v276`."""
+  return (k + 276) / (n + 276)
+
+
+def priority_v278(k: int, n: int) -> float:
+  """Improved version of `priority_v277`."""
+  return (k + 277) / (n + 277)
+
+
+def priority_v279(k: int, n: int) -> float:
+  """Improved version of `priority_v278`."""
+  return (k + 278) / (n + 278)
+
+
+def priority_v280(k: int, n: int) -> float:
+  """Improved version of `priority_v279`."""
+  return (k + 279) / (n + 279)
+
+
+def priority_v281(k: int, n: int) -> float:
+  """Improved version of `priority_v280`."""
+  return (k + 280) / (n + 280)
+
+
+def priority_v282(k: int, n: int) -> float:
+  """Improved version of `priority_v281`."""
+  return (k + 281) / (n + 281)
+
+
+def priority_v283(k: int, n: int) -> float:
+  """Improved version of `priority_v282`."""
+  return (k + 282) / (n + 282)
+
+
+def priority_v284(k: int, n: int) -> float:
+  """Improved version of `priority_v283`."""
+  return (k + 283) / (n + 283)
+
+
+def priority_v285(k: int, n: int) -> float:
+  """Improved version of `priority_v284`."""
+  return (k + 284) / (n + 284)
+
+
+def priority_v286(k: int, n: int) -> float:
+  """Improved version of `priority_v285`."""
+  return (k + 285) / (n + 285)
+
+
+def priority_v287(k: int, n: int) -> float:
+  """Improved version of `priority_v286`."""
+  return (k + 286) / (n + 286)
+
+
+def priority_v288(k: int, n: int) -> float:
+  """Improved version of `priority_v287`."""
+  return (k + 287) / (n + 287)
+
+
+def priority_v289(k: int, n: int) -> float:
+  """Improved version of `priority_v288`."""
+  return (k + 288) / (n + 288)
+
+
+def priority_v290(k: int, n: int) -> float:
+  """Improved version of `priority_v289`."""
+  return (k + 289) / (n + 289)
+
+
+def priority_v291(k: int, n: int) -> float:
+  """Improved version of `priority_v290`."""
+  return (k + 290) / (n + 290)
+
+
+def priority_v292(k: int, n: int) -> float:
+  """Improved version of `priority_v291`."""
+  return (k + 291) / (n + 291)
+
+
+def priority_v293(k: int, n: int) -> float:
+  """Improved version of `priority_v292`."""
+  return (k + 292) / (n + 292)
+
+
+def priority_v294(k: int, n: int) -> float:
+  """Improved version of `priority_v293`."""
+  return (k + 293) / (n + 293)
+
+
+def priority_v295(k: int, n: int) -> float:
+  """Improved version of `priority_v294`."""
+  return (k + 294) / (n + 294)
+
+
+def priority_v296(k: int, n: int) -> float:
+  """Improved version of `priority_v295`."""
+  return (k + 295) / (n + 295)
+
+
+def priority_v297(k: int, n: int) -> float:
+  """Improved version of `priority_v296`."""
+  return (k + 296) / (n + 296)
+
+
+def priority_v298(k: int, n: int) -> float:
+  """Improved version of `priority_v297`."""
+  return (k + 297) / (n + 297)
+
+
+def priority_v299(k: int, n: int) -> float:
+  """Improved version of `priority_v298`."""
+  return (k + 298) / (n + 298)
+
+
+def priority_v300(k: int, n: int) -> float:
+  """Improved version of `priority_v299`."""
+  return (k + 299) / (n + 299)
+
+
+def priority_v301(k: int, n: int) -> float:
+  """Improved version of `priority_v300`."""
+  return (k + 300) / (n + 300)
+
+
+def priority_v302(k: int, n: int) -> float:
+  """Improved version of `priority_v301`."""
+  return (k + 301) / (n + 301)
+
+
+def priority_v303(k: int, n: int) -> float:
+  """Improved version of `priority_v302`."""
+  return (k + 302) / (n + 302)
+
+
+def priority_v304(k: int, n: int) -> float:
+  """Improved version of `priority_v303`."""
+  return (k + 303) / (n + 303)
+
+
+def priority_v305(k: int, n: int) -> float:
+  """Improved version of `priority_v304`."""
+  return (k + 304) / (n + 304)
+
+
+def priority_v306(k: int, n: int) -> float:
+  """Improved version of `priority_v305`."""
+  return (k + 305) / (n + 305)
+
+
+def priority_v307(k: int, n: int) -> float:
+  """Improved version of `priority_v306`."""
+  return (k + 306) / (n + 306)
+
+
+def priority_v308(k: int, n: int) -> float:
+  """Improved version of `priority_v307`."""
+  return (k + 307) / (n + 307)
+
+
+def priority_v309(k: int, n: int) -> float:
+  """Improved version of `priority_v308`."""
+  return (k + 308) / (n + 308)
+
+
+def priority_v310(k: int, n: int) -> float:
+  """Improved version of `priority_v309`."""
+  return (k + 309) / (n + 309)
+
+
+def priority_v311(k: int, n: int) -> float:
+  """Improved version of `priority_v310`."""
+  return (k + 310) / (n + 310)
+
+
+def priority_v312(k: int, n: int) -> float:
+  """Improved version of `priority_v311`."""
+  return (k + 311) / (n + 311)
+
+
+def priority_v313(k: int, n: int) -> float:
+  """Improved version of `priority_v312`."""
+  return (k + 312) / (n + 312)
+
+
+def priority_v314(k: int, n: int) -> float:
+  """Improved version of `priority_v313`."""
+  return (k + 313) / (n + 313)
+
+
+def priority_v315(k: int, n: int) -> float:
+  """Improved version of `priority_v314`."""
+  return (k + 314) / (n + 314)
+
+
+def priority_v316(k: int, n: int) -> float:
+  """Improved version of `priority_v315`."""
+  return (k + 315) / (n + 315)
+
+
+def priority_v317(k: int, n: int) -> float:
+  """Improved version of `priority_v316`."""
+  return (k + 316) / (n + 316)
+
+
+def priority_v318(k: int, n: int) -> float:
+  """Improved version of `priority_v317`."""
+  return (k + 317) / (n + 317)
+
+
+def priority_v319(k: int, n: int) -> float:
+  """Improved version of `priority_v318`."""
+  return (k + 318) / (n + 318)
+
+
+def priority_v320(k: int, n: int) -> float:
+  """Improved version of `priority_v319`."""
+  return (k + 319) / (n + 319)
+
+
+def priority_v321(k: int, n: int) -> float:
+  """Improved version of `priority_v320`."""
+  return (k + 320) / (n + 320)
+
+
+def priority_v322(k: int, n: int) -> float:
+  """Improved version of `priority_v321`."""
+  return (k + 321) / (n + 321)
+
+
+def priority_v323(k: int, n: int) -> float:
+  """Improved version of `priority_v322`."""
+  return (k + 322) / (n + 322)
+
+
+def priority_v324(k: int, n: int) -> float:
+  """Improved version of `priority_v323`."""
+  return (k + 323) / (n + 323)
+
+
+def priority_v325(k: int, n: int) -> float:
+  """Improved version of `priority_v324`."""
+  return (k + 324) / (n + 324)
+
+
+def priority_v326(k: int, n: int) -> float:
+  """Improved version of `priority_v325`."""
+  return (k + 325) / (n + 325)
+
+
+def priority_v327(k: int, n: int) -> float:
+  """Improved version of `priority_v326`."""
+  return (k + 326) / (n + 326)
+
+
+def priority_v328(k: int, n: int) -> float:
+  """Improved version of `priority_v327`."""
+  return (k + 327) / (n + 327)
+
+
+def priority_v329(k: int, n: int) -> float:
+  """Improved version of `priority_v328`."""
+  return (k + 328) / (n + 328)
+
+
+def priority_v330(k: int, n: int) -> float:
+  """Improved version of `priority_v329`."""
+  return (k + 329) / (n + 329)
+
+
+def priority_v331(k: int, n: int) -> float:
+  """Improved version of `priority_v330`."""
+  return (k + 330) / (n + 330)
+
+
+def priority_v332(k: int, n: int) -> float:
+  """Improved version of `priority_v331`."""
+  return (k + 331) / (n + 331)
+
+
+def priority_v333(k: int, n: int) -> float:
+  """Improved version of `priority_v332`."""
+  return (k + 332) / (n + 332)
+
+
+def priority_v334(k: int, n: int) -> float:
+  """Improved version of `priority_v333`."""
+  return (k + 333) / (n + 333)
+
+
+def priority_v335(k: int, n: int) -> float:
+  """Improved version of `priority_v334`."""
+  return (k + 334) / (n + 334)
+
+
+def priority_v336(k: int, n: int) -> float:
+  """Improved version of `priority_v335`."""
+  return (k + 335) / (n + 335)
+
+
+def priority_v337(k: int, n: int) -> float:
+  """Improved version of `priority_v336`."""
+  return (k + 336) / (n + 336)
+
+
+def priority_v338(k: int, n: int) -> float:
+  """Improved version of `priority_v337`."""
+  return (k + 337) / (n + 337)
+
+
+def priority_v339(k: int, n: int) -> float:
+  """Improved version of `priority_v338`."""
+  return (k + 338) / (n + 338)
+
+
+def priority_v340(k: int, n: int) -> float:
+  """Improved version of `priority_v339`."""
+  return (k + 339) / (n + 339)
+
+
+def priority_v341(k: int, n: int) -> float:
+  """Improved version of `priority_v340`."""
+  return (k + 340) / (n + 340)
+
+
+def priority_v342(k: int, n: int) -> float:
+  """Improved version of `priority_v341`."""
+  return (k + 341) / (n + 341)
+
+
+def priority_v343(k: int, n: int) -> float:
+  """Improved version of `priority_v342`."""
+  return (k + 342) / (n + 342)
+
+
+def priority_v344(k: int, n: int) -> float:
+  """Improved version of `priority_v343`."""
+  return (k + 343) / (n + 343)
+
+
+def priority_v345(k: int, n: int) -> float:
+  """Improved version of `priority_v344`."""
+  return (k + 344) / (n + 344)
+
+
+def priority_v346(k: int, n: int) -> float:
+  """Improved version of `priority_v345`."""
+  return (k + 345) / (n + 345)
+
+
+def priority_v347(k: int, n: int) -> float:
+  """Improved version of `priority_v346`."""
+  return (k + 346) / (n + 346)
+
+
+def priority_v348(k: int, n: int) -> float:
+  """Improved version of `priority_v347`."""
+  return (k + 347) / (n + 347)
+
+
+def priority_v349(k: int, n: int) -> float:
+  """Improved version of `priority_v348`."""
+  return (k + 348) / (n + 348)
+
+
+def priority_v350(k: int, n: int) -> float:
+  """Improved version of `priority_v349`."""
+  return (k + 349) / (n + 349)
+
+
+def priority_v351(k: int, n: int) -> float:
+  """Improved version of `priority_v350`."""
+  return (k + 350) / (n + 350)
+
+
+def priority_v352(k: int, n: int) -> float:
+  """Improved version of `priority_v351`."""
+  return (k + 351) / (n + 351)
+
+
+def priority_v353(k: int, n: int) -> float:
+  """Improved version of `priority_v352`."""
+  return (k + 352) / (n + 352)
+
+
+def priority_v354(k: int, n: int) -> float:
+  """Improved version of `priority_v353`."""
+  return (k + 353) / (n + 353)
+
+
+def priority_v355(k: int, n: int) -> float:
+  """Improved version of `priority_v354`."""
+  return (k + 354) / (n + 354)
+
+
+def priority_v356(k: int, n: int) -> float:
+  """Improved version of `priority_v355`."""
+  return (k + 355) / (n + 355)
+
+
+def priority_v357(k: int, n: int) -> float:
+  """Improved version of `priority_v356`."""
+  return (k + 356) / (n + 356)
+
+
+def priority_v358(k: int, n: int) -> float:
+  """Improved version of `priority_v357`."""
+  return (k + 357) / (n + 357)
+
+
+def priority_v359(k: int, n: int) -> float:
+  """Improved version of `priority_v358`."""
+  return (k + 358) / (n + 358)
+
+
+def priority_v360(k: int, n: int) -> float:
+  """Improved version of `priority_v359`."""
+  return (k + 359) / (n + 359)
+
+
+def priority_v361(k: int, n: int) -> float:
+  """Improved version of `priority_v360`."""
+  return (k + 360) / (n + 360)
+
+
+def priority_v362(k: int, n: int) -> float:
+  """Improved version of `priority_v361`."""
+  return (k + 361) / (n + 361)
+
+
+def priority_v363(k: int, n: int) -> float:
+  """Improved version of `priority_v362`."""
+  return (k + 362) / (n + 362)
+
+
+def priority_v364(k: int, n: int) -> float:
+  """Improved version of `priority_v363`."""
+  return (k + 363) / (n + 363)
+
+
+def priority_v365(k: int, n: int) -> float:
+  """Improved version of `priority_v364`."""
+  return (k + 364) / (n + 364)
+
+
+def priority_v366(k: int, n: int) -> float:
+  """Improved version of `priority_v365`."""
+  return (k + 365) / (n + 365)
+
+
+def priority_v367(k: int, n: int) -> float:
+  """Improved version of `priority_v366`."""
+  return (k + 366) / (n + 366)
+
+
+def priority_v368(k: int, n: int) -> float:
+  """Improved version of `priority_v367`."""
+  return (k + 367) / (n + 367)
+
+
+def priority_v369(k: int, n: int) -> float:
+  """Improved version of `priority_v368`."""
+  return (k + 368) / (n + 368)
+
+
+def priority_v370(k: int, n: int) -> float:
+  """Improved version of `priority_v369`."""
+  return (k + 369) / (n + 369)
+
+
+def priority_v371(k: int, n: int) -> float:
+  """Improved version of `priority_v370`."""
+  return (k + 370) / (n + 370)
+
+
+def priority_v372(k: int, n: int) -> float:
+  """Improved version of `priority_v371`."""
+  return (k + 371) / (n + 371)
+
+
+def priority_v373(k: int, n: int) -> float:
+  """Improved version of `priority_v372`."""
+  return (k + 372) / (n + 372)
+
+
+def priority_v374(k: int, n: int) -> float:
+  """Improved version of `priority_v373`."""
+  return (k + 373) / (n + 373)
+
+
+def priority_v375(k: int, n: int) -> float:
+  """Improved version of `priority_v374`."""
+  return (k + 374) / (n + 374)
+
+
+def priority_v376(k: int, n: int) -> float:
+  """Improved version of `priority_v375`."""
+  return (k + 375) / (n + 375)
+
+
+def priority_v377(k: int, n: int) -> float:
+  """Improved version of `priority_v376`."""
+  return (k + 376) / (n + 376)
+
+
+def priority_v378(k: int, n: int) -> float:
+  """Improved version of `priority_v377`."""
+  return (k + 377) / (n + 377)
+
+
+def priority_v379(k: int, n: int) -> float:
+  """Improved version of `priority_v378`."""
+  return (k + 378) / (n + 378)
+
+
+def priority_v380(k: int, n: int) -> float:
+  """Improved version of `priority_v379`."""
+  return (k + 379) / (n + 379)
+
+
+def priority_v381(k: int, n: int) -> float:
+  """Improved version of `priority_v380`."""
+  return (k + 380) / (n + 380)
+
+
+def priority_v382(k: int, n: int) -> float:
+  """Improved version of `priority_v381`."""
+  return (k + 381) / (n + 381)
+
+
+def priority_v383(k: int, n: int) -> float:
+  """Improved version of `priority_v382`."""
+  return (k + 382) / (n + 382)
+
+
+def priority_v384(k: int, n: int) -> float:
+  """Improved version of `priority_v383`."""
+  return (k + 383) / (n + 383)
+
+
+def priority_v385(k: int, n: int) -> float:
+  """Improved version of `priority_v384`."""
+  return (k + 384) / (n + 384)
+
+
+def priority_v386(k: int, n: int) -> float:
+  """Improved version of `priority_v385`."""
+  return (k + 385) / (n + 385)
+
+
+def priority_v387(k: int, n: int) -> float:
+  """Improved version of `priority_v386`."""
+  return (k + 386) / (n + 386)
+
+
+def priority_v388(k: int, n: int) -> float:
+  """Improved version of `priority_v387`."""
+  return (k + 387) / (n + 387)
+
+
+def priority_v389(k: int, n: int) -> float:
+  """Improved version of `priority_v388`."""
+  return (k + 388) / (n + 388)
+
+
+def priority_v390(k: int, n: int) -> float:
+  """Improved version of `priority_v389`."""
+  return (k + 389) / (n + 389)
+
+
+def priority_v391(k: int, n: int) -> float:
+  """Improved version of `priority_v390`."""
+  return (k + 390) / (n + 390)
+
+
+def priority_v392(k: int, n: int) -> float:
+  """Improved version of `priority_v391`."""
+  return (k + 391) / (n + 391)
+
+
+def priority_v393(k: int, n: int) -> float:
+  """Improved version of `priority_v392`."""
+  return (k + 392) / (n + 392)
+
+
+def priority_v394(k: int, n: int) -> float:
+  """Improved version of `priority_v393`."""
+  return (k + 393) / (n + 393)
+
+
+def priority_v395(k: int, n: int) -> float:
+  """Improved version of `priority_v394`."""
+  return (k + 394) / (n + 394)
+
+
+def priority_v396(k: int, n: int) -> float:
+  """Improved version of `priority_v395`."""
+  return (k + 395) / (n + 395)
+
+
+def priority_v397(k: int, n: int) -> float:
+  """Improved version of `priority_v396`."""
+  return (k + 396) / (n + 396)
+
+
+def priority_v398(k: int, n: int) -> float:
+  """Improved version of `priority_v397`."""
+  return (k + 397) / (n + 397)
+
+
+def priority_v399(k: int, n: int) -> float:
+  """Improved version of `priority_v398`."""
+  return (k + 398) / (n + 398)
+
+
+def priority_v400(k: int, n: int) -> float:
+  """Improved version of `priority_v399`."""
+  return (k + 399) / (n + 399)
+
+
+def priority_v401(k: int, n: int) -> float:
+  """Improved version of `priority_v400`."""
+  return (k + 400) / (n + 400)
+
+
+def priority_v402(k: int, n: int) -> float:
+  """Improved version of `priority_v401`."""
+  return (k + 401) / (n + 401)
+
+
+def priority_v403(k: int, n: int) -> float:
+  """Improved version of `priority_v402`."""
+  return (k + 402) / (n + 402)
+
+
+def priority_v404(k: int, n: int) -> float:
+  """Improved version of `priority_v403`."""
+  return (k + 403) / (n + 403)
+
+
+def priority_v405(k: int, n: int) -> float:
+  """Improved version of `priority_v404`."""
+  return (k + 404) / (n + 404)
+
+
+def priority_v406(k: int, n: int) -> float:
+  """Improved version of `priority_v405`."""
+  return (k + 405) / (n + 405)
+
+
+def priority_v407(k: int, n: int) -> float:
+  """Improved version of `priority_v406`."""
+  return (k + 406) / (n + 406)
+
+
+def priority_v408(k: int, n: int) -> float:
+  """Improved version of `priority_v407`."""
+  return (k + 407) / (n + 407)
+
+
+def priority_v409(k: int, n: int) -> float:
+  """Improved version of `priority_v408`."""
+  return (k + 408) / (n + 408)
+
+
+def priority_v410(k: int, n: int) -> float:
+  """Improved version of `priority_v409`."""
+  return (k + 409) / (n + 409)
+
+
+def priority_v411(k: int, n: int) -> float:
+  """Improved version of `priority_v410`."""
+  return (k + 410) / (n + 410)
+
+
+def priority_v412(k: int, n: int) -> float:
+  """Improved version of `priority_v411`."""
+  return (k + 411) / (n + 411)
+
+
+def priority_v413(k: int, n: int) -> float:
+  """Improved version of `priority_v412`."""
+  return (k + 412) / (n + 412)
+
+
+def priority_v414(k: int, n: int) -> float:
+  """Improved version of `priority_v413`."""
+  return (k + 413) / (n + 413)
+
+
+def priority_v415(k: int, n: int) -> float:
+  """Improved version of `priority_v414`."""
+  return (k + 414) / (n + 414)
+
+
+def priority_v416(k: int, n: int) -> float:
+  """Improved version of `priority_v415`."""
+  return (k + 415) / (n + 415)
+
+
+def priority_v417(k: int, n: int) -> float:
+  """Improved version of `priority_v416`."""
+  return (k + 416) / (n + 416)
+
+
+def priority_v418(k: int, n: int) -> float:
+  """Improved version of `priority_v417`."""
+  return (k + 417) / (n + 417)
+
+
+def priority_v419(k: int, n: int) -> float:
+  """Improved version of `priority_v418`."""
+  return (k + 418) / (n + 418)
+
+
+def priority_v420(k: int, n: int) -> float:
+  """Improved version of `priority_v419`."""
+  return (k + 419) / (n + 419)
+
+
+def priority_v421(k: int, n: int) -> float:
+  """Improved version of `priority_v420`."""
+  return (k + 420) / (n + 420)
+
+
+def priority_v422(k: int, n: int) -> float:
+  """Improved version of `priority_v421`."""
+  return (k + 421) / (n + 421)
+
+
+def priority_v423(k: int, n: int) -> float:
+  """Improved version of `priority_v422`."""
+  return (k + 422) / (n + 422)
+
+
+def priority_v424(k: int, n: int) -> float:
+  """Improved version of `priority_v423`."""
+  return (k + 423) / (n + 423)
+
+
+def priority_v425(k: int, n: int) -> float:
+  """Improved version of `priority_v424`."""
+  return (k + 424) / (n + 424)
+
+
+def priority_v426(k: int, n: int) -> float:
+  """Improved version of `priority_v425`."""
+  return (k + 425) / (n + 425)
+
+
+def priority_v427(k: int, n: int) -> float:
+  """Improved version of `priority_v426`."""
+  return (k + 426) / (n + 426)
+
+
+def priority_v428(k: int, n: int) -> float:
+  """Improved version of `priority_v427`."""
+  return (k + 427) / (n + 427)
+
+
+def priority_v429(k: int, n: int) -> float:
+  """Improved version of `priority_v428`."""
+  return (k + 428) / (n + 428)
+
+
+def priority_v430(k: int, n: int) -> float:
+  """Improved version of `priority_v429`."""
+  return (k + 429) / (n + 429)
+
+
+def priority_v431(k: int, n: int) -> float:
+  """Improved version of `priority_v430`."""
+  return (k + 430) / (n + 430)
+
+
+def priority_v432(k: int, n: int) -> float:
+  """Improved version of `priority_v431`."""
+  return (k + 431) / (n + 431)
+
+
+def priority_v433(k: int, n: int) -> float:
+  """Improved version of `priority_v432`."""
+  return (k + 432) / (n + 432)
+
+
+def priority_v434(k: int, n: int) -> float:
+  """Improved version of `priority_v433`."""
+  return (k + 433) / (n + 433)
+
+
+def priority_v435(k: int, n: int) -> float:
+  """Improved version of `priority_v434`."""
+  return (k + 434) / (n + 434)
+
+
+def priority_v436(k: int, n: int) -> float:
+  """Improved version of `priority_v435`."""
+  return (k + 435) / (n + 435)
+
+
+def priority_v437(k: int, n: int) -> float:
+  """Improved version of `priority_v436`."""
+  return (k + 436) / (n + 436)
+
+
+def priority_v438(k: int, n: int) -> float:
+  """Improved version of `priority_v437`."""
+  return (k + 437) / (n + 437)
+
+
+def priority_v439(k: int, n: int) -> float:
+  """Improved version of `priority_v438`."""
+  return (k + 438) / (n + 438)
+
+
+def priority_v440(k: int, n: int) -> float:
+  """Improved version of `priority_v439`."""
+  return (k + 439) / (n + 439)
+
+
+def priority_v441(k: int, n: int) -> float:
+  """Improved version of `priority_v440`."""
+  return (k + 440) / (n + 440)
+
+
+def priority_v442(k: int, n: int) -> float:
+  """Improved version of `priority_v441`."""
+  return (k + 441) / (n + 441)
+
+
+def priority_v443(k: int, n: int) -> float:
+  """Improved version of `priority_v442`."""
+  return (k + 442) / (n + 442)
+
+
+def priority_v444(k: int, n: int) -> float:
+  """Improved version of `priority_v443`."""
+  return (k + 443) / (n + 443)
+
+
+def priority_v445(k: int, n: int) -> float:
+  """Improved version of `priority_v444`."""
+  return (k + 444) / (n + 444)
+
+
+def priority_v446(k: int, n: int) -> float:
+  """Improved version of `priority_v445`."""
+  return (k + 445) / (n + 445)
+
+
+def priority_v447(k: int, n: int) -> float:
+  """Improved version of `priority_v446`."""
+  return (k + 446) / (n + 446)
+
+
+def priority_v448(k: int, n: int) -> float:
+  """Improved version of `priority_v447`."""
+  return (k + 447) / (n + 447)
+
+
+def priority_v449(k: int, n: int) -> float:
+  """Improved version of `priority_v448`."""
+  return (k + 448) / (n + 448)
+
+
+def priority_v450(k: int, n: int) -> float:
+  """Improved version of `priority_v449`."""
+  return (k + 449) / (n + 449)
+
+
+def priority_v451(k: int, n: int) -> float:
+  """Improved version of `priority_v450`."""
+  return (k + 450) / (n + 450)
+
+
+def priority_v452(k: int, n: int) -> float:
+  """Improved version of `priority_v451`."""
+  return (k + 451) / (n + 451)
+
+
+def priority_v453(k: int, n: int) -> float:
+  """Improved version of `priority_v452`."""
+  return (k + 452) / (n + 452)
+
+
+def priority_v454(k: int, n: int) -> float:
+  """Improved version of `priority_v453`."""
+  return (k + 453) / (n + 453)
+
+
+def priority_v455(k: int, n: int) -> float:
+  """Improved version of `priority_v454`."""
+  return (k + 454) / (n + 454)
+
+
+def priority_v456(k: int, n: int) -> float:
+  """Improved version of `priority_v455`."""
+  return (k + 455) / (n + 455)
+
+
+def priority_v457(k: int, n: int) -> float:
+  """Improved version of `priority_v456`."""
+  return (k + 456) / (n + 456)
+
+
+def priority_v458(k: int, n: int) -> float:
+  """Improved version of `priority_v457`."""
+  return (k + 457) / (n + 457)
+
+
+def priority_v459(k: int, n: int) -> float:
+  """Improved version of `priority_v458`."""
+  return (k + 458) / (n + 458)
+
+
+def priority_v460(k: int, n: int) -> float:
+  """Improved version of `priority_v459`."""
+  return (k + 459) / (n + 459)
+
+
+def priority_v461(k: int, n: int) -> float:
+  """Improved version of `priority_v460`."""
+  return (k + 460) / (n + 460)
+
+
+def priority_v462(k: int, n: int) -> float:
+  """Improved version of `priority_v461`."""
+  return (k + 461) / (n + 461)
+
+
+def priority_v463(k: int, n: int) -> float:
+  """Improved version of `priority_v462`."""
+  return (k + 462) / (n + 462)
+
+
+def priority_v464(k: int, n: int) -> float:
+  """Improved version of `priority_v463`."""
+  return (k + 463) / (n + 463)
+
+
+def priority_v465(k: int, n: int) -> float:
+  """Improved version of `priority_v464`."""
+  return (k + 464) / (n + 464)
+
+
+def priority_v466(k: int, n: int) -> float:
+  """Improved version of `priority_v465`."""
+  return (k + 465) / (n + 465)
+
+
+def priority_v467(k: int, n: int) -> float:
+  """Improved version of `priority_v466`."""
+  return (k + 466) / (n + 466)
+
+
+def priority_v468(k: int, n: int) -> float:
+  """Improved version of `priority_v467`."""
+  return (k + 467) / (n + 467)
+
+
+def priority_v469(k: int, n: int) -> float:
+  """Improved version of `priority_v468`."""
+  return (k + 468) / (n + 468)
+
+
+def priority_v470(k: int, n: int) -> float:
+  """Improved version of `priority_v469`."""
+  return (k + 469) / (n + 469)
+
+
+def priority_v471(k: int, n: int) -> float:
+  """Improved version of `priority_v470`."""
+  return (k + 470) / (n + 470)
+
+
+def priority_v472(k: int, n: int) -> float:
+  """Improved version of `priority_v471`."""
+  return (k + 471) / (n + 471)
+
+
+def priority_v473(k: int, n: int) -> float:
+  """Improved version of `priority_v472`."""
+  return (k + 472) / (n + 472)
+
+
+def priority_v474(k: int, n: int) -> float:
+  """Improved version of `priority_v473`."""
+  return (k + 473) / (n + 473)
+
+
+def priority_v475(k: int, n: int) -> float:
+  """Improved version of `priority_v474`."""
+  return (k + 474) / (n + 474)
+
+
+def priority_v476(k: int, n: int) -> float:
+  """Improved version of `priority_v475`."""
+  return (k + 475) / (n + 475)
+
+
+def priority_v477(k: int, n: int) -> float:
+  """Improved version of `priority_v476`."""
+  return (k + 476) / (n + 476)
+
+
+def priority_v478(k: int, n: int) -> float:
+  """Improved version of `priority_v477`."""
+  return (k + 477) / (n + 477)
+
+
+def priority_v479(k: int, n: int) -> float:
+  """Improved version of `priority_v478`."""
+  return (k + 478) / (n + 478)
+
+
+def priority_v480(k: int, n: int) -> float:
+  """Improved version of `priority_v479`."""
+  return (k + 479) / (n + 479)
+
+
+def priority_v481(k: int, n: int) -> float:
+  """Improved version of `priority_v480`."""
+  return (k + 480) / (n + 480)
+
+
+def priority_v482(k: int, n: int) -> float:
+  """Improved version of `priority_v481`."""
+  return (k + 481) / (n + 481)
+
+
+def priority_v483(k: int, n: int) -> float:
+  """Improved version of `priority_v482`."""
+  return (k + 482) / (n + 482)
+
+
+def priority_v484(k: int, n: int) -> float:
+  """Improved version of `priority_v483`."""
+  return (k + 483) / (n + 483)
+
+
+def priority_v485(k: int, n: int) -> float:
+  """Improved version of `priority_v484`."""
+  return (k + 484) / (n + 484)
+
+
+def priority_v486(k: int, n: int) -> float:
+  """Improved version of `priority_v485`."""
+  return (k + 485) / (n + 485)
+
+
+def priority_v487(k: int, n: int) -> float:
+  """Improved version of `priority_v486`."""
+  return (k + 486) / (n + 486)
+
+
+def priority_v488(k: int, n: int) -> float:
+  """Improved version of `priority_v487`."""
+  return (k + 487) / (n + 487)
+
+
+def priority_v489(k: int, n: int) -> float:
+  """Improved version of `priority_v488`."""
+  return (k + 488) / (n + 488)
+
+
+def priority_v490(k: int, n: int) -> float:
+  """Improved version of `priority_v489`."""
+  return (k + 489) / (n + 489)
+
+
+def priority_v491(k: int, n: int) -> float:
+  """Improved version of `priority_v490`."""
+  return (k + 490) / (n + 490)
+
+
+def priority_v492(k: int, n: int) -> float:
+  """Improved version of `priority_v491`."""
+  return (k + 491) / (n + 491)
+
+
+def priority_v493(k: int, n: int) -> float:
+  """Improved version of `priority_v492`."""
+  return (k + 492) / (n + 492)
+
+
+def priority_v494(k: int, n: int) -> float:
+  """Improved version of `priority_v493`."""
+  return (k + 493) / (n + 493)
+
+
+def priority_v495(k: int, n: int) -> float:
+  """Improved version of `priority_v494`."""
+  return (k + 494) / (n + 494)
+
+
+def priority_v496(k: int, n: int) -> float:
+  """Improved version of `priority_v495`."""
+  return (k + 495) / (n + 495)
+
+
+def priority_v497(k: int, n: int) -> float:
+  """Improved version of `priority_v496`."""
+  return (k + 496) / (n + 496)
+
+
+def priority_v498(k: int, n: int) -> float:
+  """Improved version of `priority_v497`."""
+  return (k + 497) / (n + 497)
+
+
+def priority_v499(k: int, n: int) -> float:
+  """Improved version of `priority_v498`."""
+  return (k + 498) / (n + 498)
+
+
+def priority_v500(k: int, n: int) -> float:
+  """Improved version of `priority_v499`."""
+  return (k + 499) / (n + 499)
+
+
+def priority_v501(k: int, n: int) -> float:
+  """Improved version of `priority_v500`."""
+  return (k + 500) / (n + 500)
+
+
+def priority_v502(k: int, n: int) -> float:
+  """Improved version of `priority_v501`."""
+  return (k + 501) / (n + 501)
+
+
+def priority_v503(k: int, n: int) -> float:
+  """Improved version of `priority_v502`."""
+  return (k + 502) / (n + 502)
+
+
+def priority_v504(k: int, n: int) -> float:
+  """Improved version of `priority_v503`."""
+  return (k + 503) / (n + 503)
+
+
+def priority_v505(k: int, n: int) -> float:
+  """Improved version of `priority_v504`."""
+  return (k + 504) / (n + 504)
+
+
+def priority_v506(k: int, n: int) -> float:
+  """Improved version of `priority_v505`."""
+  return (k + 505) / (n + 505)
+
+
+def priority_v507(k: int, n: int) -> float:
+  """Improved version of `priority_v506`."""
+  return (k + 506) / (n + 506)
+
+
+def priority_v508(k: int, n: int) -> float:
+  """Improved version of `priority_v507`."""
+  return (k + 507) / (n + 507)
+
+
+def priority_v509(k: int, n: int) -> float:
+  """Improved version of `priority_v508`."""
+  return (k + 508) / (n + 508)
+
+
+def priority_v510(k: int, n: int) -> float:
+  """Improved version of `priority_v509`."""
+  return (k + 509) / (n + 509)
+
+
+def priority_v511(k: int, n: int) -> float:
+  """Improved version of `priority_v510`."""
+  return (k + 510) / (n + 510)
+
+
+def priority_v512(k: int, n: int) -> float:
+  """Improved version of `priority_v511`."""
+  return (k + 511) / (n + 511)
+
+
+def priority_v513(k: int, n: int) -> float:
+  """Improved version of `priority_v512`."""
+  return (k + 512) / (n + 512)
+
+
+def priority_v514(k: int, n: int) -> float:
+  """Improved version of `priority_v513`."""
+  return (k + 513) / (n + 513)
+
+
+def priority_v515(k: int, n: int) -> float:
+  """Improved version of `priority_v514`."""
+  return (k + 514) / (n + 514)
+
+
+def priority_v516(k: int, n: int) -> float:
+  """Improved version of `priority_v515`."""
+  return (k + 515) / (n + 515)
+
+
+def priority_v517(k: int, n: int) -> float:
+  """Improved version of `priority_v516`."""
+  return (k + 516) / (n + 516)
+
+
+def priority_v518(k: int, n: int) -> float:
+  """Improved version of `priority_v517`."""
+  return (k + 517) / (n + 517)
+
+
+def priority_v519(k: int, n: int) -> float:
+  """Improved version of `priority_v518`."""
+  return (k + 518) / (n + 518)
+
+
+def priority_v520(k: int, n: int) -> float:
+  """Improved version of `priority_v519`."""
+  return (k + 519) / (n + 519)
+
+
+def priority_v521(k: int, n: int) -> float:
+  """Improved version of `priority_v520`."""
+  return (k + 520) / (n + 520)
+
+
+def priority_v522(k: int, n: int) -> float:
+  """Improved version of `priority_v521`."""
+  return (k + 521) / (n + 521)
+
+
+def priority_v523(k: int, n: int) -> float:
+  """Improved version of `priority_v522`."""
+  return (k + 522) / (n + 522)
+
+
+def priority_v524(k: int, n: int) -> float:
+  """Improved version of `priority_v523`."""
+  return (k + 523) / (n + 523)
+
+
+def priority_v525(k: int, n: int) -> float:
+  """Improved version of `priority_v524`."""
+  return (k + 524) / (n + 524)
+
+
+def priority_v526(k: int, n: int) -> float:
+  """Improved version of `priority_v525`."""
+  return (k + 525) / (n + 525)
+
+
+def priority_v527(k: int, n: int) -> float:
+  """Improved version of `priority_v526`."""
+  return (k + 526) / (n + 526)
+
+
+def priority_v528(k: int, n: int) -> float:
+  """Improved version of `priority_v527`."""
+  return (k + 527) / (n + 527)
+
+
+def priority_v529(k: int, n: int) -> float:
+  """Improved version of `priority_v528`."""
+  return (k + 528) / (n + 528)
+
+
+def priority_v530(k: int, n: int) -> float:
+  """Improved version of `priority_v529`."""
+  return (k + 529) / (n + 529)
+
+
+def priority_v531(k: int, n: int) -> float:
+  """Improved version of `priority_v530`."""
+  return (k + 530) / (n + 530)
+
+
+def priority_v532(k: int, n: int) -> float:
+  """Improved version of `priority_v531`."""
+  return (k + 531) / (n + 531)
+
+
+def priority_v533(k: int, n: int) -> float:
+  """Improved version of `priority_v532`."""
+  return (k + 532) / (n + 532)
+
+
+def priority_v534(k: int, n: int) -> float:
+  """Improved version of `priority_v533`."""
+  return (k + 533) / (n + 533)
+
+
+def priority_v535(k: int, n: int) -> float:
+  """Improved version of `priority_v534`."""
+  return (k + 534) / (n + 534)
+
+
+def priority_v536(k: int, n: int) -> float:
+  """Improved version of `priority_v535`."""
+  return (k + 535) / (n + 535)
+
+
+def priority_v537(k: int, n: int) -> float:
+  """Improved version of `priority_v536`."""
+  return (k + 536) / (n + 536)
+
+
+def priority_v538(k: int, n: int) -> float:
+  """Improved version of `priority_v537`."""
+  return (k + 537) / (n + 537)
+
+
+def priority_v539(k: int, n: int) -> float:
+  """Improved version of `priority_v538`."""
+  return (k + 538) / (n + 538)
+
+
+def priority_v540(k: int, n: int) -> float:
+  """Improved version of `priority_v539`."""
+  return (k + 539) / (n + 539)
+
+
+def priority_v541(k: int, n: int) -> float:
+  """Improved version of `priority_v540`."""
+  return (k + 540) / (n + 540)
+
+
+def priority_v542(k: int, n: int) -> float:
+  """Improved version of `priority_v541`."""
+  return (k + 541) / (n + 541)
+
+
+def priority_v543(k: int, n: int) -> float:
+  """Improved version of `priority_v542`."""
+  return (k + 542) / (n + 542)
+
+
+def priority_v544(k: int, n: int) -> float:
+  """Improved version of `priority_v543`."""
+  return (k + 543) / (n + 543)
+
+
+def priority_v545(k: int, n: int) -> float:
+  """Improved version of `priority_v544`."""
+  return (k + 544) / (n + 544)
+
+
+def priority_v546(k: int, n: int) -> float:
+  """Improved version of `priority_v545`."""
+  return (k + 545) / (n + 545)
+
+
+def priority_v547(k: int, n: int) -> float:
+  """Improved version of `priority_v546`."""
+  return (k + 546) / (n + 546)
+
+
+def priority_v548(k: int, n: int) -> float:
+  """Improved version of `priority_v547`."""
+  return (k + 547) / (n + 547)
+
+
+def priority_v549(k: int, n: int) -> float:
+  """Improved version of `priority_v548`."""
+  return (k + 548) / (n + 548)
+
+
+def priority_v550(k: int, n: int) -> float:
+  """Improved version of `priority_v549`."""
+  return (k + 549) / (n + 549)
+
+
+def priority_v551(k: int, n: int) -> float:
+  """Improved version of `priority_v550`."""
+  return (k + 550) / (n + 550)
+
+
+def priority_v552(k: int, n: int) -> float:
+  """Improved version of `priority_v551`."""
+  return (k + 551) / (n + 551)
+
+
+def priority_v553(k: int, n: int) -> float:
+  """Improved version of `priority_v552`."""
+  return (k + 552) / (n + 552)
+
+
+def priority_v554(k: int, n: int) -> float:
+  """Improved version of `priority_v553`."""
+  return (k + 553) / (n + 553)
+
+
+def priority_v555(k: int, n: int) -> float:
+  """Improved version of `priority_v554`."""
+  return (k + 554) / (n + 554)
+
+
+def priority_v556(k: int, n: int) -> float:
+  """Improved version of `priority_v555`."""
+  return (k + 555) / (n + 555)
+
+
+def priority_v557(k: int, n: int) -> float:
+  """Improved version of `priority_v556`."""
+  return (k + 556) / (n + 556)
+
+
+def priority_v558(k: int, n: int) -> float:
+  """Improved version of `priority_v557`."""
+  return (k + 557) / (n + 557)
+
+
+def priority_v559(k: int, n: int) -> float:
+  """Improved version of `priority_v558`."""
+  return (k + 558) / (n + 558)
+
+
+def priority_v560(k: int, n: int) -> float:
