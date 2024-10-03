@@ -20,6 +20,7 @@ docker run -it -v ./data:/workspace/data -e MISTRAL_API_KEY=$MISTRAL_API_KEY fun
 #'llm models' will list the available models. Run the search with the desired model using the '--model_name' attribute.
 # A good one to use for testing, as an extremely cheap model, is 'mistral/mistral-tiny-latest'. 
 # The best one for our use case is probably 'mistral/codestral-latest', which is 4x more expensive per output token.
+# Either model is still relatively cheap: with codestral, 1 million output tokens is $0.6.
 
 `funsearch run` takes two arguments:
 
