@@ -1,9 +1,0 @@
-Sure, I'd be happy to help you improve your code. Here's a simple way to modify your `priority_v1` function based on your description. This new version calculates the priority as the sum of the elements in the tuple, normalized by the length of the tuple. This gives a higher priority to tuples with more 1s and 2s, and a lower priority to tuples with more 0s.
-
-```python
-def priority_v1(el: tuple[int, ...], n: int) -> float:
-  """Improved version of `priority_v0`."""
-  return sum(el) / n
-```
-
-This function assumes that higher values in the tuple are more desirable. If this is not the case, you may need to adjust the calculation accordingly.

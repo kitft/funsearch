@@ -1,6 +1,0 @@
-```python
-def priority_v1(k: int, n: int) -> float:
-  '''Improved version of `priority_v0`.'''
-  # Prioritize larger numbers and numbers closer to n/2
-  return k * (n - k)
-```

@@ -1,9 +1,0 @@
-Here's an improved version of `priority_v1` that considers the number of unique remainders when dividing `k` by `n` and the product of `k` and `n`. This version is shorter and makes a small change from `priority_v0`.
-
-```python
-def priority_v1(k: int, n: int) -> float:
-  """Improved version of `priority_v0`."""
-  return len(set(k % n for _ in range(n))) * k * n
-```
-
-This version calculates the number of unique remainders when dividing `k` by `n` using a generator expression and the `set` function. It then multiplies this count by the product of `k` and `n` to obtain the priority. This change should improve the performance of the Salem-Spencer progression search by giving higher priority to numbers that are more likely to generate large progressions.

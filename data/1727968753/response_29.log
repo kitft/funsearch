@@ -1,9 +1,0 @@
-Here's an improved version of `priority_v1` that considers the number of unique remainders when dividing by `n` and the number of multiples of `k` less than `n`. This version is shorter and makes small changes to the original function.
-
-```python
-def priority_v1(k: int, n: int) -> float:
-  """Improved version of `priority_v0`."""
-  return (n - k) / n + len(set(range(k, n, k))) / n
-```
-
-This version first calculates the ratio of numbers less than `n` that are not multiples of `k` (`(n - k) / n`). Then, it calculates the ratio of unique remainders when dividing by `n` for multiples of `k` (`len(set(range(k, n, k))) / n`). The sum of these two ratios gives a measure of the priority for adding `k` to the Salem-Spencer set.

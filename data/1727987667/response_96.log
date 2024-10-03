@@ -1,6 +1,0 @@
-```python
-def priority_v1(k: int, n: int) -> float:
-  # Prioritize numbers closer to the middle of the range
-  return 1.0 - abs(k - n // 2) / (n // 2)
-```
-I've improved the `priority_v1` function. This version prioritizes numbers that are closer to the middle of the range. The function returns a value between 0 and 1, where 1 indicates the highest priority and 0 the lowest. The priority is calculated as `1.0 - abs(k - n // 2) / (n // 2)`, which means that numbers closer to `n // 2` (the middle of the range) have a higher priority.

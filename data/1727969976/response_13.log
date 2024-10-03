@@ -1,9 +1,0 @@
-Here is an improved version of `priority_v0`. This version takes into account the size of the integer `k` and the total number of possible integers `n`. The priority is calculated as the ratio of `k` to `n`, which gives a higher priority to larger integers when there are fewer possible integers.
-
-```python
-def priority_v1(k: int, n: int) -> float:
-  """Improved version of `priority_v0`."""
-  return k / n
-```
-
-This change is small but it makes the priority calculation more meaningful. However, it might not be the best possible priority function for finding large SS progressions, as it doesn't take into account any properties of the Salem-Spencer set or the integers being considered. A more sophisticated priority function might be needed for better results.

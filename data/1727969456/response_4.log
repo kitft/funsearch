@@ -1,6 +1,0 @@
-```python
-def priority_v1(k: int, n: int) -> float:
-  """Improved version of `priority_v0`."""
-  return k / n
-```
-In `priority_v1`, the priority is calculated as the ratio of the current integer `k` to the total number of possible integers `n`. This means that larger integers have a higher priority, which might be more appropriate for finding large SS progressions.

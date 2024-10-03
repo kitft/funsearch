@@ -1,9 +1,0 @@
-Here's an improved version of `priority_v1` that considers the number of elements less than `k` and the total number of elements. This version is shorter and makes a small change from `priority_v0`.
-
-```python
-def priority_v1(k: int, n: int) -> float:
-  """Improved version of `priority_v0`."""
-  return (n - k) / n  # Prioritize elements closer to the middle
-```
-
-This version gives higher priority to elements closer to the middle of the range `[0, n-1]`, which is a common strategy in Salem-Spencer progressions. It's a small change from `priority_v0`, but it should provide better results in most cases.

@@ -1,8 +1,0 @@
-```python
-def priority_v1(k: int, n: int) -> float:
-  """Improved version of `priority_v0`."""
-  return k / n
-```
-I have improved the `priority_v1` function. It now returns the priority of the integer `k` by dividing it by the total number of possible integers `n`. This means that larger integers and the integers close to the total number of possible integers have a higher priority.
-
-This function should provide a better heuristic for determining the order in which to add integers to the Salem-Spencer set, as it takes into account both the size of the integer and its position relative to the total number of possible integers.

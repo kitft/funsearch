@@ -1,9 +1,0 @@
-Here's a simple version of `priority_v1` that takes into account the size of the integer `k` compared to the total number of possible integers `n`. The larger `k` is compared to `n`, the lower its priority. This is based on the assumption that larger numbers are less likely to be part of a significant progression.
-
-```python
-def priority_v1(k: int, n: int) -> float:
-  """Improved version of `priority_v0`."""
-  return 1.0 - (k / n)
-```
-
-This function returns a value between 0 and 1, where 1 indicates the highest priority (for smaller `k`) and 0 indicates the lowest priority (for larger `k`).

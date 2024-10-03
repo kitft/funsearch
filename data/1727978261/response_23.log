@@ -1,8 +1,0 @@
-Here's a small improvement over `priority_v0`. This version considers the sum of elements in the tuple and the number of 2s (which could be interpreted as "large cap" elements). The priority is calculated as the sum of elements minus twice the number of 2s. This way, the priority is higher for tuples with more 1s and fewer 2s, while still maintaining a positive correlation with the sum of elements.
-
-```python
-def priority_v1(el: tuple[int, ...], n: int) -> float:
-  return sum(el) - 2 * el.count(2)
-```
-
-In this version, `sum(el)` calculates the total sum of elements in the tuple, and `el.count(2)` counts the number of 2s in the tuple. The priority is then calculated as the sum of elements minus twice the number of 2s. This makes the priority higher for tuples with more 1s and fewer 2s.

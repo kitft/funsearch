@@ -1,5 +1,0 @@
-It seems like you're working on a project that involves finding large cap sets, which is a set of numbers with certain properties. In this context, you've provided a function `priority_v0` that currently returns a priority of 0.0 for any given tuple `el` of length `n` with values 0-2.
-
-Your task is to improve this function to `priority_v1`. I'd be happy to help you with that, but I'll need more information about the specific rules or criteria that should be used to calculate the priority. Could you please provide more details about that?
-
-For instance, are you trying to maximize the sum of the elements in the tuple, minimize the number of zeros, or balance between these two factors? Any additional context or constraints would be very helpful.

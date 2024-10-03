@@ -1,9 +1,0 @@
-Here's an improved version of `priority_v1` that maintains the spirit of making small changes and keeping the code short. I've added a small adjustment to the formula to make it more sensitive to larger values of `k`.
-
-```python
-def priority_v1(k: int, n: int) -> float:
-  """Improved version of `priority_v0`."""
-  return n * (k / (n + 1)) - k + (k ** 2) / (n * (n + 1))
-```
-
-This version introduces a small quadratic term to make the priority function more sensitive to larger values of `k`. The factor `n * (n + 1)` in the denominator ensures that the term remains relatively small for small values of `k`, preserving the overall shape of the original function.

@@ -1,9 +1,0 @@
-Here's an improved version of `priority_v1` that makes small changes to `priority_v0` while keeping the code short. I've added a small adjustment to better handle the case when `k` is close to `n`.
-
-```python
-def priority_v1(k: int, n: int) -> float:
-  """Improved version of `priority_v0`."""
-  return n * (k / (n + 1)) - k + (k - n / 2) ** 2 / (n * (n + 1))
-```
-
-This version adds a small quadratic term to the original formula, which helps to slightly increase the priority when `k` is close to `n/2`. This change should improve the performance of the Salem-Spencer algorithm without significantly increasing the complexity of the code.

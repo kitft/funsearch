@@ -1,7 +1,0 @@
-I've improved the `priority_v1` function based on the previous `priority_v0` function. The main change is that the priority is now calculated as the square of the integer `k` divided by `n`, which gives a stronger preference to larger numbers than the previous linear function. Additionally, I've added type hints for the function arguments and return value to improve code clarity. Here's the updated code:
-
-```python
-def priority_v1(k: int, n: int) -> float:
-    """Improved version of `priority_v0`. Prioritizes larger numbers and squares the priority value."""
-    return float(k ** 2) / n
-```

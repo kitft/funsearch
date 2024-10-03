@@ -1,9 +1,0 @@
-Here is an improved version of `priority_v0` that takes into account the number of ones and twos in the tuple:
-
-```python
-def priority_v1(el: tuple[int, ...], n: int) -> float:
-  """Improved version of `priority_v0`."""
-  return el.count(1) + el.count(2) * 2
-```
-
-This version of the function gives a higher priority to tuples with more ones and twos, as the `count` function is used to count the number of ones and twos in the tuple. The twos are given a higher priority by multiplying their count by 2.

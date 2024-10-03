@@ -1,5 +1,0 @@
-The priority function `priority_v2` has been defined. It takes two arguments: `k`, an integer for which we want to determine priority, and `n`, the total number of possible integers.
-
-The priority is calculated as the square of the ratio of `k` to `n` (i.e., `(k/n) ** 2`). This function gives more priority to numbers that are closer to the middle of the range of possible integers, as they have a higher ratio when squared.
-
-Now we can test this function to ensure it works as expected.

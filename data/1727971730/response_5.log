@@ -1,9 +1,0 @@
-Here is an improved version of the `priority_v0` function. The priority now is calculated as the negative of the integer's value. This would result in higher priority for smaller integers, thus enabling larger SS progressions.
-
-```python
-def priority_v1(k: int, n: int) -> float:
-  """Improved version of `priority_v0`. The priority now is calculated as the negative of the integer's value."""
-  return k * -1
-```
-
-This function now prioritizes smaller integers, which would help in creating larger SS progressions. However, this is a very basic improvement and might not yield optimal results for all scenarios. Further improvements could be made based on more specific requirements or constraints.

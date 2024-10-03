@@ -1,9 +1,0 @@
-Here's a simple way to improve the priority function:
-
-```python
-def priority_v2(k: int, n: int) -> float:
-  """Improved version of `priority_v1`."""
-  return k / n
-```
-
-This version of the function gives a higher priority to larger numbers, which makes sense in the context of finding large progressions in the Salem-Spencer set. However, this may not be the best strategy for all possible use cases, so it's always important to consider the specific problem and constraints when designing the priority function.

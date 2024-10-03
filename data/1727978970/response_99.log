@@ -1,9 +1,0 @@
-The code provided includes three functions: `priority_v0`, `priority_v1`, and `priority_v2`. All functions calculate a priority score for a given tuple `el` of length `n` with values 0-2. The priority score is used to determine the order in which elements should be added to a cap set.
-
-The `priority_v0` and `priority_v1` functions are identical, as the comment for `priority_v1` indicates that it is an improved version of `priority_v0`, but no changes were made.
-
-The priority score is calculated as the sum of the elements in the tuple divided by the number of unique elements in the tuple and then divided by the standard deviation of the elements in the tuple. The standard deviation is a measure of the dispersion or spread of the elements in the tuple.
-
-The `priority_v2` function is not implemented, as the comment suggests that it should be an improved version of `priority_v1`, but no code is provided.
-
-To improve the `priority_v2` function, you could consider adding a new term to the priority score that penalizes tuples that have a large number of zeros. This is because a larger number of zeros in a tuple means that the tuple is less likely to contribute to the cap set. You could also consider adding a term that rewards tuples that have a higher number of twos, as these are more likely to contribute to the cap set.

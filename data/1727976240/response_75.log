@@ -1,5 +1,0 @@
-This code defines three versions of a `priority` function, each slightly improved over the previous one. The `priority` function takes two arguments, `k` and `n`, and returns a float representing the priority with which we want to add `k` to the Salem-Spencer set, where `n` is the total number of possible integers.
-
-The `priority_v0` function calculates the priority as `1 - (k / n)`. The `priority_v1` function calculates the priority as `k / n`, with a check to avoid division by zero. The `priority_v2` function is an improved version of `priority_v1`, but its implementation is not provided in the code snippet.
-
-The code also uses the `funsearch` library to run the `priority_v0` function, but it's not clear from the provided information how this is supposed to work or what the expected output is.

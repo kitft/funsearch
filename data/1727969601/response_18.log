@@ -1,9 +1,0 @@
-To improve the `priority_v0` function, we can take into account the value of `k` and `n`. A simple improvement could be to prioritize larger integers `k` as they have more potential to contribute to larger SS progressions. We can also consider the ratio of `k` to `n` to determine the priority. Here's an improved version of the `priority_v0` function:
-
-```python
-def priority_v1(k: int, n: int) -> float:
-  """Improved version of `priority_v0`."""
-  return k / n
-```
-
-In this version, the priority is calculated as the ratio of the integer `k` to the total number of possible integers `n`. This means that larger integers will have a higher priority.

@@ -1,9 +1,0 @@
-Here's an improved version of `priority_v2` with small changes to make the code shorter and more efficient. I've used generator expressions and removed the explicit loop for counting frequencies.
-
-```python
-def priority_v2(k: int, n: int) -> float:
-  """Improved version of `priority_v1`."""
-  return sum(i % k == 0 for i in range(1, n + 1)) - sum(i % k == 0 for i in range(1, n // k + 1)) + sum(i % k == 0 for i in range(1, n // k**2 + 1))
-```
-
-This version reduces the number of iterations by eliminating the unnecessary `freq_kkk` and `freq_kkkk` terms. It also removes the division by `n` as it doesn't change the order of priorities.

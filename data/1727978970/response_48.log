@@ -1,9 +1,0 @@
-The original function `priority_v0` calculates the priority of adding an element to a cap set by summing the elements in the tuple and subtracting a penalty for each occurrence of the value 2. This can be improved by increasing the penalty for value 2 and adding a bonus for the number of unique values in the tuple. This would encourage the selection of tuples with more variety and fewer instances of the value 2. Here's how you could implement this:
-
-```python
-def priority_v1(el: tuple[int, ...], n: int) -> float:
-    """Improved version of `priority_v0`."""
-    return sum(el) + len(set(el)) - 1.5 * el.count(2)
-```
-
-In this version, `len(set(el))` adds a bonus for each unique value in the tuple. The bonus is reduced by 1 to account for the fact that the sum of the tuple already counts each value once. The penalty for the value 2 is increased to 1.5 to further discourage its use.

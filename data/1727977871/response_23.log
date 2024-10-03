@@ -1,9 +1,0 @@
-Here's a simple improvement to `priority_v0`. This version calculates the priority based on the ratio of the square root of `k` to the square root of `n`. This ratio is a measure of how "large" `k` is compared to the range of possible integers `n`.
-
-```python
-def priority_v1(k: int, n: int) -> float:
-  """Improved version of `priority_v0`."""
-  return np.sqrt(k) / np.sqrt(n)
-```
-
-In this version, if `k` is much larger than `n`, the priority will be close to 1. If `k` is much smaller than `n`, the priority will be close to 0. This should provide a more meaningful priority score for adding `k` to the Salem-Spencer set.

@@ -1,9 +1,0 @@
-Here's an improved version of `priority_v1` that uses a generator expression and a dictionary to count the unique remainders more efficiently. I've also made the function shorter by using a dictionary comprehension and the `sum` function.
-
-```python
-def priority_v2(k: int, n: int) -> float:
-  """Improved version of `priority_v1`."""
-  return sum(v / n for v in collections.Counter(k % i for i in range(1, n + 1)).values())
-```
-
-In this version, `collections.Counter` is used to count the unique remainders, and then `sum` is used to calculate the average count. This version should be more efficient than `priority_v1` for large `n` and `k`.

@@ -1,9 +1,0 @@
-Here's a simple modification to `priority_v0` that might improve the performance of the cap set search. This version calculates the priority based on the sum of elements in the tuple. The higher the sum, the higher the priority.
-
-```python
-def priority_v1(el: tuple[int, ...], n: int) -> float:
-  """Improved version of `priority_v0`."""
-  return sum(el)
-```
-
-This modification assumes that larger tuples are more likely to be useful for finding large cap sets. This might not be the case in all situations, so it's possible that a more sophisticated priority function would be needed for certain types of cap set searches.

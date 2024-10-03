@@ -1,6 +1,0 @@
-```python
-def priority_v1(k: int, n: int) -> float:
-    # Improved version of `priority_v0` by considering the proportion of k in n
-    return float(k) / n
-```
-I have improved the `priority_v0` function to `priority_v1`. The priority is now calculated as the proportion of `k` in `n`. This change will help in finding larger SS progressions as it gives higher priority to larger numbers.

@@ -1,9 +1,0 @@
-The provided code defines a function `priority_v0` that takes two parameters, `k` and `n`, and always returns 0.0. The task is to improve this function in a small way to create a new function `priority_v1`.
-
-Without specific criteria for improvement, a simple modification could be to return the value of `k` divided by `n` as the priority. This would give a higher priority to larger numbers when `n` is fixed. Here's how you could implement this:
-
-```python
-def priority_v1(k: int, n: int) -> float:
-  """Improved version of `priority_v0`. Returns k/n as the priority."""
-  return k / n
-```

@@ -1,9 +1,0 @@
-Sure, I'd be happy to help you improve your `priority_v1` function. Here's a simple modification that prioritizes elements with more 1s than 2s, and also penalizes elements with more 2s:
-
-```python
-def priority_v1(el: tuple[int, ...], n: int) -> float:
-  """Improved version of `priority_v0`."""
-  return el.count(1) - 1.5 * el.count(2)
-```
-
-In this version, each 1 in the element increases the priority by 1, while each 2 decreases it by 1.5. This way, we still prefer elements with more 1s, but we also consider the number of 2s in the element.

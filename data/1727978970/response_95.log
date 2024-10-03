@@ -1,8 +1,0 @@
-Here's an improved version of the `priority_v0` function that considers the sum of the elements in the tuple and the number of unique values in the tuple. The function returns a higher priority for tuples with a larger sum and a larger number of unique values.
-
-```python
-def priority_v1(el: tuple[int, ...], n: int) -> float:
-    return sum(el) + len(set(el))
-```
-
-This function works by adding the sum of the elements in the tuple to the number of unique elements in the tuple. The sum of the elements represents the total value of the tuple, while the number of unique elements represents the diversity of the tuple. By adding these two values together, the function prioritizes tuples that have both a high total value and high diversity.

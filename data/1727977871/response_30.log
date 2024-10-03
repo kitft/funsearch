@@ -1,5 +1,0 @@
-```python
-def priority_v1(k: int, n: int) -> float:
-    return k / n
-```
-The function `priority_v1` is an improved version of `priority_v0`. In `priority_v1`, the priority is calculated as the ratio of the integer `k` to the total number of possible integers `n`. This means that larger integers have a higher priority, and the priority increases as `k` approaches `n`. This could be useful in a search algorithm where we are selecting integers to add to a set, and we want to prioritize larger integers. However, without more context, it's hard to say how much this improvement will actually help.

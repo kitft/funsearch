@@ -1,8 +1,0 @@
-Here's a simple improvement over `priority_v0`. This version considers the absolute difference between `k` and `n//2`, which is the middle value when `n` is even. The larger the difference, the lower the priority, as we want to prioritize numbers closer to the middle.
-
-```python
-def priority_v1(k: int, n: int) -> float:
-  return 1.0 / (1 + abs(k - n // 2))
-```
-
-This function returns a value between 0 and 1, where 1 is the highest priority and 0 is the lowest. The priority decreases as `k` moves away from `n//2`.

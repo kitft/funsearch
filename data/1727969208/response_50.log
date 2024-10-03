@@ -1,9 +1,0 @@
-Here's an improved version of `priority_v2` with a small change to make it shorter and more efficient:
-
-```python
-def priority_v3(k: int, n: int) -> float:
-  """Improved version of `priority_v2`."""
-  return n * (k / (n + 1)) - k * (n / (n + 1))
-```
-
-This version eliminates the multiplication by `n` and `k` separately and combines them into a single multiplication, reducing the number of operations.

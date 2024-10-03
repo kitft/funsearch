@@ -1,7 +1,0 @@
-Returns k * (n - k) / (n * (n - 1)) as the priority. This is an improvement over the previous version as it takes into account the number of remaining integers that can be chosen.
-
-def priority_v2(k: int, n: int) -> float:
-  """Improved version of `priority_v1`."""
-  return k * (n - k) / (n * (n - 1))
-
-In this version, the priority is calculated as the product of the number of ways to choose k and the number of ways to choose n - k, divided by the total number of ways to choose two numbers from n. This means that integers that are closer to n / 2 have a higher priority, as they have more potential to contribute to large SS progressions.

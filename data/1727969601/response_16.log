@@ -1,8 +1,0 @@
-def priority_v1(k: int, n: int) -> float:
-  """Improved version of `priority_v0`."""
-  counts = np.bincount(np.add.outer(range(1, n + 1), range(1, n + 1)).ravel())
-  counts[k] = 0  # Exclude self-addition
-  return counts[k]
-
-
-print(priority_v1(5, 3))  # Expected output: 2 (since 1+2, 2+1, 2+3, 3+2 each sum up to 5)

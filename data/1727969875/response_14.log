@@ -1,5 +1,0 @@
-```python
-def priority_v1(k: int, n: int) -> float:
-    return float(k) / n
-```
-The updated `priority_v1` function now returns a value between 0 and 1, which indicates the priority of a given integer `k` in a set of `n` possible integers. The priority is calculated as the ratio of `k` to `n`, which means that larger integers will have a higher priority. This is a simple yet effective way to prioritize larger numbers, which could be useful in finding large progressions in the Salem-Spencer set.

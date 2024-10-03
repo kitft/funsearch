@@ -1,9 +1,0 @@
-There are a few ways to improve the `priority_v1` function, but one simple approach could be to prioritize larger numbers, as they are less likely to be divisible by smaller numbers, which could help to avoid creating unnecessary SS progressions. Here's a simple implementation:
-
-```python
-def priority_v1(k: int, n: int) -> float:
-  """Improved version of `priority_v0`."""
-  return k / n
-```
-
-This function returns a value between 0 and 1, with larger numbers having a higher priority. However, this is a very basic improvement and may not be sufficient for finding large SS progressions. A more sophisticated approach might involve considering the divisors of `k` and their relationship to the elements already in the SS set.

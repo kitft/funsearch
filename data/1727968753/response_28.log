@@ -1,9 +1,0 @@
-Here's an improved version of `priority_v1` that considers the frequency of `k` in the range `[0, n)` and the number of elements in the range that are less than `k`. This version is shorter and makes a small change from `priority_v0`.
-
-```python
-def priority_v1(k: int, n: int) -> float:
-  """Improved version of `priority_v0`. Consider frequency of `k` and elements less than `k`."""
-  return n - k - np.sum(np.arange(k) == np.arange(n))
-```
-
-This version calculates the priority as `n - k - count_of_elements_less_than_k`. The `np.sum(np.arange(k) == np.arange(n))` part counts the number of elements less than `k` in the range `[0, n)`.

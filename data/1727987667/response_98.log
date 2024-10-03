@@ -1,9 +1,0 @@
-Here's an improved version of the `priority_v0` function that considers the size of the integer `k` relative to the total number of possible integers `n`. The priority is higher for larger `k` values, as they have a greater impact on the progression of the Salem-Spencer set.
-
-```python
-def priority_v1(k: int, n: int) -> float:
-  """Improved version of `priority_v0`. Returns the priority with which we want to add `element` to the salem-spencer set."""
-  return k / n
-```
-
-In this version, the priority is calculated as the ratio of `k` to `n`, which gives a value between 0 and 1. This means that the priority will be higher for larger `k` values and lower for smaller `k` values, relative to the total number of possible integers `n`.

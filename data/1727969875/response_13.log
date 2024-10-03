@@ -1,9 +1,0 @@
-The original function `priority_v0` always returns 0.0, which means that it doesn't prioritize any integer over another. In the improved version `priority_v1`, we could make a simple change to prioritize larger numbers over smaller ones, by returning `k` as the priority. This way, larger numbers will be more likely to be added to the Salem-Spencer set. Here's how we could implement this:
-
-```python
-def priority_v1(k: int, n: int) -> float:
-  """Improved version of `priority_v0`."""
-  return float(k)
-```
-
-This implementation assumes that the larger the number, the higher its priority. However, the actual priority calculation could be more complex and depend on other factors, such as the distribution of numbers in the Salem-Spencer set so far or the specific problem being solved.

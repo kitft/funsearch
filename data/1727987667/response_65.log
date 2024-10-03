@@ -1,7 +1,0 @@
-This is a series of Python functions that aim to calculate a priority score for a given integer `k` in a range of `n` possible integers. The priority score is used to determine the order in which numbers should be added to the Salem-Spencer set.
-
-In the `priority_v0` function, the priority score is simply the proportion of the total number of integers that `k` represents. This could be useful in scenarios where larger numbers are more desirable or when the total range of possible integers is known and we want to prioritize the numbers that are closer to the middle of the range.
-
-The `priority_v1` function is an improved version of `priority_v0` that should provide the same results. However, the code is repeated, which is not efficient. In the refactored code, we can remove the repetition and maintain the same functionality.
-
-The `priority_v2` function is an improved version of `priority_v1` that, according to the comment, has been improved. However, the comment does not provide any specifics about how the function has been improved. Without this information, it's not possible to make any suggestions for how to improve the function further.

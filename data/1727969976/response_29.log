@@ -1,7 +1,0 @@
-The code provided defines a function `priority_v0` and an improved version `priority_v1` to calculate the priority of adding an integer `k` to a Salem-Spencer set, given a total number of possible integers `n`.
-
-The `priority_v0` function calculates the base priority as the ratio of `k` to `n`. It then checks if `k` is a multiple of any of the common SS-progressions (2, 3, 5, 7, 11) and adds a bonus of 0.1 to the priority for each SS-progression that `k` is a multiple of.
-
-The `priority_v1` function is an improved version of `priority_v0` that follows the same logic and has the same comments.
-
-The code is currently missing the definition of the `priority_v2` function, which is an improved version of `priority_v1`. To complete the implementation, I would suggest adding a new bonus or penalty to the priority calculation based on additional criteria.

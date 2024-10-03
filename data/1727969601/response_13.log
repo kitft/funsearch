@@ -1,8 +1,0 @@
-```python
-def priority_v1(k: int, n: int) -> float:
-  """Improved version of `priority_v0`."""
-  # Prioritize larger numbers and those closer to the middle of the range
-  return k / n + abs(0.5 - k / n)
-```
-
-This version of the priority function prioritizes larger numbers and those closer to the middle of the range. The first term `k / n` normalizes the integer `k` to be between 0 and 1, where 1 represents the largest possible integer. The second term `abs(0.5 - k / n)` calculates the distance of `k / n` from the middle of the range (0.5) and prioritizes numbers closer to the middle. By adding these two terms together, we get a priority score that balances both size and centrality.

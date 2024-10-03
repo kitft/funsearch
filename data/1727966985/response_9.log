@@ -1,9 +1,0 @@
-Sure, let's improve the `priority_v1` function based on the `priority_v0` function. Given that no specific improvement criteria are provided, I'll assume we want to prioritize larger numbers and penalize smaller ones. Here's a simple way to do it:
-
-```python
-def priority_v1(k: int, n: int) -> float:
-  """Improved version of `priority_v0`. Prioritizes larger numbers."""
-  return k / n
-```
-
-This function will return a value between 0 and 1, with larger numbers having a higher priority.

@@ -1,9 +1,0 @@
-Here's a simple improvement. If we assume that larger numbers have a higher priority, we can return the integer `k` as the priority. This assumes that `k` is within a reasonable range, which should be true if it's an integer from 1 to `n`.
-
-```python
-def priority_v1(k: int, n: int) -> float:
-  """Improved version of `priority_v0`."""
-  return float(k)
-```
-
-This version of the function will prioritize larger integers over smaller ones, which might be more suitable for your use case. However, the best priority function would depend on the specifics of your problem and the properties you want to prioritize.

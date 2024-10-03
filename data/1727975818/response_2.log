@@ -1,9 +1,0 @@
-Here's an improved version of `priority_v0` that takes into account both the size of the integer `k` and the total number of possible integers `n`. The priority is calculated as the ratio of `k` to `n`, which gives a higher priority to larger integers and to situations where there are fewer possible integers.
-
-```python
-def priority_v1(k: int, n: int) -> float:
-  """Improved version of `priority_v0`."""
-  return k / n
-```
-
-This function will return a value between 0 and 1, with 1 being the highest priority. It's a simple and effective way to prioritize larger integers in situations where there are fewer possible integers.

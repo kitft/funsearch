@@ -1,5 +1,0 @@
-```python
-def priority_v1(el: tuple[int, ...], n: int) -> float:
-  return sum(el)
-```
-The `priority_v1` function has been defined. It takes a tuple `el` and an integer `n` as input. The function returns the sum of the elements in the tuple `el` as the priority. This is an improved version of the `priority_v0` function, which returned 0.0 for all inputs. The sum of the elements in the tuple provides a better measure of the priority, as it takes into account the values of the elements in the tuple.
