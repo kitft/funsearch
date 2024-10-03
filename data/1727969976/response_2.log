@@ -1,0 +1,14 @@
+This problem is about finding large progressions in Salem-Spencer sets. The Salem-Spencer set is a special set of integers with certain properties. The task is to improve a priority function for adding elements to this set. The priority function should take two arguments: `k`, the integer to be added, and `n`, the number of possible integers. The goal is to improve upon the `priority_v0` function with a small change to create the `priority_v1` function.
+
+Here's a possible solution for `priority_v1`:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # The priority is inversely proportional to the square root of k
+  # This is because larger numbers have a lower probability of being in the set
+  # and we want to prioritize adding them if they contribute significantly to the set
+  return 1.0 / np.sqrt(k) if k > 0 else 0.0
+```
+
+In this solution, we use the inverse square root of `k` as the priority. This is because larger numbers are less likely to be in the Salem-Spencer set, and we want to prioritize adding them if they contribute significantly to the set. The priority is 0 if `k` is 0 to avoid division by zero.

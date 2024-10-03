@@ -1,0 +1,11 @@
+Here's an improved version of `priority_v1` that considers the difference between the target number `k` and the average of possible integers `n`. This version also uses the square root of `n` to balance the influence of `n` on the priority.
+
+```python
+import math
+
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return (k - n / 2) / math.sqrt(n)
+```
+
+This version makes a small change from `priority_v0` by incorporating the difference between `k` and the average of possible integers `n`. The use of the square root of `n` helps to balance the influence of `n` on the priority, making the function more robust to changes in `n`.

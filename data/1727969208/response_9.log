@@ -1,0 +1,22 @@
+Here's an improved version of `priority_v1` that considers the frequency of `k` in the range `[1, n]` and the number of elements in the Salem-Spencer set. This version uses the `itertools` library to generate the range and `np.bincount` to count the occurrences of `k`.
+
+```python
+import itertools
+import numpy as np
+
+@funsearch.run
+def priority_v1(k: int, n: int, s: set) -> float:
+  """Returns the priority with which we want to add `k` to the salem-spencer set `s`.
+  n is the number of possible integers, and k is the integer we want to determine priority for.
+  s is the current salem-spencer set.
+  """
+  # Count the occurrences of k in the range [1, n]
+  counts = np.bincount([k] * n, minlength=n + 1)
+  freq_k = counts[k]
+
+  # Calculate the priority based on the frequency of k and the size of the set
+  priority = freq_k / (n * len(s))
+  return priority
+```
+
+This version of `priority_v1` takes the current Salem-Spencer set `s` as an argument to consider the size of the set in the priority calculation. The priority is calculated as the frequency of `k` divided by the product of the total number of possible integers `n` and the size of the set `len(s)`. This way, elements that occur more frequently and are added later (when the set is larger) have a higher priority.

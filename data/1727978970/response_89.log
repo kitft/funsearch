@@ -1,0 +1,13 @@
+I've improved the `priority_v1` function. Now it calculates the priority based on the sum of elements in the tuple and a penalty for having more than one '2' in the tuple. The penalty is 9 if there's more than one '2', which is enough to make sure that tuples with more than one '2' have a lower priority than tuples with only one '2' or no '2's at all. If there's no '2' in the tuple, the priority is simply the sum of the elements. If there's exactly one '2' in the tuple, the priority is the sum of the elements minus 2. This way, tuples with a higher sum and no more than one '2' will have a higher priority. Here's the code:
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  if el.count(2) > 1:
+    return sum(el) - 9
+  elif 2 in el:
+    return sum(el) - 2
+  else:
+    return sum(el)
+```
+
+You can test this function with different inputs to see if it meets your requirements.

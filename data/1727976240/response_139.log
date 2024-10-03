@@ -1,0 +1,53 @@
+"""Improved version of `priority_v1`."""
+return k / (n * (n + 1) / 2)
+
+
+def priority_v3(k: int, n: int) -> float:
+  """Improved version of `priority_v2`."""
+  return k / (n * np.log(n))
+
+
+def priority_v4(k: int, n: int) -> float:
+  """Improved version of `priority_v3`."""
+  return k / (n * np.log(n) * np.log(np.log(n)))
+
+
+def priority_v5(k: int, n: int) -> float:
+  """Improved version of `priority_v4`."""
+  return k / (n * np.log(n) ** 2)
+
+
+def priority_v6(k: int, n: int) -> float:
+  """Improved version of `priority_v5`."""
+  return k / (n * np.log(n) ** np.log(n))
+
+
+def priority_v7(k: int, n: int) -> float:
+  """Improved version of `priority_v6`."""
+  return k / (n * np.log(n) ** np.log(np.log(n)))
+
+
+def priority_v8(k: int, n: int) -> float:
+  """Improved version of `priority_v7`."""
+  return k / (n * np.log(n) ** np.sqrt(n))
+
+
+def priority_v9(k: int, n: int) -> float:
+  """Improved version of `priority_v8`."""
+  return k / (n * np.log(n) ** np.sqrt(np.log(n)))
+
+
+def priority_v10(k: int, n: int) -> float:
+  """Improved version of `priority_v9`."""
+  return k / (n * np.log(n) ** np.log(np.log(n)) / np.log(np.log(np.log(n))))
+
+
+def find_large_ss_progressions(n: int, m: int) -> np.ndarray:
+  """Returns an array of the `m` largest Salem-Spencer progressions of length `n`."""
+  elements = np.arange(1, n * m + 1)
+  priorities = np.array([priority_v10(k, n * m) for k in elements])
+  return np.array(
+      sorted(itertools.combinations(elements, n), key=lambda x: np.sum(priorities[np.array(x) - 1]), reverse=True)[:m])
+
+
+print(find_large_ss_progressions(3, 5))

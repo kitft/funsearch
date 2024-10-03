@@ -1,0 +1,11 @@
+This code defines a function `priority_v1` that improves upon the `priority_v0` function. The `priority_v0` function calculates the priority of adding an integer `k` to a Salem-Spencer set, given a range of possible integers `n`. It does this by counting the number of pairs of integers from `1` to `n` (exclusive) that sum to `k`.
+
+The `priority_v1` function, however, improves upon this by using a more efficient algorithm. Instead of using nested loops to iterate through all pairs of integers, it uses the fact that the number of pairs that sum to `k` is equal to the maximum of `0` and `n - k`. This is because each integer from `1` to `n - k` can be paired with an integer from `n - k + 1` to `n` to sum to `k`. This reduces the time complexity of the function from O(n^2) to O(n).
+
+Here is the improved `priority_v1` function:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return max(0, n - k)
+```

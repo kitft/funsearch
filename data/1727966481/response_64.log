@@ -1,0 +1,15 @@
+Here's an improved version of `priority_v1` that considers the frequency of `k` in the range `[1, n]` and the number of multiples of `k` within that range. This version is shorter and makes a small change from `priority_v0`.
+
+```python
+from collections import Counter
+
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  freq = Counter(range(1, n + 1)).get(k, 0)
+  multiples = (n // k) - (k - 1)
+  return freq + multiples
+```
+
+This version uses the `Counter` class from the `collections` module to count the frequency of `k` in the range `[1, n]`. It also calculates the number of multiples of `k` within that range. The priority is then the sum of these two values.
+
+To further improve the function, you could consider the gap between `k` and its multiples, or the distribution of multiples. However, these changes would make the function more complex and longer.

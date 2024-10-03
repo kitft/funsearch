@@ -1,0 +1,10 @@
+Here's an improved version of `priority_v1` that considers the number of unique remainders when dividing `k` by `n`. This is based on the idea that elements with more unique remainders might contribute more to the Salem-Spencer set's diversity. I've also added a small adjustment factor to make the code short.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  remainders = set((k + i) % n for i in range(n))
+  return len(remainders) / n + 0.01 * (n - len(remainders))
+```
+
+This version of `priority_v1` first calculates the set of unique remainders when adding `i` to `k` for `i` in the range `[0, n)`. It then returns the ratio of unique remainders to `n`, plus a small adjustment factor that increases with the number of missing remainders. This encourages adding elements that contribute more unique remainders to the Salem-Spencer set.

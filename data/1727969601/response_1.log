@@ -1,0 +1,15 @@
+Here's a simple improvement based on the frequency of the occurrence of `k` in the sums of two distinct numbers from `1` to `n`. The more frequently `k` occurs, the higher the priority.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  counts = np.zeros(n * 2)
+  for i, j in itertools.product(range(1, n + 1), repeat=2):
+    if i != j:
+      counts[i + j] += 1
+  return counts[k]
+```
+
+This function counts the number of times each possible sum `i + j` (where `i` and `j` are distinct numbers from `1` to `n`) appears, and then returns the count for `k`.
+
+Note: This function might not be efficient for large `n` because it has a time complexity of O(n^2). It might be necessary to use a more efficient algorithm for larger inputs.

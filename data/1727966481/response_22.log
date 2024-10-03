@@ -1,0 +1,21 @@
+Here's an improved version of `priority_v1` that considers the frequency of `k` in the range `[1, n]` and the number of multiples of `k` within that range. This version is concise and makes small changes to the original function.
+
+```python
+from collections import Counter
+
+@funsearch.run
+def priority_v1(k: int, n: int) -> float:
+    """Returns the priority with which we want to add `k` to the Salem-Spencer set.
+    n is the number of possible integers, and k is the integer we want to determine priority for.
+    """
+    # Count the frequency of multiples of k in the range [1, n]
+    multiples = [i for i in range(1, n + 1) if i % k == 0]
+    freq = Counter(multiples)
+
+    # Calculate priority as the sum of frequencies of multiples of k
+    priority = sum(freq.values())
+
+    return priority
+```
+
+This version of `priority_v1` should provide a better estimate of the priority for adding `k` to the Salem-Spencer set by considering the frequency of its multiples within the given range.

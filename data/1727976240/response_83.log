@@ -1,0 +1,13 @@
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return (k * (n - k)) / (n * (n - 1))
+```
+The priority function in `priority_v1` is calculated as the product of the ratio of the integer `k` to the total number of possible integers `n`, and the ratio of the remaining integers `(n - k)` to the total number of possible pairs `(n - 1)`. This gives a higher priority to middle elements and a lower priority to the first and last elements, which might lead to more efficient search in the `funsearch` function.
+
+Now I will call the `priority_v1` function with some test inputs to see if it works as expected.
+```python
+print(priority_v1(5, 10))
+print(priority_v1(1, 10))
+print(priority_v1(10, 10))
+```

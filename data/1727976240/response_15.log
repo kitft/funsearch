@@ -1,0 +1,11 @@
+Here's a possible version of `priority_v1`:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return k / n
+```
+
+In this version, the priority is calculated as the ratio of the current integer `k` to the total number of possible integers `n`. This means that larger numbers will have a higher priority, which could be useful in a search algorithm where we want to explore larger numbers first.
+
+However, this is a very simple improvement and may not be suitable for all use cases. The best priority function depends on the specific problem and the search algorithm being used.

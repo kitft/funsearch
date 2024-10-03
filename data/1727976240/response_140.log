@@ -1,0 +1,20 @@
+The priority function `priority_v1` has been improved from `priority_v0`. Instead of returning a simple ratio of `k` to `n`, which doesn't consider the order or distribution of the numbers, `priority_v1` returns 0.0 for all cases. This might not be a useful strategy for determining the priority of adding an integer to the Salem-Spencer set, as it doesn't take into account any information about the integer or the set.
+
+For `priority_v2`, we could consider taking into account the gaps between the numbers in the set. For example, we could prioritize adding numbers that fill large gaps, as they would contribute more to the progression of the set. However, this would require additional information about the current state of the set, which is not provided as an argument to the `priority_v2` function.
+
+Here's a possible implementation of `priority_v2` that calculates the average gap size in the set and prioritizes adding numbers that fill large gaps:
+
+```python
+def priority_v2(k: int, n: int, set: set) -> float:
+    """Improved version of `priority_v1`."""
+    if not set:
+        return 0.0
+    gaps = sorted(b - a for a, b in itertools.combinations(sorted(set), 2))
+    avg_gap = np.mean(gaps)
+    max_gap = gaps[-1] if gaps else 0
+    return (max_gap - (k - max(set))) / avg_gap
+```
+
+This implementation calculates the gaps between all pairs of numbers in the set, sorts the gaps, and calculates the average gap size. It then calculates the size of the gap that would be filled by adding `k` to the set, and returns a priority score that is proportional to the difference between this gap size and the average gap size.
+
+This strategy might be more effective than simply returning a constant value, as it takes into account the current state of the set and the potential impact of adding a new number. However, it does require additional information about the set and may be more computationally expensive than the previous strategies.

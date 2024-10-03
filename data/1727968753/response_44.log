@@ -1,0 +1,11 @@
+Here's an improved version of `priority_v1` that considers the frequency of multiples of `k` up to `n` and the frequency of multiples of `k` up to `n//k`. This version is shorter and more efficient.
+
+```python
+def priority_v2(k: int, n: int) -> float:
+    """Improved version of `priority_v1`."""
+    freq_k = n // k
+    freq_k2 = n // (k * k)
+    return (freq_k - freq_k2) / n
+```
+
+This version calculates the frequency of multiples of `k` (`freq_k`) and the frequency of multiples of `k^2` (`freq_k2`). The priority is then calculated as the difference between these two frequencies, divided by `n`. This version is more efficient because it only requires two divisions, instead of a count operation and a division.

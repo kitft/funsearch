@@ -1,0 +1,14 @@
+Here's an improved version of `priority_v1` that considers the frequency of `k` in the range `[0, n)` and the number of remaining integers. The idea is to prioritize integers that are less frequent and have more remaining integers to pair with.
+
+```python
+from collections import Counter
+
+@funsearch.run
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    freq = Counter(range(n)).get(k, 0)
+    remaining = n - k - 1  # Exclude k itself and the integers less than k
+    return -freq / (remaining + 1)  # Minimize frequency and maximize remaining integers
+```
+
+In this version, we use the `Counter` class from the `collections` module to count the frequency of `k` in the range `[0, n)`. We then calculate the number of remaining integers that can be paired with `k` by subtracting `k` and the integers less than `k` from `n`. Finally, we return a negative value of the ratio of `k`'s frequency to the remaining integers to prioritize integers with lower frequency and more remaining integers.

@@ -1,0 +1,33 @@
+Returns the priority with which we want to add `k` to the Salem-Spencer set.
+`n` is the number of possible integers, and `k` is the integer we want to determine priority for.
+
+In this improved version, we consider the following factors:
+
+1. The inverse of the integer's value, so that smaller numbers get a higher priority.
+2. The number of unique prime factors of the integer, as numbers with more unique prime factors are more likely to form a progression with other numbers.
+3. The number of times the integer appears in the first `n` numbers of the Fibonacci sequence, as Fibonacci numbers are more likely to be in a progression.
+
+Here's the implementation:
+
+```python
+def priority_v2(k: int, n: int) -> float:
+  # Factorize the integer into prime factors
+  factors = [i for i in range(2, k + 1) if k % i == 0]
+  unique_factors = set(factors)
+
+  # Count the number of times the integer appears in the first n numbers of the Fibonacci sequence
+  fib_count = sum(1 for x in fibonacci(n) if x == k)
+
+  # Calculate the priority
+  priority = (1 / k) * len(unique_factors) * (1 + fib_count)
+  return priority
+
+def fibonacci(n):
+  # Generator for the first n numbers in the Fibonacci sequence
+  a, b = 0, 1
+  for _ in range(n):
+    yield a
+    a, b = b, a + b
+```
+
+This implementation should provide a more accurate estimate of the priority for adding each integer to the Salem-Spencer set.

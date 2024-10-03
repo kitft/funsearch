@@ -1,0 +1,15 @@
+Here's how `priority_v1` could be implemented, still keeping with the small change principle. We could consider the square root of `k` instead of `k` itself when calculating the priority. This might give more weight to smaller numbers, which could be useful in certain contexts:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return np.sqrt(k) / n
+```
+
+As for `priority_v2`, we might consider the logarithm of `k` instead. This could be useful if we expect `k` to be very large in some cases, as it would help to scale down the priority values:
+
+```python
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`."""
+  return np.log(k + 1) / n  # Adding 1 to avoid log(0)
+```

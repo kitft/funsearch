@@ -1,0 +1,34 @@
+The function `priority_v2` is not defined in the provided code. To improve `priority_v1`, we could consider the number of divisors of `k` and `n` in addition to the greatest common divisor (gcd). The more divisors a number has, the less likely it is to be relatively prime with other numbers, so this could be used to further adjust the priority. Here's a possible implementation:
+
+```python
+def priority_v2(k: int, n: int) -> float:
+    """Improved version of `priority_v1`."""
+    # Calculate the greatest common divisor of k and n
+    gcd = np.gcd(k, n)
+
+    # Calculate the number of divisors of k and n
+    def divisor_count(n):
+        count = 0
+        for i in range(1, int(np.sqrt(n)) + 1):
+            if n % i == 0:
+                if n / i == i:
+                    count += 1
+                else:
+                    count += 2
+        return count
+
+    divisor_count_k = divisor_count(k)
+    divisor_count_n = divisor_count(n)
+
+    # If k and n are relatively prime, the priority is inversely proportional to k
+    # but we penalize larger k values and favor numbers with fewer divisors.
+    if gcd == 1:
+        return 1.0 / (k + 1 + divisor_count_k) if k != 0 else float('inf')
+
+    # If k and n are not relatively prime, the priority is lower than k is relatively prime
+    # but we also consider the value of gcd and the number of divisors.
+    else:
+        return 0.1 / gcd / np.sqrt(divisor_count_k * divisor_count_n)
+```
+
+This version of the function still prioritizes smaller `k` values and numbers with larger gcds, but it also considers the number of divisors of `k` and `n`. Numbers with fewer divisors are given a slight priority boost.

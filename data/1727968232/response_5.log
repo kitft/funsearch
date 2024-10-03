@@ -1,0 +1,9 @@
+Here's an improved version of `priority_v1` that reduces the number of operations and uses a generator expression for better performance:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    return sum((k + i) % n != i for i in range(n)) / n
+```
+
+In this version, I've used a generator expression `(k + i) % n != i` to create a sequence of boolean values indicating whether each remainder is unique. The `sum()` function then counts the number of unique remainders, and we divide by `n` to get the priority value. This approach is more efficient as it avoids creating an intermediate set and reduces the number of operations.

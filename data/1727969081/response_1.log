@@ -1,0 +1,9 @@
+Here's an improved version of `priority_v1` that considers the number of unique remainders when dividing by `n`. This version is shorter and makes a small change to the previous version.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return len(set((k + i) % n for i in range(n)))
+```
+
+This version uses a set to count the unique remainders when adding `i` to `k` and taking the modulo `n`. The length of this set is used as the priority, which should be higher for numbers that result in more unique remainders, as they are more likely to be useful in a Salem-Spencer set.

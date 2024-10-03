@@ -1,0 +1,9 @@
+The code defines three functions to calculate the priority of adding an integer `k` to a Salem-Spencer set. The set consists of numbers up to `n`. The priority is determined by a combination of the size of the number and its closeness to the square root of `n`.
+
+The `priority_v0` function is the original version, which prioritizes larger numbers and those closer to the square root of `n`.
+
+The `priority_v1` function is an improved version of `priority_v0`. It has the same logic as `priority_v0`, but the comments are more explicit, making the code easier to understand.
+
+The `priority_v2` function is expected to be an improved version of `priority_v1`, but it's not implemented yet.
+
+The code also includes a decorator `@funsearch.run` which seems to be a custom decorator used for some sort of optimization or search algorithm, but it's not defined in the provided code.

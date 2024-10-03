@@ -1,0 +1,45 @@
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # This version uses the geometric mean instead of the arithmetic mean for the 2s
+  # This gives a stronger penalty to sets with more 2s
+  # Also, it penalizes sets with more 0s more heavily
+  # And it gives a slight bonus to sets with more 1s
+  return np.prod(el) ** (1 / n) / n + sum(x == 2 for x in el) ** 2 - sum(x == 0 for x in el) ** 3 - sum(x == 1 for x in el) / n
+
+
+def large_cap_sets(n: int, k: int) -> set[tuple[int, ...]]:
+  """Returns a set of the `k` largest cap sets of size `n`, where the priority is given by `priority_v1`.
+
+  A cap set is a set of `n` integers, no three of which sum to the same number.
+  """
+  # Initialize the set of cap sets with the empty set
+  cap_sets = {tuple([0] * n)}
+
+  # Repeat `k` times
+  for _ in range(k):
+    # Initialize the best cap set and its priority
+    best_cap_set = None
+    best_priority = float("-inf")
+
+    # Iterate over all possible cap sets
+    for cap_set in itertools.product(range(3), repeat=n):
+      # If the cap set is not already in our set of cap sets
+      if cap_set not in cap_sets:
+        # Calculate the priority of the cap set
+        priority = priority_v1(cap_set, n)
+
+        # If the priority is better than the best priority we've seen so far
+        if priority > best_priority:
+          # Update the best cap set and its priority
+          best_cap_set = cap_set
+          best_priority = priority
+
+    # Add the best cap set to our set of cap sets
+    cap_sets.add(best_cap_set)
+
+  # Return the set of cap sets
+  return cap_sets
+
+
+# Test the function
+print(large_cap_sets(5, 3))

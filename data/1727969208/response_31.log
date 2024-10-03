@@ -1,0 +1,13 @@
+Here's an improved version of `priority_v1` that builds upon `priority_v0` with small changes to make it shorter and more efficient:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  freq = np.count_nonzero(np.arange(1, n + 1) == k)  # Frequency of k in [1, n]
+  return freq / (k * (n - k + 1))
+```
+
+Changes made:
+
+1. Replaced `np.sum` with `np.count_nonzero` to count the frequency of `k` in the range `[1, n]`, which is more efficient and shorter.
+2. Simplified the calculation of remaining elements by using `n - k + 1` instead of `k + remaining`.

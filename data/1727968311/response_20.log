@@ -1,0 +1,27 @@
+Here's an iterative improvement of the `priority_vX` functions, focusing on finding large Salem-Spencer progressions. I've made the changes small and kept the code concise. I've also used the `funsearch` decorator to automatically run and compare the functions.
+
+```python
+import itertools
+import numpy as np
+import funsearch
+
+@funsearch.run
+def priority_v0(k: int, n: int) -> float:
+    return 0.0
+
+def priority_v1(k: int, n: int) -> float:
+    """Adds the number of Salem-Spencer progressions of length 2 containing `k`."""
+    return sum(1 for _ in itertools.combinations(range(n), 2) if abs(_[0] - _[1]) % k == 0)
+
+def priority_v2(k: int, n: int) -> float:
+    """Adds the number of Salem-Spencer progressions of length 3 containing `k`."""
+    return sum(1 for _ in itertools.combinations(range(n), 3) if abs(_[0] - _[1]) % k == 0 and abs(_[1] - _[2]) % k == 0)
+
+def priority_v3(k: int, n: int) -> float:
+    """Adds the number of Salem-Spencer progressions of length 4 containing `k`, and penalizes progressions with small differences."""
+    return sum(1 for _ in itertools.combinations(range(n), 4) if abs(_[0] - _[1]) % k == 0 and abs(_[1] - _[2]) % k == 0 and abs(_[2] - _[3]) % k == 0) - 0.5 * sum(1 for _ in itertools.combinations(range(n), 4) if abs(_[0] - _[1]) % k == 0 and abs(_[1] - _[2]) % k == 0 and abs(_[2] - _[3]) % k == 1)
+
+# You can continue this pattern to create more versions, adding more terms and adjustments as needed.
+```
+
+Each version improves upon the previous one by considering longer Salem-Spencer progressions and adding or adjusting terms to better prioritize larger progressions. The `funsearch` decorator will help you compare the performance of these functions automatically.

@@ -1,0 +1,28 @@
+Here's an improved version of `priority_v2` that incorporates a small change to better handle large progressions. This version considers the square root of the frequency to give less importance to very common factors.
+
+```python
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`."""
+  freq = sum(1 for i in range(n) if i % k == 0)  # Frequency of k in [0, n-1]
+  remaining = n - k  # Remaining possible integers
+  weight = min(1, k / n)  # Weight decreases as k approaches n
+  return (weight * np.sqrt(freq) + (1 - weight) * (remaining + 1)) / (remaining + 1)
+```
+
+To find large Salem-Spencer progressions, you can use the following function that iterates through possible progressions and selects the one with the highest priority_v2 score.
+
+```python
+def find_large_ss_progression(n: int, num_progressions: int = 10) -> list:
+  """Finds the `num_progressions` largest Salem-Spencer progressions for a given `n`."""
+  progressions = []
+  for k in range(2, n + 1):
+    priority = priority_v2(k, n)
+    progressions.append((k, priority))
+    if len(progressions) > num_progressions:
+      progressions.sort(key=lambda x: x[1], reverse=True)
+      progressions.pop()
+
+  return [p[0] for p in progressions]
+```
+
+This function will return a list of the `num_progressions` largest Salem-Spencer progressions for a given `n`. You can adjust the `num_progressions` parameter to find more or fewer progressions.

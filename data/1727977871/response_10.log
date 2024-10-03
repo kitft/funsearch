@@ -1,0 +1,18 @@
+In order to improve the priority_v1 function over the priority_v0 method, we can start by considering the modularity of the integer k, as this can help us identify patterns that might indicate its suitability for inclusion in the Salem-Spencer set.
+
+Here's a simple improvement:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`.
+  Here we consider the modulo of k with various small numbers (2, 3, 5, 7) to give some priority to numbers that are not divisible by these,
+  as they might be more likely to form a progression with other numbers.
+  """
+  priority = 0.0
+  for i in [2, 3, 5, 7]:
+    if k % i != 0:
+      priority += 1
+  return priority
+```
+
+This function works by incrementing the priority for each of the small prime numbers (2, 3, 5, 7) that k is not divisible by. The higher the priority, the more likely it is that k will form a progression with other numbers in the set.

@@ -1,0 +1,13 @@
+Here's an improved version of `priority_v0` that takes into account the number of times the value 1 appears in the tuple `el` and the number of times the value 2 appears, returning the difference between these two counts:
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`.
+
+  Returns the priority with which we want to add `element` to the cap set.
+  el is a tuple of length n with values 0-2.
+  """
+  return el.count(1) - el.count(2)
+```
+
+This function prioritizes elements that have more 1s than 2s, and it penalizes elements with more 2s than 1s. This can be useful in a cap set search if 1s and 2s represent certain properties or features, and we want to maximize the number of elements with a particular feature (represented by 1) and minimize the number of elements with an undesirable feature (represented by 2).

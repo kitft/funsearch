@@ -1,0 +1,11 @@
+I've improved the `priority_v1` function to calculate the priority based on the number of unique values in the tuple `el` and the value of `n`.
+
+Here's how the improved function works:
+1. It first checks if the length of the tuple `el` is equal to `n`. If not, it returns 0.0, indicating that the element should not be added to the cap set.
+2. If the lengths are equal, it calculates the number of unique values in the tuple `el` using the `len(set(el))` method.
+3. It then assigns a priority value based on the number of unique values:
+   - If there are 1 unique value, it returns 0.1.
+   - If there are 2 unique values, it returns 0.2.
+   - If there are more than 2 unique values, it returns 0.3.
+
+This improvement allows us to prioritize elements with more unique values, helping us to find larger cap sets.

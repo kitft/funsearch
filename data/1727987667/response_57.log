@@ -1,0 +1,13 @@
+Here's an improved version of `priority_v1`:
+
+```python
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`.
+
+  Instead of just the ratio, we use the logarithm of the ratio.
+  This gives more weight to larger ratios, which makes sense as we're interested in large progressions.
+  """
+  return np.log(k + 1) / np.log(n + 1)
+```
+
+This version of the function gives more emphasis to larger numbers, as it takes the logarithm of the ratio of `k` to `n`. This makes sense because we're interested in finding large progressions.

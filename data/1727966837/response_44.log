@@ -1,0 +1,23 @@
+Here's an improved version of `priority_v1` that considers the number of unique remainders when dividing `k` by `n`. This is inspired by the Salem-Spencer problem's focus on remainders. I've also added a small change to `priority_v0` to start the improvement process.
+
+```python
+import itertools
+
+import numpy as np
+
+import funsearch
+
+@funsearch.run
+def priority_v0(k: int, n: int) -> float:
+    """Returns the priority with which we want to add `k` to the Salem-Spencer set.
+    n is the number of possible integers, and k is the integer we want to determine priority for.
+    """
+    return k / n  # Small change: start with a simple priority based on the integer's value
+
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    remainders = set(k % i for i in range(1, n+1))
+    return len(remainders) / n  # Prioritize based on the number of unique remainders
+```
+
+This version of `priority_v1` should perform better than `priority_v0` in finding large Salem-Spencer progressions. The code is kept short, and the changes are small, as requested. You can further improve `priority_v1` by considering more aspects of the Salem-Spencer problem or by using more advanced techniques like machine learning.

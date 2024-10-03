@@ -1,0 +1,250 @@
+return float(n - k)
+
+
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`."""
+  return float(n - k) / n
+
+
+def priority_v3(k: int, n: int) -> float:
+  """Improved version of `priority_v2`."""
+  return float(n - k) / (n * np.log(n))
+
+
+def priority_v4(k: int, n: int) -> float:
+  """Improved version of `priority_v3`."""
+  return float(n - k) / (n * np.log(n) ** 2)
+
+
+def priority_v5(k: int, n: int) -> float:
+  """Improved version of `priority_v4`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k)
+
+
+def priority_v6(k: int, n: int) -> float:
+  """Improved version of `priority_v5`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 2)
+
+
+def priority_v7(k: int, n: int) -> float:
+  """Improved version of `priority_v6`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 3)
+
+
+def priority_v8(k: int, n: int) -> float:
+  """Improved version of `priority_v7`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 4)
+
+
+def priority_v9(k: int, n: int) -> float:
+  """Improved version of `priority_v8`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 5)
+
+
+def priority_v10(k: int, n: int) -> float:
+  """Improved version of `priority_v9`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 6)
+
+
+def priority_v11(k: int, n: int) -> float:
+  """Improved version of `priority_v10`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 7)
+
+
+def priority_v12(k: int, n: int) -> float:
+  """Improved version of `priority_v11`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 8)
+
+
+def priority_v13(k: int, n: int) -> float:
+  """Improved version of `priority_v12`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 9)
+
+
+def priority_v14(k: int, n: int) -> float:
+  """Improved version of `priority_v13`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 10)
+
+
+def priority_v15(k: int, n: int) -> float:
+  """Improved version of `priority_v14`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 11)
+
+
+def priority_v16(k: int, n: int) -> float:
+  """Improved version of `priority_v15`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 12)
+
+
+def priority_v17(k: int, n: int) -> float:
+  """Improved version of `priority_v16`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 13)
+
+
+def priority_v18(k: int, n: int) -> float:
+  """Improved version of `priority_v17`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 14)
+
+
+def priority_v19(k: int, n: int) -> float:
+  """Improved version of `priority_v18`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 15)
+
+
+def priority_v20(k: int, n: int) -> float:
+  """Improved version of `priority_v19`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 16)
+
+
+def priority_v21(k: int, n: int) -> float:
+  """Improved version of `priority_v20`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 17)
+
+
+def priority_v22(k: int, n: int) -> float:
+  """Improved version of `priority_v21`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 18)
+
+
+def priority_v23(k: int, n: int) -> float:
+  """Improved version of `priority_v22`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 19)
+
+
+def priority_v24(k: int, n: int) -> float:
+  """Improved version of `priority_v23`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 20)
+
+
+def priority_v25(k: int, n: int) -> float:
+  """Improved version of `priority_v24`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 21)
+
+
+def priority_v26(k: int, n: int) -> float:
+  """Improved version of `priority_v25`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 22)
+
+
+def priority_v27(k: int, n: int) -> float:
+  """Improved version of `priority_v26`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 23)
+
+
+def priority_v28(k: int, n: int) -> float:
+  """Improved version of `priority_v27`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 24)
+
+
+def priority_v29(k: int, n: int) -> float:
+  """Improved version of `priority_v28`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 25)
+
+
+def priority_v30(k: int, n: int) -> float:
+  """Improved version of `priority_v29`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 26)
+
+
+def priority_v31(k: int, n: int) -> float:
+  """Improved version of `priority_v30`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 27)
+
+
+def priority_v32(k: int, n: int) -> float:
+  """Improved version of `priority_v31`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 28)
+
+
+def priority_v33(k: int, n: int) -> float:
+  """Improved version of `priority_v32`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 29)
+
+
+def priority_v34(k: int, n: int) -> float:
+  """Improved version of `priority_v33`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 30)
+
+
+def priority_v35(k: int, n: int) -> float:
+  """Improved version of `priority_v34`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 31)
+
+
+def priority_v36(k: int, n: int) -> float:
+  """Improved version of `priority_v35`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 32)
+
+
+def priority_v37(k: int, n: int) -> float:
+  """Improved version of `priority_v36`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 33)
+
+
+def priority_v38(k: int, n: int) -> float:
+  """Improved version of `priority_v37`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 34)
+
+
+def priority_v39(k: int, n: int) -> float:
+  """Improved version of `priority_v38`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 35)
+
+
+def priority_v40(k: int, n: int) -> float:
+  """Improved version of `priority_v39`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 36)
+
+
+def priority_v41(k: int, n: int) -> float:
+  """Improved version of `priority_v40`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 37)
+
+
+def priority_v42(k: int, n: int) -> float:
+  """Improved version of `priority_v41`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 38)
+
+
+def priority_v43(k: int, n: int) -> float:
+  """Improved version of `priority_v42`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 39)
+
+
+def priority_v44(k: int, n: int) -> float:
+  """Improved version of `priority_v43`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 40)
+
+
+def priority_v45(k: int, n: int) -> float:
+  """Improved version of `priority_v44`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 41)
+
+
+def priority_v46(k: int, n: int) -> float:
+  """Improved version of `priority_v45`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 42)
+
+
+def priority_v47(k: int, n: int) -> float:
+  """Improved version of `priority_v46`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 43)
+
+
+def priority_v48(k: int, n: int) -> float:
+  """Improved version of `priority_v47`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 44)
+
+
+def priority_v49(k: int, n: int) -> float:
+  """Improved version of `priority_v48`."""
+  return float(n - k) / (n * np.log(n) ** 2 + k ** 45)
+
+
+def main():
+  for i in range(50):
+    print(f"priority_v{i}(100, 1000) = {globals()[f'priority_v{i}'](100, 1000)}")
+
+
+if __name__ == "__main__":
+  main()

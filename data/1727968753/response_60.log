@@ -1,0 +1,24 @@
+Here's an improved version of `priority_v1` that considers the frequency of remainders and uses a more efficient approach to calculate them:
+
+```python
+from collections import Counter
+
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0` using `Counter` for efficient remainder counting."""
+    remainders = [(k + i) % n for i in range(n)]
+    freq = Counter(remainders)
+    return sum(freq.values()) / n
+```
+
+This version uses Python's built-in `Counter` class to count the frequency of each remainder, which is more efficient than using a `set` as in `priority_v0`. The priority is then calculated as the sum of frequencies divided by the total number of integers `n`.
+
+To further improve the code, we can use a generator expression instead of a list comprehension to create the remainders, which saves memory:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0` using `Counter` and a generator expression."""
+    freq = Counter((k + i) % n for i in range(n))
+    return sum(freq.values()) / n
+```
+
+This version has the same functionality as the previous one but uses less memory, making it more efficient for large inputs.

@@ -1,0 +1,43 @@
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`.
+  Prioritizes numbers with larger gaps to the previous numbers in the sorted salem-spencer set."""
+  ss_set = funsearch.get_ss_set()  # assuming this function exists and returns the current salem-spencer set
+  if not ss_set:  # if the set is empty, prioritize the largest number
+    return k / n
+  else:
+    max_ss = max(ss_set)
+    return (k - max_ss) / n
+
+
+def priority_v3(k: int, n: int) -> float:
+  """Improved version of `priority_v2`.
+  Prioritizes numbers that form larger progressions with the existing numbers in the salem-spencer set."""
+  ss_set = funsearch.get_ss_set()
+  if not ss_set:
+    return k / n
+  else:
+    max_ss = max(ss_set)
+    gap = k - max_ss
+    progressions = [(k - x, x) for x in ss_set if k - x > max_ss - min(ss_set)]
+    if progressions:
+      max_progression = max(progressions, key=lambda x: x[0])
+      return (max_progression[0] + gap) / n
+    else:
+      return gap / n
+
+
+def priority_v4(k: int, n: int) -> float:
+  """Improved version of `priority_v3`.
+  Prioritizes numbers that form progressions with more existing numbers in the salem-spencer set."""
+  ss_set = funsearch.get_ss_set()
+  if not ss_set:
+    return k / n
+  else:
+    max_ss = max(ss_set)
+    gap = k - max_ss
+    progressions = [(k - x, x, len([y for y in ss_set if y < x and k - y == k - x])) for x in ss_set if k - x > max_ss - min(ss_set)]
+    if progressions:
+      max_progression = max(progressions, key=lambda x: (x[0], x[2]))
+      return (max_progression[0] + gap + max_progression[2]) / n
+    else:
+      return gap / n

@@ -1,0 +1,22 @@
+Here's an improved version of `priority_v0` that prioritizes larger numbers and numbers that are more evenly spaced apart:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # Prioritize larger numbers
+  size_priority = k / n
+
+  # Prioritize numbers that are more evenly spaced apart
+  # This is a simple heuristic that calculates the average distance between k and all other numbers in the set
+  # The smaller the average distance, the more evenly spaced the numbers are, and the higher the priority
+  existing_numbers = funsearch.get_current_salem_spencer_set()
+  if existing_numbers:
+    spacing_priority = 1 / np.mean([abs(k - x) for x in existing_numbers])
+  else:
+    spacing_priority = 0
+
+  # Combine the size and spacing priorities
+  return size_priority + spacing_priority
+```
+
+This version of the function prioritizes larger numbers by dividing `k` by `n`, which will result in a larger priority for larger numbers. It also prioritizes numbers that are more evenly spaced apart from the existing numbers in the Salem-Spencer set. This is done by calculating the average distance between `k` and all other numbers in the set, and then taking the reciprocal of that average distance. This results in a higher priority for numbers that are more evenly spaced apart. The final priority is the sum of the size and spacing priorities.

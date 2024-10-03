@@ -1,0 +1,9 @@
+Here's a simple improvement to `priority_v0`. This new version calculates the priority based on the count of 2's in the tuple `el`. The idea is that elements with more 2's should have a higher priority as they contribute more to the overall sum of the cap set.
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return el.count(2)
+```
+
+This modification will make the algorithm consider the elements with more 2's more important, which could potentially lead to a better cap set.

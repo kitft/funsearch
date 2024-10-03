@@ -1,0 +1,35 @@
+Here's a step-by-step improvement of the `priority_vX` functions, focusing on finding large Salem-Spencer progressions. I've made small changes to each version, keeping the code short and improving the priority calculation on each iteration.
+
+```python
+import itertools
+import numpy as np
+import funsearch
+
+@funsearch.run
+def priority_v0(k: int, n: int) -> float:
+    """Returns the priority with which we want to add `k` to the Salem-Spencer set."""
+    return 0.0
+
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`. Adds a simple count of Salem-Spencer progressions."""
+    return sum(1 for _ in itertools.combinations(range(1, n + 1), k))
+
+def priority_v2(k: int, n: int) -> float:
+    """Improved version of `priority_v1`. Adds the sum of reciprocals of Salem-Spencer progressions."""
+    return sum(1 / (a * b) for a, b in itertools.combinations(range(1, n + 1), k))
+
+def priority_v3(k: int, n: int) -> float:
+    """Improved version of `priority_v2`. Adds a weight based on the size of the progression."""
+    return sum((k + 1) / (a * b) for a, b in itertools.combinations(range(1, n + 1), k))
+
+def priority_v4(k: int, n: int) -> float:
+    """Improved version of `priority_v3`. Adds a bonus for progressions that are close to square numbers."""
+    return sum((k + 1) / (a * b) + (a * b) ** 0.5 for a, b in itertools.combinations(range(1, n + 1), k))
+
+def priority_v5(k: int, n: int) -> float:
+    """Improved version of `priority_v4`. Adds a penalty for progressions that are close to the maximum possible."""
+    max_possible = n * (n + 1) // 2
+    return sum((k + 1) / (a * b) + (a * b) ** 0.5 - (a * b) / max_possible for a, b in itertools.combinations(range(1, n + 1), k))
+```
+
+Each version builds upon the previous one, making small improvements to the priority calculation. The final version `priority_v5` adds a penalty for progressions that are close to the maximum possible, encouraging the search to focus on smaller, more interesting progressions.

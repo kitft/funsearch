@@ -1,0 +1,14 @@
+Here's an improved version of `priority_v1` that uses the concept of complement and the number of divisors to enhance the priority calculation. I've also made the code shorter by using numpy's `arange` and `where` functions.
+
+```python
+import numpy as np
+
+@funsearch.run
+def priority_v1(k: int, n: int) -> float:
+    """Returns the priority with which we want to add `k` to the Salem-Spencer set."""
+    complement = n - k
+    divisors = np.count_nonzero(np.gcd(k, np.arange(1, k + 1)) == 1)
+    return complement * divisors
+```
+
+In this version, `priority_v1` calculates the complement of `k` (i.e., `n - k`) and the number of divisors of `k` that are coprime to `k`. The priority is then the product of these two values. This approach should give better results than `priority_v0` while keeping the changes small.

@@ -1,0 +1,13 @@
+The `priority_v2` function is not implemented in the provided code. I would propose a modified version of `priority_v1` as follows:
+
+```python
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`."""
+  # Numbers with more divisors have a higher priority
+  num_divisors = sum(1 for i in range(1, k + 1) if k % i == 0)
+  # Numbers that are more divisible by the next smaller number than n have a higher priority
+  divisibility = k / (n - 1) if k % (n - 1) == 0 else 0
+  return divisibility + num_divisors / k
+```
+
+In this version, I've added a new variable `divisibility` which is 1 if `k` is divisible by `n - 1`, and 0 otherwise. This variable is then added to the existing priority calculation from `priority_v1`. The result is a priority that considers both divisibility by `n - 1` and the number of divisors of `k`.

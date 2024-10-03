@@ -1,0 +1,17 @@
+Here's an improved version of `priority_v1` that takes into account the number of elements set to 1 in the tuple:
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`.
+  Prioritizes tuples with more elements set to 1, as these are more likely to contribute to a large cap set.
+  """
+  return el.count(1) / n
+```
+
+This version prioritizes tuples with more elements set to 1, as these are more likely to contribute to a large cap set.
+
+The priority is calculated as the ratio of the number of 1s in the tuple to the length of the tuple. This means tuples with more 1s will have a higher priority. If all elements in the tuple are 1s, the priority will be 1.0, which is the highest possible priority.
+
+If all elements in the tuple are 0s, the priority will be 0.0, which is the lowest possible priority.
+
+Tuples with 0s and 2s will have priorities between 0.0 and 1.0, depending on how many 1s they contain.

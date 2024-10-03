@@ -1,0 +1,7 @@
+The provided code defines a priority function for selecting integers for a Salem-Spencer set. The `priority_v0` function prioritizes larger numbers, numbers close to half of `n` (for symmetry), and numbers close to the quarter and three-quarter marks of `n` (for balance).
+
+The `priority_v1` function is an improved version of `priority_v0` that only considers the size of the integer `k` relative to `n`.
+
+However, the `priority_v2` function is not defined in the provided code, so it is not possible to describe how it improves upon `priority_v1` without further information.
+
+Overall, the priority functions are designed to select a diverse and balanced set of integers for the Salem-Spencer set, with a focus on symmetry and balance. The improvement in `priority_v1` over `priority_v0` is a simplification of the priority calculation by only considering the size of the integer `k`. The definition of `priority_v2` is missing, so it is not possible to describe its improvements over `priority_v1`.

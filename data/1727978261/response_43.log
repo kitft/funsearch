@@ -1,0 +1,11 @@
+Sure, I'd be happy to help improve the `priority_v1` function. Here's a simple modification that takes into account both the number of 1s and the number of 0s in the tuple. The idea is to prioritize tuples that have more 1s and fewer 0s, as these are more likely to contribute to a large cap set.
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+    """Improved version of `priority_v0`."""
+    ones = el.count(1)
+    zeros = el.count(0)
+    return ones / n - zeros / n
+```
+
+This function works by calculating the difference between the ratio of 1s and the ratio of 0s in the tuple. The result is a number between -1 and 1, where a positive number indicates that the tuple is more likely to contribute to a large cap set, and a negative number indicates the opposite.

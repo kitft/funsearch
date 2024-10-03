@@ -1,0 +1,25 @@
+To improve the `priority_v1` function over `priority_v0`, we can consider the following modifications:
+
+1. Use the value of `k` to calculate the priority. This can be done by normalizing `k` based on the range of possible integers `n`.
+
+2. We can also consider the parity of `k` and `n` to determine the priority. For example, we can give higher priority to even numbers if `n` is even.
+
+Here is an improved version of `priority_v1` that incorporates these changes:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # Normalize k based on n
+  normalized_k = k / n
+
+  # If n is even, give higher priority to even numbers
+  if n % 2 == 0:
+    if k % 2 == 0:
+      return 1.0 - normalized_k
+    else:
+      return 0.5 - normalized_k
+  else:
+    return 1.0 - normalized_k
+```
+
+This function will return a priority value between 0 and 1, with higher values indicating a higher priority. The priority is calculated based on the value of `k` and its parity relative to `n`.

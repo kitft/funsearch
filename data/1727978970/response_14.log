@@ -1,0 +1,11 @@
+Sure, I'd be happy to help with that. The `priority_v1` function could be improved based on the context of the problem. However, without more specific details, it's hard to provide a precise solution.
+
+Here's a simple improvement of `priority_v1` that might be suitable if the goal is to maximize the sum of elements in the cap set. This is just a guess, as the actual improvement would depend on the specific problem constraints and goals.
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return sum(el)
+```
+
+This function will return the sum of all elements in the tuple `el`. Therefore, tuples with larger sums will have higher priorities.

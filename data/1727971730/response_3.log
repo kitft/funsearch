@@ -1,0 +1,8 @@
+```python
+import itertools
+import numpy as np
+
+def priority_v1(k: int, n: int) -> float:
+    return k / n
+```
+The updated `priority_v1` function returns the ratio of the current integer `k` to the total possible integers `n`. This means that larger integers will have a higher priority as they are closer to the total possible range. This is a simple improvement over the previous `priority_v0` function which always returned 0.0.

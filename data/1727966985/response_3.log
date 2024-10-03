@@ -1,0 +1,6 @@
+```python
+def priority_v1(k: int, n: int) -> float:
+  return k / n
+```
+
+The new `priority_v1` function improves upon `priority_v0` by returning a value between 0 and 1, where a larger value indicates a higher priority. The priority is calculated as the ratio of the integer `k` to the total number of possible integers `n`. This means that larger integers have a higher priority compared to smaller ones, which makes sense for finding large SS progressions.

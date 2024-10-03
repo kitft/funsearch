@@ -1,0 +1,55 @@
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`."""
+  # Normalize k to the range [-1, 1]
+  normalized_k = k / (n / 2) - 1
+
+  # Use a quadratic function to prioritize numbers closer to the center of the range
+  return 1 - normalized_k ** 2
+
+
+def priority_v3(k: int, n: int) -> float:
+  """Improved version of `priority_v2`."""
+  # Normalize k to the range [-1, 1]
+  normalized_k = k / (n / 2) - 1
+
+  # Use a sigmoid function to prioritize numbers closer to the center of the range
+  return 1 / (1 + np.exp(-normalized_k))
+
+
+def priority_v4(k: int, n: int) -> float:
+  """Improved version of `priority_v3`."""
+  # Normalize k to the range [-1, 1]
+  normalized_k = k / (n / 2) - 1
+
+  # Use a sigmoid function with a steeper slope to prioritize numbers closer to the center of the range
+  return 1 / (1 + np.exp(-5 * normalized_k))
+
+
+def priority_v5(k: int, n: int) -> float:
+  """Improved version of `priority_v4`."""
+  # Normalize k to the range [-1, 1]
+  normalized_k = k / (n / 2) - 1
+
+  # Use a sigmoid function with a steeper slope and a higher midpoint to prioritize numbers closer to the center of the range
+  return 1 / (1 + np.exp(-5 * (normalized_k - 0.5)))
+
+
+def find_large_ss_progressions(n: int, size: int, target_sum: int) -> list[tuple[int, ...]]:
+  """Returns a list of all salem-spencer progressions of length `size` with sum `target_sum` that contain numbers greater than `n/2`."""
+  progressions = []
+
+  # Generate all possible progressions of length `size` with sum `target_sum`
+  for progression in itertools.product(range(1, target_sum + 1), repeat=size):
+    if sum(progression) == target_sum and max(progression) > n / 2:
+      progressions.append(progression)
+
+  # Sort the progressions by priority, using the most recent version of the `priority` function
+  progressions.sort(key=lambda p: priority_v5(max(p), n))
+
+  return progressions
+
+
+# Example usage:
+progressions = find_large_ss_progressions(100, 3, 15)
+for progression in progressions:
+  print(progression)

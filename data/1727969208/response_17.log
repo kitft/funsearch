@@ -1,0 +1,16 @@
+Here's an improved version of `priority_v1` that builds upon `priority_v0` with a small change. This version considers the frequency of remainders to give more priority to elements with unique remainders.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    remainders = {k + i for i in range(n)}  # Generate remainders
+    freq = {r: remainders.count(r) for r in remainders}  # Count frequency of each remainder
+    return sum(freq.values()) / (n * len(remainders)) + 0.01 * (n - len(remainders))
+```
+
+Here's a brief explanation of the changes made:
+
+1. Instead of using a `set` for `remainders`, we use a `set` comprehension to generate remainders directly.
+2. We calculate the frequency of each remainder using a dictionary comprehension and the `count` method.
+3. We sum the frequencies and divide by the product of `n` and the number of unique remainders to get the average frequency.
+4. We add `0.01 * (n - len(remainders))` to give more priority to elements with unique remainders, similar to `priority_v0`.

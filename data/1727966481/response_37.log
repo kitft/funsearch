@@ -1,0 +1,13 @@
+Here's an improved version of `priority_v1` that considers the number of unique remainders when dividing by `n` and the distance from `k` to the nearest multiple of `n`. This version is shorter and makes a small change from `priority_v0`.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    return len(set(k % d for d in range(1, n + 1))) + abs(k - n * round(k / n))
+```
+
+Explanation:
+- `k % d for d in range(1, n + 1)` generates the remainders of `k` when divided by each integer from 1 to `n`.
+- `set(...)` converts the remainders to a set, removing duplicates and giving us the number of unique remainders.
+- `abs(k - n * round(k / n))` calculates the distance from `k` to the nearest multiple of `n`.
+- Adding these two values together gives a priority that favors elements with many unique remainders and that are close to a multiple of `n`.

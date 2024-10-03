@@ -1,0 +1,9 @@
+Here's an improved version of `priority_v1` that considers the frequency of `k` in the range `[0, n)` and the total number of elements in that range. This version is shorter and makes a small change from `priority_v0`.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return n * (k / (n + 1)) - k
+```
+
+This version calculates the priority as the product of `n` and the ratio of `k` to `n + 1`, then subtracts `k`. This formula gives a higher priority to larger values of `k` and considers the total number of possible integers `n`.

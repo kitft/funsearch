@@ -1,0 +1,9 @@
+The code provided defines three functions, each with the purpose of calculating a priority value for a given integer `k` in a set of `n` possible integers. The priority value determines the likelihood of adding `k` to the Salem-Spencer set.
+
+In `priority_v0`, the priority is calculated as the ratio of the product of the two largest numbers less than `k` to the total number of possible pairs (n^2). If `k` is less than 2, the function returns 0.0.
+
+`priority_v1` is an improved version of `priority_v0`. Instead of calculating the product of the two largest numbers less than `k`, it simply returns the ratio of `k` to `n`.
+
+`priority_v2` is an improved version of `priority_v1`, but it is not implemented in the provided code. To improve upon `priority_v1`, you could consider using a different formula to calculate the priority, such as the logarithm of `k` divided by the logarithm of `n`. This could help to better distinguish between larger values of `k`.
+
+Overall, the goal of these functions is to efficiently and accurately determine which integers should be added to the Salem-Spencer set, based on their priority value. By iteratively improving the priority calculation, the functions can be made more efficient and effective.

@@ -1,0 +1,13 @@
+It seems like you're working on a function to determine the priority of adding a certain integer to a Salem-Spencer set. The function `priority_v1` is an improved version of `priority_v0`, which currently returns 0.0 for all inputs.
+
+The task is to improve `priority_v1` over `priority_v0` by making small changes to the code. However, I don't see any code for `priority_v1` provided.
+
+Since you want to make the code short, I'll suggest a simple improvement based on the problem description. The priority could be inversely proportional to the value of `k`, assuming smaller values are more desirable. Here's a possible implementation:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`. Priority is inversely proportional to `k`."""
+  return 1.0 / (k + 1)  # Adding 1 to avoid division by zero
+```
+
+This function will return a value between 0 and 1, with higher values for smaller `k`.

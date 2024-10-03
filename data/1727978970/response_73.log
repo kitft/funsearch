@@ -1,0 +1,14 @@
+Here is a possible solution:
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # Prioritize elements with more 1's (since a 1 contributes to the sum)
+  return el.count(1)
+```
+
+This version of the function `priority_v1` will prioritize elements with more 1's because a 1 contributes to the sum of the cap set. This is a small improvement over `priority_v0` which always returned 0.
+
+This solution is efficient because it uses Python's built-in `tuple.count` method to count the number of 1's in the tuple, which has a time complexity of O(n). The space complexity is O(1) because it only uses a constant amount of space to store the count of 1's.
+
+The code is also short and easy to understand, which is in line with the problem's requirements.

@@ -1,0 +1,10 @@
+Here's an improved version of `priority_v0`:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # Prioritize larger numbers and numbers closer to n/2
+  return n / 2 - abs(n / 2 - k)
+```
+
+This version of the priority function gives higher priority to numbers that are closer to n/2. It does this by computing the absolute difference between k and n/2, and then subtracting this value from n/2. This results in a priority that is high for numbers close to n/2 and low for numbers far from n/2.

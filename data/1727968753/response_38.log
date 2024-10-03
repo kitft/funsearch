@@ -1,0 +1,15 @@
+Here's an improved version of `priority_v1` that considers the number of unique remainders and the frequency of each remainder when `k` is added to all integers in the range `[0, n)`. I've made small changes to keep the code short and improve the priority function.
+
+```python
+from collections import Counter
+
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    remainders = [(k + i) % n for i in range(n)]
+    remainder_count = Counter(remainders)
+    unique_remainders = len(remainder_count)
+    avg_frequency = sum(count for count in remainder_count.values()) / unique_remainders
+    return unique_remainders / n + 1 / avg_frequency
+```
+
+This version of `priority_v1` considers both the number of unique remainders and their average frequency. The intuition behind this improvement is that remainders with lower frequencies are more likely to be part of a large Salem-Spencer progression, as they are less likely to repeat within the range `[0, n)`. Therefore, we want to prioritize elements that result in unique remainders with lower frequencies.

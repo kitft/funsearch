@@ -1,0 +1,10 @@
+Here's an improved version of `priority_v1` that makes small changes to `priority_v0`. I've added a check to exclude `k` from the remainders set and used a generator expression for better performance.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    remainders = {i % n for i in range(n) if i != k}
+    return len(remainders) / n
+```
+
+This version of `priority_v1` excludes `k` from the remainders set, which is a small improvement over `priority_v0`. It also uses a generator expression to create the remainders set, which can be more memory-efficient for large `n`.

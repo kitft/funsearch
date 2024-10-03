@@ -1,0 +1,57 @@
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`.
+
+  The priority function is now based on the size of the gap between consecutive numbers in the Salem-Spencer sequence.
+  We want to maximize this gap, as it increases the "spread" of the sequence and makes it less likely that new numbers
+  will be close to any existing numbers in the sequence.
+
+  The priority of a number is calculated as the product of two factors:
+  1. The size of the gap between the number and the previous number, normalized by the total number of possible integers.
+  2. The size of the gap between the number and the next number, normalized by the total number of possible integers.
+
+  The product of these two factors gives a measure of the "desirability" of the number as the next element in the sequence.
+  """
+  # Get the current Salem-Spencer sequence
+  ss_sequence = funsearch.get_current_sequence()
+
+  # Find the previous and next numbers in the sequence
+  prev_num = max([num for num in ss_sequence if num < k], default=0)
+  next_num = min([num for num in ss_sequence if num > k], default=n)
+
+  # Calculate the size of the gaps between the number and its neighbors
+  gap_before = (k - prev_num) / n
+  gap_after = (next_num - k) / n
+
+  # Return the product of the gap sizes as the priority
+  return gap_before * gap_after
+
+
+def get_best_sequence(n: int, sequence_length: int) -> List[int]:
+  """Returns the best Salem-Spencer sequence of length `sequence_length` from the first `n` integers."""
+  # Define the search space as all integers from 1 to `n`
+  search_space = list(range(1, n + 1))
+
+  # Initialize an empty sequence
+  sequence = []
+
+  # Iteratively add the element with the highest priority to the sequence
+  for _ in range(sequence_length):
+    # Calculate the priority of each element in the search space
+    priorities = [priority_v2(k, n) for k in search_space]
+
+    # Find the element with the highest priority
+    best_element = search_space[np.argmax(priorities)]
+
+    # Add the element to the sequence and remove it from the search space
+    sequence.append(best_element)
+    search_space.remove(best_element)
+
+  # Return the final sequence
+  return sequence
+
+
+# Example usage:
+n = 100
+sequence_length = 10
+best_sequence = get_best_sequence(n, sequence_length)
+print(best_sequence)

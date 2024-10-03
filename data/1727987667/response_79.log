@@ -1,0 +1,11 @@
+Here is an improved version of `priority_v0` that considers the proportion of the remaining integers that are less than `k`. This might be a good heuristic for finding large SS progressions, as it prioritizes integers that have fewer smaller integers remaining to be considered.
+
+```python
+def priority_v1(k: int, n: int, remaining: set) -> float:
+  """Improved version of `priority_v0`."""
+  return len([i for i in remaining if i < k]) / len(remaining)
+```
+
+In this function, `remaining` is the set of integers that have not yet been considered. The priority is then the proportion of these remaining integers that are less than `k`.
+
+Note that this function assumes that `remaining` is a set containing all integers from 1 to `n` that have not yet been considered. If this is not the case, the function will not work correctly.

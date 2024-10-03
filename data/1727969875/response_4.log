@@ -1,0 +1,14 @@
+To improve the `priority_v1` function over `priority_v0`, we can consider the following:
+
+1. The larger the integer `k`, the lower its priority should be. This is because larger integers have more factors and are thus less likely to be part of a Salem-Spencer progression.
+2. The number of possible integers `n` can also influence the priority. If `n` is large, it means there are more options to choose from, and thus the priority of `k` should be lower.
+
+Based on these observations, we can modify the `priority_v0` function as follows:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return k / n
+```
+
+In this version, the priority is the ratio of `k` to `n`. This means that larger `k` values will result in a lower priority, and larger `n` values will also result in a lower priority.

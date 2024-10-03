@@ -1,0 +1,19 @@
+Here's an improved version of `priority_v1` that considers the density of numbers around `k` in the range `[1, n]`. This version uses the harmonic series to estimate the density and applies a simple weighting function to prioritize numbers with higher densities.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    # Harmonic series sum up to k
+    H_k = sum(1 / i for i in range(1, k + 1))
+
+    # Harmonic series sum up to n
+    H_n = sum(1 / i for i in range(1, n + 1))
+
+    # Density of numbers around k
+    density = H_k / H_n
+
+    # Simple weighting function to prioritize higher densities
+    return density * (1 + np.log2(k) / np.log2(n))
+```
+
+This version of `priority_v1` makes a small change from `priority_v0` by considering the density of numbers around `k` and applying a weighting function to prioritize numbers with higher densities. The code is also shorter and more concise than the original `priority_v0` function.

@@ -1,0 +1,18 @@
+Here is a possible solution for the problem:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # use the proportion of k to n as a basic priority
+  base_priority = k / n
+
+  # add a bonus for numbers that are multiples of common SS-progressions
+  # (2, 3, 5, 7, 11), each contributing 0.1 to the priority
+  for ss_prog in [2, 3, 5, 7, 11]:
+    if k % ss_prog == 0:
+      base_priority += 0.1
+
+  return base_priority
+```
+
+This version of the function increases the priority of numbers that are multiples of common Salem-Spencer progressions (2, 3, 5, 7, 11), by adding a bonus of 0.1 to their base priority (which is the proportion of the number to the total possible numbers). This should help to find larger SS progressions more quickly, as they are more likely to be multiples of these common progressions.

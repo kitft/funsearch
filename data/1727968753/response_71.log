@@ -1,0 +1,19 @@
+Here's an improved version of `priority_v1` that considers the number of unique remainders and also takes into account the frequency of each remainder. This version uses the Gini coefficient to measure the inequality among the remainders, which should give a better priority score.
+
+```python
+def gini(x):
+    """Calculate the Gini coefficient of a list of numbers."""
+    x = np.array(x)
+    x = x[x != 0]  # Exclude 0 to avoid division by zero
+    return 1 - np.sum(np.sort(x) / np.sum(x)) / (len(x) + 1)
+
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0` using Gini coefficient."""
+    remainders = [(k + i) % n for i in range(n)]
+    unique_remainders = set(remainders)
+    freq = {r: remainders.count(r) for r in unique_remainders}
+    gini_coeff = gini(list(freq.values()))
+    return gini_coeff * len(unique_remainders) / n
+```
+
+This version of `priority_v1` should provide a better score for elements that have a more uniform distribution of remainders, which is desirable for the Salem-Spencer set. The code is still relatively short and only makes small changes from the previous version.

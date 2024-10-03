@@ -1,0 +1,36 @@
+"""Finds large cap sets.
+
+On every iteration, improve priority_v1 over the priority_vX methods from previous iterations.
+Make only small changes.
+Try to make the code short.
+"""
+import itertools
+
+import numpy as np
+
+import funsearch
+
+
+@funsearch.run
+def priority_v0(el: tuple[int, ...], n: int) -> float:
+  """Returns the priority with which we want to add `element` to the cap set.
+  el is a tuple of length n with values 0-2.
+  """
+  """Improved version of `priority_v0`."""
+  count_2 = el.count(2)
+  count_0 = el.count(0)
+  sum_el = sum(el)
+  variance = np.var(el)
+
+  # Prioritize tuples with more 2s and fewer 0s, and smaller variance
+  priority = count_2 - count_0 - variance
+
+  # Normalize priority by sum of elements
+  normalized_priority = priority / sum_el if sum_el != 0 else 0
+
+  return normalized_priority
+
+
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`."""
+

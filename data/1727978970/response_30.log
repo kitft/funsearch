@@ -1,0 +1,16 @@
+The `priority_v0` function computes a priority score for a given tuple `el` of length `n` with values 0-2. The priority score is calculated as the sum of the number of 2's in the tuple, minus half the number of 1's, plus a quarter of the number of 0's.
+
+The `priority_v1` function is an improved version of `priority_v0`. However, the code for `priority_v1` is not provided in the given snippet.
+
+Given the documentation provided, it seems that the goal is to improve the `priority_v1` function based on the logic of the `priority_v0` function. Here's a possible implementation of `priority_v1` that slightly modifies the weights of 1's and 0's:
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`."""
+  count_2 = el.count(2)
+  count_1 = el.count(1)
+  count_0 = el.count(0)
+  return count_2 - 0.4 * count_1 + 0.1 * count_0
+```
+
+In this version, the weight of 1's is decreased from 0.5 to 0.4, and the weight of 0's is decreased from 0.25 to 0.1. This could potentially lead to a different order of exploration in the search space.

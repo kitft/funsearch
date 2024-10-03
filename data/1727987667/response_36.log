@@ -1,0 +1,11 @@
+Here's an improved version of `priority_v1`. This version considers the parity of the number `k` and the number of elements `n` in the set. If `k` is even, it returns a higher priority than if `k` is odd. Additionally, it increases the priority for smaller values of `n`.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  parity_priority = 1.0 if k % 2 == 0 else 0.5
+  size_priority = 1.0 / (n + 1)
+  return parity_priority * size_priority
+```
+
+In this version, the priority is calculated as the product of `parity_priority` and `size_priority`. `parity_priority` is 1.0 if `k` is even, and 0.5 if `k` is odd. `size_priority` is inversely proportional to `n + 1` to give higher priority to smaller `n`. This way, even numbers are preferred and smaller sets are preferred.

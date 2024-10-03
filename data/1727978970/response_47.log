@@ -1,0 +1,11 @@
+Here's an improved version of `priority_v0` which prioritizes tuples with more 2's and fewer 0's. This is because a 2 is more likely to contribute to the set size, while a 0 is less likely to contribute.
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`."""
+  two_count = el.count(2)
+  zero_count = el.count(0)
+  return two_count - 0.5 * zero_count
+```
+
+This function counts the number of 2's and 0's in the tuple `el`, and returns a priority value that is the number of 2's minus half the number of 0's. This means that each 2 adds 1 to the priority, while each 0 subtracts 0.5 from the priority. This should help to prioritize tuples that are more likely to contribute to the size of the cap set.

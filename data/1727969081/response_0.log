@@ -1,0 +1,21 @@
+Here's an improved version of `priority_v1` that considers the frequency of `k` in the range `[1, n]` and the number of remaining elements to be added to the Salem-Spencer set. I've made small changes to keep the code short and focused on improving the priority calculation.
+
+```python
+import collections
+
+@funsearch.run
+def priority_v1(k: int, n: int) -> float:
+    """Returns the priority with which we want to add `k` to the Salem-Spencer set.
+    n is the number of possible integers, and k is the integer we want to determine priority for.
+    """
+    # Count the frequency of k in the range [1, n]
+    freq = collections.Counter(range(1, n + 1))[k]
+
+    # Calculate the number of remaining elements to be added to the Salem-Spencer set
+    remaining = n - sum(freq.values())
+
+    # Prioritize elements that are more frequent and have more remaining elements to be added
+    return freq / (remaining + 1)
+```
+
+This version of `priority_v1` should provide a better priority score for elements that are more frequent and have more remaining elements to be added to the Salem-Spencer set. The division by `(remaining + 1)` ensures that the priority is never zero, even when there are no remaining elements to be added.

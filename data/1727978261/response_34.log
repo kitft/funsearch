@@ -1,0 +1,13 @@
+Here's an improved version of the `priority_v0` function:
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Returns the priority with which we want to add `element` to the cap set.
+  el is a tuple of length n with values 0-2.
+  """
+  # The priority is calculated as the sum of the elements in the tuple.
+  # The higher the sum, the higher the priority.
+  return sum(el)
+```
+
+This version of the function assigns a higher priority to tuples with more 2s and 1s. This is because the sum of the elements in the tuple increases with more 2s and 1s. This might help to find large cap sets more efficiently because it prioritizes tuples that have a higher chance of being included in a large cap set. However, it's important to note that this is just one possible way to improve the priority function, and other approaches could potentially be more effective.

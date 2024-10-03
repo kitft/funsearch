@@ -1,0 +1,116 @@
+"""Improved version of `priority_v1`."""
+
+# Adjust the priority based on the number of divisors and their sum
+def priority_v2(k: int, n: int) -> float:
+  divisors = [i for i in range(1, k + 1) if k % i == 0]
+  num_divisors = len(divisors)
+  sum_divisors = sum(divisors)
+  return k / n + num_divisors / sum_divisors
+
+
+def priority_v3(k: int, n: int) -> float:
+  """Improved version of `priority_v2`."""
+
+  # Adjust the priority based on the difference between the number and the sum of its divisors
+  def diff_divisors(k):
+    divisors = [i for i in range(1, k + 1) if k % i == 0]
+    return k - sum(divisors)
+
+  return k / n + diff_divisors(k) / k
+
+
+def priority_v4(k: int, n: int) -> float:
+  """Improved version of `priority_v3`."""
+
+  # Adjust the priority based on the product of its divisors
+  def prod_divisors(k):
+    divisors = [i for i in range(1, k + 1) if k % i == 0]
+    return np.prod(divisors)
+
+  return k / n + np.log(prod_divisors(k)) / k
+
+
+def priority_v5(k: int, n: int) -> float:
+  """Improved version of `priority_v4`."""
+
+  # Adjust the priority based on the ratio of the square of the number to the product of its divisors
+  def ratio_divisors(k):
+    divisors = [i for i in range(1, k + 1) if k % i == 0]
+    return (k ** 2) / np.prod(divisors)
+
+  return k / n + np.log(ratio_divisors(k)) / k
+
+
+def priority_v6(k: int, n: int) -> float:
+  """Improved version of `priority_v5`."""
+
+  # Adjust the priority based on the ratio of the square of the number to the product of its unique divisors
+  def unique_divisors(k):
+    return set(i for i in range(1, int(np.sqrt(k)) + 1) if k % i == 0)
+
+  def ratio_unique_divisors(k):
+    divisors = unique_divisors(k)
+    return (k ** 2) / np.prod(list(divisors) + [d ** 2 for d in divisors if d != k / d])
+
+  return k / n + np.log(ratio_unique_divisors(k)) / k
+
+def priority_v7(k: int, n: int) -> float:
+  """Improved version of `priority_v6`."""
+
+  # Adjust the priority based on the ratio of the cube of the number to the product of its unique divisors
+  def unique_divisors(k):
+    return set(i for i in range(1, int(np.cbrt(k)) + 1) if k % i == 0)
+
+  def ratio_unique_divisors(k):
+    divisors = unique_divisors(k)
+    return (k ** 3) / np.prod(list(divisors) + [d ** 2 for d in divisors if d != k / d and d != k / (d ** 2)])
+
+  return k / n + np.log(ratio_unique_divisors(k)) / k
+
+
+def priority_v8(k: int, n: int) -> float:
+  """Improved version of `priority_v7`."""
+
+  # Adjust the priority based on the ratio of the fourth power of the number to the product of its unique divisors
+  def unique_divisors(k):
+    return set(i for i in range(1, int(np.sqrt(np.sqrt(k))) + 1) if k % i == 0)
+
+  def ratio_unique_divisors(k):
+    divisors = unique_divisors(k)
+    return (k ** 4) / np.prod(list(divisors) + [d ** 2 for d in divisors if d != k / d and d != k / (d ** 2) and d != k / (d ** 3)])
+
+  return k / n + np.log(ratio_unique_divisors(k)) / k
+
+
+def priority_v9(k: int, n: int) -> float:
+  """Improved version of `priority_v8`."""
+
+  # Adjust the priority based on the ratio of the fifth power of the number to the product of its unique divisors
+  def unique_divisors(k):
+    return set(i for i in range(1, int(np.sqrt(np.sqrt(np.sqrt(k)))) + 1) if k % i == 0)
+
+  def ratio_unique_divisors(k):
+    divisors = unique_divisors(k)
+    return (k ** 5) / np.prod(list(divisors) + [d ** 2 for d in divisors if d != k / d and d != k / (d ** 2) and d != k / (d ** 3) and d != k / (d ** 4)])
+
+  return k / n + np.log(ratio_unique_divisors(k)) / k
+
+
+def priority_v10(k: int, n: int) -> float:
+  """Improved version of `priority_v9`."""
+
+  # Adjust the priority based on the ratio of the sixth power of the number to the product of its unique divisors
+  def unique_divisors(k):
+    return set(i for i in range(1, int(np.cbrt(np.cbrt(k))) + 1) if k % i == 0)
+
+  def ratio_unique_divisors(k):
+    divisors = unique_divisors(k)
+    return (k ** 6) / np.prod(list(divisors) + [d ** 2 for d in divisors if d != k / d and d != k / (d ** 2) and d != k / (d ** 3) and d != k / (d ** 4) and d != k / (d ** 5)])
+
+  return k / n + np.log(ratio_unique_divisors(k)) / k
+
+
+# And so on... The pattern is clear. We can continue this process indefinitely, but each improvement will be less significant than the last.
+# The priority function could be made more complex, but it would also be more difficult to compute and understand.
+# At some point, the complexity of the priority function would outweigh its benefits.
+# Therefore, I will stop here and use priority_v10 as the final version.

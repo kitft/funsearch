@@ -1,0 +1,10 @@
+Here's an improved version of `priority_v1` that considers the distance of `k` from the midpoint of the range of possible integers. This might be more appropriate for a problem where larger numbers are considered more important than smaller numbers, and the middle of the range is the most important.
+
+```python
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`. Considers the distance of `k` from the midpoint."""
+  midpoint = n / 2
+  return 1 - abs(k - midpoint) / midpoint
+```
+
+In this version, the priority is inversely proportional to the distance of `k` from the midpoint. The closer `k` is to the midpoint, the higher its priority.

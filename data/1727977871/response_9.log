@@ -1,0 +1,34 @@
+Here is an improved version of `priority_v0` using the concept of gaps between prime numbers. A larger gap between primes is more valuable in a Salem-Spencer set as it contributes more to the sum of reciprocals.
+
+```python
+def priority_v1(k: int, n: int, primes: list) -> float:
+  """Improved version of `priority_v0`.
+
+  Args:
+    k: The integer for which to compute the priority.
+    n: The number of possible integers.
+    primes: A list of prime numbers up to n.
+
+  Returns:
+    The priority with which we want to add `k` to the Salem-Spencer set.
+  """
+  # If k is not a prime number, return 0
+  if k not in primes:
+    return 0.0
+
+  # Initialize priority with 1/k
+  priority = 1/k
+
+  # Compute the gap between k and the next prime number
+  next_prime = next(p for p in primes if p > k)
+  gap = next_prime - k
+
+  # Add a bonus to the priority for large gaps
+  priority += 1/gap
+
+  return priority
+```
+
+The function `priority_v1` takes an additional argument `primes` which is a list of prime numbers up to `n`. It then computes the gap between `k` and the next prime number and adds a bonus to the priority for large gaps.
+
+This version of the function gives a higher priority to prime numbers with a larger gap to the next prime number, which should result in larger progressions in the Salem-Spencer set. However, it still returns 0 for non-prime numbers.

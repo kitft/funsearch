@@ -1,0 +1,26 @@
+It seems like you want to optimize the `priority_v0` function, which currently calculates the priority with which we want to add a given integer `k` to the Salem-Spencer set. The set contains integers from 1 to `n`, and the priority is determined by counting how many pairs of distinct integers in this range sum up to `k`.
+
+The `priority_v1` function is an improved version of `priority_v0`, and it seems that you want to make small changes to improve the efficiency of the function.
+
+Here's an optimized version of `priority_v0` using numpy's broadcasting feature to avoid the need for a nested loop:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    # Create an array of integers from 1 to n
+    arr = np.arange(1, n + 1)
+
+    # Use broadcasting to add each integer with all other integers
+    sums = arr[:, None] + arr
+
+    # Count the number of pairs that sum up to k
+    count = np.count_nonzero(sums == k)
+
+    # Subtract the diagonal elements (pairs of the same integer)
+    # since k is the sum of two distinct integers
+    count -= np.count_nonzero(arr == k // 2)
+
+    return count
+```
+
+This version of the function calculates the sums of all pairs of integers in a vectorized manner, which is more efficient than using nested loops. It also takes into account that `k` is the sum of two distinct integers.

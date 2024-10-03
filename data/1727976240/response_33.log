@@ -1,0 +1,80 @@
+"""
+This version of the `priority_v2` function takes into account the difference between k and the previous element in the Salem-Spencer set. A larger difference indicates a more significant progression, which is desirable.
+
+The priority is calculated as the ratio of the difference between k and the previous element to n (the total number of possible integers), multiplied by a constant factor (1000 in this case) to give more weight to the difference. This constant factor can be adjusted to balance the importance of the difference and the proportion of possible integers.
+
+Note that this function assumes that the previous element in the Salem-Spencer set is available as a parameter, which is not shown in the previous code snippets. Modifications may be needed to incorporate this into the existing codebase.
+"""
+
+def priority_v2(k: int, n: int, prev_element: int) -> float:
+  """Improved version of `priority_v1`."""
+  difference = abs(k - prev_element)
+  return (difference / n) * 1000 + (k / n)
+
+
+def find_ss_progressions(n: int, min_size: int) -> list:
+  """Finds Salem-Spencer progressions of a minimum size.
+
+  Args:
+    n: The maximum number to consider.
+    min_size: The minimum size of the progressions to find.
+
+  Returns:
+    A list of Salem-Spencer progressions of the minimum size.
+  """
+  # Generate all possible integers up to n.
+  integers = np.arange(1, n + 1)
+
+  # Initialize the Salem-Spencer set with the first element.
+  ss_set = [1]
+
+  # Iteratively add elements to the Salem-Spencer set.
+  while True:
+    # Calculate the priority of each integer.
+    priorities = [priority_v2(k, n, ss_set[-1]) for k in integers]
+
+    # Find the integer with the highest priority.
+    max_priority_index = np.argmax(priorities)
+    max_priority_integer = integers[max_priority_index]
+
+    # Add the integer to the Salem-Spencer set.
+    ss_set.append(max_priority_integer)
+
+    # Check if the Salem-Spencer set is a progression of the minimum size.
+    if len(ss_set) >= min_size and is_ss_progression(ss_set):
+      # If it is, yield the progression.
+      yield ss_set
+
+    # Remove the integer from the list of possible integers.
+    integers = np.delete(integers, max_priority_index)
+
+    # If there are no more integers to consider, stop iterating.
+    if len(integers) == 0:
+      break
+
+
+def is_ss_progression(ss_set: list) -> bool:
+  """Checks if a list of integers is a Salem-Spencer progression.
+
+  Args:
+    ss_set: A list of integers.
+
+  Returns:
+    True if the list is a Salem-Spencer progression, False otherwise.
+  """
+  # Check that the list is sorted in ascending order.
+  if not all(x < y for x, y in zip(ss_set, ss_set[1:])):
+    return False
+
+  # Check that the difference between consecutive elements is an increasing sequence.
+  differences = [y - x for x, y in zip(ss_set, ss_set[1:])]
+  if not all(x < y for x, y in zip(differences, differences[1:])):
+    return False
+
+  # If both conditions are satisfied, the list is a Salem-Spencer progression.
+  return True
+
+
+# Example usage:
+progressions = list(find_ss_progressions(n=100, min_size=5))
+print(progressions)

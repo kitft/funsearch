@@ -1,0 +1,14 @@
+Here's an improved version of `priority_v1` that considers the frequency of `k` in the range `[1, n]` and the number of remaining possible integers. The improvement is small, focusing on the frequency of `k` to give it a higher priority if it's less frequent.
+
+```python
+from collections import Counter
+
+@funsearch.run
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    freq = Counter(range(1, n + 1)).get(k, 0)
+    remaining = n - k
+    return freq / (remaining + 1)
+```
+
+This version uses the `Counter` class from the `collections` module to count the frequency of `k` in the range `[1, n]`. It then returns the frequency divided by the number of remaining possible integers plus one to avoid division by zero. This gives a higher priority to less frequent numbers and numbers closer to the end of the range.

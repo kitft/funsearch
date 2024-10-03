@@ -1,0 +1,16 @@
+Here's an improved version of `priority_v1` that considers the number of unique remainders when dividing `k` by `n`, as well as the number of multiples of `k` less than `n`. This version is shorter and makes small changes to improve the priority function.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  remainders = set(k % i for i in range(1, n + 1))
+  multiples = sum(1 for i in range(1, n) if i % k == 0)
+  return len(remainders) / n + multiples / n
+```
+
+This version calculates the priority as the sum of two terms:
+
+1. The ratio of unique remainders to the total number of integers `n`. This term encourages adding `k` when it has many unique remainders, as it contributes to a more diverse Salem-Spencer set.
+2. The ratio of multiples of `k` less than `n` to `n`. This term encourages adding `k` when it has many multiples, as it contributes to a larger Salem-Spencer set.
+
+To further improve the function in subsequent iterations, you could consider additional factors, such as the sum of divisors of `k`, or the number of integers co-prime to `k`. Keep the changes small and focused on improving the priority function's performance.

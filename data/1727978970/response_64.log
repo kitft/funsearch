@@ -1,0 +1,7 @@
+Sure, I'd be happy to help you improve your code. Here's a simple way to improve the `priority_v1` function based on the description you provided. This new version will return the sum of the elements in the tuple as the priority. This way, tuples with more 2s will have a higher priority, which might be a reasonable assumption if we're looking for "large cap sets".
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`. Returns the sum of the elements in the tuple as the priority."""
+  return sum(el)
+```

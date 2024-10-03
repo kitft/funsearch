@@ -1,0 +1,16 @@
+Here's an improved version of `priority_v1` that considers the frequency of `k` in the range `[0, n)` and the number of elements already in the Salem-Spencer set. This version uses a simple heuristic to prioritize elements that are frequent and have fewer co-prime pairs.
+
+```python
+@funsearch.run
+def priority_v1(k: int, n: int, ssp_set: set) -> float:
+    """Returns the priority with which we want to add `k` to the salem-spencer set.
+    n is the number of possible integers, and k is the integer we want to determine priority for.
+    ssp_set is the current Salem-Spencer set.
+    """
+    freq = sum(1 for i in range(n) if np.gcd(i, k) == 1)  # Frequency of k in [0, n)
+    co_primes = len([i for i in ssp_set if np.gcd(i, k) == 1])  # Number of co-prime pairs with k in ssp_set
+
+    return freq / (co_primes + 1)  # Add 1 to avoid division by zero
+```
+
+This version of `priority_v1` takes the current `ssp_set` as an argument to consider the number of co-prime pairs with `k` already in the set. The priority is calculated as the frequency of `k` divided by the number of co-prime pairs plus one (to avoid division by zero). This way, elements that are frequent and have fewer co-prime pairs in the current set will have a higher priority.

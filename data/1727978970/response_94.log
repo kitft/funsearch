@@ -1,0 +1,68 @@
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+    # Returns the priority with which we want to add `element` to the cap set.
+    # el is a tuple of length n with values 0-2.
+
+    # Improved version of `priority_v0`:
+    # Prioritize elements with more 2's and less 0's
+    # This is based on the idea that these elements are more likely to be part of a large cap set
+
+    return el.count(2) - el.count(0)
+
+@funsearch.run
+def priority_v2(el: tuple[int, ...], n: int) -> float:
+    """Improved version of `priority_v1`."""
+
+    # Instead of just counting 2's and 0's, we can also consider the position of these values
+    # Elements with 2's in the first positions are more likely to be part of a large cap set
+    # Elements with 0's in the first positions are less likely to be part of a large cap set
+
+    return el.count(2) - el.count(0) + (n - el.index(2)) if 2 in el else 0 - el.index(0) if 0 in el else n
+
+@funsearch.run
+def priority_v3(el: tuple[int, ...], n: int) -> float:
+    """Improved version of `priority_v2`."""
+
+    # Instead of just considering the first occurrence of 2 and 0, we can consider all their occurrences
+    # We can also consider the gap between occurrences of 2's and 0's
+    # Elements with larger gaps between 2's and 0's are more likely to be part of a large cap set
+
+    twos = [i for i, x in enumerate(el) if x == 2]
+    zeros = [i for i, x in enumerate(el) if x == 0]
+
+    gap_twos = max(twos) - min(twos) if twos else 0
+    gap_zeros = max(zeros) - min(zeros) if zeros else 0
+
+    return len(twos) - len(zeros) + gap_twos - gap_zeros
+
+@funsearch.run
+def priority_v4(el: tuple[int, ...], n: int) -> float:
+    """Improved version of `priority_v3`."""
+
+    # Instead of just considering the gaps between the first and last occurrences of 2's and 0's,
+    # we can also consider the gaps between all pairs of consecutive 2's and 0's
+    # Elements with larger average gaps between 2's and 0's are more likely to be part of a large cap set
+
+    twos = [i for i, x in enumerate(el) if x == 2]
+    zeros = [i for i, x in enumerate(el) if x == 0]
+
+    avg_gap_twos = np.mean(np.diff(twos)) if len(twos) > 1 else 0
+    avg_gap_zeros = np.mean(np.diff(zeros)) if len(zeros) > 1 else 0
+
+    return len(twos) - len(zeros) + avg_gap_twos - avg_gap_zeros
+
+@funsearch.run
+def priority_v5(el: tuple[int, ...], n: int) -> float:
+    """Final version of the priority function."""
+
+    # In the final version, we can also consider the distribution of 1's in the element
+    # Elements with 1's distributed evenly are more likely to be part of a large cap set
+
+    ones = el.count(1)
+    avg_gap_ones = np.mean(np.diff([i for i, x in enumerate(el) if x == 1])) if ones > 1 else 0
+
+    twos = el.count(2)
+    zeros = el.count(0)
+    avg_gap_twos = np.mean(np.diff([i for i, x in enumerate(el) if x == 2])) if twos > 1 else 0
+    avg_gap_zeros = np.mean(np.diff([i for i, x in enumerate(el) if x == 0])) if zeros > 1 else 0
+
+    return twos - zeros + avg_gap_twos - avg_gap_zeros + ones / n - avg_gap_ones

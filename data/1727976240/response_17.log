@@ -1,0 +1,55 @@
+"""Improved version of `priority_v1`.
+
+  The priority is calculated as k/n * (n-k), which gives higher priority to numbers that are closer to the midpoint of the range [0, n].
+  """
+  return k / n * (n - k)
+
+
+def priority_v3(k: int, n: int) -> float:
+  """Improved version of `priority_v2`."""
+
+  """Improved version of `priority_v2`.
+
+  The priority is calculated as k/n * (n-k) * np.log(k + 1), which gives higher priority to larger numbers that are closer to the midpoint of the range [0, n].
+  """
+  return k / n * (n - k) * np.log(k + 1)
+
+
+def priority_v4(k: int, n: int) -> float:
+  """Improved version of `priority_v3`."""
+
+  """Improved version of `priority_v3`.
+
+  The priority is calculated as k/n * (n-k) * np.log(k + 1) / np.log(n + 1), which normalizes the priority by the total number of possible integers.
+  """
+  return k / n * (n - k) * np.log(k + 1) / np.log(n + 1)
+
+
+def priority_v5(k: int, n: int) -> float:
+  """Improved version of `priority_v4`."""
+
+  """Improved version of `priority_v4`.
+
+  The priority is calculated as k/n * (n-k) * np.log(k + 1) / np.log(n + 1) + np.log(k + 1) / np.log(n + 1), which gives higher priority to larger numbers and numbers that are closer to the midpoint of the range [0, n].
+  """
+  return k / n * (n - k) * np.log(k + 1) / np.log(n + 1) + np.log(k + 1) / np.log(n + 1)
+
+
+def priority_v6(k: int, n: int) -> float:
+  """Improved version of `priority_v5`."""
+
+  """Improved version of `priority_v5`.
+
+  The priority is calculated as k/n * (n-k) * np.log(k + 1) / np.log(n + 1) + np.log(k + 1) / np.log(n + 1) + 1/k, which gives higher priority to larger numbers, numbers that are closer to the midpoint of the range [0, n], and numbers that are not too small.
+  """
+  return k / n * (n - k) * np.log(k + 1) / np.log(n + 1) + np.log(k + 1) / np.log(n + 1) + 1 / k
+
+
+def priority_v7(k: int, n: int) -> float:
+  """Improved version of `priority_v6`."""
+
+  """Improved version of `priority_v6`.
+
+  The priority is calculated as k/n * (n-k) * np.log(k + 1) / np.log(n + 1) + np.log(k + 1) / np.log(n + 1) + 1/k + 1/(n-k), which gives higher priority to larger numbers, numbers that are closer to the midpoint of the range [0, n], numbers that are not too small, and numbers that are not too close to the endpoints of the range.
+  """
+  return k / n * (n - k) * np.log(k + 1) / np.log(n + 1) + np.log(k + 1) / np.log(n + 1) + 1 / k + 1 / (n - k)

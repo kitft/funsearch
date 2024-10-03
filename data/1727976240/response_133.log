@@ -1,0 +1,11 @@
+Here is an improved version of `priority_v1` that gives higher priority to larger numbers `k` and numbers that are closer to `n // 2` (the middle of the range). This is because larger numbers tend to have more divisors and numbers closer to the middle have more chances to be a part of a large SS progression.
+
+```python
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`."""
+  return k / n + 1 - abs(k - n // 2) / (n // 2)
+```
+
+In this version of the function, the priority is calculated as a sum of two components. The first component is `k / n`, which gives higher priority to larger numbers. The second component is `1 - abs(k - n // 2) / (n // 2)`, which gives higher priority to numbers closer to `n // 2`. The absolute difference between `k` and `n // 2` is normalized by dividing it by `n // 2`, so that the second component is always between 0 and 1.
+
+This version of the function should be more effective in finding large SS progressions, as it gives higher priority to the numbers that are more likely to be a part of such progressions.

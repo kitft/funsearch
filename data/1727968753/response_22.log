@@ -1,0 +1,21 @@
+Here's an improved version of `priority_v1` that considers the number of elements less than `k` and greater than `k` in the Salem-Spencer set. This version also uses the fact that the Salem-Spencer set is a permutation of the first `n` natural numbers.
+
+```python
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`."""
+  less_than_k = sum(1 for i in range(k) if i not in funsearch.salem_spencer_set)
+  greater_than_k = sum(1 for i in range(k + 1, n + 1) if i not in funsearch.salem_spencer_set)
+  return (less_than_k + greater_than_k) / (n - k)
+```
+
+This version of `priority_v2` calculates the number of elements less than `k` and greater than `k` that are not in the Salem-Spencer set and divides it by the total number of elements that could potentially be added to the set. This gives a higher priority to elements that have more elements on either side that are not yet in the set.
+
+Here's a short way to write the same function using list comprehensions:
+
+```python
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`."""
+  return sum(i not in funsearch.salem_spencer_set for i in range(k)) + sum(i not in funsearch.salem_spencer_set for i in range(k + 1, n + 1)) / (n - k)
+```
+
+Both versions of `priority_v2` make small changes to improve the priority function, as requested in the problem statement.

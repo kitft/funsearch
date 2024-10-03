@@ -1,0 +1,14 @@
+Below is the improved version of the `priority_v0` function:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # Calculate the ratio of k to n
+  ratio = k / n
+  # Prioritize numbers closer to 1
+  return 1 - abs(ratio - 1)
+```
+
+The `priority_v1` function calculates the ratio of `k` to `n`, and then returns a priority score which is higher for numbers closer to 1. This means that numbers closer to the midpoint of the range are preferred over numbers closer to the ends.
+
+Note that this is a simple heuristic and may not be the best priority function for all applications. It's always a good idea to think about the specific problem you're trying to solve when designing a priority function.

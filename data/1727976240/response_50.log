@@ -1,0 +1,11 @@
+Here is the improved version of `priority_v0` called `priority_v1`. In this version, I have taken into account both `k` and `n` to calculate the priority. The priority is calculated as the cube of `k` divided by the square of `n`. This change should provide a more balanced priority distribution.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`.
+    The priority is calculated as the cube of `k` divided by the square of `n`.
+    """
+    return (k ** 3) / (n ** 2)
+```
+
+In this improved version, the cube of `k` is used instead of the square. This change might favor larger `k` values more, which could be beneficial if you're interested in finding larger SS progressions. However, it might also make the search space less evenly distributed, so it's important to consider your specific use case.

@@ -1,0 +1,11 @@
+Here's an improved version of `priority_v1` that considers the frequency of `k` in the range `[0, n)` and the number of unique elements in that range. This version uses the formula `priority = frequency / (n * unique_elements)`, which gives higher priority to elements that are more frequent and have fewer unique elements around them.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  freq = sum(1 for i in range(n) if i % k == 0)
+  unique_elements = len(set(range(k, n, k)))
+  return freq / (n * unique_elements)
+```
+
+This version is short and makes small changes to the original function, improving its performance by considering additional factors.

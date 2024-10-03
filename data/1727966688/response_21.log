@@ -1,0 +1,11 @@
+Here is a simple improvement over the `priority_v0` function. This version calculates the priority as the negative square of the difference between `k` and `n//2`, which gives higher priority to numbers closer to the middle of the range.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return -(k - n // 2) ** 2
+```
+
+This priority function assumes that `n` is the total number of possible integers, and that the Salem-Spencer set is being built from a sequence of integers starting from 0. The priority is highest for the integer in the middle of this sequence, and decreases symmetrically toward the ends of the sequence.
+
+Please note that this is a simple heuristic and may not be optimal for all scenarios. You may want to adjust this function based on the specifics of your problem.

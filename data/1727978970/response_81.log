@@ -1,0 +1,17 @@
+I've updated the `priority_v1` function to calculate the priority for adding an element to the cap set. The function takes a tuple `el` of length `n` with values 0-2 and returns a float value representing the priority.
+
+Here's the updated code:
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+    # Count the number of 1s and 2s in the element
+    num_ones = el.count(1)
+    num_twos = el.count(2)
+
+    # Calculate the priority as the square root of the sum of squares of the counts
+    priority = np.sqrt(num_ones**2 + num_twos**2)
+
+    return priority
+```
+
+In this version, the priority is calculated as the square root of the sum of squares of the counts of 1s and 2s in the element. This gives more weight to elements with a larger number of non-zero elements.

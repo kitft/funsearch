@@ -1,0 +1,14 @@
+Apologies for the confusion earlier, but here's a further improvement to the priority function for finding large SS progressions.
+
+The `priority_v2` function is an improved version of the `priority_v1` function. In this version, we consider the order of magnitude of `k` instead of just `k` itself. This is because larger numbers have a higher chance of contributing to larger SS progressions.
+
+The function returns the priority as the logarithm of `k` divided by the logarithm of `n`. This scales down the importance of larger numbers relative to smaller numbers, but still gives larger numbers a higher priority.
+
+```python
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`."""
+  # Return the priority as the logarithm of k divided by the logarithm of n
+  return np.log(k) / np.log(n)
+```
+
+This approach assumes that `n` is much larger than `k`, and that the logarithm base is the same for both `k` and `n`. If these assumptions do not hold, the function may not perform as expected.

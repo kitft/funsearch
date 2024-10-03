@@ -1,0 +1,17 @@
+Below is the improved version of `priority_v0` method named `priority_v1`. This version considers the frequency of the number `k` in the range from 1 to `n` and the size of the number `k` itself. The higher the frequency and the smaller the size, the higher the priority.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # Calculate the frequency of the number k in the range from 1 to n
+  frequency = np.sum([1 for i in range(1, n + 1) if k in str(i)]) / n
+
+  # Calculate the size of the number k
+  size = len(str(k))
+
+  # The priority is the inverse of the size multiplied by the frequency
+  priority = frequency / size
+
+  return priority
+```
+This version of the function calculates the priority by dividing the frequency of `k` in the range from 1 to `n` by the size of `k`. The smaller `k` is, the higher its priority, and the more frequently `k` appears in the range from 1 to `n`, the higher its priority.

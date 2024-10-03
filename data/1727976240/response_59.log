@@ -1,0 +1,13 @@
+Here's an improved version of `priority_v0`. The priority is now determined by how far `k` is from the middle of the range `[1, n]` and how many prime factors `k` has since larger numbers with more prime factors are more likely to be part of a large SS progression.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  mid = n / 2
+  distance_from_mid = abs(k - mid)
+  num_prime_factors = len(set(itertools.chain.from_iterable(
+      (i, n // i) for i in range(2, int(n**0.5) + 1) if n % i == 0)))
+  return 1 / distance_from_mid + np.log(num_prime_factors)
+```
+
+This version of the function still assumes that larger numbers and numbers with more prime factors are more likely to be part of a large SS progression, but now it also takes into account how far `k` is from the middle of the range since numbers closer to the middle are less likely to be part of a large SS progression.

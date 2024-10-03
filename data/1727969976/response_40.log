@@ -1,0 +1,30 @@
+In the provided Python code, there are functions `priority_v0` and `priority_v1` which both calculate a priority score for a given integer `k` out of a total number of possible integers `n`. The priority score is used to determine the order in which integers are added to the Salem-Spencer set.
+
+The `priority_v2` function is intended to be an improved version of `priority_v1`, but it's currently not implemented.
+
+Making small changes to improve `priority_v1` over `priority_v0`:
+
+- In `priority_v0`, if `k` and `n` are relatively prime (i.e., their greatest common divisor is 1), the priority is inversely proportional to `k` (with a small penalty for larger `k` values). If `k` and `n` are not relatively prime, the priority is lower and depends on the greatest common divisor `gcd`.
+
+- In `priority_v1`, the function is already well-defined and does not require any changes. The only improvement that could be made is to add some type hints to the function signature to improve readability and maintainability.
+
+Here is the improved `priority_v1` function with type hints:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    # Calculate the greatest common divisor of k and n
+    gcd = np.gcd(k, n)
+
+    # If k and n are relatively prime, the priority is inversely proportional to k
+    # but we penalize larger k values to prioritize smaller ones.
+    if gcd == 1:
+        return 1.0 / (k + 1) if k != 0 else float('inf')
+
+    # If k and n are not relatively prime, the priority is lower than when k and n are relatively prime
+    # but we also consider the value of gcd to provide a small preference to numbers with larger gcd.
+    else:
+        return 0.1 / gcd
+```
+
+As for implementing `priority_v2`, it's not possible to do so without additional context or specific requirements. The implementation of `priority_v2` should depend on what specific improvements or changes are desired over `priority_v1`.

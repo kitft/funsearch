@@ -1,0 +1,10 @@
+Here's an updated version of the `priority_v1` function, considering the cardinality of the tuple `el` and the number of non-zeros in it. We give higher priority to tuples with more non-zeros and a higher cardinality.
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`."""
+  non_zeros = sum(i != 0 for i in el)
+  return non_zeros / n
+```
+
+In this version, `non_zeros` is the number of non-zero elements in the tuple `el`, and `n` is the length of the tuple. The function returns the ratio of `non_zeros` to `n`, which gives a number between 0 and 1. This number is equal to the proportion of non-zero elements in the tuple. The higher the ratio, the more "dense" the tuple is, and the higher the priority.

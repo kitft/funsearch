@@ -1,0 +1,18 @@
+Sure, let's improve the `priority_v1` function by considering the frequency of the number `k` in the set of integers from 1 to `n`. The more frequent a number is, the higher its priority should be. Here's a simple way to do it:
+
+```python
+from collections import Counter
+
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    # Generate a list of integers from 1 to n
+    numbers = list(range(1, n+1))
+
+    # Count the frequency of each number in the list
+    frequency = Counter(numbers)
+
+    # Return the frequency of k as its priority
+    return frequency[k] / n
+```
+
+This function first generates a list of integers from 1 to `n`, then it counts the frequency of each number in this list using the `Counter` class from the `collections` module, and finally it returns the frequency of `k` as its priority, normalized by `n` to get a value between 0 and 1.

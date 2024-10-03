@@ -1,0 +1,63 @@
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`."""
+  return k ** 2 / n
+
+
+def priority_v3(k: int, n: int) -> float:
+  """Improved version of `priority_v2`."""
+  return k ** 1.5 / n
+
+
+def priority_v4(k: int, n: int) -> float:
+  """Improved version of `priority_v3`."""
+  return k ** 1.2 / n
+
+
+def priority_v5(k: int, n: int) -> float:
+  """Improved version of `priority_v4`."""
+  return k ** 1.1 / n
+
+
+def priority_v6(k: int, n: int) -> float:
+  """Improved version of `priority_v5`."""
+  return k ** 1.05 / n
+
+
+def priority_v7(k: int, n: int) -> float:
+  """Improved version of `priority_v6`."""
+  return k ** 1.01 / n
+
+
+def priority_v8(k: int, n: int) -> float:
+  """Improved version of `priority_v7`."""
+  return k ** 1.001 / n
+
+
+def priority_v9(k: int, n: int) -> float:
+  """Final version of `priority_vX`."""
+  return k ** 1.0001 / n
+
+
+@funsearch.run
+def find_large_ss_progressions(n: int, min_length: int = 3) -> list[tuple[int]]:
+  """Finds large Salem-Spencer progressions of length `n` or more."""
+  # Generate all possible Salem-Spencer sets of size `n`.
+  ss_sets = itertools.combinations(range(1, n + 1), n)
+
+  # Filter out sets that do not form a progression.
+  ss_progressions = [ss_set for ss_set in ss_sets if is_progression(ss_set)]
+
+  # Sort progressions by length in descending order.
+  ss_progressions.sort(key=len, reverse=True)
+
+  # Return progressions of length `min_length` or more.
+  return [ss_progression for ss_progression in ss_progressions if len(ss_progression) >= min_length]
+
+
+def is_progression(ss_set: tuple[int]) -> bool:
+  """Returns True if `ss_set` forms a Salem-Spencer progression."""
+  # A set forms a progression if the difference between any two elements is also in the set.
+  for a, b in itertools.combinations(ss_set, 2):
+    if abs(a - b) not in ss_set:
+      return False
+  return True

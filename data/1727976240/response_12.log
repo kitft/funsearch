@@ -1,0 +1,35 @@
+import numpy as np
+
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`.
+  Priority is based on the ratio of k to n and the size of the gap between k and the nearest Salem-Spencer number.
+  """
+  salem_spencer = set(funsearch.salem_spencer_set(n))
+  nearest_ss = min((abs(k - ss), ss) for ss in salem_spencer)[1]
+  return k / n - abs(k - nearest_ss) / n
+
+
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`.
+  Priority is also based on the number of gaps of size k that can be filled by adding a Salem-Spencer number.
+  """
+  salem_spencer = set(funsearch.salem_spencer_set(n))
+  gaps = [abs(k - ss) for ss in salem_spencer if 0 < abs(k - ss) < k]
+  return priority_v1(k, n) - len([gap for gap in gaps if gap in salem_spencer]) / len(gaps)
+
+
+def priority_v3(k: int, n: int) -> float:
+  """Improved version of `priority_v2`.
+  Priority is also based on the number of other Salem-Spencer numbers that are close to k.
+  """
+  salem_spencer = set(funsearch.salem_spencer_set(n))
+  return priority_v2(k, n) - sum(1 / abs(k - ss) for ss in salem_spencer if ss != k)
+
+
+def priority_v4(k: int, n: int) -> float:
+  """Improved version of `priority_v3`.
+  Priority is also based on the size of the gaps between k and the nearest Salem-Spencer numbers.
+  """
+  salem_spencer = set(funsearch.salem_spencer_set(n))
+  nearest_ss = sorted(salem_spencer, key=lambda ss: abs(k - ss))[:2]
+  return priority_v3(k, n) - (nearest_ss[1] - nearest_ss[0]) / n

@@ -1,0 +1,13 @@
+Here is an improved version of `priority_v0`. It gives priority based on the count of 2's in the tuple. More 2's mean higher priority. It breaks ties by giving priority to tuples with more 1's.
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`."""
+  count_of_2 = el.count(2)
+  count_of_1 = el.count(1)
+  return count_of_2 * 10 + count_of_1
+```
+
+This method first counts the number of 2's and 1's in the tuple. The count of 2's is multiplied by 10 to give it more weight, since a 2 contributes more to the cap set than a 1. The count of 1's is then added on to break ties.
+
+This method assumes that the elements in the tuple are integers and that they can be 0, 1 or 2. If the elements can be other integers or other types, this method may need to be adjusted accordingly.

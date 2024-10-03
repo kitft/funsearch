@@ -1,0 +1,33 @@
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`.
+
+  The priority is calculated as k^2 / n, which gives more weight to larger integers.
+  """
+  return k**2 / n
+
+
+def find_large_ss_progressions(ss: np.ndarray, max_size: int = 5) -> list:
+  """Returns a list of large Salem-Spencer progressions, with a maximum size of `max_size`."""
+  large_ss_progressions = []
+  for size in range(2, max_size + 1):
+    for progression in itertools.combinations(ss, size):
+      if np.diff(progression).max() - np.diff(progression).min() == size - 1:
+        large_ss_progressions.append(progression)
+  return large_ss_progressions
+
+
+def find_optimal_ss(n: int, max_size: int = 5) -> list:
+  """Returns the optimal Salem-Spencer set of size `n`, with a maximum progression size of `max_size`."""
+  ss = np.zeros(n, dtype=int)
+  for i in range(n):
+    priorities = np.array([priority_v2(k, n) for k in range(1, n + 1) if k not in ss])
+    ss[i] = np.random.choice(np.arange(1, n + 1)[priorities > 0], p=priorities / priorities.sum())
+  return find_large_ss_progressions(ss, max_size)
+
+
+if __name__ == "__main__":
+  np.random.seed(42)
+  n = 20
+  max_size = 5
+  ss = find_optimal_ss(n, max_size)
+  print(ss)

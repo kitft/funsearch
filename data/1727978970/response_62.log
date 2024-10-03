@@ -1,0 +1,15 @@
+Here is an improved version of the `priority_v0` function. This version assigns a priority based on the sum of the elements in the tuple. Larger sums indicate more 2's in the tuple, so they are given a higher priority.
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`.
+  el is a tuple of length n with values 0-2.
+  """
+  return sum(el)
+```
+
+This function sums up all the elements in the tuple `el` and returns this sum as the priority. The priority is higher for tuples that have more 2's.
+
+Note: This is a simple heuristic. It might not always lead to the optimal solution, but it's a good start.
+
+The time complexity of this function is O(n), where n is the length of the tuple. This is because we need to iterate over all the elements in the tuple once to compute the sum. The space complexity is O(1), because we only need to store the sum.

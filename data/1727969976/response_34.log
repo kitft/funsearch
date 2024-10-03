@@ -1,0 +1,16 @@
+Sure, here's an improved version of `priority_v1` that also takes into account the frequency of the integer `k` in the range `[1, n]`. The more frequent an integer is, the lower its priority:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`.
+
+  This version not only considers the ratio of the integer to be considered to the total number
+  of possible integers, but also takes into account the frequency of the integer in the range.
+  The priority is calculated as the ratio of the integer to the total number of possible integers,
+  divided by the frequency of the integer in the range.
+  """
+  frequency = np.bincount(np.arange(1, n + 1))[k]
+  return k / n / frequency
+```
+
+This version of the function should provide a more balanced priority distribution, as it not only considers the size of the integer but also its frequency in the range.

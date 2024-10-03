@@ -1,0 +1,10 @@
+Here's an improved version of `priority_v0`. This version calculates the priority based on the ratio of the absolute difference between `k` and the middle of the range of possible integers to the total range of possible integers. This means that numbers closer to the middle of the range have a higher priority.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  mid = n // 2
+  return 1.0 - abs(k - mid) / n
+```
+
+In this version, the priority is calculated as `1.0 - abs(k - mid) / n`. This means that the number in the middle of the range has the highest priority (1.0), and the priority decreases linearly as you move away from the middle. This is a simple but effective way to prioritize numbers that are closer to the middle of the range.

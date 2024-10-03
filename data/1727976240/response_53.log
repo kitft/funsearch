@@ -1,0 +1,6 @@
+```python
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`."""
+  return (k / n) ** 3 if k % 2 == 0 else (k / n) ** 2
+```
+The `priority_v2` function is defined to improve on the `priority_v1` function. The condition `k % 2 == 0` is added to check if the integer `k` is even. If `k` is even, the function will return `(k / n) ** 3`, otherwise it will return `(k / n) ** 2`. This change will give more priority to even numbers, which can lead to more efficient search results in the Salem-Spencer set.

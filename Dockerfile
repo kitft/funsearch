@@ -12,5 +12,14 @@ COPY examples ./examples
 COPY funsearch ./funsearch
 
 RUN pip install --no-deps . && rm -r ./funsearch ./build
+RUN pip install llm-mistral
+# Pget Mistral API key
+ARG MISTRAL_API_KEY
+ENV MISTRAL_API_KEY="$MISTRAL_API_KEY"
+
+# Set Mistral API key
+#RUN llm keys path
+RUN if [ -z "$MISTRAL_API_KEY" ]; then echo "Error: MISTRAL_API_KEY is not set. Please provide it when building the image. via --build-arg MISTRAL_API_KEY=<your_key>"; exit 1; fi
+RUN echo '{"mistral": "'$MISTRAL_API_KEY'"}'>  $(llm keys path)
 
 CMD /bin/bash

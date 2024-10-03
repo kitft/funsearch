@@ -1,0 +1,19 @@
+Here is an improved version of the `priority_v0` function that takes into account the number of ones and twos in the tuple.
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Returns the priority with which we want to add `element` to the cap set.
+  el is a tuple of length n with values 0-2.
+  """
+  # Count the number of ones and twos in the tuple
+  count_ones = el.count(1)
+  count_twos = el.count(2)
+
+  # The priority is the sum of the counts of ones and twos
+  # This ensures that tuples with more ones and twos are prioritized
+  return float(count_ones + count_twos)
+```
+
+This improved version of the `priority_v1` function gives a higher priority to the tuples that have more ones and twos. This is because the ones and twos contribute more to the overall sum of the elements in the cap set.
+
+This implementation assumes that a higher priority means that the tuple is more likely to be added to the cap set. If a lower priority means that the tuple is more likely to be added to the cap set, then the return statement should be changed to `return float(n - count_ones - count_twos)`.

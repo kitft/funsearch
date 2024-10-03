@@ -1,0 +1,9 @@
+Here's an improved version of `priority_v0` that prioritizes larger integers, as they are more likely to contribute to larger Salem-Spencer sets.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`. Prioritizes larger integers."""
+  return k / n
+```
+
+In this version, the priority is calculated as the ratio of the integer `k` to the total number of possible integers `n`. This means that larger integers will have a higher priority, as they are more likely to contribute to larger Salem-Spencer sets.

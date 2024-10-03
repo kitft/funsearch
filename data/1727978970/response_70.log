@@ -1,0 +1,21 @@
+The problem is about finding large cap sets, which are subsets of the power set of {0, ..., n-1} that do not contain any pair of elements that sum to a value in the subset. The goal is to improve a priority function that determines the order in which to add elements to a cap set. The priority function takes as input a tuple of length n with values 0-2 and returns a float that represents the priority of adding that element to the cap set.
+
+Here's an improved version of `priority_v0` that takes into account the number of elements in the tuple that have a value of 1 and the number of unique sums of pairs of elements in the tuple:
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  # Count the number of elements with a value of 1
+  num_ones = sum(el)
+
+  # Count the number of unique sums of pairs of elements
+  sums = set()
+  for i in range(n):
+    for j in range(i+1, n):
+      sums.add(el[i] + el[j])
+  num_unique_sums = len(sums)
+
+  # Prioritize adding elements with a value of 1 and elements that increase the number of unique sums
+  return num_ones + 0.1 * num_unique_sums
+```
+
+In this version, the priority is calculated as the sum of the number of elements with a value of 1 and 0.1 times the number of unique sums of pairs of elements. This prioritizes adding elements with a value of 1 and elements that increase the number of unique sums, which helps to ensure that the resulting cap set is large.

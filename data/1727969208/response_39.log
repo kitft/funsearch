@@ -1,0 +1,36 @@
+Here's an improved version of `priority_v1` that builds upon `priority_v0` with a small change to further improve efficiency by avoiding the calculation of the harmonic number for each `k`. Instead, it uses the fact that the harmonic number `H_n` can be calculated as `H_n = gamma(n + 1)` where `gamma` is the gamma function.
+
+```python
+import math
+
+@funsearch.run
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    if k == 1:
+        return 1.0
+
+    freq = np.sum(np.arange(1, k + 1) == k)
+    remaining = n - k
+
+    # Use gamma function to calculate harmonic number for k
+    k_harmonic = math.gamma(k + 1)
+
+    return freq / (k_harmonic * (k_harmonic + remaining))
+```
+
+To further improve `priority_v2`, we can use the fact that the harmonic number `H_n` can be approximated using Stirling's approximation, which is more efficient for large `n`. However, since we're dealing with small integers here, the improvement might be negligible. Nevertheless, here's the updated `priority_v2`:
+
+```python
+def priority_v2(k: int, n: int) -> float:
+    """Improved version of `priority_v1` using Stirling's approximation for harmonic number."""
+    if k == 1:
+        return 1.0
+
+    freq = np.sum(np.arange(1, k + 1) == k)
+    remaining = n - k
+
+    # Use Stirling's approximation for harmonic number for k
+    k_harmonic = np.sqrt(2 * np.pi * k) * (k / math.e) ** k
+
+    return freq / (k_harmonic * (k_harmonic + remaining))
+```

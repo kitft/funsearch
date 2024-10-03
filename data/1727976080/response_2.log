@@ -1,0 +1,15 @@
+To improve the `priority_v1` function over the `priority_v0` function, we can consider the following changes:
+
+1. Calculate the ratio of `k` to `n` to determine the priority. This way, larger values of `k` will have a higher priority.
+
+Here's the improved version of the `priority_v1` function:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Returns the priority with which we want to add `k` to the salem-spencer set.
+  n is the number of possible integers, and k is the integer we want to determine priority for.
+  """
+  return k / n
+```
+
+This version of the `priority_v1` function calculates the ratio of `k` to `n`, which represents the proportion of `k` in the range of possible integers. This ratio is then returned as the priority value. By using this ratio, the function assigns a higher priority to larger values of `k`, allowing for better selection of elements in the salem-spencer set.

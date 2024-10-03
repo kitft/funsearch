@@ -1,0 +1,60 @@
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # Add a small constant to prioritize larger numbers slightly more
+  return (k + 1) / (n + 1)
+
+
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`."""
+  # Use logarithmic scaling to prioritize larger numbers exponentially more
+  return np.log(k + 1) / np.log(n + 1)
+
+
+def priority_v3(k: int, n: int) -> float:
+  """Improved version of `priority_v2`."""
+  # Add a power factor to prioritize larger numbers even more
+  power = 1.5
+  return np.log(k + 1) ** power / np.log(n + 1) ** power
+
+
+def priority_v4(k: int, n: int) -> float:
+  """Improved version of `priority_v3`."""
+  # Use a combination of logarithmic and linear scaling to balance prioritization
+  log_factor = np.log(k + 1) / np.log(n + 1)
+  linear_factor = (k + 1) / (n + 1)
+  return 0.5 * log_factor + 0.5 * linear_factor
+
+
+def priority_v5(k: int, n: int) -> float:
+  """Improved version of `priority_v4`."""
+  # Use a custom sigmoid function to prioritize larger numbers with a smooth curve
+  def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+  return sigmoid(k / n)
+
+
+# ... continue with additional iterations as needed
+
+
+def find_large_ss_progressions(max_n: int, max_set_size: int) -> tuple[list[int], float]:
+  """Finds the largest Salem-Spencer set with numbers up to `max_n` and a maximum set size of `max_set_size`.
+
+  Returns the set and its total priority.
+  """
+  ss_set = []
+  total_priority = 0.0
+
+  for n in range(1, max_n + 1):
+    if len(ss_set) < max_set_size:
+      priority = priority_v5(n, max_n)
+      ss_set.append(n)
+      total_priority += priority
+    else:
+      min_priority = min(priority_v5(k, max_n) for k in ss_set)
+      if priority > min_priority:
+        min_priority_index = ss_set.index(min(ss_set, key=lambda k: priority_v5(k, max_n)))
+        ss_set[min_priority_index] = n
+        total_priority += priority - min_priority
+
+  return ss_set, total_priority

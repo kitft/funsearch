@@ -1,0 +1,19 @@
+Here's an improved version of `priority_v1` that considers the frequency of `k` in the range `[1, n]` and the number of missing integers in that range. This version is shorter and makes small changes to `priority_v0`.
+
+```python
+from collections import Counter
+
+@funsearch.run
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    # Count the frequency of k in the range [1, n]
+    freq = sum(1 for i in range(1, n + 1) if i % k == 0)
+
+    # Count the number of missing integers in the range [1, n]
+    missing = n - freq
+
+    # Return the priority as the ratio of missing integers to frequency
+    return missing / freq if freq > 0 else 0.0
+```
+
+This version of `priority_v1` assumes that you want to prioritize adding integers that are less frequent in the range `[1, n]` and have more missing integers in their multiples. The priority is calculated as the ratio of missing integers to frequency, with a default value of 0.0 if the frequency is 0.

@@ -1,0 +1,13 @@
+Here's an improved version of `priority_v1` that considers the frequency of `k` in the range `[0, n)` and the number of unique elements in that range. This version is more concise and makes a small change from `priority_v0`.
+
+```python
+from collections import Counter
+
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  freq = Counter(range(n)).get(k, 0)
+  unique_elements = len(set(range(n)))
+  return freq / unique_elements
+```
+
+This version calculates the frequency of `k` in the range `[0, n)` and divides it by the number of unique elements in that range. This gives a higher priority to elements that appear more frequently and are unique.

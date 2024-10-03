@@ -1,0 +1,16 @@
+Sure, I'd be happy to help improve the `priority_v1` function based on the comments in the code.
+
+The original `priority_v0` function calculates the priority of an element as the average of its values. The comment suggests that we want to improve this function in `priority_v1`. However, the `priority_v1` function is not provided, so I'll assume we want to consider the frequency of each value in the tuple when calculating the priority.
+
+Here's a possible improvement:
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+    """Improved version of `priority_v0`."""
+    # Count the frequency of each value in the tuple
+    freq = np.bincount(el, minlength=3)
+    # Calculate the priority as the sum of the frequencies of 1 and 2, normalized by the length of the tuple
+    return (freq[1] + freq[2]) / n
+```
+
+This version of the function counts the frequency of each value in the tuple (0, 1, and 2) and calculates the priority as the sum of the frequencies of 1 and 2, normalized by the length of the tuple. This might give more weight to elements that contain more 1s and 2s, which could be helpful for finding large cap sets.

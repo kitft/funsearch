@@ -1,0 +1,23 @@
+Here's an improved version of `priority_v1` that considers the number of unique remainders when dividing `k` by `n`. This is a small change that builds upon `priority_v0` and should make the code shorter.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`. Consider the number of unique remainders."""
+  return len(set((k + i) % n for i in range(n))) / n
+```
+
+This version calculates the priority as the ratio of unique remainders to `n`, which is a simple way to measure the diversity of remainders and thus the potential for large Salem-Spencer progressions. It's a small change from `priority_v0` but should improve the priority function.
+
+Here's how you can use `funsearch` to run this function with different parameters:
+
+```python
+import funsearch
+
+@funsearch.run
+def test_priority_v1():
+  for k in range(1, 10):
+    for n in range(2, 10):
+      print(f"priority_v1({k}, {n}): {priority_v1(k, n)}")
+
+test_priority_v1()
+```

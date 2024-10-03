@@ -1,0 +1,14 @@
+Here's an improved version of `priority_v1` that builds upon `priority_v0` with small changes. I've added a factor to the growth rate to give it more weight and used a logarithmic function to smooth out the frequency contribution.
+
+```python
+import math
+
+@funsearch.run
+def priority_v2(k: int, n: int) -> float:
+    """Improved version of `priority_v1`."""
+    frequency = sum(1 for i in range(n) if i == k)
+    growth_rate = (frequency - sum(1 for i in range(k) if i == k - 1)) / (k - (k - 1))
+    return frequency / n + math.log(frequency + 1) / math.log(n + 1) + 2 * growth_rate
+```
+
+This version of the function gives more priority to elements with higher frequencies and growth rates, while also considering the total number of possible integers `n`. The logarithmic function smooths out the frequency contribution, giving less importance to very high frequencies. The growth rate is multiplied by 2 to give it more weight in the priority calculation.

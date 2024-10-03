@@ -1,0 +1,8 @@
+Sure, I'd be happy to help you improve your function. Here's a simple way to improve `priority_v1` over `priority_v0`. I'm assuming that a higher priority should be given to larger numbers since they contribute more to the progression. I'm also assuming that the priority should be normalized between 0 and 1. Here's a simple implementation:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  return k / n
+```
+
+This function will return a number between 0 and 1, where 1 represents the highest priority (for the largest number), and 0 represents the lowest priority (for the smallest number).

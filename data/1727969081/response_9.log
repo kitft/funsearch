@@ -1,0 +1,13 @@
+Here's an improved version of `priority_v1` that considers the number of unique remainders when dividing `k` by `n` and the frequency of these remainders. This version is shorter and only makes small changes to the original function.
+
+```python
+from collections import Counter
+
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  remainders = [k % i for i in range(1, n+1)]
+  freq = Counter(remainders)
+  return sum(freq.values()) / n - len(freq) / n
+```
+
+This version calculates the remainders of `k` when divided by all integers from 1 to `n`, counts the frequency of these remainders using `Counter`, and then returns the average frequency minus the number of unique remainders divided by `n`. This should give a better indication of the priority for adding `k` to the Salem-Spencer set.

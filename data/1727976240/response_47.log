@@ -1,0 +1,13 @@
+Let's assume that the priority of an integer `k` is inversely proportional to its frequency in the Salem-Spencer set. This means that less frequent integers should have a higher priority.
+
+Here's how we can modify the `priority_v1` function to reflect this:
+
+```python
+def priority_v1(k: int, n: int, ss_set: set) -> float:
+  """Improved version of `priority_v0`. Priority is inversely proportional to the frequency of `k` in the ss_set."""
+  return 1 / (ss_set.count(k) + 1)
+```
+
+In this version, `ss_set` is the current Salem-Spencer set, and `ss_set.count(k)` returns the number of times `k` appears in `ss_set`. The `+ 1` is to avoid division by zero when `k` is not yet in `ss_set`.
+
+This function will give a higher priority to integers that are less frequent in the Salem-Spencer set, which should help to find larger SS progressions.

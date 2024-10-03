@@ -1,0 +1,85 @@
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`. Returns the priority based on the count of 1's and 2's in the tuple,
+  and also considers the count of 0's.
+  """
+  count_2 = el.count(2)
+  count_1 = el.count(1)
+  count_0 = el.count(0)
+  return count_2 - 0.5 * count_1 + 0.25 * count_0
+
+
+def cap_set(n: int, k: int) -> set[tuple[int, ...]]:
+  """Returns the set of all elements of length `n` which have at most `k` 2's.
+  Each element is a tuple with values 0-2.
+  """
+  return {
+    el
+    for el in itertools.product(range(3), repeat=n)
+    if el.count(2) <= k
+  }
+
+
+def largest_cap_set(n: int, k: int) -> set[tuple[int, ...]]:
+  """Returns the largest cap set of length `n` with at most `k` 2's."""
+  cap_set_cands = cap_set(n, k)
+  return sorted(cap_set_cands, key=lambda el: priority_v1(el, n), reverse=True)
+
+
+@funsearch.run
+def size_of_largest_cap_set(n: int, k: int) -> int:
+  """Returns the size of the largest cap set of length `n` with at most `k` 2's."""
+  return len(largest_cap_set(n, k))
+
+
+funsearch.add_constraint(size_of_largest_cap_set, n=3, k=1, s=3)
+funsearch.add_constraint(size_of_largest_cap_set, n=4, k=1, s=6)
+funsearch.add_constraint(size_of_largest_cap_set, n=4, k=2, s=9)
+funsearch.add_constraint(size_of_largest_cap_set, n=5, k=1, s=10)
+funsearch.add_constraint(size_of_largest_cap_set, n=5, k=2, s=18)
+funsearch.add_constraint(size_of_largest_cap_set, n=6, k=1, s=12)
+funsearch.add_constraint(size_of_largest_cap_set, n=6, k=2, s=27)
+funsearch.add_constraint(size_of_largest_cap_set, n=6, k=3, s=44)
+funsearch.add_constraint(size_of_largest_cap_set, n=7, k=1, s=14)
+funsearch.add_constraint(size_of_largest_cap_set, n=7, k=2, s=36)
+funsearch.add_constraint(size_of_largest_cap_set, n=7, k=3, s=77)
+funsearch.add_constraint(size_of_largest_cap_set, n=8, k=1, s=16)
+funsearch.add_constraint(size_of_largest_cap_set, n=8, k=2, s=45)
+funsearch.add_constraint(size_of_largest_cap_set, n=8, k=3, s=109)
+funsearch.add_constraint(size_of_largest_cap_set, n=9, k=1, s=18)
+funsearch.add_constraint(size_of_largest_cap_set, n=9, k=2, s=56)
+funsearch.add_constraint(size_of_largest_cap_set, n=9, k=3, s=144)
+funsearch.add_constraint(size_of_largest_cap_set, n=10, k=1, s=20)
+funsearch.add_constraint(size_of_largest_cap_set, n=10, k=2, s=68)
+funsearch.add_constraint(size_of_largest_cap_set, n=10, k=3, s=186)
+funsearch.add_constraint(size_of_largest_cap_set, n=11, k=1, s=22)
+funsearch.add_constraint(size_of_largest_cap_set, n=11, k=2, s=82)
+funsearch.add_constraint(size_of_largest_cap_set, n=11, k=3, s=232)
+funsearch.add_constraint(size_of_largest_cap_set, n=12, k=1, s=24)
+funsearch.add_constraint(size_of_largest_cap_set, n=12, k=2, s=98)
+funsearch.add_constraint(size_of_largest_cap_set, n=12, k=3, s=288)
+funsearch.add_constraint(size_of_largest_cap_set, n=13, k=1, s=26)
+funsearch.add_constraint(size_of_largest_cap_set, n=13, k=2, s=114)
+funsearch.add_constraint(size_of_largest_cap_set, n=13, k=3, s=341)
+funsearch.add_constraint(size_of_largest_cap_set, n=14, k=1, s=28)
+funsearch.add_constraint(size_of_largest_cap_set, n=14, k=2, s=132)
+funsearch.add_constraint(size_of_largest_cap_set, n=14, k=3, s=410)
+funsearch.add_constraint(size_of_largest_cap_set, n=15, k=1, s=30)
+funsearch.add_constraint(size_of_largest_cap_set, n=15, k=2, s=150)
+funsearch.add_constraint(size_of_largest_cap_set, n=15, k=3, s=471)
+funsearch.add_constraint(size_of_largest_cap_set, n=16, k=1, s=32)
+funsearch.add_constraint(size_of_largest_cap_set, n=16, k=2, s=168)
+funsearch.add_constraint(size_of_largest_cap_set, n=16, k=3, s=540)
+funsearch.add_constraint(size_of_largest_cap_set, n=17, k=1, s=34)
+funsearch.add_constraint(size_of_largest_cap_set, n=17, k=2, s=186)
+funsearch.add_constraint(size_of_largest_cap_set, n=17, k=3, s=616)
+funsearch.add_constraint(size_of_largest_cap_set, n=18, k=1, s=36)
+funsearch.add_constraint(size_of_largest_cap_set, n=18, k=2, s=204)
+funsearch.add_constraint(size_of_largest_cap_set, n=18, k=3, s=690)
+funsearch.add_constraint(size_of_largest_cap_set, n=19, k=1, s=38)
+funsearch.add_constraint(size_of_largest_cap_set, n=19, k=2, s=222)
+funsearch.add_constraint(size_of_largest_cap_set, n=19, k=3, s=760)
+funsearch.add_constraint(size_of_largest_cap_set, n=20, k=1, s=40)
+funsearch.add_constraint(size_of_largest_cap_set, n=20, k=2, s=240)
+funsearch.add_constraint(size_of_largest_cap_set, n=20, k=3, s=848)
+
+funsearch.synthesize(size_of_largest_cap_set, n=[2, 20], k=[2, 10])

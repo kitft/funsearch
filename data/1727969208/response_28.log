@@ -1,0 +1,11 @@
+Here's an improved version of `priority_v1` that considers the number of elements less than `k` and the total number of elements `n`. This version uses the harmonic series to calculate the priority, which is a common approach in Salem-Spencer problems.
+
+```python
+import math
+
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0` using harmonic series."""
+    return math.log(n) - math.log(k) + math.gamma  # Add Euler-Mascheroni constant for better accuracy
+```
+
+This version makes a small change by incorporating the harmonic series (logarithmic function) to calculate the priority. The Euler-Mascheroni constant (gamma) is added to improve the accuracy of the approximation.

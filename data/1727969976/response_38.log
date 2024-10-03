@@ -1,0 +1,30 @@
+To improve the `priority_v1` function, let's consider the following changes:
+
+1. Instead of using a constant value of 0.1 for the priority when k and n are not relatively prime, let's use a value that is proportional to the square root of the gcd. This will give more weight to numbers with larger gcd.
+2. Let's add a small penalty to larger values of k when k and n are not relatively prime, to prioritize smaller numbers even in this case.
+3. Let's handle the case when k is zero separately, as it causes a division by zero error in the current implementation. We can assign a high priority to zero when k is not equal to n, and a low priority when k is equal to n.
+
+Here's the improved version of `priority_v2`:
+
+```python
+def priority_v2(k: int, n: int) -> float:
+    """Improved version of `priority_v1`."""
+    # Calculate the greatest common divisor of k and n
+    gcd = np.gcd(k, n)
+
+    # If k and n are relatively prime, the priority is inversely proportional to k
+    # but we penalize larger k values to prioritize smaller ones.
+    if gcd == 1:
+        return 1.0 / (k + 1) if k != 0 else float('inf')
+
+    # If k and n are not relatively prime, the priority is lower than k is relatively prime
+    # but we also consider the value of gcd to provide a small preference to numbers with larger gcd.
+    else:
+        return 0.1 / (np.sqrt(gcd) * (k + 1))
+
+    # If k is zero, assign a high priority if k is not equal to n, and a low priority if k is equal to n.
+    if k == 0:
+        return float('inf') if k != n else 0.0
+```
+
+This version of the function takes into account the magnitude of the gcd and the value of k when deciding the priority, providing a more nuanced decision-making process.

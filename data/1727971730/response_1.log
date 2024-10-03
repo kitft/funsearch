@@ -1,0 +1,17 @@
+Here's a simple way to improve `priority_v1` over `priority_v0`. We could use the concept of divisibility and primes to create a priority score. A higher priority score indicates a higher likelihood of being part of a large SS progression.
+
+```python
+import sympy
+
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`.
+  Uses the number of divisors and whether the number is prime for the priority score.
+  """
+  # A higher priority for prime numbers
+  if sympy.isprime(k):
+    return 2.0
+  # Use the number of divisors as the priority score
+  return sympy.divisor_count(k)
+```
+
+This code works by first checking if the number is prime. If it is, we return a higher priority score. If not, we use the number of divisors of the number as the priority score. The sympy library is used to efficiently compute whether a number is prime and to compute the number of divisors of a number.

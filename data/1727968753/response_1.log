@@ -1,0 +1,11 @@
+Here's an improved version of `priority_v1` that considers the number of unique remainders when dividing `k` by `n`. This is inspired by the Salem-Spencer problem, where the priority is often determined by the number of unique remainders. I've made small changes to keep the code short and maintain the spirit of improving the previous version incrementally.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return len(set(k % i for i in range(1, n + 1)))
+```
+
+This version calculates the priority as the number of unique remainders when dividing `k` by all integers from 1 to `n`. The `set()` function is used to remove duplicates, and `len()` returns the count of unique remainders, which is the priority value.
+
+To further improve this function, you could consider additional factors, such as the frequency of remainders or the distribution of remainders. However, I've kept the changes small and focused on the unique remainders as a starting point for improvement.

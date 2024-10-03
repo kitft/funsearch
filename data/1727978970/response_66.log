@@ -1,0 +1,5 @@
+Your code is structured well, and the comments are clear. However, there's no code provided for the `priority_v2` function, which is supposed to be an improved version of `priority_v1`.
+
+Given the comments, it seems like the improvement might involve a more sophisticated calculation of the priority. This might include considering the distribution of the elements in `el` in a more detailed way, or using a different metric to measure the "uniqueness" of the elements in `el`.
+
+However, without more specific guidance or constraints, it's difficult to suggest a specific improvement. Could you please provide more context or clarify what you're trying to achieve with `priority_v2`?

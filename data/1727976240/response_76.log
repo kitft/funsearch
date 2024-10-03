@@ -1,0 +1,41 @@
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    # Prioritize larger numbers and those that are closer to the square root of n
+    return k / n + (1 - abs(np.sqrt(n) - k) / n)
+
+@funsearch.run
+def generate_salem_spencer(n: int, m: int) -> np.ndarray:
+  """Generates the Salem-Spencer set for a given n and m.
+
+  Args:
+    n: The size of the set.
+    m: The maximum value in the set.
+
+  Returns:
+    A numpy array containing the Salem-Spencer set.
+  """
+  salem_spencer_set = np.zeros(n, dtype=np.int32)
+  for i in range(n):
+    priorities = [priority_v1(k, m) for k in range(1, m + 1) if k not in salem_spencer_set]
+    salem_spencer_set[i] = np.argmax(priorities) + 1
+  return salem_spencer_set
+
+@funsearch.run
+def find_large_ss_progressions(n: int, m: int, l: int) -> np.ndarray:
+  """Finds large Salem-Spencer progressions.
+
+  Args:
+    n: The size of the set.
+    m: The maximum value in the set.
+    l: The length of the progressions to find.
+
+  Returns:
+    A numpy array containing the large Salem-Spencer progressions.
+  """
+  salem_spencer_set = generate_salem_spencer(n, m)
+  progressions = []
+  for i in range(n - l + 1):
+    progression = salem_spencer_set[i:i + l]
+    if np.all(np.diff(progression) == 1):
+      progressions.append(progression)
+  return np.array(progressions)

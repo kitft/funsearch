@@ -1,0 +1,9 @@
+Here's an improvement to the `priority_v1` function:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`. Priority is inversely proportional to `k`, but with a logarithmic scale."""
+  return np.log(n / k)
+```
+
+The change made here is to use a logarithmic scale instead of a linear one. This is to give more priority to smaller `k` values, while still maintaining a decreasing priority as `k` increases. The natural logarithm (`np.log`) is used here, but any other base would work as well, depending on the specific requirements of the problem.

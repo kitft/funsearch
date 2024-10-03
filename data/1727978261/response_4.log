@@ -1,0 +1,9 @@
+Here's a simple improvement to the `priority_v0` function. In the context of "large cap sets", the priority of an element could be determined by the number of 2's in it, as these contribute more to the size of the cap set. Here's a possible implementation:
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`. The priority is based on the number of 2's in the element."""
+  return el.count(2)
+```
+
+This function will return a higher priority for elements that have more 2's, meaning these elements will be more likely to be selected for the cap set.

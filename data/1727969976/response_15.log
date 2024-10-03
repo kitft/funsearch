@@ -1,0 +1,10 @@
+Here is a simple improvement over `priority_v0`. This version assigns a priority based on the distance of the number `k` from the middle of the range `[1, n]`. The number in the middle of the range gets the highest priority, and the numbers further away get lower priorities.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  mid = n // 2
+  return 1 - abs(k - mid) / mid
+```
+
+In this version of the function, the priority is calculated as `1 - (distance from the middle) / (half of the range)`. This ensures that the priority is between 0 and 1, and the number in the middle of the range gets the highest priority of 1. Numbers further away from the middle get lower priorities, with the numbers at the ends of the range getting a priority of 0.

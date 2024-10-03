@@ -1,0 +1,9 @@
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # Prioritize larger numbers and numbers that are further apart
+  return k / n + 1 / (k + 1)
+
+# Test the function
+priority_v1(5, 10)
+```

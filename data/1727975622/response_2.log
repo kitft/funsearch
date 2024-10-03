@@ -1,0 +1,9 @@
+Here's an improved version of `priority_v0`. In this version, we return the negative square of the distance of `k` from `n//2` (the middle of the range). This way, we prioritize adding numbers that are closer to the middle of the range, as they are more likely to be part of a large SS progression.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return -(k - n // 2) ** 2
+```
+
+This function will return a higher priority value for numbers closer to the middle of the range, and a lower priority value for numbers further away from the middle. The `-` sign is used to ensure that the function returns a positive priority value, as required by the problem statement.

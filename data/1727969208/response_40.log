@@ -1,0 +1,33 @@
+Here's an improved version of `priority_v1` that considers the frequency of `k` in the range `[1, n]` and the number of elements in the Salem-Spencer set. This version uses the `Counter` class from the `collections` module to count the occurrences of `k`.
+
+```python
+from collections import Counter
+
+@funsearch.run
+def priority_v1(k: int, n: int, ss_set: set) -> float:
+  """Improved version of `priority_v0`."""
+  freq_k = sum(1 for i in range(1, n + 1) if i % k == 0)
+  return freq_k / (n * len(ss_set))
+```
+
+In this version, `ss_set` is an additional parameter that represents the current Salem-Spencer set. The priority is calculated as the frequency of `k` divided by the product of `n` and the size of the `ss_set`. This encourages adding elements that have a high frequency and are not yet in the `ss_set`.
+
+To further improve the function, you can consider the following aspects:
+
+1. **Consider the maximum frequency**: Instead of using the frequency of `k`, you can use the maximum frequency of any element in the range `[1, n]` that is not in the `ss_set`. This can be calculated using `max(Counter(range(1, n + 1)).values()) - 1` (subtracting 1 to exclude the frequency of `k` if it's in the `ss_set`).
+
+2. **Use the inverse of the size of the Salem-Spencer set**: Instead of dividing by the size of the `ss_set`, you can use its inverse to give more weight to smaller sets.
+
+Here's the updated version incorporating these changes:
+
+```python
+from collections import Counter
+
+@funsearch.run
+def priority_v2(k: int, n: int, ss_set: set) -> float:
+  """Further improved version of `priority_v0`."""
+  max_freq = max(Counter(i for i in range(1, n + 1) if i not in ss_set).values())
+  return max_freq / len(ss_set)
+```
+
+This version should provide a better priority value for adding elements to the Salem-Spencer set.

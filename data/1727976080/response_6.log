@@ -1,0 +1,14 @@
+Here's an improved version of `priority_v0` that takes the integer `k` and the number of possible integers `n` into account:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Returns the priority with which we want to add `k` to the salem-spencer set."""
+  # Normalize k to be between 0 and 1 for simplicity
+  normalized_k = k / n
+
+  # Give higher priority to numbers closer to 0.5 (middle of the range)
+  # and lower priority to numbers closer to 0 or 1 (extremes)
+  return 1 - abs(normalized_k - 0.5) * 2
+```
+
+This version of the function gives higher priority to numbers closer to the middle of the range, which may help in finding large SS progressions.

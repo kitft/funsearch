@@ -1,0 +1,23 @@
+Let's focus on simplifying and optimizing the `priority_v0` function.
+
+The current implementation calculates several separate sums and then combines them using arithmetic operations. This can be improved by using a single loop to calculate all the sums at once.
+
+Here's the improved version of `priority_v0`:
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+    count_0, count_1, count_2, total = 0, 0, 0, 0
+    for x in el:
+        total += x
+        if x == 0:
+            count_0 += 1
+        elif x == 1:
+            count_1 += 1
+        else:
+            count_2 += 1
+    return total / n ** 2 + count_2 ** 2 - count_0 ** 2 - count_1 / n ** 2
+```
+
+In this version, we use a single loop to iterate over all elements of `el`. For each element, we increment the corresponding counter (`count_0`, `count_1`, or `count_2`) and add the value to the `total`. After the loop, we calculate and return the priority using the updated counters and the total.
+
+This version of the function should be more efficient than the original `priority_v0` function, especially for large values of `n`.

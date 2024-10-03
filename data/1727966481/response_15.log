@@ -1,0 +1,10 @@
+Here's an improved version of `priority_v1` that considers the number of unique remainders when dividing `k` by `n`. This can be seen as a simple way to estimate the diversity of the set when `k` is added. I've also added a small adjustment to prioritize larger numbers.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  remainders = set((k + i) % n for i in range(n))
+  return len(remainders) + k / n
+```
+
+This version of `priority_v1` will give higher priority to numbers `k` that result in more unique remainders when divided by `n`, and also prioritizes larger numbers due to the `k / n` term.

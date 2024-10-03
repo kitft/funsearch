@@ -1,0 +1,9 @@
+Here is an improved version of `priority_v0` as `priority_v1`. This version scales the priority by the square root of `n` to give more weight to larger numbers, as they are less common and therefore more valuable for progressions.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return float(k) / np.sqrt(n)
+```
+
+This change assumes that `n` is large enough that the square root is a meaningful transformation. If `n` can be small, you might want to add a check to avoid dividing by zero or a very small number.

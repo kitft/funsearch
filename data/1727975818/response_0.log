@@ -1,0 +1,11 @@
+To improve the `priority_v1` function over `priority_v0`, we need to consider the value of `k` and `n` to determine the priority with which we want to add `k` to the Salem-Spencer set. In `priority_v0`, the function always returns 0.0, which means that the priority is not considered.
+
+A simple improvement could be to return the value of `k` divided by `n`, which gives a priority between 0 and 1 based on the proportion of `k` to the total number of possible integers `n`. Here's an implementation of `priority_v1`:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`. Returns the priority of adding `k` to the Salem-Spencer set."""
+  return k / n
+```
+
+This updated function now considers the value of `k` in determining the priority, which should lead to better results when selecting elements for the Salem-Spencer set.

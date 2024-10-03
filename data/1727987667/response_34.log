@@ -1,0 +1,18 @@
+Here is a possible improvement over the `priority_v0` method. This new function calculates the priority based on the size of the gaps between the Salem-Spencer set and the integer `k`. Larger gaps are given higher priority.
+
+```python
+def priority_v1(k: int, ss_set: set) -> float:
+  """Returns the priority with which we want to add k to the salem-spencer set.
+  ss_set is the current Salem-Spencer set."""
+  if not ss_set:  # If the set is empty, give maximum priority
+    return float('inf')
+  else:
+    # Calculate the minimum and maximum gaps between k and the elements in ss_set
+    min_gap = min(abs(k - ss) for ss in ss_set)
+    max_gap = max(abs(k - ss) for ss in ss_set)
+    # Return the negative average of the minimum and maximum gaps
+    # This prioritizes larger gaps, as they allow for more future elements to be added
+    return -(min_gap + max_gap) / 2
+```
+
+This function assumes that `ss_set` is not empty. If it can be empty, additional checks should be added to handle this case.

@@ -1,0 +1,10 @@
+Here's an improved version of `priority_v2` with a small change to make it shorter and more efficient by avoiding the multiplication of `n` with `ratio`:
+
+```python
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`."""
+  ratio = k / (n + 1)
+  return n * (ratio - 1) + k * ratio
+```
+
+This version reduces the number of operations and makes the code more concise.

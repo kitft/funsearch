@@ -1,0 +1,10 @@
+Here's the next version of the `priority_v2` function. This version improves on `priority_v1` by adding a small constant to the denominator of the fraction to avoid division by zero when `n` is very small.
+
+```python
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`."""
+  # Add a small constant to the denominator to avoid division by zero
+  return (k - n/2) / np.sqrt(n + 1e-6)
+```
+
+In this version, we add `1e-6` to `n` inside the square root to make sure we don't try to compute the square root of zero or a negative number, which would result in a `ValueError`. The value `1e-6` is chosen arbitrarily as a small number, and it can be adjusted if necessary.

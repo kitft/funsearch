@@ -1,0 +1,14 @@
+Here's an improved version of `priority_v1` that considers the frequency of `k` in the range `[1, n]` and the number of unique elements in that range. This version is shorter and makes a small change from `priority_v0`.
+
+```python
+from collections import Counter
+
+@funsearch.run
+def priority_v1(k: int, n: int) -> float:
+    """Returns the priority with which we want to add `k` to the Salem-Spencer set.
+    n is the number of possible integers, and k is the integer we want to determine priority for.
+    """
+    return (n - Counter(range(1, n + 1)).get(k, 0)) / n
+```
+
+This version uses the `Counter` class from the `collections` module to count the frequency of `k` in the range `[1, n]`. The `get` method is used to retrieve the count of `k`, with a default value of 0 if `k` is not present in the range. The priority is then calculated as the number of integers not equal to `k` divided by `n`.

@@ -1,0 +1,93 @@
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`.
+
+  This version considers the number of elements in the tuple that have a value of 2.
+  The more such elements, the higher the priority.
+  """
+  return sum(x == 2 for x in el)
+
+
+def priority_v2(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v1`.
+
+  This version also considers the number of elements in the tuple that have a value of 1.
+  The more such elements, the lower the priority.
+  """
+  return sum(x == 2 for x in el) - sum(x == 1 for x in el)
+
+
+def priority_v3(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v2`.
+
+  This version also considers the number of unique elements in the tuple.
+  The more unique elements, the higher the priority.
+  """
+  return sum(x == 2 for x in el) - sum(x == 1 for x in el) + len(set(el))
+
+
+def priority_v4(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v3`.
+
+  This version also considers the number of times each element appears in the tuple.
+  The more times an element appears, the lower the priority.
+  """
+  return sum(x == 2 for x in el) - sum(x == 1 for x in el) + len(set(el)) - sum(el)
+
+
+def priority_v5(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v4`.
+
+  This version also considers the distribution of elements in the tuple.
+  The more uniform the distribution, the higher the priority.
+  """
+  return sum(x == 2 for x in el) - sum(x == 1 for x in el) + len(set(el)) - sum(el) - np.var(el)
+
+
+def priority_v6(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v5`.
+
+  This version also considers the number of runs of consecutive elements in the tuple.
+  The more runs, the lower the priority.
+  """
+  return sum(x == 2 for x in el) - sum(x == 1 for x in el) + len(set(el)) - sum(el) - np.var(el) - sum(np.diff(el) == 0)
+
+
+def priority_v7(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v6`.
+
+  This version also considers the number of long runs of consecutive elements in the tuple.
+  The more long runs, the lower the priority.
+  """
+  return sum(x == 2 for x in el) - sum(x == 1 for x in el) + len(set(el)) - sum(el) - np.var(el) - sum(np.diff(el) == 0) - sum(np.diff(el) > 1)
+
+
+def priority_v8(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v7`.
+
+  This version also considers the number of short runs of consecutive elements in the tuple.
+  The more short runs, the higher the priority.
+  """
+  return sum(x == 2 for x in el) - sum(x == 1 for x in el) + len(set(el)) - sum(el) - np.var(el) - sum(np.diff(el) == 0) - sum(np.diff(el) > 1) + sum(np.diff(el) == 1)
+
+
+def priority_v9(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v8`.
+
+  This version also considers the number of changes in the tuple.
+  The more changes, the higher the priority.
+  """
+  return sum(x == 2 for x in el) - sum(x == 1 for x in el) + len(set(el)) - sum(el) - np.var(el) - sum(np.diff(el) == 0) - sum(np.diff(el) > 1) + sum(np.diff(el) == 1) + sum(np.diff(el) != 0)
+
+
+def priority_v10(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v9`.
+
+  This version also considers the number of times each pair of elements appears in the tuple.
+  The more times a pair appears, the lower the priority.
+  """
+  return sum(x == 2 for x in el) - sum(x == 1 for x in el) + len(set(el)) - sum(el) - np.var(el) - sum(np.diff(el) == 0) - sum(np.diff(el) > 1) + sum(np.diff(el) == 1) + sum(np.diff(el) != 0) - sum(itertools.combinations(el, 2))
+
+
+# The `priority_v10` function considers many different aspects of the tuple, and should be able to find large cap sets efficiently.
+# However, it may be overly complex for some applications, and may be slow to compute.
+# For simpler applications, or when speed is a concern, the earlier versions of the `priority` function may be sufficient.

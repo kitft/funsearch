@@ -1,0 +1,9 @@
+Here's an improved version of `priority_v1` that considers the number of unique remainders when dividing `k` by `n` and the sum of these remainders. This version is shorter and makes small changes to improve the priority function.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  remainders = set((k + i) % n for i in range(n))
+  return len(remainders) + sum(remainders)
+```
+
+This version first generates a set of unique remainders when dividing `k + i` by `n` for `i` in the range `[0, n)`. Then, it returns the sum of the number of unique remainders and the sum of these remainders. This function should provide a better priority than `priority_v0` for most cases.

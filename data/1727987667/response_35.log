@@ -1,0 +1,13 @@
+I have improved the priority function to `priority_v1`. This version calculates the priority based on the ratio of the square root of the integer `k` to the square root of the number of possible integers `n`. The priority is higher for larger `k` values and for a smaller number of possible integers `n`. This can be useful for finding large progressions in the Salem-Spencer set.
+
+Here's the code:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`.
+  Calculates the priority based on the ratio of the square root of `k` to the square root of `n`.
+  """
+  return np.sqrt(k) / np.sqrt(n)
+```
+
+You can now use this function to improve the priority of adding integers to the Salem-Spencer set.

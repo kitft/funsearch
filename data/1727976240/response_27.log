@@ -1,0 +1,10 @@
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # Prioritize larger numbers and numbers that are not divisible by small primes
+  prime_divisors = [i for i in range(2, int(np.sqrt(k)) + 1) if k % i == 0]
+  return k / (1 + len(prime_divisors))
+
+# Test the function
+priority_v1(15, 100)
+```

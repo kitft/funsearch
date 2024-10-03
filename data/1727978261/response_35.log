@@ -1,0 +1,16 @@
+The problem is about finding large cap sets, which are subsets of integers that satisfy certain conditions related to their sums. The task is to improve a priority function that determines the order in which elements are added to the cap set. The improved version should make small changes to the previous versions and should be as short as possible.
+
+Here's an improved version of the `priority_v1` function that considers the sum of the elements in the tuple and the number of non-zero elements:
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+    """Improved version of `priority_v0`."""
+    # Calculate the sum of the elements in the tuple
+    total = sum(el)
+    # Calculate the number of non-zero elements in the tuple
+    non_zero = sum(1 for e in el if e != 0)
+    # Return the priority as the sum of the elements divided by the number of non-zero elements
+    return total / non_zero if non_zero > 0 else 0.0
+```
+
+This version of the function gives higher priority to tuples with larger sums and fewer non-zero elements, which may lead to the discovery of larger cap sets. However, it's important to note that the effectiveness of this priority function depends on the specific problem instance and may require further tuning or modification.

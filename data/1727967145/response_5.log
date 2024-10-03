@@ -1,0 +1,16 @@
+Here's an improved version of `priority_v1` that considers the number of unique remainders when dividing `k` by `n`, and the number of multiples of `k` within the range `[1, n]`. This version is shorter and makes small changes to `priority_v0`.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  remainders = set((k * i) % n for i in range(1, n + 1))
+  multiples = sum(1 for i in range(1, n + 1) if (k * i) % n == 0)
+  return len(remainders) / n + multiples / n
+```
+
+This version calculates the priority as the sum of two terms:
+
+1. The ratio of unique remainders to `n`, which encourages adding `k` if it produces many unique remainders.
+2. The ratio of multiples of `k` within `[1, n]` to `n`, which encourages adding `k` if it has many multiples within the range.
+
+Both terms are divided by `n` to normalize the values between 0 and 1.

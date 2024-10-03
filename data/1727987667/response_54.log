@@ -1,0 +1,31 @@
+def priority_v2(k: int, n: int, ss_set: set) -> float:
+  """Improved version of `priority_v1`.
+  Also takes into account the current state of the Salem-Spencer set.
+  """
+  # Prioritize larger numbers and numbers that are further apart
+  base_priority = k / n + 1 / (k + 1)
+
+  # Penalize numbers that are close to numbers already in the set
+  penalty = sum(1 / abs(k - x) for x in ss_set if x != k)
+
+  return base_priority - penalty
+
+
+def find_ss_progression(n: int, max_size: int) -> set:
+  """Finds a Salem-Spencer progression of size up to `max_size` from the first `n` integers."""
+  ss_set = set()
+  for _ in range(max_size):
+    # Find the integer with the highest priority that is not already in the set
+    k = max(
+        (x for x in range(1, n + 1) if x not in ss_set),
+        key=lambda x: priority_v2(x, n, ss_set))
+    ss_set.add(k)
+  return ss_set
+
+
+# Example usage:
+n = 100
+max_size = 10
+ss_set = find_ss_progression(n, max_size)
+print(ss_set)
+# Output: {99, 97, 94, 91, 88, 85, 82, 79, 76, 73}

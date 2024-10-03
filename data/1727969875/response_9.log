@@ -1,0 +1,13 @@
+In order to improve the `priority_v1` function over `priority_v0`, we could consider the number `k` and the total number of possible integers `n`. A simple improvement could be to give higher priority to smaller numbers `k` relative to `n`, assuming smaller numbers are more likely to form large SS progressions.
+
+Here is a possible implementation:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return 1.0 - k / n
+```
+
+In this version, the priority is highest for the smallest `k` and decreases linearly as `k` increases. This means that numbers closer to 0 are more likely to be selected for the Salem-Spencer set.
+
+Please note that this is a very basic improvement and may not be the best strategy for finding large SS progressions. The priority function should be adapted based on the specific problem and the knowledge about the distribution of numbers that are likely to form large SS progressions.

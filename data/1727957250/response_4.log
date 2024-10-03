@@ -1,0 +1,22 @@
+Here's an improved version of `priority_v1` that considers the number of unique values in the input tuple `el`. This version uses the `Counter` class from the `collections` module to count the occurrences of each value in `el`. The priority is then calculated as the sum of the squares of the differences between the counts of each value and the expected count (`n // 3`) for a balanced tuple.
+
+```python
+from collections import Counter
+
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  def calculate_priority(el: tuple) -> float:
+    counts = Counter(el)
+    expected_count = n // 3
+    return sum((count - expected_count) ** 2 for count in counts.values())
+
+  return calculate_priority
+```
+
+To use this function with `funsearch.run`, you can pass it as follows:
+
+```python
+@funsearch.run
+def priority_v1(k: int, n: int) -> float:
+  return priority_v1(k, n)
+```

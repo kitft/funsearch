@@ -1,0 +1,57 @@
+"""Improved version of `priority_v1`.
+  Here, we consider the prime factorization of k. Numbers with a larger number of unique prime factors and smaller prime factors are more likely to form progressions and thus are given a higher priority.
+  """
+  def prime_factors(n):
+    i = 2
+    factors = []
+    while i * i <= n:
+      if n % i:
+        i += 1
+      else:
+        n //= i
+        factors.append(i)
+    if n > 1:
+      factors.append(n)
+    return factors
+
+  factors = prime_factors(k)
+  unique_factors = set(factors)
+  priority = len(unique_factors) + sum(factors)/k
+  return priority
+
+
+def priority_v3(k: int, n: int) -> float:
+  """Improved version of `priority_v2`."""
+  """Improved version of `priority_v2`.
+  Here, we consider the gap between consecutive numbers in a progression. A gap of 2 is considered more likely to form a progression than a gap of 3, and so on.
+  We calculate the gaps between k and the numbers already in the Salem-Spencer set, and give k a higher priority if it forms smaller gaps.
+  """
+  # assuming ss_set is the current Salem-Spencer set
+  ss_set = set(range(1, n+1))  # replace with actual set
+  gaps = [abs(k - ss) for ss in ss_set]
+  priority = priority_v2(k, n) + 1/min(gaps) if gaps else priority_v2(k, n)
+  return priority
+
+
+def priority_v4(k: int, n: int) -> float:
+  """Improved version of `priority_v3`."""
+  """Improved version of `priority_v3`.
+  Here, we consider the distribution of numbers in the Salem-Spencer set. If a number is close to the mean of the set, it is more likely to form progressions, and thus is given a higher priority.
+  """
+  # assuming ss_set is the current Salem-Spencer set
+  ss_set = set(range(1, n+1))  # replace with actual set
+  mean = np.mean(list(ss_set))
+  priority = priority_v3(k, n) + 1/(abs(k - mean) + 1)  # adding 1 to avoid division by zero
+  return priority
+
+
+def find_large_ss_progression(n: int) -> list[int]:
+  """Finds a large Salem-Spencer progression of length greater than sqrt(n)."""
+  ss_set = set()
+  for _ in range(n):
+    priorities = [priority_v4(k, n) for k in range(1, n+1) if k not in ss_set]
+    k = np.argmax(priorities) + 1
+    ss_set.add(k)
+    if len(ss_set) > np.sqrt(n):
+      return list(ss_set)
+  return []

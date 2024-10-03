@@ -1,0 +1,12 @@
+Here's an improved version of `priority_v1` that takes into account the size of the integer `k` and the number of possible integers `n`. The priority is higher for larger `k` because they contribute more to the overall progression:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`.
+
+  The priority is calculated as k/n, which represents the ratio of the integer to the total number of possible integers.
+  """
+  return k / n
+```
+
+This simple change makes the priority calculation more meaningful, as it now reflects the relative size of the integer compared to the total number of possible integers.

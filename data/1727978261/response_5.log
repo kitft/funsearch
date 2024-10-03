@@ -1,0 +1,14 @@
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+    return sum(el) / n
+
+def priority_v2(el: tuple[int, ...], n: int) -> float:
+    return sum(el) / n + np.prod(el)
+
+def priority_v3(el: tuple[int, ...], n: int) -> float:
+    return sum(el) / n + np.prod(el) + sum(1 for i, j in itertools.combinations(range(n), 2) if el[i] == 1 and el[j] == 1)
+
+def priority_v4(el: tuple[int, ...], n: int) -> float:
+    return sum(el) / n + np.prod(el) + sum(1 for i, j in itertools.combinations(range(n), 2) if el[i] == 1 and el[j] == 1) - sum(el) * (n - sum(el)) / n
+
+def priority_v5(el: tuple[int, ...], n: int) -> float:
+    return sum(el) / n + np.prod(el) + sum(1 for i, j in itertools.combinations(range(n), 2) if el[i] == 1 and el[j] == 1) - sum(el) * (n - sum(el)) / n + sum(1 for i in range(n) if el[i] == 2) / n

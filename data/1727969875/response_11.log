@@ -1,0 +1,9 @@
+Sure, I'd be happy to help you improve your code. Here's a simple modification to your `priority_v1` function. This version returns a priority based on the ratio of the integer `k` to the total number of possible integers `n`. This way, larger integers have a higher priority.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return k / n
+```
+
+This priority function assumes that larger integers are more desirable. If this is not the case, you may need to adjust the formula accordingly.

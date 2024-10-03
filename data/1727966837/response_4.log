@@ -1,0 +1,15 @@
+Here's an improved version of `priority_v1` that considers the frequency of `k` in the range `[0, n)` and the number of elements that are already in the Salem-Spencer set. This version also uses a simple heuristic to prioritize elements that are less likely to be in the set.
+
+```python
+@funsearch.run
+def priority_v1(k: int, n: int, ss_set: set) -> float:
+    """Returns the priority with which we want to add `k` to the salem-spencer set `ss_set`.
+    n is the number of possible integers, and k is the integer we want to determine priority for.
+    """
+    freq = sum(1 for i in range(n) if i % k == 0)
+    return (n - len(ss_set)) / (freq * (n - k))
+```
+
+In this version, `ss_set` is added as an argument to the function, allowing it to consider the current state of the set. The priority is calculated as the ratio of the number of elements not yet in the set to the frequency of `k` in the range `[0, n)`. This heuristic assumes that elements with lower frequencies are more likely to be in the set and should therefore have a lower priority.
+
+To further improve the function, you could consider additional factors, such as the number of multiples of `k` that are already in the set or the distribution of elements in the set. However, keep in mind that the goal is to make small changes on each iteration, so avoid large refactorings or adding complex logic at once.

@@ -1,0 +1,13 @@
+It appears that there's a function `priority_v0` that returns a priority score for an integer `k` given a total number of possible integers `n`. The task is to improve this function in a small way to create `priority_v1`.
+
+Without more context or specific requirements, it's difficult to suggest an improvement. However, based on the function name and the provided code, it seems that the function might be related to the Salem-Spencer set and progressions.
+
+If we assume that the priority score should be higher for larger `k` values (since larger numbers are less frequent), we could modify the function as follows:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`. Prioritizes larger `k` values."""
+  return k / n
+```
+
+This new function calculates the priority as the ratio of `k` to `n`, which means larger `k` values will result in higher priority scores.

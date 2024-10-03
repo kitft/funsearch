@@ -1,0 +1,11 @@
+Here's an improved version of `priority_v1` that considers the frequency of multiples of `k` up to `n`, as well as the frequency of multiples of `k` up to `n//k` (since adding `k` to the set will also add multiples of `k` up to `n//k`). I've also added a small adjustment factor to prioritize larger numbers.
+
+```python
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`."""
+  freq_k = np.count_nonzero(np.arange(n) % k == 0)
+  freq_k_k = np.count_nonzero(np.arange(n // k) % k == 0)
+  return (freq_k + freq_k_k * (n // k)) / n * (1 + 0.1 * np.log2(k))
+```
+
+To keep the code short and follow the given instructions, I've made only a small change from `priority_v1` to `priority_v2`. You can further improve the method by considering more factors, but keep in mind that the goal is to make small changes on each iteration.

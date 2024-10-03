@@ -1,0 +1,61 @@
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`.
+
+  Adds a small factor to the priority to break ties in a deterministic way.
+  """
+  return (abs(k - n // 2) + 0.01 * k) / n
+
+
+def priority_v3(k: int, n: int) -> float:
+  """Improved version of `priority_v2`.
+
+  Adds a small factor to the priority to break ties in a deterministic way,
+  but only for the first half of the integers.
+  """
+  return (abs(k - n // 2) + 0.01 * (k if k < n // 2 else n - k)) / n
+
+
+def priority_v4(k: int, n: int) -> float:
+  """Improved version of `priority_v3`.
+
+  Uses a different formula for the priority, which is more sensitive to
+  numbers close to the middle of the range.
+  """
+  return 1 / (1 + (k - n // 2) ** 2 / (n ** 2 / 4))
+
+
+def find_large_ss_progressions(n: int, max_size: int) -> list[tuple[int, ...]]:
+  """Finds large Salem-Spencer progressions in the range [1, n].
+
+  Args:
+    n: The number of possible integers.
+    max_size: The maximum size of the progressions to find.
+
+  Returns:
+    A list of Salem-Spencer progressions of length at least 3 and up to
+    `max_size`. The progressions are sorted by length in descending order.
+  """
+  progressions = []
+  for size in range(3, max_size + 1):
+    for elements in itertools.combinations(range(1, n + 1), size):
+      if is_salem_spencer(elements):
+        progressions.append(elements)
+    progressions.sort(key=lambda x: len(x), reverse=True)
+  return progressions
+
+
+def is_salem_spencer(elements: tuple[int, ...]) -> bool:
+  """Checks if a tuple of integers is a Salem-Spencer progression."""
+  return all(np.gcd(a, b) == 1 for a, b in itertools.combinations(elements, 2))
+
+
+def main() -> None:
+  n = 100
+  max_size = 5
+  progressions = find_large_ss_progressions(n, max_size)
+  for progression in progressions:
+    print(progression)
+
+
+if __name__ == "__main__":
+  main()

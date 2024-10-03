@@ -1,0 +1,15 @@
+The code provided defines a function `priority_v1` that takes two arguments: `k` and `n`. However, the function is currently empty and does not contain any code.
+
+To improve upon `priority_v0`, we can implement a priority calculation based on the given integers `k` and `n`. One possible approach could be to calculate the ratio of `k` to `n` and return that as the priority.
+
+Here's an example implementation of `priority_v1`:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`.
+  Calculates the priority as the ratio of `k` to `n`.
+  """
+  return k / n
+```
+
+This implementation assumes that higher values of `k` and lower values of `n` result in a higher priority.

@@ -1,0 +1,15 @@
+Here's a possible improvement for `priority_v1`. This version uses the concept of entropy to determine the priority. Entropy is a measure of uncertainty or randomness. In the context of this problem, entropy can be used to measure how much information is lost when we consider an integer for addition to the Salem-Spencer set. A higher entropy indicates more uncertainty or randomness, which might suggest a higher priority.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`.
+  Uses entropy to determine priority.
+  """
+  prob = k / n
+  entropy = -prob * np.log2(prob)
+  return entropy
+```
+
+This version of the function calculates the probability of `k` being chosen (`k / n`), then calculates the entropy of this probability using the formula `-p * log2(p)`. The entropy is then returned as the priority.
+
+This version of the function gives a higher priority to integers that are less probable, but not necessarily to integers that are more random or uncertain. It's possible that other measures of uncertainty or randomness might be more appropriate for this problem, but entropy is a common and useful measure that can be easily calculated.

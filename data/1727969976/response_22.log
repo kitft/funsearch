@@ -1,0 +1,13 @@
+Sure, I'd be happy to help you improve your code. In this case, since you're looking for large SS progressions, one way to improve the priority function could be to give higher priority to numbers that are further apart. This could potentially help in finding longer progressions. Here's a simple way to do that:
+
+```python
+def priority_v1(k: int, n: int, ss_set: set) -> float:
+    """Improved version of `priority_v0`. Gives higher priority to numbers that are further apart."""
+    if not ss_set:  # If the set is empty, return a high priority
+        return 1.0
+    else:
+        # Otherwise, return the average distance from k to all numbers in the set
+        return np.mean([abs(k - num) for num in ss_set])
+```
+
+In this version, if the set is empty, it returns a high priority (1.0) to encourage adding the first number. If the set is not empty, it calculates the average distance from `k` to all numbers in the set and returns this as the priority. The larger the average distance, the higher the priority.

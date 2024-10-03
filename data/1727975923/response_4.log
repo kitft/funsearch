@@ -1,0 +1,25 @@
+The improved version of `priority_v0` could consider the number of divisors of `k` and use it as a priority score. The more divisors a number has, the higher its priority for being added to the Salem-Spencer set.
+
+Here's an implementation using the `numpy` library to efficiently calculate the number of divisors:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`.
+
+  Args:
+      k: The integer to determine the priority for.
+      n: The number of possible integers.
+
+  Returns:
+      The priority with which we want to add `k` to the Salem-Spencer set.
+  """
+  # Calculate the number of divisors of k
+  num_divisors = np.sum(k % np.arange(1, k + 1) == 0)
+
+  # Normalize the number of divisors by dividing by k (to keep the priority within [0, 1])
+  priority = num_divisors / k
+
+  return priority
+```
+
+This function first calculates the number of divisors of `k` by checking how many numbers in the range from 1 to `k` evenly divide `k`. It then normalizes this count by dividing it by `k` to ensure that the priority remains within the range [0, 1].

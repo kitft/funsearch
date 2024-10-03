@@ -1,0 +1,45 @@
+To improve the `priority_v1` function over `priority_v0`, we can consider the impact of adding `k` to the Salem-Spencer set on the progress towards finding large SS progressions.
+
+A simple improvement could be to prioritize integers that have fewer divisors. This is because integers with fewer divisors are less likely to be divisible by other elements in the set, which makes them more valuable for forming long progressions.
+
+Here's an updated version of the `priority_v1` function that considers the number of divisors:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  def divisors(n):
+    result = []
+    for i in range(1, int(np.sqrt(n)) + 1):
+      if n % i == 0:
+        if n / i == i:
+          result.append(i)
+        else:
+          result.extend([i, n // i])
+    return result
+
+  return 1 / len(divisors(k))
+```
+
+This function calculates the number of divisors of `k` and returns the reciprocal of that value as the priority. This way, integers with fewer divisors have a higher priority.
+
+Let's test it out:
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  def divisors(n):
+    result = []
+    for i in range(1, int(np.sqrt(n)) + 1):
+      if n % i == 0:
+        if n / i == i:
+          result.append(i)
+        else:
+          result.extend([i, n // i])
+    return result
+
+  return 1 / len(divisors(k))
+
+# Test the function
+n = 100
+priority_values = [priority_v1(k, n) for k in range(1, n+1)]
+priority_values
+```

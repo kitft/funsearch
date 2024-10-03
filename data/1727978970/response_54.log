@@ -1,0 +1,10 @@
+Here's an improved version of `priority_v0`:
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # Give higher priority to elements with more 2's.
+  return el.count(2)
+```
+
+In this version, we give higher priority to tuples that contain more 2's, as these tuples are more likely to contribute to the size of the cap set. This simple modification could potentially lead to finding larger cap sets.

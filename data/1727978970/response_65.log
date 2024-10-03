@@ -1,0 +1,9 @@
+Here's a possible improvement for the `priority_v1` function. This version will prioritize tuples that have more 2s and fewer 1s. The reasoning is that a 2 in a tuple means that there are two elements in the set that are disjoint, which is desirable for a cap set. On the other hand, a 1 in a tuple means that there is an overlap between two elements, which is undesirable.
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`. Prioritizes tuples with more 2s and fewer 1s."""
+  return el.count(2) - el.count(1)
+```
+
+This function works by simply subtracting the number of 1s from the number of 2s in the tuple. The result is a measure of how "good" the tuple is for a cap set: the higher the result, the more 2s there are in the tuple, and the fewer 1s, which is desirable.

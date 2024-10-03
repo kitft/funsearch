@@ -1,0 +1,14 @@
+This version of the function `priority_v2` can prioritize larger numbers, numbers that are further apart, and also numbers that have a larger gap to the next number in the sequence.
+
+```python
+def priority_v2(k: int, n: int, previous_k: int) -> float:
+  """Improved version of `priority_v1`."""
+  # Prioritize larger numbers, numbers that are further apart, and numbers with a larger gap to the next number
+  return k / n + 1 / (k + 1) + 1 / (k - previous_k)
+```
+
+The new term `1 / (k - previous_k)` will be larger when the gap between `k` and `previous_k` is larger. This encourages the selection of numbers that are further apart in the sequence.
+
+However, we need to know the previous number `previous_k` to calculate this term. This raises the question of how to handle the first number in the sequence since it doesn't have a previous number. For this, we can either set `previous_k` to 0 for the first number or find a different way to calculate the priority for the first number.
+
+Please note that this is a simple suggestion and the effectiveness of the change might depend on the specific use case and distribution of the numbers.

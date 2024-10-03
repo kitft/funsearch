@@ -1,0 +1,14 @@
+It seems there's a function definition for `priority_v1` but no implementation. Here's a simple way to improve on `priority_v0` by giving higher priority to tuples with more 2's and less 0's.
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # count the number of 2's and 0's in el
+  num_twos = el.count(2)
+  num_zeros = el.count(0)
+
+  # return a priority that favors more 2's and less 0's
+  return num_twos - num_zeros
+```
+
+This way, tuples with more 2's and less 0's will be more likely to be added to the cap set, assuming the `funsearch` library uses this priority to make decisions. However, the best priority function can vary depending on the specific problem and context.

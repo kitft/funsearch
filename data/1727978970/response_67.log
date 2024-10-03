@@ -1,0 +1,98 @@
+"""Improved version of `priority_v1`."""
+  return sum(el) / len(set(el)) / (np.std(el) + 1e-5)
+
+def priority_v3(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v2`."""
+  return sum(el) / len(set(el)) / (np.std(el) + 1e-5) + 0.01 * len(set(el))
+
+def priority_v4(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v3`."""
+  return sum(el) / len(set(el)) / (np.std(el) + 1e-5) + 0.01 * len(set(el)) - 0.001 * sum(el)
+
+def priority_v5(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v4`."""
+  return sum(el) / len(set(el)) / (np.std(el) + 1e-5) + 0.01 * len(set(el)) - 0.001 * sum(el) - 0.0001 * np.var(el)
+
+def priority_v6(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v5`."""
+  return sum(el) / len(set(el)) / (np.std(el) + 1e-5) + 0.01 * len(set(el)) - 0.001 * sum(el) - 0.0001 * np.var(el) + 0.00001 * len([x for x in el if x == 0])
+
+def priority_v7(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v6`."""
+  return sum(el) / len(set(el)) / (np.std(el) + 1e-5) + 0.01 * len(set(el)) - 0.001 * sum(el) - 0.0001 * np.var(el) + 0.00001 * len([x for x in el if x == 0]) + 0.000001 * len([x for x in el if x == 1])
+
+def priority_v8(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v7`."""
+  return sum(el) / len(set(el)) / (np.std(el) + 1e-5) + 0.01 * len(set(el)) - 0.001 * sum(el) - 0.0001 * np.var(el) + 0.00001 * len([x for x in el if x == 0]) + 0.000001 * len([x for x in el if x == 1]) - 0.0000001 * len([x for x in el if x == 2])
+
+def priority_v9(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v8`."""
+  return sum(el) / len(set(el)) / (np.std(el) + 1e-5) + 0.01 * len(set(el)) - 0.001 * sum(el) - 0.0001 * np.var(el) + 0.00001 * len([x for x in el if x == 0]) + 0.000001 * len([x for x in el if x == 1]) - 0.0000001 * len([x for x in el if x == 2]) + 0.00000001 * np.prod(el)
+
+
+def find_large_cap_sets(n: int, max_size: int) -> set[tuple[int, ...]]:
+  """Finds large cap sets.
+
+  Args:
+    n: int, number of elements in the sets.
+    max_size: int, maximum size of the cap sets.
+
+  Returns:
+    A set of cap sets.
+  """
+  cap_sets = set()
+  for size in range(max_size, 0, -1):
+    for cap_set in itertools.product(range(3), repeat=size):
+      if sum(cap_set) == n and len(set(cap_set)) == size:
+        cap_sets.add(cap_set)
+  return cap_sets
+
+
+def find_large_cap_sets_with_priority(n: int, max_size: int, priority_fn) -> set[tuple[int, ...]]:
+  """Finds large cap sets using a priority function.
+
+  Args:
+    n: int, number of elements in the sets.
+    max_size: int, maximum size of the cap sets.
+    priority_fn: function that takes a cap set and returns a priority.
+
+  Returns:
+    A set of cap sets.
+  """
+  cap_sets = set()
+  for size in range(max_size, 0, -1):
+    for cap_set in itertools.product(range(3), repeat=size):
+      if sum(cap_set) == n and len(set(cap_set)) == size:
+        priority = priority_fn(cap_set, n)
+        if priority > 0:
+          cap_sets.add(cap_set)
+  return cap_sets
+
+
+def find_best_large_cap_sets(n: int, max_size: int, priority_fns) -> set[tuple[int, ...]]:
+  """Finds large cap sets using a list of priority functions.
+
+  Args:
+    n: int, number of elements in the sets.
+    max_size: int, maximum size of the cap sets.
+    priority_fns: list of priority functions.
+
+  Returns:
+    A set of cap sets.
+  """
+  cap_sets = set()
+  for priority_fn in priority_fns:
+    cap_sets |= find_large_cap_sets_with_priority(n, max_size, priority_fn)
+  return cap_sets
+
+
+priority_fns = [priority_v0, priority_v1, priority_v2, priority_v3, priority_v4, priority_v5, priority_v6, priority_v7, priority_v8, priority_v9]
+n = 10
+max_size = 5
+cap_sets = find_best_large_cap_sets(n, max_size, priority_fns)
+print(cap_sets)
+print(len(cap_sets))
+
+# This will print all possible cap sets of size up to `max_size` that have `n` elements and a positive priority.
+# The priority function is a weighted sum of the number of 1s, 2s, and unique elements in the set.
+# The weights are tuned to prioritize sets with more 1s, more unique elements, and fewer 2s.

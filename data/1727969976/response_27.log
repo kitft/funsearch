@@ -1,0 +1,12 @@
+Here's an improved version of `priority_v1` that returns the priority based on the gap between the largest number in the Salem-Spencer set and the candidate number `k`. The larger the gap, the higher the priority.
+
+```python
+def priority_v2(k: int, n: int, salem_spencer_set: set) -> float:
+  """Improved version of `priority_v1`."""
+  if not salem_spencer_set:
+    return float('inf') if k == 1 else 0.0
+  largest_in_set = max(salem_spencer_set)
+  return k - largest_in_set if k > largest_in_set else 0.0
+```
+
+In this version, `salem_spencer_set` is an additional argument which holds the current Salem-Spencer set. The priority of a number is defined as the difference between the number and the largest number in the set, if the number is larger than the largest number in the set. If the number is smaller or equal to the largest number in the set, the priority is 0. This way, the algorithm will prefer larger numbers that are far away from the numbers already in the set.

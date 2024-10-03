@@ -1,0 +1,90 @@
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+    """Improved version of `priority_v0`."""
+    # Priority is based on the number of 2s and 1s in the tuple
+    # More 2s and 1s, higher the priority
+    return sum(el)
+
+@funsearch.run
+def priority_v2(el: tuple[int, ...], n: int) -> float:
+    """Improved version of `priority_v1`."""
+    # Priority is based on the number of unique elements in the tuple
+    # More unique elements, higher the priority
+    return len(set(el))
+
+@funsearch.run
+def priority_v3(el: tuple[int, ...], n: int) -> float:
+    """Improved version of `priority_v2`."""
+    # Priority is based on the number of 2s and the number of unique elements in the tuple
+    # More 2s and unique elements, higher the priority
+    return sum(el) + len(set(el))
+
+@funsearch.run
+def priority_v4(el: tuple[int, ...], n: int) -> float:
+    """Improved version of `priority_v3`."""
+    # Priority is based on the number of 2s, the number of unique elements,
+    # and the variance of the elements in the tuple
+    # More 2s, unique elements, and variance, higher the priority
+    return sum(el) + len(set(el)) + np.var(el)
+
+@funsearch.run
+def priority_v5(el: tuple[int, ...], n: int) -> float:
+    """Improved version of `priority_v4`."""
+    # Priority is based on the number of 2s, the number of unique elements,
+    # the variance of the elements in the tuple, and the number of transitions between elements
+    # More 2s, unique elements, variance, and transitions, higher the priority
+    transitions = sum(abs(el[i] - el[i + 1]) for i in range(n - 1))
+    return sum(el) + len(set(el)) + np.var(el) + transitions
+
+@funsearch.run
+def priority_v6(el: tuple[int, ...], n: int) -> float:
+    """Improved version of `priority_v5`."""
+    # Priority is based on the number of 2s, the number of unique elements,
+    # the variance of the elements in the tuple, the number of transitions between elements,
+    # and the number of runs of consecutive elements
+    # More 2s, unique elements, variance, transitions, and runs, higher the priority
+    runs = sum(1 for i in range(1, n) if el[i] == el[i - 1])
+    return sum(el) + len(set(el)) + np.var(el) + transitions + runs
+
+@funsearch.run
+def priority_v7(el: tuple[int, ...], n: int) -> float:
+    """Improved version of `priority_v6`."""
+    # Priority is based on the number of 2s, the number of unique elements,
+    # the variance of the elements in the tuple, the number of transitions between elements,
+    # the number of runs of consecutive elements, and the number of peaks in the tuple
+    # More 2s, unique elements, variance, transitions, runs, and peaks, higher the priority
+    peaks = sum(1 for i in range(1, n - 1) if el[i] > el[i - 1] and el[i] > el[i + 1])
+    return sum(el) + len(set(el)) + np.var(el) + transitions + runs + peaks
+
+@funsearch.run
+def priority_v8(el: tuple[int, ...], n: int) -> float:
+    """Improved version of `priority_v7`."""
+    # Priority is based on the number of 2s, the number of unique elements,
+    # the variance of the elements in the tuple, the number of transitions between elements,
+    # the number of runs of consecutive elements, the number of peaks in the tuple,
+    # and the number of valleys in the tuple
+    # More 2s, unique elements, variance, transitions, runs, peaks, and valleys, higher the priority
+    valleys = sum(1 for i in range(1, n - 1) if el[i] < el[i - 1] and el[i] < el[i + 1])
+    return sum(el) + len(set(el)) + np.var(el) + transitions + runs + peaks + valleys
+
+@funsearch.run
+def priority_v9(el: tuple[int, ...], n: int) -> float:
+    """Improved version of `priority_v8`."""
+    # Priority is based on the number of 2s, the number of unique elements,
+    # the variance of the elements in the tuple, the number of transitions between elements,
+    # the number of runs of consecutive elements, the number of peaks in the tuple,
+    # the number of valleys in the tuple, and the maximum length of a monotonic subsequence
+    # More 2s, unique elements, variance, transitions, runs, peaks, valleys, and subsequence length, higher the priority
+    subsequences = [list(group) for key, group in itertools.groupby(enumerate(el), lambda x: x[0] - x[1])]
+    max_subsequence_length = max(len(subsequence) for subsequence in subsequences)
+    return sum(el) + len(set(el)) + np.var(el) + transitions + runs + peaks + valleys + max_subsequence_length
+
+@funsearch.run
+def priority_v10(el: tuple[int, ...], n: int) -> float:
+    """Improved version of `priority_v9`."""
+    # Priority is based on the number of 2s, the number of unique elements,
+    # the variance of the elements in the tuple, the number of transitions between elements,
+    # the number of runs of consecutive elements, the number of peaks in the tuple,
+    # the number of valleys in the tuple, the maximum length of a monotonic subsequence,
+    # and the ratio of the number of 2s to the number of unique elements
+    # More 2s, unique elements, variance, transitions, runs, peaks, valleys, subsequence length, and 2s to unique elements ratio, higher the priority
+    return (sum(el) + len(set(el)) + np.var(el) + transitions + runs + peaks + valleys + max_subsequence_length) * (sum(el) / len(set(el)))

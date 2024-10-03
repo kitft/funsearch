@@ -1,0 +1,20 @@
+Here's an improved version of `priority_v1` that considers the number of ways to choose `k` elements from `n` possible integers, which is given by the combination formula `n choose k` or `nCk`. This version also uses the `math` library for better readability.
+
+```python
+import math
+
+@funsearch.run
+def priority_v1(k: int, n: int) -> float:
+    """Returns the priority with which we want to add `k` to the salem-spencer set.
+    n is the number of possible integers, and k is the integer we want to determine priority for.
+    """
+    return nCk(n, k) - nCk(n, k - 1) if k <= n else 0.0
+
+def nCk(n, k):
+    """Calculate n choose k using the combination formula."""
+    return math.comb(n, k)
+```
+
+In this version, `priority_v1` returns the difference between `nCk(n, k)` and `nCk(n, k - 1)` if `k` is less than or equal to `n`. Otherwise, it returns `0.0`. The `nCk` function calculates the combination using the `math.comb` function, which is more efficient than using `itertools.combinations` or calculating it manually.
+
+To further improve the function, you could consider adding more factors to the priority calculation, such as the sum of the elements in the set, their distribution, or other relevant characteristics of the Salem-Spencer set. However, keep in mind that the goal is to make small changes on each iteration, so you should gradually incorporate these improvements.

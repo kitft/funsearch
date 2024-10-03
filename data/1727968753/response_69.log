@@ -1,0 +1,9 @@
+Here's an improved version of `priority_v2` that reduces the number of iterations and uses generator expressions for better performance:
+
+```python
+def priority_v2(k: int, n: int) -> float:
+    """Improved version of `priority_v1`."""
+    return sum((i % k == 0) - (i % k**2 == 0) + (i % k**3 == 0) for i in range(1, n // k**3 + 1)) / n
+```
+
+This version calculates the frequency of multiples of `k`, `k^2`, and `k^3` in a single pass, reducing the number of iterations and making the code shorter.

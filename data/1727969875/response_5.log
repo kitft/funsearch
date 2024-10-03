@@ -1,0 +1,9 @@
+Here, I've defined a simple function `priority_v1` which calculates the priority of an integer `k` based on its value relative to the total number of possible integers `n`. This is done by computing the ratio of `k` to `n` and subtracting 0.5. This way, integers near the middle of the range have a higher priority (closer to 0), while integers at the extremes have a lower priority (farther from 0).
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return k / n - 0.5
+```
+
+This function assumes that both `k` and `n` are positive integers. If `n` is zero, the function will return `-0.5`, which might not be the expected result in all cases. You might want to add a check for this at the beginning of the function to handle such cases more appropriately.

@@ -1,0 +1,10 @@
+Sure, I'd be happy to help you improve your `priority_v1` function. Based on the context you've provided, it seems like you're working with the Salem-Spencer set and want to prioritize adding integers to it. Here's a simple way to do this:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`. The priority is inversely proportional to the integer's value,
+  but normalized by the total number of possible integers."""
+  return (n - k) / n
+```
+
+This function will give higher priority to smaller integers, which could be useful if you're trying to find large SS progressions. The priority is calculated as the fraction of the total integers that are larger than the current integer.

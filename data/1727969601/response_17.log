@@ -1,0 +1,19 @@
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`.
+
+  Counts the pairs (i, j) such that i + j = k and i != j,
+  which can be simplified by using combinatorics and avoiding double counting.
+  """
+  if k < 2 or k > 2*n:
+    return 0
+  if k % 2 == 0:
+    return combinations(n, 2) - n // 2
+  return combinations(n, 2)
+
+def combinations(n, r):
+  """Calculate the number of combinations of n items taken r at a time."""
+  return factorial(n) // (factorial(r) * factorial(n - r))
+
+def factorial(n):
+  """Calculate the factorial of n."""
+  return np.prod(np.arange(1, n + 1))

@@ -1,0 +1,10 @@
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # Count the number of 2s in the tuple
+  num_twos = el.count(2)
+
+  # Prioritize tuples with more 2s
+  return num_twos
+```
+I've improved the `priority_v0` function to `priority_v1`. The `priority_v1` function counts the number of 2s in the tuple and returns that count as the priority. This will ensure that tuples with more 2s are considered first when adding elements to the cap set.

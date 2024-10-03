@@ -1,0 +1,11 @@
+Here's an improved version of `priority_v1` that considers the number of elements less than `k` and the total number of possible integers `n`. This version uses the formula for the expected value of the number of elements less than `k` in a uniform distribution.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return (k - 1) / (n - 1)
+```
+
+This version makes a small change to the previous one by replacing the constant `0.0` with a formula that takes into account the position of `k` among the possible integers. The formula `(k - 1) / (n - 1)` gives the expected value of the number of elements less than `k`, which can be seen as a measure of the priority to add `k` to the Salem-Spencer set.
+
+To further improve this version, you could consider additional factors, such as the distribution of elements in the set or the specific properties of the Salem-Spencer set. However, this version already represents a small but meaningful improvement over the initial version.

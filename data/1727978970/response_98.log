@@ -1,0 +1,1407 @@
+"""Improved version of `priority_v1`.
+
+Another improvement could be to prioritize elements that have a lower coefficient of variation over elements that have a higher coefficient of variation.
+This is because a lower coefficient of variation means that the elements are more consistent with each other, which increases the chances of finding a cap set.
+"""
+return sum(el) / len(set(el)) / (np.std(el) / np.mean(el))
+
+
+def priority_v3(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v2`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared differences over elements that have a higher sum of squared differences.
+This is because a lower sum of squared differences means that the elements are more similar to each other, which increases the chances of finding a cap set.
+"""
+return sum(el) / len(set(el)) / np.sqrt(np.sum(np.square(el - np.mean(el))))
+
+
+def priority_v4(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v3`."""
+
+"""Another improvement could be to prioritize elements that have a lower skewness over elements that have a higher skewness.
+This is because a lower skewness means that the elements are more symmetrically distributed, which increases the chances of finding a cap set.
+"""
+from scipy.stats import skew
+return sum(el) / len(set(el)) / np.sqrt(np.sum(np.square(el - np.mean(el)))) / np.abs(skew(el))
+
+
+def priority_v5(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v4`."""
+
+"""Another improvement could be to prioritize elements that have a lower kurtosis over elements that have a higher kurtosis.
+This is because a lower kurtosis means that the elements are more normally distributed, which increases the chances of finding a cap set.
+"""
+from scipy.stats import kurtosis
+return sum(el) / len(set(el)) / np.sqrt(np.sum(np.square(el - np.mean(el)))) / np.abs(skew(el)) / kurtosis(el)
+
+
+def priority_v6(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v5`."""
+
+"""Another improvement could be to prioritize elements that have a lower entropy over elements that have a higher entropy.
+This is because a lower entropy means that the elements are more predictable, which increases the chances of finding a cap set.
+"""
+from scipy.stats import entropy
+return sum(el) / len(set(el)) / np.sqrt(np.sum(np.square(el - np.mean(el)))) / np.abs(skew(el)) / kurtosis(el) / entropy(el)
+
+
+def priority_v7(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v6`."""
+
+"""Another improvement could be to prioritize elements that have a lower dispersion over elements that have a higher dispersion.
+This is because a lower dispersion means that the elements are more tightly clustered, which increases the chances of finding a cap set.
+"""
+dispersion = np.max(el) - np.min(el)
+return sum(el) / len(set(el)) / np.sqrt(np.sum(np.square(el - np.mean(el)))) / np.abs(skew(el)) / kurtosis(el) / entropy(el) / dispersion
+
+
+def priority_v8(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v7`."""
+
+"""Another improvement could be to prioritize elements that have a lower range over elements that have a higher range.
+This is because a lower range means that the elements are more closely spaced, which increases the chances of finding a cap set.
+"""
+range = np.ptp(el)
+return sum(el) / len(set(el)) / np.sqrt(np.sum(np.square(el - np.mean(el)))) / np.abs(skew(el)) / kurtosis(el) / entropy(el) / range
+
+
+def priority_v9(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v8`."""
+
+"""Another improvement could be to prioritize elements that have a lower interquartile range over elements that have a higher interquartile range.
+This is because a lower interquartile range means that the elements are less spread out, which increases the chances of finding a cap set.
+"""
+from scipy.stats import iqr
+return sum(el) / len(set(el)) / np.sqrt(np.sum(np.square(el - np.mean(el)))) / np.abs(skew(el)) / kurtosis(el) / entropy(el) / iqr(el)
+
+
+def priority_v10(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v9`."""
+
+"""Another improvement could be to prioritize elements that have a lower variance over elements that have a higher variance.
+This is because a lower variance means that the elements are more tightly grouped, which increases the chances of finding a cap set.
+"""
+return sum(el) / len(set(el)) / np.var(el)
+
+
+def priority_v11(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v10`."""
+
+"""Another improvement could be to prioritize elements that have a lower coefficient of dispersion over elements that have a higher coefficient of dispersion.
+This is because a lower coefficient of dispersion means that the elements are more consistent in their relative variability, which increases the chances of finding a cap set.
+"""
+return sum(el) / len(set(el)) / (np.std(el) / np.mean(el))
+
+
+def priority_v12(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v11`."""
+
+"""Another improvement could be to prioritize elements that have a lower mean absolute deviation over elements that have a higher mean absolute deviation.
+This is because a lower mean absolute deviation means that the elements are more tightly grouped around the mean, which increases the chances of finding a cap set.
+"""
+from scipy.stats import median_abs_deviation
+return sum(el) / len(set(el)) / median_abs_deviation(el)
+
+
+def priority_v13(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v12`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute differences over elements that have a higher sum of absolute differences.
+This is because a lower sum of absolute differences means that the elements are more similar to each other, which increases the chances of finding a cap set.
+"""
+return sum(el) / len(set(el)) / np.sum(np.abs(el - np.mean(el)))
+
+
+def priority_v14(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v13`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared logarithmic errors over elements that have a higher sum of squared logarithmic errors.
+This is because a lower sum of squared logarithmic errors means that the elements are more accurately predicted by a logarithmic model, which increases the chances of finding a cap set.
+"""
+return sum(el) / len(set(el)) / np.sum(np.square(np.log(el + 1) - np.log(np.mean(el) + 1)))
+
+
+def priority_v15(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v14`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute logarithmic errors over elements that have a higher sum of absolute logarithmic errors.
+This is because a lower sum of absolute logarithmic errors means that the elements are more accurately predicted by a logarithmic model, which increases the chances of finding a cap set.
+"""
+return sum(el) / len(set(el)) / np.sum(np.abs(np.log(el + 1) - np.log(np.mean(el) + 1)))
+
+
+def priority_v16(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v15`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared percentage errors over elements that have a higher sum of squared percentage errors.
+This is because a lower sum of squared percentage errors means that the elements are more accurately predicted by a percentage error model, which increases the chances of finding a cap set.
+"""
+return sum(el) / len(set(el)) / np.sum(np.square((el - np.mean(el)) / np.mean(el)))
+
+
+def priority_v17(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v16`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute percentage errors over elements that have a higher sum of absolute percentage errors.
+This is because a lower sum of absolute percentage errors means that the elements are more accurately predicted by a percentage error model, which increases the chances of finding a cap set.
+"""
+return sum(el) / len(set(el)) / np.sum(np.abs((el - np.mean(el)) / np.mean(el)))
+
+
+def priority_v18(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v17`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared scaled errors over elements that have a higher sum of squared scaled errors.
+This is because a lower sum of squared scaled errors means that the elements are more accurately predicted by a scaled error model, which increases the chances of finding a cap set.
+"""
+scaled_el = el / np.max(el)
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - np.mean(scaled_el)))
+
+
+def priority_v19(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v18`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute scaled errors over elements that have a higher sum of absolute scaled errors.
+This is because a lower sum of absolute scaled errors means that the elements are more accurately predicted by a scaled error model, which increases the chances of finding a cap set.
+"""
+scaled_el = el / np.max(el)
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - np.mean(scaled_el)))
+
+
+def priority_v20(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v19`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the median over elements that have a higher sum of squared deviations from the median.
+This is because a lower sum of squared deviations from the median means that the elements are more symmetrically distributed, which increases the chances of finding a cap set.
+"""
+return sum(el) / len(set(el)) / np.sum(np.square(el - np.median(el)))
+
+
+def priority_v21(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v20`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the median over elements that have a higher sum of absolute deviations from the median.
+This is because a lower sum of absolute deviations from the median means that the elements are more symmetrically distributed, which increases the chances of finding a cap set.
+"""
+return sum(el) / len(set(el)) / np.sum(np.abs(el - np.median(el)))
+
+
+def priority_v22(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v21`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the midrange over elements that have a higher sum of squared deviations from the midrange.
+This is because a lower sum of squared deviations from the midrange means that the elements are more symmetrically distributed, which increases the chances of finding a cap set.
+"""
+midrange = (np.min(el) + np.max(el)) / 2
+return sum(el) / len(set(el)) / np.sum(np.square(el - midrange))
+
+
+def priority_v23(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v22`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the midrange over elements that have a higher sum of absolute deviations from the midrange.
+This is because a lower sum of absolute deviations from the midrange means that the elements are more symmetrically distributed, which increases the chances of finding a cap set.
+"""
+midrange = (np.min(el) + np.max(el)) / 2
+return sum(el) / len(set(el)) / np.sum(np.abs(el - midrange))
+
+
+def priority_v24(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v23`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the trimmed mean over elements that have a higher sum of squared deviations from the trimmed mean.
+This is because a lower sum of squared deviations from the trimmed mean means that the elements are more normally distributed, which increases the chances of finding a cap set.
+"""
+from scipy.stats import trim_mean
+trimmed_mean = trim_mean(el, 0.1)
+return sum(el) / len(set(el)) / np.sum(np.square(el - trimmed_mean))
+
+
+def priority_v25(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v24`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the trimmed mean over elements that have a higher sum of absolute deviations from the trimmed mean.
+This is because a lower sum of absolute deviations from the trimmed mean means that the elements are more normally distributed, which increases the chances of finding a cap set.
+"""
+from scipy.stats import trim_mean
+trimmed_mean = trim_mean(el, 0.1)
+return sum(el) / len(set(el)) / np.sum(np.abs(el - trimmed_mean))
+
+
+def priority_v26(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v25`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the Winsorized mean over elements that have a higher sum of squared deviations from the Winsorized mean.
+This is because a lower sum of squared deviations from the Winsorized mean means that the elements are more normally distributed, which increases the chances of finding a cap set.
+"""
+from scipy.stats import mstats
+winsorized_mean = mstats.winsorize(el, limits=[0.05, 0.05]).mean()
+return sum(el) / len(set(el)) / np.sum(np.square(el - winsorized_mean))
+
+
+def priority_v27(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v26`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the Winsorized mean over elements that have a higher sum of absolute deviations from the Winsorized mean.
+This is because a lower sum of absolute deviations from the Winsorized mean means that the elements are more normally distributed, which increases the chances of finding a cap set.
+"""
+from scipy.stats import mstats
+winsorized_mean = mstats.winsorize(el, limits=[0.05, 0.05]).mean()
+return sum(el) / len(set(el)) / np.sum(np.abs(el - winsorized_mean))
+
+
+def priority_v28(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v27`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the Huber mean over elements that have a higher sum of squared deviations from the Huber mean.
+This is because a lower sum of squared deviations from the Huber mean means that the elements are more normally distributed, which increases the chances of finding a cap set.
+"""
+from sklearn.covariance import MinCovDet
+huber_mean = MinCovDet().fit(el.reshape(-1, 1)).location_[0]
+return sum(el) / len(set(el)) / np.sum(np.square(el - huber_mean))
+
+
+def priority_v29(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v28`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the Huber mean over elements that have a higher sum of absolute deviations from the Huber mean.
+This is because a lower sum of absolute deviations from the Huber mean means that the elements are more normally distributed, which increases the chances of finding a cap set.
+"""
+from sklearn.covariance import MinCovDet
+huber_mean = MinCovDet().fit(el.reshape(-1, 1)).location_[0]
+return sum(el) / len(set(el)) / np.sum(np.abs(el - huber_mean))
+
+
+def priority_v30(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v29`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the median absolute deviation from the median over elements that have a higher sum of squared deviations from the median absolute deviation from the median.
+This is because a lower sum of squared deviations from the median absolute deviation from the median means that the elements are more robust to outliers, which increases the chances of finding a cap set.
+"""
+median_abs_dev = np.median(np.abs(el - np.median(el)))
+return sum(el) / len(set(el)) / np.sum(np.square((el - np.median(el)) / median_abs_dev))
+
+
+def priority_v31(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v30`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the median absolute deviation from the median over elements that have a higher sum of absolute deviations from the median absolute deviation from the median.
+This is because a lower sum of absolute deviations from the median absolute deviation from the median means that the elements are more robust to outliers, which increases the chances of finding a cap set.
+"""
+median_abs_dev = np.median(np.abs(el - np.median(el)))
+return sum(el) / len(set(el)) / np.sum(np.abs((el - np.median(el)) / median_abs_dev))
+
+
+def priority_v32(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v31`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the mid-range absolute deviation from the mid-range over elements that have a higher sum of squared deviations from the mid-range absolute deviation from the mid-range.
+This is because a lower sum of squared deviations from the mid-range absolute deviation from the mid-range means that the elements are more robust to outliers, which increases the chances of finding a cap set.
+"""
+mid_range = (np.min(el) + np.max(el)) / 2
+mid_range_abs_dev = np.median(np.abs(el - mid_range))
+return sum(el) / len(set(el)) / np.sum(np.square((el - mid_range) / mid_range_abs_dev))
+
+
+def priority_v33(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v32`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the mid-range absolute deviation from the mid-range over elements that have a higher sum of absolute deviations from the mid-range absolute deviation from the mid-range.
+This is because a lower sum of absolute deviations from the mid-range absolute deviation from the mid-range means that the elements are more robust to outliers, which increases the chances of finding a cap set.
+"""
+mid_range = (np.min(el) + np.max(el)) / 2
+mid_range_abs_dev = np.median(np.abs(el - mid_range))
+return sum(el) / len(set(el)) / np.sum(np.abs((el - mid_range) / mid_range_abs_dev))
+
+
+def priority_v34(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v33`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the trimmed mean absolute deviation from the trimmed mean over elements that have a higher sum of squared deviations from the trimmed mean absolute deviation from the trimmed mean.
+This is because a lower sum of squared deviations from the trimmed mean absolute deviation from the trimmed mean means that the elements are more robust to outliers, which increases the chances of finding a cap set.
+"""
+from scipy.stats import trim_mean
+trimmed_mean = trim_mean(el, 0.1)
+trimmed_mean_abs_dev = np.median(np.abs(el - trimmed_mean))
+return sum(el) / len(set(el)) / np.sum(np.square((el - trimmed_mean) / trimmed_mean_abs_dev))
+
+
+def priority_v35(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v34`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the trimmed mean absolute deviation from the trimmed mean over elements that have a higher sum of absolute deviations from the trimmed mean absolute deviation from the trimmed mean.
+This is because a lower sum of absolute deviations from the trimmed mean absolute deviation from the trimmed mean means that the elements are more robust to outliers, which increases the chances of finding a cap set.
+"""
+from scipy.stats import trim_mean
+trimmed_mean = trim_mean(el, 0.1)
+trimmed_mean_abs_dev = np.median(np.abs(el - trimmed_mean))
+return sum(el) / len(set(el)) / np.sum(np.abs((el - trimmed_mean) / trimmed_mean_abs_dev))
+
+
+def priority_v36(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v35`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the Winsorized mean absolute deviation from the Winsorized mean over elements that have a higher sum of squared deviations from the Winsorized mean absolute deviation from the Winsorized mean.
+This is because a lower sum of squared deviations from the Winsorized mean absolute deviation from the Winsorized mean means that the elements are more robust to outliers, which increases the chances of finding a cap set.
+"""
+from scipy.stats import mstats
+winsorized_mean = mstats.winsorize(el, limits=[0.05, 0.05]).mean()
+winsorized_mean_abs_dev = np.median(np.abs(el - winsorized_mean))
+return sum(el) / len(set(el)) / np.sum(np.square((el - winsorized_mean) / winsorized_mean_abs_dev))
+
+
+def priority_v37(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v36`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the Winsorized mean absolute deviation from the Winsorized mean over elements that have a higher sum of absolute deviations from the Winsorized mean absolute deviation from the Winsorized mean.
+This is because a lower sum of absolute deviations from the Winsorized mean absolute deviation from the Winsorized mean means that the elements are more robust to outliers, which increases the chances of finding a cap set.
+"""
+from scipy.stats import mstats
+winsorized_mean = mstats.winsorize(el, limits=[0.05, 0.05]).mean()
+winsorized_mean_abs_dev = np.median(np.abs(el - winsorized_mean))
+return sum(el) / len(set(el)) / np.sum(np.abs((el - winsorized_mean) / winsorized_mean_abs_dev))
+
+
+def priority_v38(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v37`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the Huber mean absolute deviation from the Huber mean over elements that have a higher sum of squared deviations from the Huber mean absolute deviation from the Huber mean.
+This is because a lower sum of squared deviations from the Huber mean absolute deviation from the Huber mean means that the elements are more robust to outliers, which increases the chances of finding a cap set.
+"""
+from sklearn.covariance import MinCovDet
+huber_mean = MinCovDet().fit(el.reshape(-1, 1)).location_[0]
+huber_mean_abs_dev = np.median(np.abs(el - huber_mean))
+return sum(el) / len(set(el)) / np.sum(np.square((el - huber_mean) / huber_mean_abs_dev))
+
+
+def priority_v39(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v38`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the Huber mean absolute deviation from the Huber mean over elements that have a higher sum of absolute deviations from the Huber mean absolute deviation from the Huber mean.
+This is because a lower sum of absolute deviations from the Huber mean absolute deviation from the Huber mean means that the elements are more robust to outliers, which increases the chances of finding a cap set.
+"""
+from sklearn.covariance import MinCovDet
+huber_mean = MinCovDet().fit(el.reshape(-1, 1)).location_[0]
+huber_mean_abs_dev = np.median(np.abs(el - huber_mean))
+return sum(el) / len(set(el)) / np.sum(np.abs((el - huber_mean) / huber_mean_abs_dev))
+
+
+def priority_v40(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v39`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled median absolute deviation from the scaled median over elements that have a higher sum of squared deviations from the scaled median absolute deviation from the scaled median.
+This is because a lower sum of squared deviations from the scaled median absolute deviation from the scaled median means that the elements are more robust to outliers and more symmetrically distributed, which increases the chances of finding a cap set.
+"""
+scaled_el = el / np.max(el)
+scaled_median = np.median(scaled_el)
+scaled_median_abs_dev = np.median(np.abs(scaled_el - scaled_median))
+return sum(el) / len(set(el)) / np.sum(np.square((scaled_el - scaled_median) / scaled_median_abs_dev))
+
+
+def priority_v41(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v40`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled median absolute deviation from the scaled median over elements that have a higher sum of absolute deviations from the scaled median absolute deviation from the scaled median.
+This is because a lower sum of absolute deviations from the scaled median absolute deviation from the scaled median means that the elements are more robust to outliers and more symmetrically distributed, which increases the chances of finding a cap set.
+"""
+scaled_el = el / np.max(el)
+scaled_median = np.median(scaled_el)
+scaled_median_abs_dev = np.median(np.abs(scaled_el - scaled_median))
+return sum(el) / len(set(el)) / np.sum(np.abs((scaled_el - scaled_median) / scaled_median_abs_dev))
+
+
+def priority_v42(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v41`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled mid-range absolute deviation from the scaled mid-range over elements that have a higher sum of squared deviations from the scaled mid-range absolute deviation from the scaled mid-range.
+This is because a lower sum of squared deviations from the scaled mid-range absolute deviation from the scaled mid-range means that the elements are more robust to outliers and more symmetrically distributed, which increases the chances of finding a cap set.
+"""
+scaled_el = el / np.max(el)
+scaled_mid_range = (np.min(scaled_el) + np.max(scaled_el)) / 2
+scaled_mid_range_abs_dev = np.median(np.abs(scaled_el - scaled_mid_range))
+return sum(el) / len(set(el)) / np.sum(np.square((scaled_el - scaled_mid_range) / scaled_mid_range_abs_dev))
+
+
+def priority_v43(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v42`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled mid-range absolute deviation from the scaled mid-range over elements that have a higher sum of absolute deviations from the scaled mid-range absolute deviation from the scaled mid-range.
+This is because a lower sum of absolute deviations from the scaled mid-range absolute deviation from the scaled mid-range means that the elements are more robust to outliers and more symmetrically distributed, which increases the chances of finding a cap set.
+"""
+scaled_el = el / np.max(el)
+scaled_mid_range = (np.min(scaled_el) + np.max(scaled_el)) / 2
+scaled_mid_range_abs_dev = np.median(np.abs(scaled_el - scaled_mid_range))
+return sum(el) / len(set(el)) / np.sum(np.abs((scaled_el - scaled_mid_range) / scaled_mid_range_abs_dev))
+
+
+def priority_v44(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v43`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled trimmed mean absolute deviation from the scaled trimmed mean over elements that have a higher sum of squared deviations from the scaled trimmed mean absolute deviation from the scaled trimmed mean.
+This is because a lower sum of squared deviations from the scaled trimmed mean absolute deviation from the scaled trimmed mean means that the elements are more robust to outliers and more symmetrically distributed, which increases the chances of finding a cap set.
+"""
+from scipy.stats import trim_mean
+scaled_el = el / np.max(el)
+scaled_trimmed_mean = trim_mean(scaled_el, 0.1)
+scaled_trimmed_mean_abs_dev = np.median(np.abs(scaled_el - scaled_trimmed_mean))
+return sum(el) / len(set(el)) / np.sum(np.square((scaled_el - scaled_trimmed_mean) / scaled_trimmed_mean_abs_dev))
+
+
+def priority_v45(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v44`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled trimmed mean absolute deviation from the scaled trimmed mean over elements that have a higher sum of absolute deviations from the scaled trimmed mean absolute deviation from the scaled trimmed mean.
+This is because a lower sum of absolute deviations from the scaled trimmed mean absolute deviation from the scaled trimmed mean means that the elements are more robust to outliers and more symmetrically distributed, which increases the chances of finding a cap set.
+"""
+from scipy.stats import trim_mean
+scaled_el = el / np.max(el)
+scaled_trimmed_mean = trim_mean(scaled_el, 0.1)
+scaled_trimmed_mean_abs_dev = np.median(np.abs(scaled_el - scaled_trimmed_mean))
+return sum(el) / len(set(el)) / np.sum(np.abs((scaled_el - scaled_trimmed_mean) / scaled_trimmed_mean_abs_dev))
+
+
+def priority_v46(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v45`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled Winsorized mean absolute deviation from the scaled Winsorized mean over elements that have a higher sum of squared deviations from the scaled Winsorized mean absolute deviation from the scaled Winsorized mean.
+This is because a lower sum of squared deviations from the scaled Winsorized mean absolute deviation from the scaled Winsorized mean means that the elements are more robust to outliers and more symmetrically distributed, which increases the chances of finding a cap set.
+"""
+from scipy.stats import mstats
+scaled_el = el / np.max(el)
+scaled_winsorized_mean = mstats.winsorize(scaled_el, limits=[0.05, 0.05]).mean()
+scaled_winsorized_mean_abs_dev = np.median(np.abs(scaled_el - scaled_winsorized_mean))
+return sum(el) / len(set(el)) / np.sum(np.square((scaled_el - scaled_winsorized_mean) / scaled_winsorized_mean_abs_dev))
+
+
+def priority_v47(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v46`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled Winsorized mean absolute deviation from the scaled Winsorized mean over elements that have a higher sum of absolute deviations from the scaled Winsorized mean absolute deviation from the scaled Winsorized mean.
+This is because a lower sum of absolute deviations from the scaled Winsorized mean absolute deviation from the scaled Winsorized mean means that the elements are more robust to outliers and more symmetrically distributed, which increases the chances of finding a cap set.
+"""
+from scipy.stats import mstats
+scaled_el = el / np.max(el)
+scaled_winsorized_mean = mstats.winsorize(scaled_el, limits=[0.05, 0.05]).mean()
+scaled_winsorized_mean_abs_dev = np.median(np.abs(scaled_el - scaled_winsorized_mean))
+return sum(el) / len(set(el)) / np.sum(np.abs((scaled_el - scaled_winsorized_mean) / scaled_winsorized_mean_abs_dev))
+
+
+def priority_v48(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v47`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled Huber mean absolute deviation from the scaled Huber mean over elements that have a higher sum of squared deviations from the scaled Huber mean absolute deviation from the scaled Huber mean.
+This is because a lower sum of squared deviations from the scaled Huber mean absolute deviation from the scaled Huber mean means that the elements are more robust to outliers and more symmetrically distributed, which increases the chances of finding a cap set.
+"""
+from sklearn.covariance import MinCovDet
+scaled_el = el / np.max(el)
+scaled_huber_mean = MinCovDet().fit(scaled_el.reshape(-1, 1)).location_[0]
+scaled_huber_mean_abs_dev = np.median(np.abs(scaled_el - scaled_huber_mean))
+return sum(el) / len(set(el)) / np.sum(np.square((scaled_el - scaled_huber_mean) / scaled_huber_mean_abs_dev))
+
+
+def priority_v49(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v48`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled Huber mean absolute deviation from the scaled Huber mean over elements that have a higher sum of absolute deviations from the scaled Huber mean absolute deviation from the scaled Huber mean.
+This is because a lower sum of absolute deviations from the scaled Huber mean absolute deviation from the scaled Huber mean means that the elements are more robust to outliers and more symmetrically distributed, which increases the chances of finding a cap set.
+"""
+from sklearn.covariance import MinCovDet
+scaled_el = el / np.max(el)
+scaled_huber_mean = MinCovDet().fit(scaled_el.reshape(-1, 1)).location_[0]
+scaled_huber_mean_abs_dev = np.median(np.abs(scaled_el - scaled_huber_mean))
+return sum(el) / len(set(el)) / np.sum(np.abs((scaled_el - scaled_huber_mean) / scaled_huber_mean_abs_dev))
+
+
+def priority_v50(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v49`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled median absolute deviation from the scaled median, scaled by the standard deviation of the elements, over elements that have a higher sum of squared deviations from the scaled median absolute deviation from the scaled median, scaled by the standard deviation of the elements.
+This is because a lower sum of squared deviations from the scaled median absolute deviation from the scaled median, scaled by the standard deviation of the elements, means that the elements are more robust to outliers and more symmetrically distributed, and that the standard deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+scaled_el = el / np.max(el)
+scaled_median = np.median(scaled_el)
+scaled_median_abs_dev = np.median(np.abs(scaled_el - scaled_median))
+return sum(el) / len(set(el)) / np.sum(np.square((scaled_el - scaled_median) / scaled_median_abs_dev)) / np.std(el)
+
+
+def priority_v51(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v50`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled median absolute deviation from the scaled median, scaled by the standard deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled median absolute deviation from the scaled median, scaled by the standard deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled median absolute deviation from the scaled median, scaled by the standard deviation of the elements, means that the elements are more robust to outliers and more symmetrically distributed, and that the standard deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+scaled_el = el / np.max(el)
+scaled_median = np.median(scaled_el)
+scaled_median_abs_dev = np.median(np.abs(scaled_el - scaled_median))
+return sum(el) / len(set(el)) / np.sum(np.abs((scaled_el - scaled_median) / scaled_median_abs_dev)) / np.std(el)
+
+
+def priority_v52(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v51`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled median absolute deviation from the scaled median, scaled by the median absolute deviation of the elements, over elements that have a higher sum of squared deviations from the scaled median absolute deviation from the scaled median, scaled by the median absolute deviation of the elements.
+This is because a lower sum of squared deviations from the scaled median absolute deviation from the scaled median, scaled by the median absolute deviation of the elements, means that the elements are more robust to outliers and more symmetrically distributed, and that the median absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+scaled_el = el / np.max(el)
+scaled_median = np.median(scaled_el)
+scaled_median_abs_dev = np.median(np.abs(scaled_el - scaled_median))
+return sum(el) / len(set(el)) / np.sum(np.square((scaled_el - scaled_median) / scaled_median_abs_dev)) / np.median(np.abs(el - np.median(el)))
+
+
+def priority_v53(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v52`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled median absolute deviation from the scaled median, scaled by the median absolute deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled median absolute deviation from the scaled median, scaled by the median absolute deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled median absolute deviation from the scaled median, scaled by the median absolute deviation of the elements, means that the elements are more robust to outliers and more symmetrically distributed, and that the median absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+scaled_el = el / np.max(el)
+scaled_median = np.median(scaled_el)
+scaled_median_abs_dev = np.median(np.abs(scaled_el - scaled_median))
+return sum(el) / len(set(el)) / np.sum(np.abs((scaled_el - scaled_median) / scaled_median_abs_dev)) / np.median(np.abs(el - np.median(el)))
+
+
+def priority_v54(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v53`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled median absolute deviation from the scaled median, scaled by the trimmed mean absolute deviation of the elements, over elements that have a higher sum of squared deviations from the scaled median absolute deviation from the scaled median, scaled by the trimmed mean absolute deviation of the elements.
+This is because a lower sum of squared deviations from the scaled median absolute deviation from the scaled median, scaled by the trimmed mean absolute deviation of the elements, means that the elements are more robust to outliers and more symmetrically distributed, and that the trimmed mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import trim_mean
+scaled_el = el / np.max(el)
+scaled_median = np.median(scaled_el)
+scaled_median_abs_dev = np.median(np.abs(scaled_el - scaled_median))
+return sum(el) / len(set(el)) / np.sum(np.square((scaled_el - scaled_median) / scaled_median_abs_dev)) / np.abs(trim_mean(el, 0.1) - np.median(el))
+
+
+def priority_v55(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v54`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled median absolute deviation from the scaled median, scaled by the trimmed mean absolute deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled median absolute deviation from the scaled median, scaled by the trimmed mean absolute deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled median absolute deviation from the scaled median, scaled by the trimmed mean absolute deviation of the elements, means that the elements are more robust to outliers and more symmetrically distributed, and that the trimmed mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import trim_mean
+scaled_el = el / np.max(el)
+scaled_median = np.median(scaled_el)
+scaled_median_abs_dev = np.median(np.abs(scaled_el - scaled_median))
+return sum(el) / len(set(el)) / np.sum(np.abs((scaled_el - scaled_median) / scaled_median_abs_dev)) / np.abs(trim_mean(el, 0.1) - np.median(el))
+
+
+def priority_v56(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v55`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled median absolute deviation from the scaled median, scaled by the Winsorized mean absolute deviation of the elements, over elements that have a higher sum of squared deviations from the scaled median absolute deviation from the scaled median, scaled by the Winsorized mean absolute deviation of the elements.
+This is because a lower sum of squared deviations from the scaled median absolute deviation from the scaled median, scaled by the Winsorized mean absolute deviation of the elements, means that the elements are more robust to outliers and more symmetrically distributed, and that the Winsorized mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import mstats
+scaled_el = el / np.max(el)
+scaled_median = np.median(scaled_el)
+scaled_median_abs_dev = np.median(np.abs(scaled_el - scaled_median))
+winsorized_mean = mstats.winsorize(el, limits=[0.05, 0.05]).mean()
+return sum(el) / len(set(el)) / np.sum(np.square((scaled_el - scaled_median) / scaled_median_abs_dev)) / np.abs(winsorized_mean - np.median(el))
+
+
+def priority_v57(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v56`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled median absolute deviation from the scaled median, scaled by the Winsorized mean absolute deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled median absolute deviation from the scaled median, scaled by the Winsorized mean absolute deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled median absolute deviation from the scaled median, scaled by the Winsorized mean absolute deviation of the elements, means that the elements are more robust to outliers and more symmetrically distributed, and that the Winsorized mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import mstats
+scaled_el = el / np.max(el)
+scaled_median = np.median(scaled_el)
+scaled_median_abs_dev = np.median(np.abs(scaled_el - scaled_median))
+winsorized_mean = mstats.winsorize(el, limits=[0.05, 0.05]).mean()
+return sum(el) / len(set(el)) / np.sum(np.abs((scaled_el - scaled_median) / scaled_median_abs_dev)) / np.abs(winsorized_mean - np.median(el))
+
+
+def priority_v58(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v57`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled median absolute deviation from the scaled median, scaled by the Huber mean absolute deviation of the elements, over elements that have a higher sum of squared deviations from the scaled median absolute deviation from the scaled median, scaled by the Huber mean absolute deviation of the elements.
+This is because a lower sum of squared deviations from the scaled median absolute deviation from the scaled median, scaled by the Huber mean absolute deviation of the elements, means that the elements are more robust to outliers and more symmetrically distributed, and that the Huber mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from sklearn.covariance import MinCovDet
+scaled_el = el / np.max(el)
+scaled_median = np.median(scaled_el)
+scaled_median_abs_dev = np.median(np.abs(scaled_el - scaled_median))
+huber_mean = MinCovDet().fit(el.reshape(-1, 1)).location_[0]
+return sum(el) / len(set(el)) / np.sum(np.square((scaled_el - scaled_median) / scaled_median_abs_dev)) / np.abs(huber_mean - np.median(el))
+
+
+def priority_v59(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v58`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled median absolute deviation from the scaled median, scaled by the Huber mean absolute deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled median absolute deviation from the scaled median, scaled by the Huber mean absolute deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled median absolute deviation from the scaled median, scaled by the Huber mean absolute deviation of the elements, means that the elements are more robust to outliers and more symmetrically distributed, and that the Huber mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from sklearn.covariance import MinCovDet
+scaled_el = el / np.max(el)
+scaled_median = np.median(scaled_el)
+scaled_median_abs_dev = np.median(np.abs(scaled_el - scaled_median))
+huber_mean = MinCovDet().fit(el.reshape(-1, 1)).location_[0]
+return sum(el) / len(set(el)) / np.sum(np.abs((scaled_el - scaled_median) / scaled_median_abs_dev)) / np.abs(huber_mean - np.median(el))
+
+
+def priority_v60(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v59`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled median, over elements that have a higher sum of squared deviations from the scaled median.
+This is because a lower sum of squared deviations from the scaled median means that the elements are more symmetrically distributed, which increases the chances of finding a cap set.
+"""
+scaled_el = el / np.max(el)
+scaled_median = np.median(scaled_el)
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_median))
+
+
+def priority_v61(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v60`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled median, over elements that have a higher sum of absolute deviations from the scaled median.
+This is because a lower sum of absolute deviations from the scaled median means that the elements are more symmetrically distributed, which increases the chances of finding a cap set.
+"""
+scaled_el = el / np.max(el)
+scaled_median = np.median(scaled_el)
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_median))
+
+
+def priority_v62(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v61`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled mid-range, over elements that have a higher sum of squared deviations from the scaled mid-range.
+This is because a lower sum of squared deviations from the scaled mid-range means that the elements are more symmetrically distributed, which increases the chances of finding a cap set.
+"""
+scaled_el = el / np.max(el)
+scaled_mid_range = (np.min(scaled_el) + np.max(scaled_el)) / 2
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_mid_range))
+
+
+def priority_v63(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v62`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled mid-range, over elements that have a higher sum of absolute deviations from the scaled mid-range.
+This is because a lower sum of absolute deviations from the scaled mid-range means that the elements are more symmetrically distributed, which increases the chances of finding a cap set.
+"""
+scaled_el = el / np.max(el)
+scaled_mid_range = (np.min(scaled_el) + np.max(scaled_el)) / 2
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_mid_range))
+
+
+def priority_v64(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v63`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled trimmed mean, over elements that have a higher sum of squared deviations from the scaled trimmed mean.
+This is because a lower sum of squared deviations from the scaled trimmed mean means that the elements are more symmetrically distributed and more robust to outliers, which increases the chances of finding a cap set.
+"""
+from scipy.stats import trim_mean
+scaled_el = el / np.max(el)
+scaled_trimmed_mean = trim_mean(scaled_el, 0.1)
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_trimmed_mean))
+
+
+def priority_v65(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v64`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled trimmed mean, over elements that have a higher sum of absolute deviations from the scaled trimmed mean.
+This is because a lower sum of absolute deviations from the scaled trimmed mean means that the elements are more symmetrically distributed and more robust to outliers, which increases the chances of finding a cap set.
+"""
+from scipy.stats import trim_mean
+scaled_el = el / np.max(el)
+scaled_trimmed_mean = trim_mean(scaled_el, 0.1)
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_trimmed_mean))
+
+
+def priority_v66(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v65`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled Winsorized mean, over elements that have a higher sum of squared deviations from the scaled Winsorized mean.
+This is because a lower sum of squared deviations from the scaled Winsorized mean means that the elements are more symmetrically distributed and more robust to outliers, which increases the chances of finding a cap set.
+"""
+from scipy.stats import mstats
+scaled_el = el / np.max(el)
+scaled_winsorized_mean = mstats.winsorize(scaled_el, limits=[0.05, 0.05]).mean()
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_winsorized_mean))
+
+
+def priority_v67(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v66`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled Winsorized mean, over elements that have a higher sum of absolute deviations from the scaled Winsorized mean.
+This is because a lower sum of absolute deviations from the scaled Winsorized mean means that the elements are more symmetrically distributed and more robust to outliers, which increases the chances of finding a cap set.
+"""
+from scipy.stats import mstats
+scaled_el = el / np.max(el)
+scaled_winsorized_mean = mstats.winsorize(scaled_el, limits=[0.05, 0.05]).mean()
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_winsorized_mean))
+
+
+def priority_v68(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v67`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled Huber mean, over elements that have a higher sum of squared deviations from the scaled Huber mean.
+This is because a lower sum of squared deviations from the scaled Huber mean means that the elements are more symmetrically distributed and more robust to outliers, which increases the chances of finding a cap set.
+"""
+from sklearn.covariance import MinCovDet
+scaled_el = el / np.max(el)
+scaled_huber_mean = MinCovDet().fit(scaled_el.reshape(-1, 1)).location_[0]
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_huber_mean))
+
+
+def priority_v69(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v68`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled Huber mean, over elements that have a higher sum of absolute deviations from the scaled Huber mean.
+This is because a lower sum of absolute deviations from the scaled Huber mean means that the elements are more symmetrically distributed and more robust to outliers, which increases the chances of finding a cap set.
+"""
+from sklearn.covariance import MinCovDet
+scaled_el = el / np.max(el)
+scaled_huber_mean = MinCovDet().fit(scaled_el.reshape(-1, 1)).location_[0]
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_huber_mean))
+
+
+def priority_v70(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v69`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled median, scaled by the standard deviation of the elements, over elements that have a higher sum of squared deviations from the scaled median, scaled by the standard deviation of the elements.
+This is because a lower sum of squared deviations from the scaled median, scaled by the standard deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the standard deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+scaled_el = el / np.max(el)
+scaled_median = np.median(scaled_el)
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_median)) / np.std(el)
+
+
+def priority_v71(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v70`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled median, scaled by the standard deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled median, scaled by the standard deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled median, scaled by the standard deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the standard deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+scaled_el = el / np.max(el)
+scaled_median = np.median(scaled_el)
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_median)) / np.std(el)
+
+
+def priority_v72(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v71`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled median, scaled by the median absolute deviation of the elements, over elements that have a higher sum of squared deviations from the scaled median, scaled by the median absolute deviation of the elements.
+This is because a lower sum of squared deviations from the scaled median, scaled by the median absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the median absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+scaled_el = el / np.max(el)
+scaled_median = np.median(scaled_el)
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_median)) / np.median(np.abs(el - np.median(el)))
+
+
+def priority_v73(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v72`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled median, scaled by the median absolute deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled median, scaled by the median absolute deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled median, scaled by the median absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the median absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+scaled_el = el / np.max(el)
+scaled_median = np.median(scaled_el)
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_median)) / np.median(np.abs(el - np.median(el)))
+
+
+def priority_v74(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v73`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled median, scaled by the trimmed mean absolute deviation of the elements, over elements that have a higher sum of squared deviations from the scaled median, scaled by the trimmed mean absolute deviation of the elements.
+This is because a lower sum of squared deviations from the scaled median, scaled by the trimmed mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the trimmed mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import trim_mean
+scaled_el = el / np.max(el)
+scaled_median = np.median(scaled_el)
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_median)) / np.abs(trim_mean(el, 0.1) - np.median(el))
+
+
+def priority_v75(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v74`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled median, scaled by the trimmed mean absolute deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled median, scaled by the trimmed mean absolute deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled median, scaled by the trimmed mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the trimmed mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import trim_mean
+scaled_el = el / np.max(el)
+scaled_median = np.median(scaled_el)
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_median)) / np.abs(trim_mean(el, 0.1) - np.median(el))
+
+
+def priority_v76(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v75`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled median, scaled by the Winsorized mean absolute deviation of the elements, over elements that have a higher sum of squared deviations from the scaled median, scaled by the Winsorized mean absolute deviation of the elements.
+This is because a lower sum of squared deviations from the scaled median, scaled by the Winsorized mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the Winsorized mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import mstats
+scaled_el = el / np.max(el)
+scaled_median = np.median(scaled_el)
+winsorized_mean = mstats.winsorize(el, limits=[0.05, 0.05]).mean()
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_median)) / np.abs(winsorized_mean - np.median(el))
+
+
+def priority_v77(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v76`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled median, scaled by the Winsorized mean absolute deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled median, scaled by the Winsorized mean absolute deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled median, scaled by the Winsorized mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the Winsorized mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import mstats
+scaled_el = el / np.max(el)
+scaled_median = np.median(scaled_el)
+winsorized_mean = mstats.winsorize(el, limits=[0.05, 0.05]).mean()
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_median)) / np.abs(winsorized_mean - np.median(el))
+
+
+def priority_v78(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v77`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled median, scaled by the Huber mean absolute deviation of the elements, over elements that have a higher sum of squared deviations from the scaled median, scaled by the Huber mean absolute deviation of the elements.
+This is because a lower sum of squared deviations from the scaled median, scaled by the Huber mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the Huber mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from sklearn.covariance import MinCovDet
+scaled_el = el / np.max(el)
+scaled_median = np.median(scaled_el)
+huber_mean = MinCovDet().fit(el.reshape(-1, 1)).location_[0]
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_median)) / np.abs(huber_mean - np.median(el))
+
+
+def priority_v79(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v78`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled median, scaled by the Huber mean absolute deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled median, scaled by the Huber mean absolute deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled median, scaled by the Huber mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the Huber mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from sklearn.covariance import MinCovDet
+scaled_el = el / np.max(el)
+scaled_median = np.median(scaled_el)
+huber_mean = MinCovDet().fit(el.reshape(-1, 1)).location_[0]
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_median)) / np.abs(huber_mean - np.median(el))
+
+
+def priority_v80(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v79`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled mid-range, scaled by the standard deviation of the elements, over elements that have a higher sum of squared deviations from the scaled mid-range, scaled by the standard deviation of the elements.
+This is because a lower sum of squared deviations from the scaled mid-range, scaled by the standard deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the standard deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+scaled_el = el / np.max(el)
+scaled_mid_range = (np.min(scaled_el) + np.max(scaled_el)) / 2
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_mid_range)) / np.std(el)
+
+
+def priority_v81(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v80`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled mid-range, scaled by the standard deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled mid-range, scaled by the standard deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled mid-range, scaled by the standard deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the standard deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+scaled_el = el / np.max(el)
+scaled_mid_range = (np.min(scaled_el) + np.max(scaled_el)) / 2
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_mid_range)) / np.std(el)
+
+
+def priority_v82(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v81`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled mid-range, scaled by the median absolute deviation of the elements, over elements that have a higher sum of squared deviations from the scaled mid-range, scaled by the median absolute deviation of the elements.
+This is because a lower sum of squared deviations from the scaled mid-range, scaled by the median absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the median absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+scaled_el = el / np.max(el)
+scaled_mid_range = (np.min(scaled_el) + np.max(scaled_el)) / 2
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_mid_range)) / np.median(np.abs(el - np.median(el)))
+
+
+def priority_v83(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v82`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled mid-range, scaled by the median absolute deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled mid-range, scaled by the median absolute deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled mid-range, scaled by the median absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the median absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+scaled_el = el / np.max(el)
+scaled_mid_range = (np.min(scaled_el) + np.max(scaled_el)) / 2
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_mid_range)) / np.median(np.abs(el - np.median(el)))
+
+
+def priority_v84(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v83`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled mid-range, scaled by the trimmed mean absolute deviation of the elements, over elements that have a higher sum of squared deviations from the scaled mid-range, scaled by the trimmed mean absolute deviation of the elements.
+This is because a lower sum of squared deviations from the scaled mid-range, scaled by the trimmed mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the trimmed mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import trim_mean
+scaled_el = el / np.max(el)
+scaled_mid_range = (np.min(scaled_el) + np.max(scaled_el)) / 2
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_mid_range)) / np.abs(trim_mean(el, 0.1) - np.median(el))
+
+
+def priority_v85(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v84`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled mid-range, scaled by the trimmed mean absolute deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled mid-range, scaled by the trimmed mean absolute deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled mid-range, scaled by the trimmed mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the trimmed mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import trim_mean
+scaled_el = el / np.max(el)
+scaled_mid_range = (np.min(scaled_el) + np.max(scaled_el)) / 2
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_mid_range)) / np.abs(trim_mean(el, 0.1) - np.median(el))
+
+
+def priority_v86(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v85`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled mid-range, scaled by the Winsorized mean absolute deviation of the elements, over elements that have a higher sum of squared deviations from the scaled mid-range, scaled by the Winsorized mean absolute deviation of the elements.
+This is because a lower sum of squared deviations from the scaled mid-range, scaled by the Winsorized mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the Winsorized mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import mstats
+scaled_el = el / np.max(el)
+scaled_mid_range = (np.min(scaled_el) + np.max(scaled_el)) / 2
+winsorized_mean = mstats.winsorize(el, limits=[0.05, 0.05]).mean()
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_mid_range)) / np.abs(winsorized_mean - np.median(el))
+
+
+def priority_v87(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v86`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled mid-range, scaled by the Winsorized mean absolute deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled mid-range, scaled by the Winsorized mean absolute deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled mid-range, scaled by the Winsorized mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the Winsorized mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import mstats
+scaled_el = el / np.max(el)
+scaled_mid_range = (np.min(scaled_el) + np.max(scaled_el)) / 2
+winsorized_mean = mstats.winsorize(el, limits=[0.05, 0.05]).mean()
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_mid_range)) / np.abs(winsorized_mean - np.median(el))
+
+
+def priority_v88(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v87`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled mid-range, scaled by the Huber mean absolute deviation of the elements, over elements that have a higher sum of squared deviations from the scaled mid-range, scaled by the Huber mean absolute deviation of the elements.
+This is because a lower sum of squared deviations from the scaled mid-range, scaled by the Huber mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the Huber mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from sklearn.covariance import MinCovDet
+scaled_el = el / np.max(el)
+scaled_mid_range = (np.min(scaled_el) + np.max(scaled_el)) / 2
+huber_mean = MinCovDet().fit(el.reshape(-1, 1)).location_[0]
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_mid_range)) / np.abs(huber_mean - np.median(el))
+
+
+def priority_v89(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v88`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled mid-range, scaled by the Huber mean absolute deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled mid-range, scaled by the Huber mean absolute deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled mid-range, scaled by the Huber mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the Huber mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from sklearn.covariance import MinCovDet
+scaled_el = el / np.max(el)
+scaled_mid_range = (np.min(scaled_el) + np.max(scaled_el)) / 2
+huber_mean = MinCovDet().fit(el.reshape(-1, 1)).location_[0]
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_mid_range)) / np.abs(huber_mean - np.median(el))
+
+
+def priority_v90(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v89`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled trimmed mean, scaled by the standard deviation of the elements, over elements that have a higher sum of squared deviations from the scaled trimmed mean, scaled by the standard deviation of the elements.
+This is because a lower sum of squared deviations from the scaled trimmed mean, scaled by the standard deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the standard deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import trim_mean
+scaled_el = el / np.max(el)
+scaled_trimmed_mean = trim_mean(scaled_el, 0.1)
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_trimmed_mean)) / np.std(el)
+
+
+def priority_v91(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v90`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled trimmed mean, scaled by the standard deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled trimmed mean, scaled by the standard deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled trimmed mean, scaled by the standard deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the standard deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import trim_mean
+scaled_el = el / np.max(el)
+scaled_trimmed_mean = trim_mean(scaled_el, 0.1)
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_trimmed_mean)) / np.std(el)
+
+
+def priority_v92(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v91`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled trimmed mean, scaled by the median absolute deviation of the elements, over elements that have a higher sum of squared deviations from the scaled trimmed mean, scaled by the median absolute deviation of the elements.
+This is because a lower sum of squared deviations from the scaled trimmed mean, scaled by the median absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the median absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import trim_mean
+scaled_el = el / np.max(el)
+scaled_trimmed_mean = trim_mean(scaled_el, 0.1)
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_trimmed_mean)) / np.median(np.abs(el - np.median(el)))
+
+
+def priority_v93(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v92`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled trimmed mean, scaled by the median absolute deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled trimmed mean, scaled by the median absolute deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled trimmed mean, scaled by the median absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the median absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import trim_mean
+scaled_el = el / np.max(el)
+scaled_trimmed_mean = trim_mean(scaled_el, 0.1)
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_trimmed_mean)) / np.median(np.abs(el - np.median(el)))
+
+
+def priority_v94(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v93`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled trimmed mean, scaled by the trimmed mean absolute deviation of the elements, over elements that have a higher sum of squared deviations from the scaled trimmed mean, scaled by the trimmed mean absolute deviation of the elements.
+This is because a lower sum of squared deviations from the scaled trimmed mean, scaled by the trimmed mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the trimmed mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import trim_mean
+scaled_el = el / np.max(el)
+scaled_trimmed_mean = trim_mean(scaled_el, 0.1)
+trimmed_mean_abs_dev = np.abs(trim_mean(el, 0.1) - np.median(el))
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_trimmed_mean)) / trimmed_mean_abs_dev
+
+
+def priority_v95(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v94`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled trimmed mean, scaled by the trimmed mean absolute deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled trimmed mean, scaled by the trimmed mean absolute deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled trimmed mean, scaled by the trimmed mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the trimmed mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import trim_mean
+scaled_el = el / np.max(el)
+scaled_trimmed_mean = trim_mean(scaled_el, 0.1)
+trimmed_mean_abs_dev = np.abs(trim_mean(el, 0.1) - np.median(el))
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_trimmed_mean)) / trimmed_mean_abs_dev
+
+
+def priority_v96(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v95`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled trimmed mean, scaled by the Winsorized mean absolute deviation of the elements, over elements that have a higher sum of squared deviations from the scaled trimmed mean, scaled by the Winsorized mean absolute deviation of the elements.
+This is because a lower sum of squared deviations from the scaled trimmed mean, scaled by the Winsorized mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the Winsorized mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import mstats
+scaled_el = el / np.max(el)
+scaled_trimmed_mean = trim_mean(scaled_el, 0.1)
+winsorized_mean = mstats.winsorize(el, limits=[0.05, 0.05]).mean()
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_trimmed_mean)) / np.abs(winsorized_mean - np.median(el))
+
+
+def priority_v97(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v96`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled trimmed mean, scaled by the Winsorized mean absolute deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled trimmed mean, scaled by the Winsorized mean absolute deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled trimmed mean, scaled by the Winsorized mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the Winsorized mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import mstats
+scaled_el = el / np.max(el)
+scaled_trimmed_mean = trim_mean(scaled_el, 0.1)
+winsorized_mean = mstats.winsorize(el, limits=[0.05, 0.05]).mean()
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_trimmed_mean)) / np.abs(winsorized_mean - np.median(el))
+
+
+def priority_v98(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v97`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled trimmed mean, scaled by the Huber mean absolute deviation of the elements, over elements that have a higher sum of squared deviations from the scaled trimmed mean, scaled by the Huber mean absolute deviation of the elements.
+This is because a lower sum of squared deviations from the scaled trimmed mean, scaled by the Huber mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the Huber mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from sklearn.covariance import MinCovDet
+scaled_el = el / np.max(el)
+scaled_trimmed_mean = trim_mean(scaled_el, 0.1)
+huber_mean = MinCovDet().fit(el.reshape(-1, 1)).location_[0]
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_trimmed_mean)) / np.abs(huber_mean - np.median(el))
+
+
+def priority_v99(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v98`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled trimmed mean, scaled by the Huber mean absolute deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled trimmed mean, scaled by the Huber mean absolute deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled trimmed mean, scaled by the Huber mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the Huber mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from sklearn.covariance import MinCovDet
+scaled_el = el / np.max(el)
+scaled_trimmed_mean = trim_mean(scaled_el, 0.1)
+huber_mean = MinCovDet().fit(el.reshape(-1, 1)).location_[0]
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_trimmed_mean)) / np.abs(huber_mean - np.median(el))
+
+
+def priority_v100(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v99`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled Winsorized mean, scaled by the standard deviation of the elements, over elements that have a higher sum of squared deviations from the scaled Winsorized mean, scaled by the standard deviation of the elements.
+This is because a lower sum of squared deviations from the scaled Winsorized mean, scaled by the standard deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the standard deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import mstats
+scaled_el = el / np.max(el)
+scaled_winsorized_mean = mstats.winsorize(scaled_el, limits=[0.05, 0.05]).mean()
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_winsorized_mean)) / np.std(el)
+
+
+def priority_v101(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v100`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled Winsorized mean, scaled by the standard deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled Winsorized mean, scaled by the standard deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled Winsorized mean, scaled by the standard deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the standard deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import mstats
+scaled_el = el / np.max(el)
+scaled_winsorized_mean = mstats.winsorize(scaled_el, limits=[0.05, 0.05]).mean()
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_winsorized_mean)) / np.std(el)
+
+
+def priority_v102(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v101`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled Winsorized mean, scaled by the median absolute deviation of the elements, over elements that have a higher sum of squared deviations from the scaled Winsorized mean, scaled by the median absolute deviation of the elements.
+This is because a lower sum of squared deviations from the scaled Winsorized mean, scaled by the median absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the median absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import mstats
+scaled_el = el / np.max(el)
+scaled_winsorized_mean = mstats.winsorize(scaled_el, limits=[0.05, 0.05]).mean()
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_winsorized_mean)) / np.median(np.abs(el - np.median(el)))
+
+
+def priority_v103(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v102`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled Winsorized mean, scaled by the median absolute deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled Winsorized mean, scaled by the median absolute deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled Winsorized mean, scaled by the median absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the median absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import mstats
+scaled_el = el / np.max(el)
+scaled_winsorized_mean = mstats.winsorize(scaled_el, limits=[0.05, 0.05]).mean()
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_winsorized_mean)) / np.median(np.abs(el - np.median(el)))
+
+
+def priority_v104(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v103`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled Winsorized mean, scaled by the trimmed mean absolute deviation of the elements, over elements that have a higher sum of squared deviations from the scaled Winsorized mean, scaled by the trimmed mean absolute deviation of the elements.
+This is because a lower sum of squared deviations from the scaled Winsorized mean, scaled by the trimmed mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the trimmed mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import mstats, trim_mean
+scaled_el = el / np.max(el)
+scaled_winsorized_mean = mstats.winsorize(scaled_el, limits=[0.05, 0.05]).mean()
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_winsorized_mean)) / np.abs(trim_mean(el, 0.1) - np.median(el))
+
+
+def priority_v105(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v104`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled Winsorized mean, scaled by the trimmed mean absolute deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled Winsorized mean, scaled by the trimmed mean absolute deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled Winsorized mean, scaled by the trimmed mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the trimmed mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import mstats, trim_mean
+scaled_el = el / np.max(el)
+scaled_winsorized_mean = mstats.winsorize(scaled_el, limits=[0.05, 0.05]).mean()
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_winsorized_mean)) / np.abs(trim_mean(el, 0.1) - np.median(el))
+
+
+def priority_v106(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v105`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled Winsorized mean, scaled by the Winsorized mean absolute deviation of the elements, over elements that have a higher sum of squared deviations from the scaled Winsorized mean, scaled by the Winsorized mean absolute deviation of the elements.
+This is because a lower sum of squared deviations from the scaled Winsorized mean, scaled by the Winsorized mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the Winsorized mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import mstats
+scaled_el = el / np.max(el)
+scaled_winsorized_mean = mstats.winsorize(scaled_el, limits=[0.05, 0.05]).mean()
+winsorized_mean_abs_dev = np.abs(mstats.winsorize(el, limits=[0.05, 0.05]).mean() - np.median(el))
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_winsorized_mean)) / winsorized_mean_abs_dev
+
+
+def priority_v107(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v106`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled Winsorized mean, scaled by the Winsorized mean absolute deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled Winsorized mean, scaled by the Winsorized mean absolute deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled Winsorized mean, scaled by the Winsorized mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the Winsorized mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import mstats
+scaled_el = el / np.max(el)
+scaled_winsorized_mean = mstats.winsorize(scaled_el, limits=[0.05, 0.05]).mean()
+winsorized_mean_abs_dev = np.abs(mstats.winsorize(el, limits=[0.05, 0.05]).mean() - np.median(el))
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_winsorized_mean)) / winsorized_mean_abs_dev
+
+
+def priority_v108(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v107`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled Winsorized mean, scaled by the Huber mean absolute deviation of the elements, over elements that have a higher sum of squared deviations from the scaled Winsorized mean, scaled by the Huber mean absolute deviation of the elements.
+This is because a lower sum of squared deviations from the scaled Winsorized mean, scaled by the Huber mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the Huber mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import mstats
+from sklearn.covariance import MinCovDet
+scaled_el = el / np.max(el)
+scaled_winsorized_mean = mstats.winsorize(scaled_el, limits=[0.05, 0.05]).mean()
+huber_mean_abs_dev = np.abs(MinCovDet().fit(el.reshape(-1, 1)).location_[0] - np.median(el))
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_winsorized_mean)) / huber_mean_abs_dev
+
+
+def priority_v109(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v108`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled Winsorized mean, scaled by the Huber mean absolute deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled Winsorized mean, scaled by the Huber mean absolute deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled Winsorized mean, scaled by the Huber mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the Huber mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import mstats
+from sklearn.covariance import MinCovDet
+scaled_el = el / np.max(el)
+scaled_winsorized_mean = mstats.winsorize(scaled_el, limits=[0.05, 0.05]).mean()
+huber_mean_abs_dev = np.abs(MinCovDet().fit(el.reshape(-1, 1)).location_[0] - np.median(el))
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_winsorized_mean)) / huber_mean_abs_dev
+
+
+def priority_v110(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v109`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled Huber mean, scaled by the standard deviation of the elements, over elements that have a higher sum of squared deviations from the scaled Huber mean, scaled by the standard deviation of the elements.
+This is because a lower sum of squared deviations from the scaled Huber mean, scaled by the standard deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the standard deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from sklearn.covariance import MinCovDet
+scaled_el = el / np.max(el)
+scaled_huber_mean = MinCovDet().fit(scaled_el.reshape(-1, 1)).location_[0]
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_huber_mean)) / np.std(el)
+
+
+def priority_v111(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v110`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled Huber mean, scaled by the standard deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled Huber mean, scaled by the standard deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled Huber mean, scaled by the standard deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the standard deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from sklearn.covariance import MinCovDet
+scaled_el = el / np.max(el)
+scaled_huber_mean = MinCovDet().fit(scaled_el.reshape(-1, 1)).location_[0]
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_huber_mean)) / np.std(el)
+
+
+def priority_v112(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v111`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled Huber mean, scaled by the median absolute deviation of the elements, over elements that have a higher sum of squared deviations from the scaled Huber mean, scaled by the median absolute deviation of the elements.
+This is because a lower sum of squared deviations from the scaled Huber mean, scaled by the median absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the median absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from sklearn.covariance import MinCovDet
+scaled_el = el / np.max(el)
+scaled_huber_mean = MinCovDet().fit(scaled_el.reshape(-1, 1)).location_[0]
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_huber_mean)) / np.median(np.abs(el - np.median(el)))
+
+
+def priority_v113(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v112`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled Huber mean, scaled by the median absolute deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled Huber mean, scaled by the median absolute deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled Huber mean, scaled by the median absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the median absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from sklearn.covariance import MinCovDet
+scaled_el = el / np.max(el)
+scaled_huber_mean = MinCovDet().fit(scaled_el.reshape(-1, 1)).location_[0]
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_huber_mean)) / np.median(np.abs(el - np.median(el)))
+
+
+def priority_v114(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v113`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled Huber mean, scaled by the trimmed mean absolute deviation of the elements, over elements that have a higher sum of squared deviations from the scaled Huber mean, scaled by the trimmed mean absolute deviation of the elements.
+This is because a lower sum of squared deviations from the scaled Huber mean, scaled by the trimmed mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the trimmed mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import trim_mean
+from sklearn.covariance import MinCovDet
+scaled_el = el / np.max(el)
+scaled_huber_mean = MinCovDet().fit(scaled_el.reshape(-1, 1)).location_[0]
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_huber_mean)) / np.abs(trim_mean(el, 0.1) - np.median(el))
+
+
+def priority_v115(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v114`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled Huber mean, scaled by the trimmed mean absolute deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled Huber mean, scaled by the trimmed mean absolute deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled Huber mean, scaled by the trimmed mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the trimmed mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import trim_mean
+from sklearn.covariance import MinCovDet
+scaled_el = el / np.max(el)
+scaled_huber_mean = MinCovDet().fit(scaled_el.reshape(-1, 1)).location_[0]
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_huber_mean)) / np.abs(trim_mean(el, 0.1) - np.median(el))
+
+
+def priority_v116(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v115`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled Huber mean, scaled by the Winsorized mean absolute deviation of the elements, over elements that have a higher sum of squared deviations from the scaled Huber mean, scaled by the Winsorized mean absolute deviation of the elements.
+This is because a lower sum of squared deviations from the scaled Huber mean, scaled by the Winsorized mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the Winsorized mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import mstats
+from sklearn.covariance import MinCovDet
+scaled_el = el / np.max(el)
+scaled_huber_mean = MinCovDet().fit(scaled_el.reshape(-1, 1)).location_[0]
+winsorized_mean_abs_dev = np.abs(mstats.winsorize(el, limits=[0.05, 0.05]).mean() - np.median(el))
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_huber_mean)) / winsorized_mean_abs_dev
+
+
+def priority_v117(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v116`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled Huber mean, scaled by the Winsorized mean absolute deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled Huber mean, scaled by the Winsorized mean absolute deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled Huber mean, scaled by the Winsorized mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the Winsorized mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from scipy.stats import mstats
+from sklearn.covariance import MinCovDet
+scaled_el = el / np.max(el)
+scaled_huber_mean = MinCovDet().fit(scaled_el.reshape(-1, 1)).location_[0]
+winsorized_mean_abs_dev = np.abs(mstats.winsorize(el, limits=[0.05, 0.05]).mean() - np.median(el))
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_huber_mean)) / winsorized_mean_abs_dev
+
+
+def priority_v118(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v117`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled Huber mean, scaled by the Huber mean absolute deviation of the elements, over elements that have a higher sum of squared deviations from the scaled Huber mean, scaled by the Huber mean absolute deviation of the elements.
+This is because a lower sum of squared deviations from the scaled Huber mean, scaled by the Huber mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the Huber mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from sklearn.covariance import MinCovDet
+scaled_el = el / np.max(el)
+scaled_huber_mean = MinCovDet().fit(scaled_el.reshape(-1, 1)).location_[0]
+huber_mean_abs_dev = np.abs(MinCovDet().fit(el.reshape(-1, 1)).location_[0] - np.median(el))
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_huber_mean)) / huber_mean_abs_dev
+
+
+def priority_v119(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v118`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled Huber mean, scaled by the Huber mean absolute deviation of the elements, over elements that have a higher sum of absolute deviations from the scaled Huber mean, scaled by the Huber mean absolute deviation of the elements.
+This is because a lower sum of absolute deviations from the scaled Huber mean, scaled by the Huber mean absolute deviation of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the Huber mean absolute deviation of the elements is taken into account, which increases the chances of finding a cap set.
+"""
+from sklearn.covariance import MinCovDet
+scaled_el = el / np.max(el)
+scaled_huber_mean = MinCovDet().fit(scaled_el.reshape(-1, 1)).location_[0]
+huber_mean_abs_dev = np.abs(MinCovDet().fit(el.reshape(-1, 1)).location_[0] - np.median(el))
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_huber_mean)) / huber_mean_abs_dev
+
+
+def priority_v120(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v119`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled median, scaled by the standard deviation of the elements, scaled by the sum of the elements, over elements that have a higher sum of squared deviations from the scaled median, scaled by the standard deviation of the elements, scaled by the sum of the elements.
+This is because a lower sum of squared deviations from the scaled median, scaled by the standard deviation of the elements, scaled by the sum of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the standard deviation, sum of the elements, and the median of the elements are taken into account, which increases the chances of finding a cap set.
+"""
+scaled_el = el / np.max(el)
+scaled_median = np.median(scaled_el)
+return sum(el) / len(set(el)) / np.sum(np.square(scaled_el - scaled_median)) / np.std(el) / np.sum(el)
+
+
+def priority_v121(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v120`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of absolute deviations from the scaled median, scaled by the standard deviation of the elements, scaled by the sum of the elements, over elements that have a higher sum of absolute deviations from the scaled median, scaled by the standard deviation of the elements, scaled by the sum of the elements.
+This is because a lower sum of absolute deviations from the scaled median, scaled by the standard deviation of the elements, scaled by the sum of the elements, means that the elements are more symmetrically distributed and more robust to outliers, and that the standard deviation, sum of the elements, and the median of the elements are taken into account, which increases the chances of finding a cap set.
+"""
+scaled_el = el / np.max(el)
+scaled_median = np.median(scaled_el)
+return sum(el) / len(set(el)) / np.sum(np.abs(scaled_el - scaled_median)) / np.std(el) / np.sum(el)
+
+
+def priority_v122(el: tuple[int, ...], n: int) -> float:
+"""Improved version of `priority_v121`."""
+
+"""Another improvement could be to prioritize elements that have a lower sum of squared deviations from the scaled median, scaled by the median absolute deviation of the elements, scaled by the sum of the elements, over elements that have a higher sum of squared deviations from the scaled median, scaled by the median absolute deviation of the elements, scaled by the sum of the elements.
+This is because a lower sum of squared deviations from the scaled median, scaled by the median absolute deviation of the elements, scaled by the sum of the elements, means that the elements are more symmetrically distributed and more robust to

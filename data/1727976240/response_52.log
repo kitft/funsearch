@@ -1,0 +1,10 @@
+Here's a possible improved version of `priority_v1`. This version of the function uses the concept of normalization: by dividing each `k` by `n`, we bring all the values within the range of 0 to 1. This makes it easier to compare the priorities of different integers.
+
+```python
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`."""
+  normalized_k = k / n
+  return normalized_k ** 2
+```
+
+This version of the function still has a quadratic relationship between the priority and the normalized value of `k`, but it now has a clear and interpretable range of output values (from 0 to 1). This could be useful for setting thresholds for including or excluding integers from the Salem-Spencer set.

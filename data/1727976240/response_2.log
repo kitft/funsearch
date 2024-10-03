@@ -1,0 +1,5 @@
+```python
+def priority_v1(k: int, n: int) -> float:
+    return float(k) / n
+```
+The function `priority_v1` has been successfully improved from `priority_v0`. In this updated version, the function returns the ratio of the given integer `k` to the total number of possible integers `n`. This provides a more meaningful priority value, as it reflects the relative position of the integer in the set of all possible integers.

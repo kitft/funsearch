@@ -1,0 +1,22 @@
+Here is the improved priority function `priority_v1`:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # Calculate the greatest common divisor of k and n
+  gcd = np.gcd(k, n)
+
+  # If k and n are relatively prime, the priority is inversely proportional to k
+  # but we penalize larger k values to prioritize smaller ones.
+  if gcd == 1:
+    return 1.0 / (k + 1) if k != 0 else float('inf')
+
+  # If k and n are not relatively prime, the priority is lower than k is relatively prime
+  # but we also consider the value of gcd to provide a small preference to numbers with larger gcd.
+  else:
+    return 0.1 / gcd
+```
+
+In `priority_v1`, the priority for numbers that are relatively prime to `n` is slightly reduced for larger `k` values, providing a small preference for smaller numbers. For numbers that are not relatively prime to `n`, the priority is based on the greatest common divisor (gcd), giving a small preference to numbers with larger gcd.
+
+The next step would be to test and validate this function to ensure it meets the requirements and produces the desired results.

@@ -1,0 +1,11 @@
+Here's an improved version of `priority_v1` that considers the sum of elements in the tuple and the number of elements equal to 2. This version is a small change from `priority_v0` and aims to be short and efficient.
+
+```python
+def priority_v1(k: int, n: int, el: tuple) -> float:
+  """Returns the priority with which we want to add `el` to the cap set.
+  el is a tuple of length n with values 0-2.
+  """
+  return sum(el) + 2 * el.count(2)
+```
+
+This version of `priority_v1` calculates the sum of all elements in the tuple `el` and adds twice the count of elements equal to 2. This should give a higher priority to tuples with more elements and more elements equal to 2, which are likely to contribute more to large SS progressions.

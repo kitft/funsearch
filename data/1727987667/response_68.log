@@ -1,0 +1,16 @@
+Here's a strategy to improve the priority function:
+
+1. We know that larger numbers are likely to have more divisors, which could help us find progressions. Thus, we should prioritize larger numbers.
+2. Additionally, we know that two numbers in a Salem-Spencer progression differ by at least 2. Therefore, we should prioritize numbers closer to `n` (the total number of possible integers), as they are more likely to be part of a progression ending near `n`.
+3. To combine these two factors, we can use the product of the number and its distance from `n`. This will give us a higher priority for large numbers that are near `n`.
+
+Let's implement this in `priority_v1` and `priority_v2`:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  return k * (n - k)
+
+def priority_v2(k: int, n: int) -> float:
+  # We can also take the square root of the product to give more weight to the distance from n
+  return np.sqrt(k * (n - k))
+```

@@ -1,0 +1,35 @@
+In the `priority_v2` function, we can further improve the priority calculation by considering the frequency of each prime factor. Instead of just counting the number of unique prime factors, we can prioritize numbers with a larger product of the frequencies of their prime factors. This is because a number with more higher-frequency prime factors is more likely to have a larger sum-of-divisors progression.
+
+Here's a possible implementation:
+
+```python
+from collections import Counter
+
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`."""
+
+  if k <= 1 or k > n:
+    return 0.0
+
+  # Count the frequency of each prime factor of k
+  factors = []
+  i = 2
+  while i * i <= k:
+    if k % i:
+      i += 1
+    else:
+      k //= i
+      factors.append(i)
+
+  if k > 1:
+    factors.append(k)
+
+  # Calculate the product of the frequencies of the prime factors
+  priority = 1
+  for count in Counter(factors).values():
+    priority *= count
+
+  return priority
+```
+
+In this version, we use the `collections.Counter` class to count the frequency of each prime factor. Then, we calculate the product of these frequencies and return it as the priority. This should result in a better distribution of priority values, leading to more effective addition of elements to the Salem-Spencer set.

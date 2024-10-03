@@ -1,0 +1,15 @@
+It seems like you're trying to improve a function that calculates the priority of adding an integer to a Salem-Spencer set. The function `priority_v1` is defined, but it's not clear what improvements you're looking for. However, I can suggest a simple modification based on the context provided.
+
+Here's a possible improvement:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # Normalize the integer k between 0 and 1
+  normalized_k = k / n
+  # Calculate the priority as the square of the normalized integer
+  # This will give higher priority to larger integers
+  return normalized_k ** 2
+```
+
+This version of the function normalizes the integer `k` between 0 and 1, and then squares this value. This will give higher priority to larger integers, which might be useful in a Salem-Spencer set context. However, without more specific information about the problem, it's difficult to say whether this is the best possible improvement.

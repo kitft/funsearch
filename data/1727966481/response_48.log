@@ -1,0 +1,14 @@
+Here's an improved version of `priority_v1` that considers the number of unique remainders when dividing `k` by `n`, as well as the count of numbers less than `k` that are coprime with `n`. This version uses the `math.gcd` function to calculate the greatest common divisor.
+
+```python
+import math
+
+@funsearch.run
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    unique_remainders = len(set((k + i * n) % n for i in range(n)))
+    coprime_count = sum(1 for i in range(k) if math.gcd(i, n) == 1)
+    return unique_remainders + coprime_count
+```
+
+This version of `priority_v1` makes small changes to the original function by adding two new calculations: `unique_remainders` and `coprime_count`. These values are then added together to form the new priority score. The `set` and `range` functions are used to generate all possible remainders and check for coprimality, respectively. The `math.gcd` function is used to calculate the greatest common divisor between `i` and `n`.

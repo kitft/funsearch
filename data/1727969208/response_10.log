@@ -1,0 +1,35 @@
+Here's a step-by-step improvement of the `priority_vX` functions, focusing on finding large Salem-Spencer progressions. I've made small changes at each step to improve the priority function. The final version, `priority_v3`, uses the fact that Salem-Spencer progressions are closely related to the largest prime factor (LPF) of numbers.
+
+```python
+import itertools
+import numpy as np
+from sympy import primerange
+
+import funsearch
+
+@funsearch.run
+def priority_v0(k: int, n: int) -> float:
+    return 0.0
+
+def priority_v1(k: int, n: int) -> float:
+    """Use the fact that Salem-Spencer progressions are increasing sequences."""
+    return k / n
+
+def priority_v2(k: int, n: int) -> float:
+    """Consider the difference between consecutive numbers in the progression."""
+    return (k - (k - 1)) / n
+
+def priority_v3(k: int, n: int) -> float:
+    """Use the largest prime factor (LPF) of numbers to improve priority.
+       Salem-Spencer progressions are more likely to occur when the LPF of numbers is large.
+    """
+    lpf = max(primerange(k - 1, k + 1))
+    return lpf * (k / n)
+
+# Example usage:
+n = 1000
+for k in range(1, n + 1):
+    print(f"Priority for {k}: {priority_v3(k, n)}")
+```
+
+In this version, `priority_v3` uses the largest prime factor of numbers around `k` to improve the priority. Salem-Spencer progressions are more likely to occur when the largest prime factor of the numbers in the progression is large, as this increases the likelihood of the progression being Salem-Spencer.

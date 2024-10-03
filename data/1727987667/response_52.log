@@ -1,0 +1,13 @@
+The `priority_v0` function is currently returning a constant value of 0.0, which means that it is not considering the values of `k` and `n` when calculating the priority. The `priority_v1` function is expected to be an improved version of `priority_v0`, meaning it should consider the values of `k` and `n` to calculate the priority.
+
+Given that no specific improvement criteria are provided, I will assume that the priority should be higher for larger `k` values and lower `n` values, as these represent larger numbers with fewer possible options. However, it's important to note that this is a simplistic assumption and may not always be the most appropriate priority calculation for all use cases.
+
+Here's a possible implementation of `priority_v1`:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    return k / n
+```
+
+In this version, the priority is calculated as the ratio of `k` to `n`. This means that for larger `k` values and smaller `n` values, the priority will be higher. This could be seen as a simple heuristic for prioritizing larger numbers with fewer possible options.

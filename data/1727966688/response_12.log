@@ -1,0 +1,15 @@
+Sure, let's improve the `priority_v1` function. We can consider the priority as a function of the gap between the current and previous largest numbers in the Salem-Spencer set. The larger the gap, the higher the priority.
+
+```python
+def priority_v1(k: int, ss_set: list) -> float:
+  """Improved version of `priority_v0`.
+  ss_set is the current Salem-Spencer set.
+  """
+  if not ss_set:  # If the set is empty, the priority is the value of k.
+    return float(k)
+  else:
+    max_ss = max(ss_set)  # The current maximum value in the Salem-Spencer set.
+    return float(max_ss - k)  # The priority is the gap between the current max and k.
+```
+
+In this version, the priority is determined by the gap between the current maximum number in the Salem-Spencer set and the number `k` we're considering. The larger the gap, the higher the priority. If the set is empty, the priority is simply the value of `k`.

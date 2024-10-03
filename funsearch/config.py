@@ -16,7 +16,6 @@
 """Configuration of a FunSearch experiment."""
 import dataclasses
 
-
 @dataclasses.dataclass(frozen=True)
 class ProgramsDatabaseConfig:
   """Configuration of a ProgramsDatabase.
@@ -33,12 +32,20 @@ class ProgramsDatabaseConfig:
     backup_folder: Path for automatic backups
   """
   functions_per_prompt: int = 2
-  num_islands: int = 10
+  num_islands: int = 10  # Default value, can be overridden during initialization
   reset_period: int = 4 * 60 * 60
   cluster_sampling_temperature_init: float = 0.1
   cluster_sampling_temperature_period: int = 30_000
   backup_period: int = 30
   backup_folder: str = './data/backups'
+
+  def __init__(self, **kwargs):
+    # Use object.__setattr__ to set attributes on a frozen dataclass
+    #object.__setattr__(self, 'num_islands', num_islands)
+    # Set other attributes from kwargs
+    for key, value in kwargs.items():
+      if hasattr(self, key):
+        object.__setattr__(self, key, value)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -55,9 +62,18 @@ class Config:
         can execute in parallel as part of a distributed system.
     samples_per_prompt: How many independently sampled program continuations to
         obtain for each prompt.
+    num_islands: Number of islands to maintain as a diversity mechanism.
   """
+  num_islands: int = 10
   programs_database: ProgramsDatabaseConfig = dataclasses.field(
       default_factory=ProgramsDatabaseConfig)
   num_samplers: int = 15
   num_evaluators: int = 140
   samples_per_prompt: int = 4
+
+  def __init__(self, num_islands: int = 10, **kwargs):
+    object.__setattr__(self, 'num_islands', num_islands)
+    object.__setattr__(self, 'programs_database', ProgramsDatabaseConfig(num_islands=num_islands))
+    for key, value in kwargs.items():
+      if hasattr(self, key):
+        object.__setattr__(self, key, value)

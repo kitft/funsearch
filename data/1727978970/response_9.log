@@ -1,0 +1,14 @@
+The goal of this function is to assign a priority value to a given tuple `el` of length `n` with values ranging from 0 to 2. The priority value will determine the order in which elements are added to a cap set.
+
+The `priority_v0` function is a placeholder that always returns 0.0, which means that the order in which elements are added to the cap set is not determined by this function.
+
+The `priority_v1` function is an improved version of `priority_v0` that needs to be implemented. The function should return a priority value that reflects the importance of the element `el` for the cap set. The priority value could be based on various criteria, such as the number of 2s in the element, the number of unique values in the element, or the position of the 2s in the element.
+
+Here is an example implementation of `priority_v1` that returns the number of 2s in the element as the priority value:
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  return el.count(2)
+```
+
+This implementation prioritizes elements with more 2s over elements with fewer 2s. However, the priority function could be adjusted to meet the specific requirements of the problem at hand.

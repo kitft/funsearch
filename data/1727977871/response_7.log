@@ -1,0 +1,9 @@
+Here's an improved version of `priority_v0` that considers the ratio of `k` to `n`:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return k / n if n != 0 else 0.0
+```
+
+In this version, the priority is higher for larger `k` and smaller `n`. This means that integers that are larger in relation to the total number of possible integers are more likely to be added to the Salem-Spencer set. This might make the algorithm more efficient, as it will prioritize adding the largest numbers first, which might lead to faster progressions.

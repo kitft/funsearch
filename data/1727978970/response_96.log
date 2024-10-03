@@ -1,0 +1,121 @@
+count_2 = el.count(2)
+  count_1 = el.count(1)
+  count_0 = el.count(0)
+  sum_el = sum(el)
+  variance = np.var(el)
+
+  # Prioritize tuples with more 2s, less 0s, and more 1s, and smaller variance
+  priority = count_2 + count_1 - count_0 - variance
+
+  # Normalize priority by sum of elements
+  normalized_priority = priority / sum_el if sum_el != 0 else 0
+
+  return normalized_priority
+
+
+def priority_v2(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v1`."""
+
+  count_2 = el.count(2)
+  count_1 = el.count(1)
+  count_0 = el.count(0)
+  sum_el = sum(el)
+  variance = np.var(el)
+
+  # Prioritize tuples with more 2s, less 0s, and more 1s, smaller variance, and larger sum
+  priority = count_2 + count_1 - count_0 - variance + sum_el
+
+  # Normalize priority by the number of elements
+  normalized_priority = priority / n if n != 0 else 0
+
+  return normalized_priority
+
+
+def priority_v3(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v2`."""
+
+  count_2 = el.count(2)
+  count_1 = el.count(1)
+  count_0 = el.count(0)
+  sum_el = sum(el)
+  variance = np.var(el)
+
+  # Prioritize tuples with more 2s, less 0s, more 1s, smaller variance, larger sum, and less number of elements
+  priority = count_2 + count_1 - count_0 - variance + sum_el - n
+
+  # Normalize priority by the square root of the number of elements
+  normalized_priority = priority / np.sqrt(n) if n != 0 else 0
+
+  return normalized_priority
+
+
+def priority_v4(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v3`."""
+
+  count_2 = el.count(2)
+  count_1 = el.count(1)
+  count_0 = el.count(0)
+  sum_el = sum(el)
+  variance = np.var(el)
+
+  # Prioritize tuples with more 2s, less 0s, more 1s, smaller variance, larger sum, less number of elements, and more unique elements
+  priority = count_2 + count_1 - count_0 - variance + sum_el - n + len(set(el))
+
+  # Normalize priority by the square root of the number of elements
+  normalized_priority = priority / np.sqrt(n) if n != 0 else 0
+
+  return normalized_priority
+
+
+def priority_v5(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v4`."""
+
+  count_2 = el.count(2)
+  count_1 = el.count(1)
+  count_0 = el.count(0)
+  sum_el = sum(el)
+  variance = np.var(el)
+
+  # Prioritize tuples with more 2s, less 0s, more 1s, smaller variance, larger sum, less number of elements, more unique elements, and larger product of elements
+  priority = count_2 + count_1 - count_0 - variance + sum_el - n + len(set(el)) + np.prod(el)
+
+  # Normalize priority by the square root of the number of elements
+  normalized_priority = priority / np.sqrt(n) if n != 0 else 0
+
+  return normalized_priority
+
+
+def priority_v6(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v5`."""
+
+  count_2 = el.count(2)
+  count_1 = el.count(1)
+  count_0 = el.count(0)
+  sum_el = sum(el)
+  variance = np.var(el)
+
+  # Prioritize tuples with more 2s, less 0s, more 1s, smaller variance, larger sum, less number of elements, more unique elements, larger product of elements, and larger sum of squares of elements
+  priority = count_2 + count_1 - count_0 - variance + sum_el - n + len(set(el)) + np.prod(el) + np.sum(np.square(el))
+
+  # Normalize priority by the square root of the number of elements
+  normalized_priority = priority / np.sqrt(n) if n != 0 else 0
+
+  return normalized_priority
+
+
+def priority_v7(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v6`."""
+
+  count_2 = el.count(2)
+  count_1 = el.count(1)
+  count_0 = el.count(0)
+  sum_el = sum(el)
+  variance = np.var(el)
+
+  # Prioritize tuples with more 2s, less 0s, more 1s, smaller variance, larger sum, less number of elements, more unique elements, larger product of elements, larger sum of squares of elements, and smaller number of pairs of equal elements
+  priority = count_2 + count_1 - count_0 - variance + sum_el - n + len(set(el)) + np.prod(el) + np.sum(np.square(el)) - len([1 for a, b in itertools.combinations(el, 2) if a == b])
+
+  # Normalize priority by the square root of the number of elements
+  normalized_priority = priority / np.sqrt(n) if n != 0 else 0
+
+  return normalized_priority

@@ -1,0 +1,8 @@
+Here's an improved version of the `priority_v0` function. This version assigns a priority based on the number of times a given element appears in the tuple. The more times it appears, the higher the priority. This may help in finding larger cap sets, as elements that appear more frequently are more likely to be part of larger sets.
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+    return np.sum(el)
+```
+
+This function uses the `np.sum` function to calculate the sum of all elements in the tuple. This sum is then returned as the priority. Elements with higher values (1 or 2) will have a higher priority, which may help in finding larger cap sets.

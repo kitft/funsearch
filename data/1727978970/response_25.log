@@ -1,0 +1,15 @@
+Here's a simple implementation of `priority_v1` that makes a small change from `priority_v0`. The new implementation considers the total count of 1s and 2s in the tuple, as well as the total count of 2s. The priority is calculated as the total count of 1s multiplied by 0.1 and added to the total count of 2s.
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`.
+  The priority is calculated as the total count of 1s multiplied by 0.1 and added to the total count of 2s.
+  """
+  count_1 = el.count(1)
+  count_2 = el.count(2)
+  return count_1 * 0.1 + count_2
+```
+
+This approach assumes that having more 1s is more important than having more 2s. However, the weight of 1s is lower than the weight of 2s (0.1 vs 1). This is based on the assumption that having a 2 in a position is considered more valuable than having a 1, but it's less valuable than having a 2 at that position.
+
+This is a simple improvement, and the weights can be adjusted based on the specific requirements of the problem.

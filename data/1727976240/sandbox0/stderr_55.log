@@ -1,0 +1,3 @@
+<ast>:61: RuntimeWarning: divide by zero encountered in scalar remainder
+<ast>:61: RuntimeWarning: divide by zero encountered in scalar divide
+<ast>:63: RuntimeWarning: invalid value encountered in scalar multiply

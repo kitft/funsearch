@@ -1,0 +1,23 @@
+Here's an improved version of `priority_v1` that considers the sum of elements in the tuple. This version is a small change from `priority_v0` and aims to prioritize tuples with larger sums.
+
+```python
+def priority_v1(k: int, n: int, el: tuple) -> float:
+  """Returns the priority with which we want to add `el` to the cap set.
+  el is a tuple of length n with values 0-2.
+  """
+  return sum(el)
+```
+
+To keep the code short and maintain small changes, I've added an `el` parameter to the function, which represents the tuple of length `n` with values 0-2. The function now returns the sum of the elements in the tuple, prioritizing tuples with larger sums.
+
+You can further improve this function by considering other factors, such as the number of unique elements or the distribution of elements in the tuple. Here's an example of `priority_v2` that considers the number of unique elements:
+
+```python
+def priority_v2(k: int, n: int, el: tuple) -> float:
+  """Returns the priority with which we want to add `el` to the cap set.
+  el is a tuple of length n with values 0-2.
+  """
+  return sum(el) + len(set(el))
+```
+
+In this version, the function returns the sum of the elements plus the number of unique elements in the tuple. This version prioritizes tuples with larger sums and more unique elements.

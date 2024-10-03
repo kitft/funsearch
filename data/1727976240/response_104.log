@@ -1,0 +1,31 @@
+"""Improved version of `priority_v0`.
+
+Priority is inversely proportional to `k`, but with a logarithmic scale.
+Also, we add a small constant to avoid division by zero.
+"""
+return np.log(n / (k + 1e-9))
+
+
+def priority_v2(k: int, n: int, salem_spencer_set: set) -> float:
+  """Improved version of `priority_v1`.
+
+  We also consider the size of the Salem-Spencer set when determining priority.
+  The larger the set, the lower the priority.
+  """
+  return np.log(n / (k + 1e-9)) / (len(salem_spencer_set) + 1)
+
+
+def salem_spencer_search(n: int, max_size: int) -> set:
+  """Finds a Salem-Spencer set of size up to `max_size` from the first `n` integers."""
+  salem_spencer_set = set()
+  for k in itertools.count(1):
+    if len(salem_spencer_set) == max_size:
+      break
+    if funsearch.add(k, salem_spencer_set, priority_v2):
+      for a in salem_spencer_set:
+        for b in salem_spencer_set:
+          salem_spencer_set.discard(a + b - k)
+  return salem_spencer_set
+
+
+print(salem_spencer_search(1000, 6))

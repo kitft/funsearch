@@ -1,0 +1,18 @@
+Here is an improved version of `priority_v0`:
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`."""
+  count_0 = sum(x == 0 for x in el)
+  count_1 = sum(x == 1 for x in el)
+  count_2 = sum(x == 2 for x in el)
+
+  # Penalize larger sets more for 1s, reward larger sets more for 2s
+  return count_2 / n ** 2 - count_1 / n ** 2 - count_0 ** 2
+```
+
+The changes made in this version are:
+
+1. Stored the counts of 0s, 1s, and 2s in variables to make the code more readable.
+2. Simplified the calculation of the priority. Instead of using `sum(el)`, which adds up all elements, we only consider the counts of 0s, 1s, and 2s. This makes the priority calculation more intuitive and easier to understand.
+3. Updated the penalty for 1s to be more severe, as before. However, now we reward larger sets more for 2s, to encourage the inclusion of more 2s in the cap set. This should help to improve the quality of the cap sets found.

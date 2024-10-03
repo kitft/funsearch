@@ -1,0 +1,30 @@
+Here is an improved version of `priority_v0` that uses the prime factorization of `k` to determine the priority.
+
+```python
+from functools import reduce
+from operator import mul
+
+def prime_factors(n):
+    i = 2
+    factors = []
+    while i * i <= n:
+        if n % i:
+            i += 1
+        else:
+            n //= i
+            factors.append(i)
+    if n > 1:
+        factors.append(n)
+    return factors
+
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    factors = prime_factors(k)
+    # The more unique prime factors, the higher the priority
+    unique_factors = len(set(factors))
+    # The more times a factor appears, the lower the priority
+    factor_counts = np.prod([factors.count(i) for i in set(factors)])
+    return unique_factors / factor_counts
+```
+
+This version of the function gives higher priority to numbers with more unique prime factors and lower priority to numbers with repeated prime factors. This is because numbers with more unique prime factors are less likely to be part of a large SS progression (a Salem-Spencer progression is a sequence of integers such that the difference between any two consecutive terms is a power of 2).

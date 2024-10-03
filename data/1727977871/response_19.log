@@ -1,0 +1,43 @@
+Here's an improved version of `priority_v1` utilizing the concept of prime factorization. The priority of a number is determined by the number of its unique prime factors because numbers with more unique prime factors contribute more to the progression.
+
+```python
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`."""
+  def prime_factors(n):
+    i = 2
+    factors = set()
+    while i * i <= n:
+      if n % i:
+        i += 1
+      else:
+        n //= i
+        factors.add(i)
+    if n > 1:
+      factors.add(n)
+    return factors
+
+  return len(prime_factors(k))
+```
+
+This function `prime_factors` calculates the prime factors of a given number `n`. The priority is then simply the number of unique prime factors. For instance, the number 12 has prime factors 2 and 3, so its priority is 2.
+
+Please note that the priority returned by this function is a positive integer. If you need a normalized priority (between 0 and 1), you might want to divide the number of prime factors by the maximum possible number of prime factors. The maximum number of prime factors a number can have is approximately `log(n)` (using the Prime Number Theorem), so you could normalize the priority as follows:
+
+```python
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`."""
+  def prime_factors(n):
+    i = 2
+    factors = set()
+    while i * i <= n:
+      if n % i:
+        i += 1
+      else:
+        n //= i
+        factors.add(i)
+    if n > 1:
+      factors.add(n)
+    return factors
+
+  return len(prime_factors(k)) / np.log(n)
+```

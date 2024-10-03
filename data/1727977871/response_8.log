@@ -1,0 +1,12 @@
+Here's a simple way to improve on the `priority_v0` function. The improved version, `priority_v1`, could prioritize larger numbers and numbers that are closer to the square root of `n`, which might be more likely to contribute to large SS progressions.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # Prioritize larger numbers and numbers close to sqrt(n)
+  return k / n + (1 / abs(k - np.sqrt(n)))
+```
+
+This function calculates the priority as a weighted sum of the relative size of `k` and its closeness to the square root of `n`. The first term `k / n` gives a higher priority to larger numbers, while the second term `1 / abs(k - np.sqrt(n))` gives a higher priority to numbers that are closer to the square root of `n`.
+
+Note that this function assumes `n` is non-negative. If `n` can be negative, you might want to handle that case separately or modify the function accordingly.

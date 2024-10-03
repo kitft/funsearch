@@ -1,0 +1,15 @@
+The problem is about improving a priority function for finding large cap sets. A cap set is a subset of a finite set of integers such that no two elements in the subset have a sum that is also in the subset. The goal is to improve the priority function for adding an element to the cap set, making only small changes and trying to make the code short.
+
+Here's how we can improve the `priority_v0` function to `priority_v1`:
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # Calculate the number of unique sums that can be obtained by adding an element from el to an existing element in the cap set
+  unique_sums = set(sum(pair) for pair in itertools.combinations(el, 2))
+
+  # The priority is the negative of the number of unique sums, so that elements with fewer unique sums are prioritized
+  return -len(unique_sums)
+```
+
+In this improved version, we calculate the number of unique sums that can be obtained by adding an element from `el` to an existing element in the cap set. The priority is then defined as the negative of this number, so that elements with fewer unique sums are prioritized. This means that elements that are less likely to cause collisions with existing elements in the cap set will be added to the cap set first.

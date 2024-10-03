@@ -1,0 +1,14 @@
+Here's an improved version of `priority_v0` which takes into account the frequency of the remainder of `k` divided by a small set of primes. This is a simple heuristic to find numbers that are likely to form large Salem-Spencer progressions, as such progressions often involve numbers with similar remainder patterns when divided by small primes.
+
+```python
+from collections import Counter
+
+PRIMES = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
+
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    rem_counts = Counter(k % p for p in PRIMES)
+    return sum(count / n for count in rem_counts.values())
+```
+
+In this version, `PRIMES` is a list of small primes that we consider for the remainder patterns. For each prime in `PRIMES`, we calculate the remainder of `k` divided by that prime. We then count the frequency of each remainder using `collections.Counter`. Finally, we calculate the priority as the sum of the frequencies of all remainders divided by `n`, which is the total number of possible integers.

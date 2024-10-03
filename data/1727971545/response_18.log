@@ -1,0 +1,18 @@
+Here's an improved version of `priority_v1` that considers the number of elements less than `k` and the number of elements greater than `k` in the Salem-Spencer set. This version uses the harmonic number `H(n)` to weigh the priority, giving more importance to elements closer to the middle of the range.
+
+```python
+from math import factorial
+
+@funsearch.run
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    less_than_k = sum(1 for i in range(1, k) if funsearch.is_in_salem_spencer(i, n))
+    greater_than_k = sum(1 for i in range(k+1, n+1) if funsearch.is_in_salem_spencer(i, n))
+
+    # Harmonic number H(n) is approximately ln(n) + γ + 1/(2n), where γ is Euler's constant
+    H_n = np.log(n) + 0.57721566490153286060 + 1 / (2 * n)
+
+    return (less_than_k / H_n) - (greater_than_k / H_n)
+```
+
+This version of `priority_v1` makes a small change from `priority_v0` by considering the distribution of elements in the Salem-Spencer set around the target integer `k`. It uses the harmonic number to weigh the priority, giving more importance to elements closer to the middle of the range.

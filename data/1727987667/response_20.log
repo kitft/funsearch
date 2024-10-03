@@ -1,0 +1,10 @@
+Here's an improved version of `priority_v0` that considers the frequency of the number `k` in the sequence of integers from 1 to `n`. The more frequent `k` is, the lower its priority should be, as we want to find large SS progressions.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  frequency = np.bincount(np.arange(1, n+1) % k)[k-1] / n
+  return frequency
+```
+
+In this version, `np.bincount(np.arange(1, n+1) % k)[k-1]` counts the number of multiples of `k` in the range from 1 to `n`, and `/ n` normalizes this count to a probability. This probability is then used as the priority of `k`. Numbers that appear more frequently in the range have a lower priority.

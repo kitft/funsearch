@@ -1,0 +1,11 @@
+Here's an improved version of `priority_v1` that considers the frequency of `k` in the range `[0, n)` and the number of unique elements in that range. This version is shorter and makes small changes to the original function.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  freq = np.count_nonzero(np.arange(n) == k)
+  unique_elements = np.unique(np.arange(n)).size
+  return freq / unique_elements
+```
+
+This version calculates the frequency of `k` in the range `[0, n)` and divides it by the number of unique elements in that range. This should provide a better priority value for adding `k` to the Salem-Spencer set.

@@ -1,0 +1,11 @@
+Below is an improved version of `priority_v0` named `priority_v1`. This version assigns priority to elements based on the number of 1s and 2s, with more 2s receiving higher priority.
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return el.count(2) + el.count(1) * 0.5
+```
+
+In this version, each 2 in the element tuple contributes 1.0 to the priority, and each 1 contributes 0.5. This means that elements with more 2s and at least as many 1s will have higher priority than those with fewer or no 2s.
+
+This change could lead to a more efficient search as it gives priority to elements that contain more 2s, which could potentially lead to larger cap sets. However, it's important to note that this is a simple heuristic and may not always lead to the optimal solution. More sophisticated priority functions could potentially be designed based on the specific characteristics of the data and the problem at hand.

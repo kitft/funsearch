@@ -1,0 +1,13 @@
+Sure, I'd be happy to help you improve the `priority_v1` function. Here's a simple approach:
+
+The priority of an element could be determined by the number of 2's in the tuple. A '2' might represent a substantial contribution to the cap set, so we could prioritize elements with more '2's.
+
+Here's a possible implementation:
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return el.count(2)
+```
+
+This function will return the number of '2's in the tuple, which could be used as a priority score. However, you might want to consider other factors or adjust the scoring mechanism based on the specific requirements of your problem.

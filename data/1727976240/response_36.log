@@ -1,0 +1,26 @@
+The function `priority_v1` is currently returning a fixed value of 0.0, which means that no matter what the values of `k` and `n` are, the priority will always be the same. This might not be the desired behavior, so let's improve the function to return a priority that depends on `k` and `n`.
+
+A simple way to do this would be to use the ratio of `k` to `n` just like in `priority_v0`. However, to make the priority more sensitive to larger values of `k`, we could square this ratio. This way, integers that are closer to `n` will have a lower priority.
+
+Here's how we could implement this in `priority_v1`:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`.
+  Here, priority is determined by the square of the ratio of k to n, which gives more weight to larger k.
+  """
+  return (k / n) ** 2
+```
+
+Let's execute this code and see if it works as expected.
+```python
+
+def priority_v1(k: int, n: int) -> float:
+  return (k / n) ** 2
+
+# Test the function
+print(priority_v1(5, 10)) # Expected output: 0.25
+print(priority_v1(10, 10)) # Expected output: 1.0
+print(priority_v1(50, 100)) # Expected output: 0.25
+
+```

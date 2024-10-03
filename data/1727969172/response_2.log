@@ -1,0 +1,11 @@
+Here's an improved version of `priority_v1` that considers the number of elements less than `k` and the total number of possible integers. This version uses the formula for the expected value of the number of elements less than a given number in a random sample without replacement.
+
+```python
+import math
+
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    return (k - 1) / (n - 1) + math.log(n - k + 1) / math.log(2)
+```
+
+This version makes a small change by incorporating the expected value of elements less than `k` and the logarithm of the remaining possibilities. The logarithm base 2 is used to represent the priority in terms of bits, which is a common practice in information theory and computer science.

@@ -1,0 +1,6 @@
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`.
+  The priority is now the product of `k` and its inverse `(n-k)`, which increases the priority
+  for both smaller and larger values of `k`, while keeping the priority within the range [0, 1].
+  """
+  return k * (n - k) / (n * n)

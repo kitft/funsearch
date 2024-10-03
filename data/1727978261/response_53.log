@@ -1,0 +1,9 @@
+Here's an improved version of `priority_v0` that uses the sum of elements in the tuple `el` as the priority. This means that tuples with more 1s and 2s will have a higher priority, which might lead to more efficient cap sets.
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return sum(el)
+```
+
+This change is small but it might have a significant impact on the results, since it prefers tuples that have more 1s and 2s.

@@ -1,0 +1,20 @@
+Here's an improved version of `priority_v2` that considers the frequency of remainders as well, giving more priority to numbers with remainders that appear less frequently. I've also made the code shorter by using a generator expression and the `sum` function.
+
+```python
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`. Returns the priority based on the number of unique remainders and their frequencies."""
+  remainders = {k % i: remainders.count(k % i) for i in range(1, n + 1)}
+  return sum(freq / n for freq in remainders.values())
+```
+
+To further improve the function, we can consider the gaps between remainders. Numbers with larger gaps between their remainders should have higher priority, as they are more likely to contribute to a larger Salem-Spencer progression. Here's an updated version of the function that incorporates this idea:
+
+```python
+def priority_v3(k: int, n: int) -> float:
+  """Improved version of `priority_v2`. Returns the priority based on the number of unique remainders, their frequencies, and the gaps between them."""
+  remainders = {k % i: remainders.count(k % i) for i in range(1, n + 1)}
+  gaps = sorted(set(k % i - k % j for i in range(1, n + 1) for j in range(i + 1, n + 1) if (k % i != k % j)))
+  return sum(freq / n for freq in remainders.values()) + len(gaps) / (n * (n - 1) / 2)
+```
+
+This version of the function should provide a better estimate of the priority for adding a number to the Salem-Spencer set. As before, you can further improve the function by considering other factors that might contribute to the priority, such as the distribution of remainders or the number of common divisors.

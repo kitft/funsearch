@@ -1,0 +1,11 @@
+Here's a simple implementation of `priority_v1` that considers the total number of 1s in the tuple and the number of 2s. It gives a higher priority to tuples with more 1s and fewer 2s, as these are more likely to contribute to a larger cap set.
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`."""
+  num_ones = el.count(1)
+  num_twos = el.count(2)
+  return num_ones - num_twos
+```
+
+This function works by subtracting the number of 2s from the number of 1s in the tuple. A higher result indicates a higher priority, as tuples with more 1s and fewer 2s are more likely to contribute to a larger cap set.

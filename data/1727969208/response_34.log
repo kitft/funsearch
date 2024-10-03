@@ -1,0 +1,15 @@
+Here's an improved version of `priority_v1` that incorporates small changes to make it more efficient and accurate:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return n / (k + 1) - 1 / (n + 1)
+```
+
+Explanation of the changes:
+
+1. Inverted the fraction `k / (n + 1)` to `n / (k + 1)` to prioritize smaller values of `k` when `n` is large.
+2. Subtracted `1 / (n + 1)` to account for the fact that adding any element increases the size of the Salem-Spencer set by 1, so we should consider the relative increase in size rather than the absolute size.
+3. Removed the multiplication by `n` as it doesn't affect the priority order and can be absorbed into the constant factor when comparing priorities.
+
+This version of `priority_v1` should provide a more accurate and efficient way to determine the priority for adding an integer to the Salem-Spencer set.

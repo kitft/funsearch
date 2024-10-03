@@ -1,0 +1,12 @@
+Here's a simple approach to improve the `priority_v0` function.
+
+We can assign a priority based on the number of 2's in the tuple `el`. This is because a 2 contributes more to the final sum than a 1 or a 0.
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  return el.count(2)
+```
+
+This will ensure that tuples with more 2's will have a higher priority. If the number of 2's is equal, the priority will be the same.
+
+Remember that we want to make only small changes and that the code should be short.

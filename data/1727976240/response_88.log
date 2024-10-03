@@ -1,0 +1,43 @@
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`.
+
+  The priority is calculated as (k/n) ** 2, which squares the ratio of the integer to the total number of possible integers.
+  This gives more weight to larger integers, as their square is larger than their linear value.
+  """
+  return (k / n) ** 2
+
+
+def find_large_ss_progressions(n_digits: int, max_terms: int) -> None:
+  """Finds large SS progressions.
+
+  This function iterates through all possible digits and terms to find large SS progressions.
+  It uses a priority function to determine which integer to add to the Salem-Spencer set next.
+  The priority function is defined as `priority_v2`, which squares the ratio of the integer to the total number of possible integers.
+
+  Args:
+    n_digits: The number of digits to use for the integers.
+    max_terms: The maximum number of terms in the Salem-Spencer set.
+  """
+  digits = list(range(1, 10)) + list(range(0, 10)) * (n_digits - 1)
+
+  for n_terms in range(3, max_terms + 1):
+    print(f"Searching for Salem-Spencer progressions with {n_terms} terms...")
+    ss_set = set()
+    for _ in range(n_terms):
+      priorities = [priority_v2(k, len(digits)) for k in digits if k not in ss_set]
+      next_element = digits[np.argmax(priorities)]
+      ss_set.add(next_element)
+
+    for diff in itertools.combinations(digits, n_terms - 1):
+      diff = sum(diff)
+      start = min(k for k in digits if k not in ss_set or k - diff not in ss_set) - diff
+      if start >= 0:
+        while True:
+          if all((start + i * diff) in ss_set for i in range(1, n_terms)):
+            print(f"Found: {tuple(start + i * diff for i in range(n_terms))}")
+            break
+          start += diff
+
+
+if __name__ == "__main__":
+  find_large_ss_progressions(n_digits=4, max_terms=7)

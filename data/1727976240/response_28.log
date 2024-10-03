@@ -1,0 +1,15 @@
+Here's a simple improvement to the priority function that takes into account the size of the number and its relationship with the total number of possible integers.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # Normalize k to be between 0 and 1
+  normalized_k = k / n
+
+  # The priority is the square of the normalized value, which gives more weight to larger numbers
+  return normalized_k ** 2
+```
+
+In this version, the priority is calculated as the square of the normalized value of `k`. This means that larger numbers will have a higher priority, and smaller numbers will have a lower priority. The squaring function is used to amplify the difference between the priorities of larger numbers and smaller numbers.
+
+This is a small change from `priority_v0`, but it should help to improve the performance of the function. However, the effectiveness of this change will depend on the specific problem that the function is being used for, so it's important to test it thoroughly to ensure that it meets the requirements of the problem.

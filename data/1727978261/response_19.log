@@ -1,0 +1,43 @@
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+    return sum(el) / n
+
+def priority_v2(el: tuple[int, ...], n: int) -> float:
+    return sum(el) / n + sum(1 for i in el if i == 2)
+
+def priority_v3(el: tuple[int, ...], n: int) -> float:
+    return sum(el) / n + sum(1 for i in el if i == 2) - sum(1 for i in el if i == 0)
+
+def priority_v4(el: tuple[int, ...], n: int) -> float:
+    return sum(el) / n + sum(1 for i in el if i == 2) - sum(1 for i in el if i == 0) + sum(0.5 for i in el if i == 1)
+
+def priority_v5(el: tuple[int, ...], n: int) -> float:
+    return sum(el) / n + sum(1 for i in el if i == 2) - sum(1 for i in el if i == 0) + sum(0.5 for i in el if i == 1) - (n - sum(el)) / n
+
+def priority_v6(el: tuple[int, ...], n: int) -> float:
+    return sum(el) / n + sum(1 for i in el if i == 2) - sum(1 for i in el if i == 0) + sum(0.5 for i in el if i == 1) - (n - sum(el)) / n + sum(1 for i in range(n) if i < n - 1 and el[i] == 2 and el[i+1] == 2)
+
+def priority_v7(el: tuple[int, ...], n: int) -> float:
+    return sum(el) / n + sum(1 for i in el if i == 2) - sum(1 for i in el if i == 0) + sum(0.5 for i in el if i == 1) - (n - sum(el)) / n + sum(1 for i in range(n) if i < n - 1 and el[i] == 2 and el[i+1] == 2) - sum(1 for i in range(n) if i < n - 2 and el[i] == 2 and el[i+1] == 2 and el[i+2] == 2)
+
+def priority_v8(el: tuple[int, ...], n: int) -> float:
+    return sum(el) / n + sum(1 for i in el if i == 2) - sum(1 for i in el if i == 0) + sum(0.5 for i in el if i == 1) - (n - sum(el)) / n + sum(1 for i in range(n) if i < n - 1 and el[i] == 2 and el[i+1] == 2) - sum(1 for i in range(n) if i < n - 2 and el[i] == 2 and el[i+1] == 2 and el[i+2] == 2) + sum(1 for i in range(n) if i < n - 3 and el[i] == 2 and el[i+1] == 2 and el[i+2] == 2 and el[i+3] == 2)
+
+def priority_v9(el: tuple[int, ...], n: int) -> float:
+    return sum(el) / n + sum(1 for i in el if i == 2) - sum(1 for i in el if i == 0) + sum(0.5 for i in el if i == 1) - (n - sum(el)) / n + sum(1 for i in range(n) if i < n - 1 and el[i] == 2 and el[i+1] == 2) - sum(1 for i in range(n) if i < n - 2 and el[i] == 2 and el[i+1] == 2 and el[i+2] == 2) + sum(1 for i in range(n) if i < n - 3 and el[i] == 2 and el[i+1] == 2 and el[i+2] == 2 and el[i+3] == 2) - sum(1 for i in range(n) if i < n - 4 and el[i] == 2 and el[i+1] == 2 and el[i+2] == 2 and el[i+3] == 2 and el[i+4] == 2)
+
+def priority_v10(el: tuple[int, ...], n: int) -> float:
+    return sum(el) / n + sum(1 for i in el if i == 2) - sum(1 for i in el if i == 0) + sum(0.5 for i in el if i == 1) - (n - sum(el)) / n + sum(1 for i in range(n) if i < n - 1 and el[i] == 2 and el[i+1] == 2) - sum(1 for i in range(n) if i < n - 2 and el[i] == 2 and el[i+1] == 2 and el[i+2] == 2) + sum(1 for i in range(n) if i < n - 3 and el[i] == 2 and el[i+1] == 2 and el[i+2] == 2 and el[i+3] == 2) - sum(1 for i in range(n) if i < n - 4 and el[i] == 2 and el[i+1] == 2 and el[i+2] == 2 and el[i+3] == 2 and el[i+4] == 2) + sum(1 for i in range(n) if i < n - 5 and el[i] == 2 and el[i+1] == 2 and el[i+2] == 2 and el[i+3] == 2 and el[i+4] == 2 and el[i+5] == 2)
+
+def find_large_cap_sets(n: int, k: int) -> list[tuple[int, ...]]:
+    """Finds all large cap sets of length `n` and size `k`.
+    A large cap set is a cap set where all elements are 1 or 2.
+    """
+    cap_sets = []
+    for el in itertools.product(range(3), repeat=n):
+        if sum(el) == k and all(x in (1, 2) for x in el):
+            cap_sets.append(el)
+    cap_sets.sort(key=lambda x: priority_v10(x, n), reverse=True)
+    return cap_sets
+
+# Example usage:
+print(find_large_cap_sets(10, 5))

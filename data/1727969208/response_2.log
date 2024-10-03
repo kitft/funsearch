@@ -1,0 +1,14 @@
+Here's an improved version of `priority_v1` that considers the frequency of `k` in the range `[1, n]` and the number of distinct values in that range. This version is shorter and makes small changes to `priority_v0`.
+
+```python
+from collections import Counter
+
+@funsearch.run
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    freq = Counter(range(1, n + 1)).get(k, 0)  # Frequency of k in [1, n]
+    distinct = len(set(range(1, n + 1)))  # Number of distinct values in [1, n]
+    return freq / distinct  # Return the frequency divided by the number of distinct values
+```
+
+This version assumes that elements with higher frequency and fewer distinct values in the range should have higher priority. You can adjust the formula according to your specific use case.

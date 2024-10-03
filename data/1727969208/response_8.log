@@ -1,0 +1,13 @@
+Here's an improved version of `priority_v1` that considers the frequency of `k` in the first `n` integers and the number of integers that are co-prime with `k`. This version is shorter and makes small changes to `priority_v0`.
+
+```python
+from math import gcd
+
+@funsearch.run
+def priority_v1(k: int, n: int) -> float:
+    freq = sum(1 for i in range(1, n + 1) if i % k == 0)  # Frequency of k in first n integers
+    co_prime = sum(gcd(i, k) == 1 for i in range(1, n + 1))  # Count of integers co-prime with k
+    return freq / n + co_prime / n  # Priority as a weighted sum of frequency and co-prime count
+```
+
+This version assumes that you want to prioritize integers that appear frequently in the first `n` integers and have many co-prime numbers with them. You can adjust the weights or add other factors as needed to improve the priority function further.

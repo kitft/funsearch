@@ -1,0 +1,9 @@
+Here's a simple improvement to `priority_v1` that might help. This function gives higher priority to elements with more 2's, and then to elements with more 1's. This is based on the idea that elements with more 2's are more likely to be part of a large cap set, as they contribute more to the total sum of the set.
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return el.count(2) + el.count(1) / n
+```
+
+This function works by first counting the number of 2's in the element, and then adding the number of 1's divided by n. This normalizes the count of 1's by the size of the element, so that elements with more 1's relative to their size are preferred. This might help to avoid adding too many 1's to the set, which could lead to having too many small numbers and not enough large ones.

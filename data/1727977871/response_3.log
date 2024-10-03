@@ -1,0 +1,13 @@
+It seems like you're looking to improve a function that calculates a priority score for adding an integer to a Salem-Spencer set. The current version, `priority_v0`, always returns 0.0, which is not very helpful.
+
+Your task is to create a new version, `priority_v1`, that improves upon `priority_v0`. You're asked to make small changes and try to keep the code short. However, without any specific criteria or context, it's difficult to suggest a meaningful improvement.
+
+A simple approach could be to use the ratio of the integer `k` to the total number of possible integers `n`. This would give a higher priority to larger numbers. Here's a possible implementation:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`. Returns the ratio of k to n."""
+  return k / n
+```
+
+This function will return a value between 0 and 1, where 1 indicates that `k` is equal to `n` (the maximum possible value), and 0 indicates that `k` is 0.

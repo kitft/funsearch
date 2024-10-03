@@ -1,0 +1,53 @@
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  if k <= 1 or k > n:
+    return 0.0
+
+  # Count the number of prime factors of k
+  factors = set()
+  i = 2
+  while i * i <= k:
+    if k % i:
+      i += 1
+    else:
+      k //= i
+      factors.add(i)
+
+  if k > 1:
+    factors.add(k)
+
+  # Prioritize numbers with more unique prime factors
+  return len(factors)
+
+
+@funsearch.run
+def largest_ss_progression_v0(n: int) -> int:
+  """Returns the largest length of a salem-spencer progression for integers between 1 and n."""
+  return 0
+
+
+def largest_ss_progression_v1(n: int) -> int:
+  """Improved version of `largest_ss_progression_v0`."""
+  # Generate a list of priorities for each integer
+  priorities = [priority_v1(k, n) for k in range(1, n + 1)]
+
+  # Sort the integers by priority
+  sorted_integers = sorted(range(1, n + 1), key=lambda k: priorities[k - 1], reverse=True)
+
+  # Try to find the largest salem-spencer progression
+  max_length = 0
+  for length in range(1, n + 1):
+    for start in range(1, n - length + 2):
+      end = start + length - 1
+      if end > n:
+        break
+
+      # Check if the sequence is a salem-spencer progression
+      if all(priorities[k - 1] >= priorities[k - start] for k in range(start + 1, end + 1)):
+        max_length = max(max_length, length)
+
+  return max_length
+
+
+# Test the function
+print(largest_ss_progression_v1(100))

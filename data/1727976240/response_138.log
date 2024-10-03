@@ -1,0 +1,17 @@
+To improve the priority calculation over the previous iterations, we can take into account the number of common divisors between the existing elements in the Salem-Spencer set and the new element we want to add. This can help us identify larger progressions.
+
+Here's an improved version of `priority_v1` that takes into account the number of common divisors:
+
+```python
+def priority_v2(k: int, n: int, existing_set: set) -> float:
+    """Improved version of `priority_v1` that considers the number of common divisors."""
+    # Calculate the number of common divisors between k and the existing elements in the set
+    common_divisors = sum(1 for x in existing_set if np.gcd(k, x) > 1)
+
+    # Return the priority as the number of common divisors divided by the total number of elements in the set
+    return common_divisors / len(existing_set)
+```
+
+In this version, we pass an additional parameter `existing_set` which contains the existing elements in the Salem-Spencer set. We then calculate the number of common divisors between `k` and each element in the `existing_set`. Finally, we return the priority as the ratio of the number of common divisors to the total number of elements in the set.
+
+By considering the number of common divisors, we can prioritize elements that contribute to larger progressions in the Salem-Spencer set.

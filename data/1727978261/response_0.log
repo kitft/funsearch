@@ -1,0 +1,10 @@
+Here is a simple improvement of the priority_v0 function. This version prioritizes elements that have more 2s and fewer 0s.
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  return el.count(2) - el.count(0)
+```
+
+This function works by counting the number of 2s and 0s in the element tuple. It subtracts the count of 0s from the count of 2s. This means that elements with more 2s and fewer 0s will have a higher priority. This could potentially help in finding large cap sets, as these elements are more likely to have unique elements that can be added to the set.
+
+Please note, this is a simple improvement and may not be the best strategy for finding large cap sets. Also, the funsearch.run decorator is assumed to have a proper implementation for running the function and finding the optimal result.

@@ -1,0 +1,16 @@
+Here's an improved version of `priority_v1` that considers the number of unique remainders when dividing `k` by `n` and the number of multiples of `k` less than `n`. This version is shorter and makes small changes to `priority_v0`.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  remainders = set(k % i for i in range(1, n + 1))
+  multiples = sum(1 for i in range(1, n // k + 1))
+  return len(remainders) / n + multiples / n
+```
+
+This version calculates the priority as a weighted sum of two factors:
+
+1. The ratio of unique remainders to `n`, which encourages adding `k` when it has many unique remainders.
+2. The ratio of multiples of `k` less than `n` to `n`, which encourages adding `k` when it has many multiples.
+
+The `@funsearch.run` decorator is not used here, as it's not clear what `funsearch` is or how it should be used in this context. If you want to use it, you should add it back to the function definition.

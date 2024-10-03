@@ -1,0 +1,18 @@
+Here's an improved version of `priority_v1` that considers the sum of elements in the tuple. This version uses the sum as a feature to prioritize elements with larger sums, assuming that larger sums indicate more valuable elements to add to the cap set.
+
+```python
+import itertools
+
+import numpy as np
+
+import funsearch
+
+@funsearch.run
+def priority_v1(k: int, n: int, el: tuple) -> float:
+  """Returns the priority with which we want to add `el` to the cap set.
+  el is a tuple of length n with values 0-2.
+  """
+  return np.sum(el)
+```
+
+This version of `priority_v1` takes an additional argument `el`, which is the tuple of length `n` with values 0-2. It simply returns the sum of the elements in the tuple, which can be used as a priority score. This version is a small change from `priority_v0`, but it should provide a more meaningful priority score for adding elements to the cap set.

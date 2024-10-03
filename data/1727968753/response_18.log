@@ -1,0 +1,13 @@
+Here's a more concise and improved version of `priority_v2` that also includes a small change to consider the frequency of `k^2` to further refine the priority:
+
+```python
+def priority_v3(k: int, n: int) -> float:
+  """Improved version of `priority_v2`."""
+  freq_k = np.count_nonzero(np.arange(n) % k == 0)
+  freq_kk = np.count_nonzero(np.arange(n // k) % k == 0)
+  freq_kkk = np.count_nonzero(np.arange(n // k**2) % k == 0)
+  freq_kkkk = np.count_nonzero(np.arange(n // k**3) % k == 0)
+  return (freq_k + freq_kk - freq_kkk + freq_kkkk) / n
+```
+
+This version considers the frequency of `k^3` in addition to `k`, `k^2`, and `k^2 // k` (which is `k`). This small change might help improve the priority function by capturing more information about the distribution of multiples of `k` within the range `[0, n)`.

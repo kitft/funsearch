@@ -1,0 +1,11 @@
+To improve the `priority_v1` function over the `priority_v0` function, we can consider the value of `k` and the total number of possible integers `n`. A simple way to improve the priority could be to give higher priority to larger values of `k`, as they have a greater potential to contribute to a large SS progression. Additionally, we can normalize the priority by dividing it by `n` to ensure that the priority values are between 0 and 1.
+
+Here is an improved version of the `priority_v1` function:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return k / n
+```
+
+In this implementation, the priority is calculated as the ratio of `k` to `n`. This will give higher priority to larger values of `k`, while still normalizing the priority values to be between 0 and 1.

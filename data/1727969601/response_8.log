@@ -1,0 +1,17 @@
+Here's an improved version of `priority_v0` called `priority_v1`. This version leverages mathematical properties to avoid unnecessary calculations.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`.
+  Utilizes the fact that for each k, there are exactly (n-1) possible (i,j) pairs that sum up to k.
+  """
+  if 2 <= k <= 2*n:
+    return n - 1
+  return 0
+```
+
+Explanation:
+
+In the previous version, the code was counting the number of possible pairs (i, j) that summed up to k. However, this number is constant for each k and is equal to (n-1) if 2 <= k <= 2n. This is because for each k in this range, there are exactly (n-1) pairs (i, j) where i != j. This follows from the fact that there are n possible values for i and j, and we're excluding the case where i = j.
+
+By utilizing this mathematical property, the code becomes much more efficient. It no longer needs to iterate over all possible pairs (i, j), but instead can simply return the constant value (n-1) for k in the appropriate range. For k outside of this range, the function returns 0, since there are no pairs (i, j) that sum up to k.

@@ -1,0 +1,14 @@
+Here's a simple improvement to the `priority_v1` function. This version considers two factors: the size of the number and its primality. Larger prime numbers are more likely to contribute to large SS progressions, so we give them a higher priority:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`. Consider size and primality of the number."""
+  if k < 2:
+    return 0.0
+  for i in range(2, int(np.sqrt(k)) + 1):
+    if k % i == 0:
+      return 0.0
+  return 1.0 / k
+```
+
+This function first checks if the number is less than 2 (which means it's not prime). If it is, it returns a priority of 0.0. Then, it checks if the number is divisible by any integer from 2 to the square root of the number. If it is, the function returns a priority of 0.0. If the number is prime, the function returns a priority of 1 divided by the number, which prioritizes smaller prime numbers over larger ones.

@@ -1,0 +1,13 @@
+Sure, I can help you improve your code. Here's a simple improvement to your `priority_v1` function:
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Returns the priority with which we want to add `element` to the cap set.
+  el is a tuple of length n with values 0-2.
+  """
+  # The priority is calculated as the sum of elements in the tuple.
+  # The higher the sum, the higher the priority.
+  return sum(el)
+```
+
+This function calculates the priority based on the sum of elements in the tuple. The higher the sum, the higher the priority. This is a simple improvement over the `priority_v0` function, which always returned 0.0.

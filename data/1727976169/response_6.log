@@ -1,0 +1,34 @@
+Okay, let's improve the priority function again. This time, let's prioritize numbers that are further from 0 and 1, but closer to integer values. This is because integers are likely to have more divisors, which could lead to more interesting patterns in the Salem-Spencer tree.
+
+Here's how I'd modify the `priority_v2` function:
+
+```python
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`."""
+
+  # Calculate the ratio of k to n
+  ratio = k / n
+
+  # Prioritize numbers closer to integer values, but not too close to 0 or 1
+  return max(1 - abs(ratio - round(ratio)), 0)
+```
+
+In this version, the `max` function is used to ensure that the priority is never negative. The `round` function is used to round the ratio to the nearest integer, and the `abs` function is used to calculate the distance from this integer. The priority is then calculated as `1 - abs(ratio - round(ratio))`, which gives a high priority to numbers close to integers, but not too close to 0 or 1.
+
+Let's run this code to see how it works.
+```python
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`."""
+
+  # Calculate the ratio of k to n
+  ratio = k / n
+
+  # Prioritize numbers closer to integer values, but not too close to 0 or 1
+  return max(1 - abs(ratio - round(ratio)), 0)
+
+# Test the function with some example inputs
+print(priority_v2(5, 10))
+print(priority_v2(7, 10))
+print(priority_v2(9, 10))
+print(priority_v2(1, 10))
+```

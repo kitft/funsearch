@@ -1,0 +1,16 @@
+The improvement of the `priority_v1` function over `priority_v0` can be made by giving more weight to larger integers while still normalizing the priority by the total number of possible integers. This can be achieved by squaring the integer `k` and dividing it by `n`.
+
+Here's the improved version of the `priority_v1` function:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`.
+
+  The priority is calculated as k^2 / n, which gives more weight to larger integers.
+  """
+  return k**2 / n
+```
+
+This function calculates the priority of an integer `k` out of `n` possible integers by squaring `k` and then dividing it by `n`. This way, larger integers have a higher priority than smaller ones, but the priority is still a value between 0 and 1.
+
+The next iteration could focus on further refining the priority calculation, for example by adding more terms or using a different function, or by incorporating additional information about the integers into the priority calculation. However, making only small changes is the requirement, so we should not deviate too much from the current solution.

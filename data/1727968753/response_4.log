@@ -1,0 +1,13 @@
+Here's an improved version of `priority_v1` that considers the frequency of `k` in the range `[1, n]` and the number of missing integers between `k` and `n`. This version uses the `itertools` module to generate the range and count the frequency of `k`.
+
+```python
+from collections import Counter
+
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # Generate the range [1, n] and count the frequency of k
+  freq = Counter(range(1, n + 1))
+  return freq[k] + n - max(freq.keys())
+```
+
+This version of `priority_v1` makes a small change by counting the frequency of `k` in the range `[1, n]` and adding the number of missing integers between `k` and `n` to the priority. This should improve the progress of finding large Salem-Spencer progressions compared to `priority_v0`.

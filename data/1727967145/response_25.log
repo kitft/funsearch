@@ -1,0 +1,11 @@
+Here's an improved version of `priority_v2` that reduces the number of iterations by only checking up to the square root of `n` and uses a generator expression for better performance:
+
+```python
+def priority_v2(k: int, n: int) -> float:
+    """Improved version of `priority_v1`."""
+    remainders = {k * i % n for i in range(1, int(n ** 0.5) + 1)}
+    multiples = sum((k * i) % n == 0 for i in range(1, int(n ** 0.5) + 1))
+    return len(remainders) / n + multiples / n
+```
+
+This version is shorter and more efficient than the previous ones. It also maintains the same functionality and improves the priority calculation as required.

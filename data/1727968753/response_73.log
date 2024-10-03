@@ -1,0 +1,14 @@
+Here's an improved version of `priority_v1` that reduces the number of operations and uses numpy's built-in functions for better performance. I've also made the code shorter by using numpy's vectorized operations and removing the explicit loop.
+
+```python
+import numpy as np
+
+@funsearch.run
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    remainders = (k + np.arange(n)) % n
+    _, counts = np.unique(remainders, return_counts=True)
+    return np.mean(counts)
+```
+
+In this version, I've used `np.arange(n)` to generate the sequence of integers from 0 to n-1. Then, I've used numpy's `np.unique` function with the `return_counts` parameter set to True to get the unique remainders and their frequencies. Finally, I've calculated the mean of the frequencies using `np.mean`.

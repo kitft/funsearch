@@ -1,0 +1,8 @@
+Here's an improved version of `priority_v1` that uses a generator expression and the built-in `len` function to count the remainders, making it more concise:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+    return len((k + i) % n for i in range(n)) / n
+```
+
+This version performs the same calculation as `priority_v0` but is shorter and more efficient, as it avoids creating an intermediate set.

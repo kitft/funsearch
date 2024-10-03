@@ -1,0 +1,11 @@
+To improve the `priority_v1` function over `priority_v0`, we need to consider a better way to calculate the priority of adding an element to the cap set. The `priority_v0` function currently returns 0.0 for all elements, which is not a useful measure.
+
+One approach could be to calculate the priority based on the number of 2s in the element. Since 2 is the largest value, elements with more 2s could have a higher priority. Here's a simple implementation of this idea:
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return el.count(2)
+```
+
+This function will return the number of 2s in the element, which could be a better measure of priority than always returning 0. However, this is still a very basic priority calculation and may not be suitable for all use cases. Depending on the specific requirements of the cap set, a more sophisticated priority calculation may be needed.

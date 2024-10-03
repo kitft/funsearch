@@ -1,0 +1,82 @@
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+    """Improved version of `priority_v0`."""
+    # Use the sum of the elements as a simple priority function
+    return sum(el)
+
+
+@funsearch.run
+def priority_v2(el: tuple[int, ...], n: int) -> float:
+    """Improved version of `priority_v1`."""
+    # Use the sum of the elements, but give more weight to the last element
+    return sum(i * val for i, val in enumerate(el, 1))
+
+
+@funsearch.run
+def priority_v3(el: tuple[int, ...], n: int) -> float:
+    """Improved version of `priority_v2`."""
+    # Use the sum of the elements, but give more weight to the last element,
+    # and penalize elements that are already in the cap set
+    return sum(i * val for i, val in enumerate(el, 1)) - el.count(1)
+
+
+@funsearch.run
+def priority_v4(el: tuple[int, ...], n: int, cap_set: set[tuple[int, ...]]) -> float:
+    """Improved version of `priority_v3`."""
+    # Use the sum of the elements, but give more weight to the last element,
+    # penalize elements that are already in the cap set, and reward elements
+    # that are not in the cap set but have a high probability of being in it
+    prob = np.prod([1 - p for p in funsearch.state.probs if p < 0.5])
+    return sum(i * val for i, val in enumerate(el, 1)) - el.count(1) + prob
+
+
+@funsearch.run
+def priority_v5(el: tuple[int, ...], n: int, cap_set: set[tuple[int, ...]]) -> float:
+    """Improved version of `priority_v4`."""
+    # Use the sum of the elements, but give more weight to the last element,
+    # penalize elements that are already in the cap set, reward elements that
+    # are not in the cap set but have a high probability of being in it, and
+    # penalize elements that have a low probability of being in the cap set
+    prob = np.prod([p if p < 0.5 else 1 - p for p in funsearch.state.probs])
+    return sum(i * val for i, val in enumerate(el, 1)) - el.count(1) + prob
+
+
+@funsearch.run
+def priority_v6(el: tuple[int, ...], n: int, cap_set: set[tuple[int, ...]]) -> float:
+    """Improved version of `priority_v5`."""
+    # Use the sum of the elements, but give more weight to the last element,
+    # penalize elements that are already in the cap set, reward elements that
+    # are not in the cap set but have a high probability of being in it,
+    # penalize elements that have a low probability of being in the cap set,
+    # and penalize elements that are similar to elements already in the cap set
+    similarity = sum(sum(a != b for a, b in zip(el, other)) for other in cap_set)
+    prob = np.prod([p if p < 0.5 else 1 - p for p in funsearch.state.probs])
+    return sum(i * val for i, val in enumerate(el, 1)) - el.count(1) + prob - similarity
+
+
+@funsearch.run
+def priority_v7(el: tuple[int, ...], n: int, cap_set: set[tuple[int, ...]]) -> float:
+    """Improved version of `priority_v6`."""
+    # Use the sum of the elements, but give more weight to the last element,
+    # penalize elements that are already in the cap set, reward elements that
+    # are not in the cap set but have a high probability of being in it,
+    # penalize elements that have a low probability of being in the cap set,
+    # penalize elements that are similar to elements already in the cap set,
+    # and reward elements that are dissimilar to elements already in the cap set
+    similarity = sum(sum(a != b for a, b in zip(el, other)) for other in cap_set)
+    dissimilarity = sum(sum(a == b for a, b in zip(el, other)) for other in cap_set)
+    prob = np.prod([p if p < 0.5 else 1 - p for p in funsearch.state.probs])
+    return sum(i * val for i, val in enumerate(el, 1)) - el.count(1) + prob - similarity + dissimilarity
+
+
+def find_large_cap_sets(n: int, k: int, max_size: int) -> list[set[tuple[int, ...]]]:
+    """Finds large cap sets of size up to `max_size`."""
+    cap_sets = []
+    for cap_set_size in range(k, max_size + 1):
+        cap_set = set()
+        for el in itertools.product(range(3), repeat=n):
+            if len(cap_set) >= cap_set_size:
+                break
+            if el not in cap_set and priority_v7(el, n, cap_set) > 0:
+                cap_set.add(el)
+        cap_sets.append(cap_set)
+    return cap_sets

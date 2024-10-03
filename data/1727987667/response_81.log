@@ -1,0 +1,77 @@
+"""Improved version of `priority_v1`."""
+return k / np.sqrt(n)
+
+
+def priority_v3(k: int, n: int) -> float:
+  """Improved version of `priority_v2`."""
+  return k / np.log(n)
+
+
+def priority_v4(k: int, n: int) -> float:
+  """Improved version of `priority_v3`."""
+  return k / (np.log(n) ** 2)
+
+
+def priority_v5(k: int, n: int) -> float:
+  """Improved version of `priority_v4`."""
+  return k / (np.log(n) ** 3)
+
+
+def priority_v6(k: int, n: int) -> float:
+  """Improved version of `priority_v5`."""
+  return k / (np.log(n) ** 4)
+
+
+def priority_v7(k: int, n: int) -> float:
+  """Improved version of `priority_v6`."""
+  return k / (np.log(n) ** np.log(n))
+
+
+def priority_v8(k: int, n: int) -> float:
+  """Improved version of `priority_v7`."""
+  return k / (np.log(n) ** np.log(np.log(n)))
+
+
+def priority_v9(k: int, n: int) -> float:
+  """Improved version of `priority_v8`."""
+  return k / (np.log(n) ** np.log(np.log(np.log(n))))
+
+
+def priority_v10(k: int, n: int) -> float:
+  """Improved version of `priority_v9`."""
+  return k / (np.log(n) ** np.log(np.log(np.log(np.log(n)))))
+
+
+def find_large_ss_progressions(n: int, k: int, max_length: int) -> list[int]:
+  """Finds large SS progressions.
+
+  Args:
+    n: The number of possible integers.
+    k: The minimum value of the integers.
+    max_length: The maximum length of the progressions.
+
+  Returns:
+    A list of the largest SS progressions found.
+  """
+  progressions = []
+  for length in range(k, max_length + 1):
+    # Generate all possible progressions of length `length`.
+    for start in range(k, n - length + 1):
+      progression = list(range(start, start + length))
+
+      # Calculate the priority of the progression.
+      priority = sum(priority_v10(num, n) for num in progression)
+
+      # Add the progression to the list if it has a high enough priority.
+      if priority > 1:
+        progressions.append(progression)
+
+  return progressions
+
+
+# Example usage:
+n = 10000
+k = 2
+max_length = 10
+progressions = find_large_ss_progressions(n, k, max_length)
+print(progressions)

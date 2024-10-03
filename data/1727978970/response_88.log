@@ -1,0 +1,11 @@
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # Count the number of 1's and 2's in the element
+  count_1 = el.count(1)
+  count_2 = el.count(2)
+
+  # Prioritize elements with more 2's, then more 1's, then more 0's
+  return count_2 * (n ** 2) + count_1 * n + el.count(0)
+```
+The `priority_v1` function calculates the priority of an element based on the number of 1's, 2's, and 0's it contains. Elements with more 2's are given higher priority, followed by elements with more 1's, and finally elements with more 0's. The priority is calculated as `count_2 * (n ** 2) + count_1 * n + count_0`, where `n` is the length of the element. This ensures that the priority is a unique value for each possible element, and that elements with more 2's are always prioritized over elements with fewer 2's.

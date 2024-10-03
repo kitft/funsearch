@@ -1,0 +1,14 @@
+Here's an improved version of `priority_v1` that considers the frequency of each integer in the range `[0, n)` and the difference between `k` and the mean of the range. This version is more concise and makes small changes to the previous version.
+
+```python
+@funsearch.run
+def priority_v1(k: int, n: int) -> float:
+    """Returns the priority with which we want to add `k` to the Salem-Spencer set.
+    n is the number of possible integers, and k is the integer we want to determine priority for.
+    """
+    freq = np.bincount(np.arange(n), minlength=n)  # Frequency of each integer in [0, n)
+    mean = np.mean(np.arange(n))  # Mean of the range [0, n)
+    return -np.abs(k - mean) * np.mean(freq)  # Negative absolute difference from mean multiplied by mean frequency
+```
+
+This version uses NumPy functions for efficiency and calculates the mean frequency of integers in the range. The priority is then defined as the negative absolute difference between `k` and the mean of the range, multiplied by the mean frequency. The negative sign is used to ensure that smaller differences result in higher priorities.

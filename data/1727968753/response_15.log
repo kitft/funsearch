@@ -1,0 +1,12 @@
+Here's an improved version of `priority_v2` that considers the frequency of multiples of `k` and their distances from `k` to create a priority score. I've also made the code shorter by using list comprehension and lambda functions.
+
+```python
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`."""
+  freq = np.count_nonzero(np.arange(n) % k == 0)
+  multiples = [i for i in range(k, n, k)]
+  distances = [i - k for i in multiples]
+  return (freq / n) + (sum(distances) / (n - k))
+```
+
+This version calculates the sum of distances of multiples of `k` from `k` and adds it to the frequency ratio to create a new priority score. The idea is that elements closer to `k` should have higher priority, and this version incorporates that consideration.

@@ -1,0 +1,14 @@
+Here's an improved version of `priority_v1` that considers the frequency of `k` in all possible subsets of size `k` in the range `[0, n)`. This version uses the `itertools.combinations` function to generate all subsets and `np.mean` to calculate the average frequency.
+
+```python
+from typing import Iterator
+
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    def subset_iter() -> Iterator[tuple[int, ...]]:
+        return itertools.combinations(range(n), k)
+
+    return np.mean(k in s for s in subset_iter())
+```
+
+This version of `priority_v1` should provide a better estimate of the priority for adding `k` to the Salem-Spencer set. It's also shorter and more concise than the original `priority_v0` function.

@@ -1,0 +1,18 @@
+Here's an improved version of `priority_v1` that considers the frequency of `k` in the range `[1, n]` and the number of elements already in the Salem-Spencer set. This version uses the `itertools` library to count the frequency of `k` and numpy to calculate the mean of the current Salem-Spencer set.
+
+```python
+import itertools
+import numpy as np
+
+@funsearch.run
+def priority_v1(k: int, n: int, ss_set: np.ndarray) -> float:
+    """Returns the priority with which we want to add `k` to the salem-spencer set.
+    n is the number of possible integers, and k is the integer we want to determine priority for.
+    ss_set is the current Salem-Spencer set.
+    """
+    freq_k = sum(1 for _ in itertools.islice(itertools.count(), k, n + 1))  # Frequency of k in [1, n]
+    mean_ss_set = np.mean(ss_set) if ss_set.size else 0  # Mean of the current Salem-Spencer set
+    return freq_k / (n + 1) - abs(k - mean_ss_set)  # Priority calculation
+```
+
+This version of `priority_v1` takes the current Salem-Spencer set `ss_set` as an argument to consider the elements already in the set. The priority is calculated as the frequency of `k` in the range `[1, n]` divided by the total number of possible integers minus the absolute difference between `k` and the mean of the current Salem-Spencer set. This should improve the priority calculation compared to `priority_v0`.

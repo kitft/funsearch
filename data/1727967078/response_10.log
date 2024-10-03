@@ -1,0 +1,11 @@
+Here's an improved version of `priority_v1` that considers the frequency of `k` in the range `[0, n)` and the number of remaining possible integers. This version is shorter and makes a small change from `priority_v0`.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  freq = sum(1 for i in range(n) if i % k == 0)  # Frequency of k in [0, n)
+  remaining = n - k  # Remaining possible integers
+  return freq / (remaining + 1)
+```
+
+This version calculates the frequency of `k` in the range `[0, n)` and divides it by the number of remaining possible integers plus one (to avoid division by zero). This should improve the priority calculation compared to `priority_v0`.

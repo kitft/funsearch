@@ -1,0 +1,11 @@
+Here's an improved version of `priority_v1` that considers the number of unique remainders when dividing `k` by `n` and the number of multiples of `k` less than `n`. This version is more concise and makes small changes to `priority_v0`.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  remainders = set((k + i) % n for i in range(n))
+  multiples = sum(i for i in range(n) if (k * i) % n == 0)
+  return len(remainders) / n + multiples / n
+```
+
+This version first calculates the set of unique remainders when dividing `k + i` by `n` for `i` in the range `[0, n)`. Then, it counts the number of multiples of `k` less than `n`. Finally, it returns the average of these two values, scaled by `n`. This version should provide a better priority value for the Salem-Spencer problem.

@@ -1,0 +1,14 @@
+To improve the `priority_v1` function over `priority_v0`, we need to consider the value of `k` and `n` to determine the priority. A simple improvement could be to give higher priority to larger `k` values, as they might contribute more to the progression. However, we also need to consider the total number of possible integers `n` to ensure that the priority is still reasonable.
+
+Here's a possible implementation:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # Normalize k between 0 and 1 based on n
+  normalized_k = k / n
+  # Give higher priority to larger k values
+  return normalized_k ** 2
+```
+
+In this implementation, we normalize `k` between 0 and 1 based on `n`. Then, we square the normalized `k` value to give a higher priority to larger `k` values. This way, larger `k` values will have a more significant impact on the priority, while still considering the total number of possible integers `n`.

@@ -1,0 +1,101 @@
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+    """Improved version of `priority_v0`."""
+    # Count the number of each value in the tuple
+    count_0 = el.count(0)
+    count_1 = el.count(1)
+    count_2 = el.count(2)
+
+    # Give higher priority to tuples with more 1s and 2s, and less 0s
+    return count_1 + count_2 - count_0
+
+def priority_v2(el: tuple[int, ...], n: int) -> float:
+    """Improved version of `priority_v1`."""
+    # Count the number of each value in the tuple
+    count_0 = el.count(0)
+    count_1 = el.count(1)
+    count_2 = el.count(2)
+
+    # Give higher priority to tuples with more 1s and 2s, and less 0s
+    # Also, give higher priority to tuples with less total elements
+    return (count_1 + count_2 - count_0) / n
+
+def priority_v3(el: tuple[int, ...], n: int) -> float:
+    """Improved version of `priority_v2`."""
+    # Count the number of each value in the tuple
+    count_0 = el.count(0)
+    count_1 = el.count(1)
+    count_2 = el.count(2)
+
+    # Give higher priority to tuples with more 1s and 2s, and less 0s
+    # Also, give higher priority to tuples with less total elements
+    # And, give higher priority to tuples with more unique elements
+    return (count_1 + count_2 - count_0) / n + len(set(el)) / n
+
+def priority_v4(el: tuple[int, ...], n: int) -> float:
+    """Improved version of `priority_v3`."""
+    # Count the number of each value in the tuple
+    count_0 = el.count(0)
+    count_1 = el.count(1)
+    count_2 = el.count(2)
+
+    # Give higher priority to tuples with more 1s and 2s, and less 0s
+    # Also, give higher priority to tuples with less total elements
+    # And, give higher priority to tuples with more unique elements
+    # And, give higher priority to tuples with less variance in elements
+    return (count_1 + count_2 - count_0) / n + len(set(el)) / n - np.var(el) / n
+
+def priority_v5(el: tuple[int, ...], n: int) -> float:
+    """Improved version of `priority_v4`."""
+    # Count the number of each value in the tuple
+    count_0 = el.count(0)
+    count_1 = el.count(1)
+    count_2 = el.count(2)
+
+    # Give higher priority to tuples with more 1s and 2s, and less 0s
+    # Also, give higher priority to tuples with less total elements
+    # And, give higher priority to tuples with more unique elements
+    # And, give higher priority to tuples with less variance in elements
+    # And, give higher priority to tuples with less skewness in elements
+    return (count_1 + count_2 - count_0) / n + len(set(el)) / n - np.var(el) / n - np.abs(np.mean(el) - np.median(el)) / n
+
+@funsearch.run
+def priority_v6(el: tuple[int, ...], n: int) -> float:
+    """Final version of `priority`."""
+    # Count the number of each value in the tuple
+    count_0 = el.count(0)
+    count_1 = el.count(1)
+    count_2 = el.count(2)
+
+    # Give higher priority to tuples with more 1s and 2s, and less 0s
+    # Also, give higher priority to tuples with less total elements
+    # And, give higher priority to tuples with more unique elements
+    # And, give higher priority to tuples with less variance in elements
+    # And, give higher priority to tuples with less skewness in elements
+    # And, give higher priority to tuples with less kurtosis in elements
+    return (count_1 + count_2 - count_0) / n + len(set(el)) / n - np.var(el) / n - np.abs(np.mean(el) - np.median(el)) / n - np.abs(np.kurtosis(el)) / n
+
+def find_large_cap_sets(n: int, max_size: int = 10) -> tuple[tuple[int, ...], ...]:
+    """Finds large cap sets of size `n` and maximum size `max_size`."""
+    # Generate all possible tuples of length `n` with values 0-2
+    tuples = itertools.product(range(3), repeat=n)
+
+    # Sort the tuples by priority
+    tuples = sorted(tuples, key=lambda el: priority_v6(el, n), reverse=True)
+
+    # Initialize the cap set
+    cap_set = []
+
+    # Iterate over the tuples
+    for el in tuples:
+        # If the tuple is not a subset of any tuple in the cap set, add it to the cap set
+        if not any(set(el).issubset(set(cap_el)) for cap_el in cap_set):
+            cap_set.append(el)
+
+            # If the cap set is large enough, stop adding tuples
+            if len(cap_set) >= max_size:
+                break
+
+    return tuple(cap_set)
+
+# Print the large cap sets of size 3 and maximum size 10
+print(find_large_cap_sets(3, 10))

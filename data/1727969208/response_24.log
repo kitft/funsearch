@@ -1,0 +1,17 @@
+Here's an improved version of `priority_v1` that uses the concept of entropy to measure the uncertainty or randomness of the distribution of elements. This version considers not only the frequency of the element but also the frequency of other elements, giving more priority to elements that are less frequent and more unique.
+
+```python
+import numpy as np
+from scipy.stats import entropy
+
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0` using entropy."""
+    # Calculate the frequency distribution of elements
+    freq_dist = np.bincount(np.arange(n), minlength=n) / n
+    # Calculate the entropy of the frequency distribution
+    entropy_val = entropy(freq_dist, base=2)
+    # Calculate the priority as the product of the frequency and the entropy
+    return freq_dist[k] * entropy_val
+```
+
+This version of `priority_v1` should provide a better measure of the priority for adding an element to the Salem-Spencer set, as it considers the uniqueness and randomness of the element's distribution. The code is also short and follows the given instructions to make only small changes from the previous version.

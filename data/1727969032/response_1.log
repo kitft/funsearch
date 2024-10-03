@@ -1,0 +1,13 @@
+Here's an improved version of `priority_v1` that considers the number of elements less than `k` and the total number of possible integers `n`. This version uses the harmonic series to weigh the priority based on the density of integers less than `k`.
+
+```python
+from math import gamma
+
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0` using harmonic series."""
+    return gamma(k + 1) / gamma(k - n + 2)
+```
+
+This version makes a small change from `priority_v0` by using the harmonic series to weigh the priority. The harmonic series is defined as `H_n = 1 + 1/2 + 1/3 + ... + 1/n`, and `gamma(n) = (n-1)!` is the gamma function, which generalizes the factorial function to non-integer arguments.
+
+To further improve `priority_vX` methods in future iterations, you could consider incorporating additional factors such as the distribution of integers within the range, the growth rate of the harmonic series, or other relevant mathematical properties. Keep in mind the goal of making small changes and keeping the code short.

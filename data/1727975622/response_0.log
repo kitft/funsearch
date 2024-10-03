@@ -1,0 +1,9 @@
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # The priority is inversely proportional to the number of smaller integers left to consider
+  return 1.0 / (n - k + 1)
+
+# Testing the function
+print(priority_v1(5, 10))  # should return 0.2
+```

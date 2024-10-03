@@ -1,0 +1,12 @@
+Here's an improved version of `priority_v1` that considers the number of divisors of `k` and the number of elements in the Salem-Spencer set. This version uses the `divisors` function from the `funsearch` library to count the number of divisors.
+
+```python
+from funsearch import divisors
+
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  d = len(divisors(k))  # Number of divisors of k
+  return d / (n + 1)  # Priority is proportional to the number of divisors and inversely proportional to the size of the set
+```
+
+In this version, the priority is calculated as the number of divisors of `k` divided by the size of the set (`n + 1`). This ensures that elements with more divisors are prioritized, and the priority decreases as the set size increases. This change should improve the performance of the Salem-Spencer set construction.

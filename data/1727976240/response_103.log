@@ -1,0 +1,33 @@
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`. Gives higher priority to prime numbers."""
+  if funsearch.is_prime(k):
+    return (k / n) ** 4
+  else:
+    return (k / n) ** 3 if k % 2 == 0 else (k / n) ** 2
+
+
+def find_large_ss_progressions(max_number: int):
+  """Finds large SS progressions."""
+  ss_set = set()
+  for k in range(1, max_number + 1):
+    priority = priority_v2(k, max_number)
+    if not ss_set:
+      ss_set.add(k)
+    else:
+      for ss_element in ss_set.copy():
+        diff = abs(k - ss_element)
+        if diff in ss_set:
+          yield (ss_element, k, diff)
+        else:
+          if priority > priority_v2(diff, max_number):
+            ss_set.add(diff)
+      ss_set.add(k)
+
+
+def main():
+  for progression in find_large_ss_progressions(1000):
+    print(progression)
+
+
+if __name__ == "__main__":
+  main()

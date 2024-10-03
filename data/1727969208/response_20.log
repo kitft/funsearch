@@ -1,0 +1,20 @@
+Here's an improved version of `priority_v1` that considers the number of unique remainders when dividing `k` by `n`. This is a small change that builds upon `priority_v0` and should make the code shorter.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    return len(set(k % n for _ in range(n)))
+```
+
+This version of `priority_v1` calculates the number of unique remainders when dividing `k` by `n` for `n` times. The more unique remainders, the higher the priority, as it indicates that `k` can potentially create more unique pairs in the Salem-Spencer set.
+
+To further improve this function, you could consider the frequency of each remainder as well, but that would be a larger change. Here's a slightly more complex version that does this:
+
+```python
+def priority_v2(k: int, n: int) -> float:
+    """Further improved version of `priority_v1`."""
+    remainders = [k % n for _ in range(n)]
+    return sum((remainders.count(r) - 1) ** 2 for r in set(remainders))
+```
+
+This version calculates the square of the frequency of each unique remainder minus one, summing them up to give a higher priority to remainders that appear more frequently.

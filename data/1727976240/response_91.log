@@ -1,0 +1,33 @@
+Here is the improved version of `priority_v1`. This version considers the divisibility of `k` by the next smaller number than `n`:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # If k is divisible by the next smaller number than n, it has a higher priority
+  if k % (n - 1) == 0:
+    return 1.0
+  else:
+    return 0.0
+```
+
+This is a simple improvement that gives a higher priority to numbers that are divisible by the next smaller number than `n`. This could help in finding large Salem-Spencer progressions, as it might make it easier to chain together a sequence of numbers that each meet this condition.
+
+However, it's important to note that this is still a very naive priority function. In practice, a more sophisticated priority function might consider multiple factors, such as the size of `k`, the number of divisors of `k`, and the relationship between `k` and the other numbers in the current Salem-Spencer set.
+
+Here is a possible `priority_v2` function that considers the number of divisors of `k`:
+
+```python
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`."""
+  # If k is divisible by the next smaller number than n, it has a higher priority
+  if k % (n - 1) == 0:
+    base_priority = 1.0
+  else:
+    base_priority = 0.0
+
+  # Numbers with more divisors have a higher priority
+  num_divisors = sum(1 for i in range(1, k + 1) if k % i == 0)
+  return base_priority + num_divisors / k
+```
+
+This function gives a higher priority to numbers that have more divisors, in addition to the condition from `priority_v1`. The priority is calculated as the sum of the base priority (which is 1.0 if `k` is divisible by `n - 1`, and 0.0 otherwise) and the ratio of the number of divisors of `k` to `k` itself.

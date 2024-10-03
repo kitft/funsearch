@@ -1,0 +1,11 @@
+Here's a simple improvement of the `priority_v0` function. In this version, we give higher priority to elements that have more 2s in them, since these are more likely to contribute to a larger cap set. We also penalize elements with 0s in them, as these are less likely to contribute to a cap set.
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return sum(el) - el.count(0)
+```
+
+This function works by summing the elements of `el` and then subtracting the count of 0s in `el`. This gives a higher priority to elements with more 2s and fewer 0s.
+
+Please note that this is a very basic improvement and may not be suitable for all use cases. The priority function can be made more complex to better suit the specific requirements of the problem. For example, we could take into account the interactions between different elements in `el` or consider the size of the cap set that we are trying to find.

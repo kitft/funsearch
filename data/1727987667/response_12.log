@@ -1,0 +1,25 @@
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of priority_v0 with a focus on large SS progressions."""
+    # We prioritize larger numbers more
+    base_priority = k / n
+    # We also prioritize numbers that are closer to the end of the sequence
+    sequence_length = 10  # assuming a sequence length of 10 for this example
+    position_priority = (sequence_length - k) / sequence_length
+    # The final priority is a weighted average of the base priority and the position priority
+    return 0.7 * base_priority + 0.3 * position_priority
+
+
+def find_large_ss_progressions(n: int, sequence_length: int) -> list:
+    """Finds large Salem-Spencer progressions of length `sequence_length` from the first `n` integers."""
+    # Generate all possible sequences of length `sequence_length` from the first `n` integers
+    sequences = list(itertools.combinations(range(1, n + 1), sequence_length))
+    # Sort the sequences by their priority, calculated using the `priority_v1` function
+    sequences.sort(key=lambda seq: sum(priority_v1(k, n) for k in seq), reverse=True)
+    # Return the sequences with the highest priorities
+    return sequences[:10]  # return the top 10 sequences for this example
+
+
+# Example usage
+n = 100
+sequence_length = 10
+print(find_large_ss_progressions(n, sequence_length))

@@ -1,0 +1,59 @@
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  return sum(el)  # Higher sum leads to higher priority
+
+
+@funsearch.run
+def priority_v2(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v1`."""
+  return sum(el) / n  # Higher average leads to higher priority
+
+
+@funsearch.run
+def priority_v3(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v2`."""
+  return sum(el) / n + sum(x == 2 for x in el)  # Prefer 2s over 1s and 0s
+
+
+@funsearch.run
+def priority_v4(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v3`."""
+  return sum(el) / n + sum(x == 2 for x in el) - sum(x == 0 for x in el)  # Disprefer 0s
+
+
+@funsearch.run
+def priority_v5(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v4`."""
+  return sum(el) / n + sum(x == 2 for x in el) - sum(x == 0 for x in el) - sum(x == 1 for x in el) / n  # Disprefer 1s
+
+
+@funsearch.run
+def priority_v6(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v5`."""
+  return sum(el) / n ** 2 + sum(x == 2 for x in el) - sum(x == 0 for x in el) - sum(x == 1 for x in el) / n  # Penalize larger sets more
+
+
+@funsearch.run
+def priority_v7(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v6`."""
+  return sum(el) / n ** 2 + sum(x == 2 for x in el) ** 2 - sum(x == 0 for x in el) - sum(x == 1 for x in el) / n  # Prefer more 2s
+
+
+@funsearch.run
+def priority_v8(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v7`."""
+  return sum(el) / n ** 2 + sum(x == 2 for x in el) ** 2 - sum(x == 0 for x in el) ** 2 - sum(x == 1 for x in el) / n  # Disprefer more 0s
+
+
+@funsearch.run
+def priority_v9(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v8`."""
+  return sum(el) / n ** 2 + sum(x == 2 for x in el) ** 2 - sum(x == 0 for x in el) ** 2 - sum(x == 1 for x in el) / n ** 2  # Penalize larger sets more for 1s
+
+
+@funsearch.run
+def priority_v10(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v9`."""
+  return sum(el) / n ** 2 + sum(x == 2 for x in el) ** 2 - sum(x == 0 for x in el) ** 2 - sum(x == 1 for x in el) / n ** 2 + np.prod(el)  # Prefer products
+
+
+# This process can be repeated until a satisfactory priority function is found.

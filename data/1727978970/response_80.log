@@ -1,0 +1,18 @@
+Here's an improved version of `priority_v0` that takes into account the number of elements in the cap set and the number of times each value appears in the current element:
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+    """Improved version of `priority_v0`."""
+    # Weight each value in the element based on its frequency
+    weights = [0.5, 1, 2]  # You can adjust these weights as needed
+    weighted_el = [weights[val] for val in el]
+
+    # Calculate the priority as the sum of the weighted elements divided by the size of the cap set
+    priority = sum(weighted_el) / n
+
+    return priority
+```
+
+This version of the function gives more priority to elements that have more 2s and less priority to elements that have more 0s. The priority is also normalized by the size of the cap set to ensure that it doesn't depend on the size of the cap set.
+
+You can adjust the weights to change the priority of each value. For example, if you want to give even more priority to 2s, you can set `weights = [0.5, 1, 3]`.

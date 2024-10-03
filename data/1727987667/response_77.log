@@ -1,0 +1,61 @@
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1`."""
+  if k == 0:
+    return 0.0
+  return 1 / np.log(k) / n
+
+
+def priority_v3(k: int, n: int) -> float:
+  """Improved version of `priority_v2`."""
+  if k == 0:
+    return 0.0
+  return 1 / np.log(k) ** 2 / n
+
+
+def priority_v4(k: int, n: int) -> float:
+  """Improved version of `priority_v3`."""
+  if k == 0:
+    return 0.0
+  return 1 / np.log(k) ** 3 / n
+
+
+def priority_v5(k: int, n: int) -> float:
+  """Improved version of `priority_v4`."""
+  if k == 0:
+    return 0.0
+  return 1 / np.log(k) ** 4 / n
+
+
+# ... and so on, you get the idea.
+
+
+def salem_spencer_progression(n: int, size: int) -> np.ndarray:
+  """Returns a Salem-Spencer progression of size `size` from the first `n` integers.
+
+  The progression is chosen by iteratively finding the integer with the highest priority
+  according to the `priority` function, and adding it to the progression.
+  """
+  progression = np.zeros(size, dtype=np.int64)
+  for i in range(size):
+    priorities = [priority_v5(k, n) for k in range(n) if k not in progression]
+    progression[i] = np.argmax(priorities)
+  return progression
+
+
+def is_salem_spencer(progression: np.ndarray) -> bool:
+  """Returns True if `progression` is a Salem-Spencer progression."""
+  return np.all(np.diff(progression) > np.diff(np.sort(progression)))
+
+
+def find_large_salem_spencer_progressions(n: int, min_size: int, max_size: int) -> None:
+  """Finds and prints all Salem-Spencer progressions of size between `min_size` and `max_size`
+  from the first `n` integers.
+  """
+  for size in range(min_size, max_size + 1):
+    for progression in itertools.combinations(range(n), size):
+      if is_salem_spencer(np.array(progression)):
+        print(progression)
+
+
+# Example usage:
+find_large_salem_spencer_progressions(1000, 10, 20)

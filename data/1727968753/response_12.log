@@ -1,0 +1,29 @@
+Here's an improved version of `priority_v1` that considers the frequency of `k` in the Salem-Spencer set and the number of unique elements in the set so far. I've made small changes to keep the code short and focused on improving the priority function.
+
+```python
+import itertools
+import numpy as np
+import funsearch
+
+@funsearch.run
+def priority_v1(k: int, n: int, ss_set: set = None) -> float:
+    """Returns the priority with which we want to add `k` to the Salem-Spencer set.
+    n is the number of possible integers, and k is the integer we want to determine priority for.
+    ss_set is the current Salem-Spencer set (default is None).
+    """
+    if ss_set is None:
+        ss_set = set()
+
+    # Calculate frequency of k in the set
+    freq_k = ss_set.count(k)
+
+    # Calculate unique elements in the set
+    unique_elements = len(ss_set)
+
+    # Priority function: prefer elements with higher frequency and fewer unique elements
+    priority = (freq_k / n) - (unique_elements / n)
+
+    return priority
+```
+
+This version of `priority_v1` uses the frequency of `k` in the current Salem-Spencer set and the number of unique elements in the set to calculate the priority. The priority is higher for elements with a higher frequency and fewer unique elements in the set. This should improve the search process by favoring elements that are more likely to lead to a larger Salem-Spencer set.

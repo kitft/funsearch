@@ -1,0 +1,16 @@
+Here's an improved version of `priority_v0` that takes into account the size of the integer `k` relative to the total number of possible integers `n`. The priority is highest for integers that are close to the middle of the range and lowest for integers near the edges.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # Normalize k to be in the range [0, 1]
+  normalized_k = k / n
+
+  # Calculate the distance from the middle of the range
+  distance_from_middle = abs(0.5 - normalized_k)
+
+  # The priority is inversely proportional to the distance from the middle
+  return 1.0 - distance_from_middle
+```
+
+This version of the `priority_v1` function should provide a better distribution of priorities for the integers in the range, which might lead to better results in the `funsearch` function.

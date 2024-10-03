@@ -1,0 +1,5 @@
+It seems like you're working on a project that involves finding large progressions in the Salem-Spencer set. The code you've shared includes a function `priority_v0`, which calculates the priority with which we want to add a given integer `k` to the Salem-Spencer set. The function takes two arguments: `k`, the integer we want to determine priority for, and `n`, the total number of possible integers.
+
+You've also mentioned that you've created improved versions of `priority_v0`, namely `priority_v1` and `priority_v2`. However, the code for these improved versions is missing.
+
+I'd be happy to help you with the implementation of these functions based on the description you've provided. Could you please provide more details about the improvements you've made in `priority_v1` and `priority_v2` compared to `priority_v0`?

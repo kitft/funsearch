@@ -1,0 +1,37 @@
+Here's a simple improvement using the concept of gap size. The priority of an integer k is inversely proportional to its gap size with the nearest integer already present in the Salem-Spencer set. This approach favors the addition of elements with larger gaps to the existing set.
+
+```python
+import funsearch
+
+class SalemSpencer:
+    def __init__(self):
+        self.set = set()
+
+    def gap(self, k: int) -> int:
+        return min(abs(k - x) for x in self.set) if self.set else float('inf')
+
+def priority_v1(k: int, ss: SalemSpencer) -> float:
+    """Improved version of `priority_v0`.
+    The priority is inversely proportional to the gap size of k with the nearest integer in the set.
+    """
+    return 1 / (ss.gap(k) + 1)  # Add 1 to avoid division by zero
+
+@funsearch.run
+def main(n: int) -> SalemSpencer:
+    ss = SalemSpencer()
+
+    # Add the first element (0 or 1, depending on your set's definition)
+    ss.set.add(0)
+
+    # Sort all integers by priority in descending order
+    priorities = sorted((priority_v1(k, ss), k) for k in range(n))
+    priorities.reverse()
+
+    # Add elements to the set in order of priority
+    for _, k in priorities:
+        ss.set.add(k)
+
+    return ss
+```
+
+This code first initializes an empty Salem-Spencer set. It then sorts all integers from 0 to n by their priority (gap size) in descending order. The element with the largest gap size is added to the set first, and the process is repeated until all elements are added to the set. A new `SalemSpencer` class is defined to keep track of the set and its gap size calculation.

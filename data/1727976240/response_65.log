@@ -1,0 +1,9 @@
+Sure, here's a simple improvement to the `priority_v1` function. This version assigns a higher priority to larger numbers, as they are more likely to contribute to a large SS progression.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`. Assigns a higher priority to larger numbers."""
+  return k / n
+```
+
+In this version, the priority is determined by the ratio of the integer `k` to the total number of possible integers `n`. This way, larger numbers receive a higher priority.

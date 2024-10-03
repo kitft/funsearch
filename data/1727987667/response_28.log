@@ -1,0 +1,10 @@
+I have implemented the `priority_v1` function which is an improved version of the `priority_v0` function. This function calculates the priority of an integer `k` based on the total number of possible integers `n`.
+
+The priority is calculated using the following formula:
+
+- If `k` is less than or equal to 0, the priority is 0.0.
+- If `k` is greater than 0, the priority is calculated as the square root of `k` divided by the square root of `n`.
+
+This implementation ensures that the priority increases with the value of `k` and decreases with the total number of possible integers `n`.
+
+You can now use the `priority_v1` function to determine the priority of adding an integer to the Salem-Spencer set.

@@ -1,0 +1,28 @@
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`. The priority is inversely proportional to the integer's value,
+    but normalized by the total number of possible integers. Additionally, the priority is raised to the power
+    of 2 to increase the importance of smaller integers."""
+    return ((n - k) / n) ** 2
+
+
+def find_large_ss_progressions(possible_integers, ss_set_size, max_iter=1000):
+    """Finds large SS progressions by iteratively adding elements to the Salem-Spencer set."""
+    ss_set = set()
+    for _ in range(max_iter):
+        best_element = max(possible_integers, key=lambda k: priority_v1(k, len(possible_integers)))
+        ss_set.add(best_element)
+        possible_integers.remove(best_element)
+        if len(ss_set) == ss_set_size:
+            break
+    return ss_set
+
+
+def main():
+    possible_integers = set(range(1, 1001))  # Change the range as needed
+    ss_set_size = 100  # Change the set size as needed
+    large_ss_progression = find_large_ss_progressions(possible_integers, ss_set_size)
+    print(large_ss_progression)
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,41 @@
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # We prioritize elements with more 2's and less 0's
+  return el.count(2) - el.count(0)
+
+
+@funsearch.run
+def priority_v2(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v1`."""
+  # We also consider the number of 1's
+  return el.count(2) - el.count(0) + 0.5 * el.count(1)
+
+
+@funsearch.run
+def priority_v3(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v2`."""
+  # We prioritize elements with a balance between 2's and 1's
+  return el.count(2) - el.count(0) + 0.75 * el.count(1) - 0.25 * abs(el.count(2) - el.count(1))
+
+
+@funsearch.run
+def priority_v4(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v3`."""
+  # We prioritize elements with a good distribution of 2's and 1's
+  counts = np.bincount(el)
+  return counts[2] - counts[0] + 0.75 * counts[1] - 0.25 * np.var(counts)
+
+
+@funsearch.run
+def priority_v5(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v4`."""
+  # We prioritize elements with a good distribution of 2's, 1's, and 0's
+  counts = np.bincount(el)
+  return counts[2] - counts[0] + 0.75 * counts[1] - 0.15 * np.var(counts) - 0.05 * (counts[0] + counts[1])
+
+
+def find_large_cap_set(n: int, k: int) -> set[tuple[int, ...]]:
+  """Finds a large cap set."""
+  elements = itertools.product(range(3), repeat=n)
+  sorted_elements = sorted(elements, key=lambda el: priority_v5(el, n), reverse=True)
+  return set(sorted_elements[:k])

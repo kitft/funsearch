@@ -1,0 +1,11 @@
+A simple improvement to the `priority_v0` function could be to prioritize tuples that have more 2's and fewer 0's. This could be achieved by counting the number of 2's and 0's in the tuple and using them to calculate the priority. Here's a possible implementation:
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+    """Improved version of `priority_v0`."""
+    num_twos = el.count(2)
+    num_zeros = el.count(0)
+    return num_twos - num_zeros
+```
+
+This function counts the number of 2's and 0's in the tuple `el` and returns the difference between the two. A higher priority is given to tuples with more 2's and fewer 0's, which could potentially lead to a larger cap set.

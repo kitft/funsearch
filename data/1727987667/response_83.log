@@ -1,0 +1,14 @@
+Here's an improved version of `priority_v1` that considers the number of factors of `k`:
+
+```python
+def priority_v2(k: int, n: int) -> float:
+  """Improved version of `priority_v1` that considers the number of factors."""
+  factors = [i for i in range(1, k + 1) if k % i == 0]
+  return k / n * len(factors)
+```
+
+This version of the function gives a higher priority to numbers with more factors, as they are likely to lead to more progressions. However, this may not always be the case, and there may be other factors to consider.
+
+One potential improvement could be to consider the prime factorization of `k`, as this may provide more insight into its properties. Another improvement could be to consider the gaps between the factors of `k`, as this may also be relevant to finding progressions.
+
+Ultimately, the best priority function will depend on the specific problem and the data that is available. Experimenting with different functions and seeing which one performs best is a good way to approach this problem.

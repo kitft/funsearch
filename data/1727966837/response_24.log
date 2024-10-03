@@ -1,0 +1,11 @@
+Here's an improved version of `priority_v1` that considers the number of unique remainders when dividing `k` by `n`, and the number of multiples of `k` within the range `[1, n]`. This version is shorter and makes small changes to `priority_v0`.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  remainders = set(k % i for i in range(1, n + 1))
+  multiples = sum(i % k == 0 for i in range(1, n + 1))
+  return len(remainders) + multiples
+```
+
+This version uses the `set` data structure to efficiently count the number of unique remainders, and a generator expression with `sum` to count the number of multiples of `k`. The priority is then the sum of these two values.

@@ -1,0 +1,22 @@
+Here's an improved version of `priority_v2` that reduces the computation by using a single pass to count the frequency and unique elements:
+
+```python
+def priority_v2(k: int, n: int) -> float:
+    """Improved version of `priority_v1`."""
+    freq = unique_elements = 0
+    for i in range(1, n + 1):
+        if i == k:
+            freq += 1
+        unique_elements += 1
+    return freq / unique_elements
+```
+
+To further improve the function and make it shorter, we can use a generator expression to count the frequency and unique elements in a single line:
+
+```python
+def priority_v3(k: int, n: int) -> float:
+    """Improved version of `priority_v2`."""
+    return sum(1 for i in range(1, n + 1) if i == k) / (n + 1)
+```
+
+This version of the function has the same time complexity as the previous ones but is shorter and more concise.

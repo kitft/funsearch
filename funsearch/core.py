@@ -42,8 +42,12 @@ def run(samplers, database, iterations: int = -1):
     while iterations != 0:
       for s in samplers:
         s.sample()
-      if iterations > 0:
-        iterations -= 1
+      #if iterations > 0:
+      iterations -= 1
+      if iterations % 5 == 0:
+        #print("best scores unique: ", list(set(database._best_scores_per_test_per_island)))
+        L = database._best_scores_per_test_per_island
+        print("best scores unique: ", [dict(sorted(dict(s).items(), key=lambda x: x[0])) for s in set(frozenset(d.items()) for d in L)])
   except KeyboardInterrupt:
     logging.info("Keyboard interrupt. Stopping.")
   database.backup()

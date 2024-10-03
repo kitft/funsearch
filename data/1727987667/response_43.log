@@ -1,0 +1,16 @@
+The `priority_v1` function can be improved by considering the frequency of `k` in the range [1, n]. A higher frequency indicates a higher priority. This can be achieved by counting the number of times `k` appears in the prime factorization of all numbers in the range.
+
+Here is the improved version of `priority_v1`:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    count = 0
+    for i in range(1, n + 1):
+        while i % k == 0:
+            count += 1
+            i /= k
+    return count / n
+```
+
+This function works by iterating over all numbers from 1 to `n` and for each number, it checks if `k` is a factor. If it is, it increments the `count` variable and removes `k` from the number. Finally, it returns the frequency of `k` in the range [1, n].

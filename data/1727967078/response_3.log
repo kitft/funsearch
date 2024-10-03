@@ -1,0 +1,10 @@
+Here's an improved version of `priority_v1` that considers the number of unique remainders when dividing other integers by `k`. This should give a higher priority to numbers that can potentially create more unique Salem-Spencer pairs.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  remainders = set((i % k) for i in range(1, n))
+  return len(remainders) / (n - 1)
+```
+
+This version calculates the number of unique remainders when dividing other integers by `k` and divides it by `n - 1` to normalize the value between 0 and 1. This should give a higher priority to numbers that can create more unique Salem-Spencer pairs, as those pairs are formed by integers that leave different remainders when divided by `k`.

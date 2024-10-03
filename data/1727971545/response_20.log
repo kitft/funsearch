@@ -1,0 +1,11 @@
+Here's an improved version of `priority_v1` that considers the frequency of `k` in the range `[0, n)` and the distance from `k` to the nearest multiple of `n`. This version is shorter and makes small changes to `priority_v0`.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  freq = sum(1 for i in range(n) if i % n == k)
+  dist = min(abs(k - i) for i in range(0, n, n))
+  return freq / n + dist / n
+```
+
+This version uses list comprehension to count the frequency of `k` and finds the minimum distance to the nearest multiple of `n`. The priority is then calculated as the sum of the normalized frequency and distance.

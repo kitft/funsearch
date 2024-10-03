@@ -1,0 +1,9 @@
+To improve upon the `priority_v0` function, we can consider the size of the integer `k` and the total number of possible integers `n`. A simple improvement could be to prioritize larger integers, as they may contribute more to a "large SS progression". Here's a simple implementation of `priority_v1`:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`. Prioritizes larger integers."""
+  return k / n
+```
+
+This function returns a value between 0 and 1, where 1 indicates the maximum priority (for the largest integer) and 0 indicates the minimum priority (for the smallest integer).

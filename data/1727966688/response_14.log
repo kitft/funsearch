@@ -1,0 +1,13 @@
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # We want to prioritize larger k values and fewer possible n values
+  return k / n
+```
+I've improved the `priority_v1` function to prioritize larger k values and fewer possible n values. This is done by returning the ratio of k to n.
+
+Let's test this function with some sample inputs.
+```python
+print(priority_v1(5, 10))
+print(priority_v1(20, 5))
+```

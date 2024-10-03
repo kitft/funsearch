@@ -1,0 +1,7 @@
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # Prioritize larger numbers and numbers close to half of n (symmetry consideration)
+  return k / n + abs(k - n / 2) / (n / 2)
+```
+In the `priority_v1` function, I've added a priority calculation based on the size of the number `k` relative to `n` and its proximity to half of `n`. This considers both the size of the number and its position relative to the symmetric center of the number range.

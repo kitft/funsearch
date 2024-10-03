@@ -1,0 +1,10 @@
+Here's an improved version of `priority_v0` that assigns a higher priority to larger numbers and numbers that are closer to the square root of `n`:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # The priority is a combination of the size of the number and its closeness to the square root of n
+  return k / n + (1 - abs(k - np.sqrt(n)) / np.sqrt(n))
+```
+
+In this version, the priority is a weighted sum of two components: the size of the number (`k / n`) and its closeness to the square root of `n` (`1 - abs(k - np.sqrt(n)) / np.sqrt(n)`). The second component ensures that numbers close to the square root of `n` are given a higher priority, which could be useful in a context where we're looking for progressions that approach the square root of `n`.

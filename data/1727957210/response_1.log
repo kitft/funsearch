@@ -1,0 +1,9 @@
+Here's an improved version of `priority_v1` that considers the sum of elements in the tuple. This version uses the `sum` function to calculate the total value of the tuple and returns a higher priority for tuples with a larger sum, up to a maximum value of `k`.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return min(sum(element for element in range(n)), k) / k
+```
+
+This version is a small change from `priority_v0` and should be easier to understand and maintain. It also keeps the code short while improving the priority calculation.

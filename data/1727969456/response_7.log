@@ -1,0 +1,15 @@
+It seems like you're working on a function to determine the priority of adding an integer to a Salem-Spencer set. This set is a subset of integers that satisfies certain properties. The priority function will be used to decide which integer to add to the set next, based on a given score.
+
+You've started with a basic version of the priority function (`priority_v0`), which currently always returns 0.0, indicating that the priority is not being considered in the current implementation.
+
+Your task is to improve this function in small steps. The improved version should be named `priority_v1`. It's not clear from your question how you want to improve the function, but generally, you might consider factors like the size of the integer, its relationship to other integers in the set, or its contribution to the overall properties of the set.
+
+Since the problem statement is a bit vague, it's hard to provide a specific solution. However, I can help you write a simple version of `priority_v1` that takes into account the size of the integer. The larger the integer, the higher its priority:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`. Priority is based on the size of the integer."""
+  return k / n
+```
+
+This function returns a value between 0 and 1, where 1 indicates the highest priority.

@@ -64,7 +64,8 @@ def main(ctx):
 @click.option('--iterations', default=-1, type=click.INT, help='Max iterations per sampler')
 @click.option('--samplers', default=15, type=click.INT, help='Samplers')
 @click.option('--sandbox_type', default="ContainerSandbox", type=click.Choice(SANDBOX_NAMES), help='Sandbox type')
-def run(spec_file, inputs, model_name, output_path, load_backup, iterations, samplers, sandbox_type):
+@click.option('--num_islands', default=10, type=click.INT, help='Number of islands')
+def run(spec_file, inputs, model_name, output_path, load_backup, iterations, samplers, sandbox_type, num_islands):
   """ Execute function-search algorithm:
 
 \b
@@ -95,14 +96,15 @@ def run(spec_file, inputs, model_name, output_path, load_backup, iterations, sam
     logging.info(f"Writing logs to {log_path}")
 
   model = llm.get_model(model_name)
-  model.key = model.get_key()
+  #model.key = model.get_key()
+  model.key = os.environ.get('MISTRAL_API_KEY')
   lm = sampler.LLM(2, model, log_path)
 
   specification = spec_file.read()
   function_to_evolve, function_to_run = core._extract_function_names(specification)
   template = code_manipulation.text_to_program(specification)
 
-  conf = config.Config(num_evaluators=1)
+  conf = config.Config(num_evaluators=1, num_islands=num_islands)
   database = programs_database.ProgramsDatabase(
     conf.programs_database, template, function_to_evolve, identifier=timestamp)
   if load_backup:

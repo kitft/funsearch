@@ -1,0 +1,8 @@
+```python
+import math
+
+def priority_v1(k: int, n: int) -> float:
+  return math.log(k, n) if k > 0 else 0.0
+```
+
+The `priority_v1` function calculates the log base `n` of `k` to determine its priority. This is a common technique in mathematics to scale down larger numbers, which can be helpful in this context to give higher priority to smaller numbers. If `k` is less than or equal to 0, the function returns 0.0, since the logarithm is undefined for non-positive numbers.

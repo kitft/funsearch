@@ -1,0 +1,19 @@
+```python
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`.
+    This version prioritizes numbers that have more divisors, as they contribute more to a large SS progression.
+    """
+    def divisors(n):
+        result = set()
+        for i in range(1, int(n**0.5) + 1):
+            if n % i == 0:
+                result.add(i)
+                result.add(n // i)
+        return len(result)
+
+    return divisors(k)
+```
+
+This version of the priority function considers the number of divisors of `k` as the priority. Numbers with more divisors are more likely to contribute to a large Salem-Spencer progression and thus are prioritized higher. However, this is a very simple improvement and may not be the best strategy for finding large SS progressions.
+
+The `divisors` function calculates the number of divisors for a given number `n`. It does this by iterating from 1 to the square root of `n` and checking if `n` is divisible by the current number. If it is, the current number and its quotient are added to the set of divisors. The length of the set is then returned as the number of divisors.

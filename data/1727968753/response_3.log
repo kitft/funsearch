@@ -1,0 +1,10 @@
+Here's an improved version of `priority_v1` that considers the frequency of `k` in the range `[0, n)` and the total number of possible integers `n`. This version is shorter and only makes small changes to `priority_v0`.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  freq = np.count_nonzero(np.arange(n) % k == 0)
+  return freq / n
+```
+
+This version calculates the frequency of `k` in the range `[0, n)` by counting the number of multiples of `k` using `np.count_nonzero(np.arange(n) % k == 0)`. It then returns the ratio of this frequency to the total number of possible integers `n`, giving a priority value between 0 and 1.

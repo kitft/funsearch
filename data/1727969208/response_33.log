@@ -1,0 +1,13 @@
+Here's an improved version of `priority_v1` that considers the frequency of `k` in the range `[0, n)` and the number of elements already in the Salem-Spencer set. This version uses the `Counter` class from the `collections` module to count the frequencies.
+
+```python
+from collections import Counter
+
+@funsearch.run
+def priority_v1(k: int, n: int, ss_set: set) -> float:
+    """Improved version of `priority_v0`. ss_set is the current Salem-Spencer set."""
+    freq = sum(1 for i in range(n) if (i * i) % n == k)
+    return freq / (n * len(ss_set) + 1)
+```
+
+This version of `priority_v1` makes a small change by considering the frequency of `k` and the size of the current Salem-Spencer set. The priority is now a ratio of the frequency to the total number of possible integers and the size of the set plus one (to avoid division by zero).

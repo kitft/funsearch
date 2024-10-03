@@ -1,0 +1,14 @@
+Here's an improved version of `priority_v1` that considers the number of unique remainders when dividing `k` by `n` and the number of multiples of `k` within the range `[1, n]`. This version is shorter and makes small changes to improve the priority calculation.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # Calculate unique remainders when dividing k by n
+  remainders = set(k % i for i in range(1, n + 1))
+  # Calculate number of multiples of k within [1, n]
+  multiples = sum(i for i in range(1, n + 1) if i % k == 0)
+  # Return a weighted sum of unique remainders and multiples
+  return len(remainders) + multiples
+```
+
+This version of `priority_v1` should provide a better estimate for the priority of adding `k` to the Salem-Spencer set compared to `priority_v0`. It considers both the diversity of remainders and the frequency of multiples, which are relevant factors for the Salem-Spencer problem.

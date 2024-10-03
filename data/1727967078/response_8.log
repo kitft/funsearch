@@ -1,0 +1,21 @@
+Here's a possible implementation of `priority_v1` that builds upon `priority_v0`. This version uses the concept of "entropy" to measure the uncertainty or randomness of the Salem-Spencer set. The higher the entropy, the more uncertain the set, and thus, the higher the priority to add the current element.
+
+```python
+import math
+
+@funsearch.run
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0` using entropy calculation."""
+    # Calculate the probability of each possible integer being in the Salem-Spencer set
+    p = np.full(n, 1 / n)
+
+    # Calculate the entropy of the current set
+    entropy = -np.sum(p * np.log2(p))
+
+    # Calculate the expected entropy reduction by adding the current element
+    expected_reduction = entropy - np.sum(p * np.log2(p * (n - 1) / n))
+
+    return expected_reduction
+```
+
+This version makes a small change from `priority_v0` by introducing a simple entropy calculation. It assumes that the Salem-Spencer set is currently a uniform distribution of integers, which might not be the case, but it serves as a starting point for improvement.

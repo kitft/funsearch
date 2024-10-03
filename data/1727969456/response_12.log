@@ -1,0 +1,13 @@
+To improve the `priority_v1` function over `priority_v0`, we can take into account not only the size of the integer `k` but also its position in the sequence of possible integers. One way to do this is to calculate the priority based on the ratio of the sum of the integers up to `k` to the sum of all possible integers. This will give more weight to the larger integers that are closer to the end of the sequence.
+
+Here's an improved version of `priority_v1`:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    sum_up_to_k = (k * (k + 1)) // 2
+    sum_of_all = (n * (n + 1)) // 2
+    return sum_up_to_k / sum_of_all
+```
+
+In this version, `sum_up_to_k` is the sum of all integers from 1 to `k`, and `sum_of_all` is the sum of all integers from 1 to `n`. The priority is then calculated as the ratio of these two sums.

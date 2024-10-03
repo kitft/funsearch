@@ -1,0 +1,54 @@
+"""Improved version of `priority_v1`.
+  Calculates the priority based on the ratio of `k` to `n`, applying a logarithmic transformation.
+  """
+  if n == 0:
+    return 0.0
+  return np.log(k) / np.log(n)
+
+
+def evaluate_progression(sequence: tuple[int]) -> int:
+  """Returns the score of the progression `sequence`."""
+  return sum([pair[1] - pair[0] for pair in zip(sequence, sequence[1:])])
+
+
+def find_large_ss_progressions(n: int, size: int) -> list[tuple[int]]:
+  """Finds the top `size` salem-spencer progressions of length `n`, sorted by score."""
+  progressions = list(itertools.combinations(range(1, n + 1), size))
+  progressions.sort(key=evaluate_progression, reverse=True)
+  return progressions[:size]
+
+
+def find_large_ss_progressions_with_priority(n: int, size: int, priority_func: callable) -> list[tuple[int]]:
+  """Finds the top `size` salem-spencer progressions of length `n`, sorted by score, using a priority function."""
+  progressions = []
+  for _ in range(size):
+    remaining_numbers = set(range(1, n + 1))
+    progression = []
+    while len(progression) < size:
+      priorities = [priority_func(k, len(remaining_numbers)) for k in remaining_numbers]
+      next_number = max(remaining_numbers, key=lambda k: priorities[k - 1])
+      progression.append(next_number)
+      remaining_numbers.remove(next_number)
+    progressions.append(tuple(progression))
+  progressions.sort(key=evaluate_progression, reverse=True)
+  return progressions
+
+
+# Example usage
+n = 10
+size = 5
+priority_func = priority_v2
+
+progressions = find_large_ss_progressions_with_priority(n, size, priority_func)
+for progression in progressions:
+  print(progression, evaluate_progression(progression))
+```
+In this code, we define several versions of a `priority_func` function that determines the priority with which we add a number to the Salem-Spencer set. The `priority_v0` function simply returns `1 - (k / n)`, while the `priority_v1` function returns `k / n`. The `priority_v2` function applies a logarithmic transformation to the ratio `k / n`.
+
+We also define a `evaluate_progression` function that calculates the score of a progression as the sum of the differences between consecutive elements.
+
+The `find_large_ss_progressions` function generates all possible progressions of length `n` and size `size`, sorts them by score in descending order, and returns the top `size` progressions.
+
+The `find_large_ss_progressions_with_priority` function is an improved version that uses a priority function to determine the order in which numbers are added to the progression. It generates `size` progressions using the priority function and returns the top `size` progressions sorted by score.
+
+Finally, we provide an example usage of the `find_large_ss_progressions_with_priority` function with `n = 10`, `size = 5`, and `priority_func = priority_v2`. The code prints each progression and its score.

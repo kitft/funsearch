@@ -1,0 +1,17 @@
+Here's an improved version of `priority_v1` that considers the frequency of each integer in the range `[1, n]` and the count of integers less than `k`. This version uses the `itertools` library to generate all possible subsets of the range `[1, n]`.
+
+```python
+from collections import Counter
+from typing import List
+
+@funsearch.run
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    subset_sizes = [len(subset) for subset in itertools.chain.from_iterable(itertools.combinations(range(1, n + 1), r) for r in range(1, n + 2))]
+    subset_counts = Counter(subset_sizes)
+    k_count = sum(1 for i in range(1, k) if i in subset_counts)
+
+    return k_count / (n * (n + 1) / 2) - subset_counts[n] / (n * (n + 1) / 2)
+```
+
+This version of `priority_v1` calculates the priority as the difference between the proportion of subsets containing `k` and the proportion of subsets of size `n`. This should provide a better estimate of the priority for adding `k` to the Salem-Spencer set.

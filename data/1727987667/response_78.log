@@ -1,0 +1,17 @@
+Sure, I can help you with that. Here's an improved version of `priority_v0` using a simple heuristic: the larger the number `k` is, the lower its priority should be. This is because larger numbers are less likely to be part of a large SS progression.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`.
+
+  Args:
+    k: The integer for which we want to determine priority.
+    n: The number of possible integers.
+
+  Returns:
+    The priority with which we want to add `k` to the salem-spencer set.
+  """
+  return n - k
+```
+
+This function returns the difference between the total number of possible integers `n` and the current integer `k`. The larger `k` is, the smaller the result of this function will be, which means that larger numbers will have lower priority.

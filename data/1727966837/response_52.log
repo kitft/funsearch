@@ -1,0 +1,14 @@
+Here's an improved version of `priority_v1` that considers the density of integers around `k` in the range `[1, n]`. This version uses the harmonic series to calculate the priority, giving higher priority to integers with more dense neighbors.
+
+```python
+from math import gamma
+
+@funsearch.run
+def priority_v1(k: int, n: int) -> float:
+    """Returns the priority with which we want to add `k` to the salem-spencer set.
+    n is the number of possible integers, and k is the integer we want to determine priority for.
+    """
+    return gamma(k + 1) - gamma(k) + gamma(n - k + 1) - gamma(n - k)
+```
+
+This version of `priority_v1` makes a small change from `priority_v0` by using the harmonic series to calculate the priority, which should improve the performance of the Salem-Spencer progression search. The harmonic series is used because it gives higher priority to integers with more dense neighbors, which is a desirable property for the Salem-Spencer progression search.

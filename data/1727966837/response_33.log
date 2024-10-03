@@ -1,0 +1,15 @@
+Here's an improved version of `priority_v1` that considers the number of elements in the Salem-Spencer set that are congruent to `k` modulo `n`. This version uses the `itertools.combinations` function to generate all possible subsets of size `k` from `n` elements, and then counts how many of those subsets contain `k`.
+
+```python
+from typing import List
+
+@funsearch.run
+def priority_v1(k: int, n: int) -> float:
+    """Returns the priority with which we want to add `k` to the Salem-Spencer set.
+    n is the number of possible integers, and k is the integer we want to determine priority for.
+    """
+    count = sum(1 for subset in itertools.combinations(range(n), k) if k in subset)
+    return count / (n ** k)
+```
+
+This version of `priority_v1` should provide a better estimate of the priority for adding `k` to the Salem-Spencer set, as it takes into account the number of subsets that contain `k`. The priority is normalized by dividing by `n ** k` to ensure that the priority is always between 0 and 1.

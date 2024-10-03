@@ -1,0 +1,12 @@
+Here's a possible improved version of `priority_v0`:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Returns the priority with which we want to add `element` to the salem-spencer set.
+  n is the number of possible integers, and k is the integer we want to determine priority for.
+  """
+  # Prioritize larger numbers and numbers that are closer to the middle of the range
+  return (n - abs(k - n // 2)) / n
+```
+
+This version of the function prioritizes larger numbers and numbers that are closer to the middle of the range. The priority is calculated as the difference between the maximum possible number and the absolute difference between the current number and the middle of the range, divided by the maximum possible number. This way, numbers closer to the middle of the range and larger numbers are given a higher priority.

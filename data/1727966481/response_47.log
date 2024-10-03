@@ -1,0 +1,21 @@
+Here's an improved version of `priority_v1` that considers the frequency of `k` in the range `[0, n)` and the distance from `k` to the middle of the range. This version uses the `itertools` library to count the frequency of `k` and numpy for efficient calculations.
+
+```python
+import itertools
+import numpy as np
+
+@funsearch.run
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    # Count the frequency of k in the range [0, n)
+    freq = sum(1 for _ in itertools.islice(itertools.count(), k, n))
+
+    # Calculate the distance from k to the middle of the range
+    mid = n // 2
+    dist = abs(k - mid)
+
+    # Return a weighted sum of frequency and distance, with higher frequency and smaller distance having higher priority
+    return freq / n + dist / (n - 1)
+```
+
+This version of `priority_v1` makes small changes to `priority_v0` by adding a frequency count and a distance calculation, and combining them into a weighted sum to determine priority. The code is kept short by using efficient libraries and concise syntax.

@@ -1,0 +1,10 @@
+Here's an improved version of `priority_v1` which takes into account the distribution of the numbers in the set. This is done by calculating the difference between the current number and the mean of the numbers in the set so far. The priority is then given as the product of this difference and the inverse of the total number of possible integers. This ensures that larger differences have a higher priority, and that the priority decreases as more numbers are added to the set.
+
+```python
+def priority_v2(k: int, n: int, current_set: set) -> float:
+  """Improved version of `priority_v1`. Takes into account the distribution of the numbers in the set."""
+  mean = sum(current_set) / len(current_set) if current_set else 0
+  return (k - mean) / n
+```
+
+In this function, `current_set` is the set of numbers that have been added to the Salem-Spencer set so far. If the set is empty, the mean is set to 0. The function then returns the product of the difference between `k` and the mean, and the inverse of `n`.

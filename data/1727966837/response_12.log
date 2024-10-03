@@ -1,0 +1,27 @@
+Here's an improved version of `priority_v1` that considers the number of unique remainders when dividing `k` by `n`, and the number of multiples of `k` less than `n`. This version is shorter and makes small changes to the previous version.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  remainders = set(k % i for i in range(1, n))
+  multiples = sum(i for i in range(1, n) if i % k == 0)
+  return len(remainders) + multiples
+```
+
+This version calculates the set of unique remainders when dividing `k` by all integers from 1 to `n-1`, and the number of multiples of `k` less than `n`. The priority is then the sum of the number of unique remainders and multiples of `k`.
+
+To further improve the function, you can consider additional factors that might affect the priority, such as the number of common divisors between `k` and `n`, or the distance between `k` and its multiples. Here's an example of how you can incorporate these factors:
+
+```python
+from math import gcd
+
+def priority_v2(k: int, n: int) -> float:
+  """Further improved version of `priority_v1`."""
+  remainders = set(k % i for i in range(1, n))
+  multiples = sum(i for i in range(1, n) if i % k == 0)
+  gcd_val = gcd(k, n)
+  distance = n // k - 1
+  return len(remainders) + multiples + gcd_val + distance
+```
+
+This version calculates the greatest common divisor (GCD) between `k` and `n`, and the distance between `k` and its multiples. The priority is then the sum of the number of unique remainders, multiples of `k`, GCD, and the distance.

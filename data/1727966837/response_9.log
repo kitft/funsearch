@@ -1,0 +1,14 @@
+Here's an improved version of `priority_v1` that considers the frequency of `k` in the range `[1, n]` and the number of remaining integers. This version also uses a generator expression for better performance.
+
+```python
+from collections import Counter
+
+@funsearch.run
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    freq = sum(1 for i in range(1, n + 1) if i % k == 0)
+    remaining = n - freq
+    return freq / (freq + remaining)
+```
+
+This version of `priority_v1` calculates the frequency of `k` in the range `[1, n]` using a generator expression and then divides it by the total number of integers that are either multiples of `k` or not. This gives a higher priority to integers that appear more frequently as multiples and have fewer remaining integers that are not multiples.

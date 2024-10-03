@@ -1,0 +1,26 @@
+Here's an improved version of `priority_v1` that uses the concept of entropy to prioritize elements in the Salem-Spencer set. This version considers the distribution of remainders when dividing `k` by all numbers up to `n`. The idea is that elements with more uniform distributions (lower entropy) are more likely to be useful in the Salem-Spencer set.
+
+```python
+import math
+
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0` using entropy calculation."""
+    remainders = [k % i for i in range(1, n + 1)]
+    entropy = -sum(p * math.log2(p) for p in np.unique(remainders, return_counts=True)[1] / n)
+    return entropy
+```
+
+This version calculates the entropy of the remainders distribution and returns it as the priority. Lower entropy values indicate more uniform distributions, so elements with lower entropy will have higher priority.
+
+To further improve this function, you could consider using a weighted entropy calculation that gives more importance to smaller remainders, as they are more likely to be useful in the Salem-Spencer set. Here's an example of how you could modify the function to include this improvement:
+
+```python
+def priority_v2(k: int, n: int) -> float:
+    """Improved version of `priority_v1` using weighted entropy calculation."""
+    remainders = [k % i for i in range(1, n + 1)]
+    weights = np.arange(1, n + 1)
+    weighted_entropy = -sum(p * w * math.log2(p) for p, w in zip(np.unique(remainders, return_counts=True)[1], weights) / n)
+    return weighted_entropy
+```
+
+In this version, we multiply the probability of each remainder by its corresponding weight (the remainder's value) before calculating the entropy. This gives smaller remainders more influence on the final priority value.

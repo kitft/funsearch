@@ -1,0 +1,6 @@
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return k / n
+```
+The updated function `priority_v1` now calculates the priority of an integer `k` based on its value relative to the total number of possible integers `n`. This is done by dividing `k` by `n`, which gives a value between 0 and 1. A larger `k` will result in a higher priority.

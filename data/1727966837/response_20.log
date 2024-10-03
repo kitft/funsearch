@@ -1,0 +1,9 @@
+Here's an improved version of `priority_v1` that considers the number of unique remainders when dividing `k` by `n`. This is a small change that builds upon `priority_v0` and might improve the performance of the Salem-Spencer set construction.
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  return len(set(k % i for i in range(1, n + 1)))
+```
+
+This version of `priority_v1` calculates the number of unique remainders when dividing `k` by all integers from 1 to `n`. The more unique remainders, the higher the priority for adding `k` to the Salem-Spencer set. This change is small but might help improve the progressions found by the algorithm.

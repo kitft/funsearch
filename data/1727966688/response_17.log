@@ -1,0 +1,11 @@
+To improve the `priority_v1` function over `priority_v0`, I will consider the value of `k` and `n` to determine the priority. A higher value of `k` should have a higher priority since it indicates a larger number. However, I will also consider the total number of possible integers `n` to ensure that the priority is not too high for small `n` values.
+
+Here is the improved version of the `priority_v1` function:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+    """Improved version of `priority_v0`."""
+    return k / n
+```
+
+In this version, the priority is calculated as the ratio of `k` to `n`. This means that larger `k` values will have a higher priority, and the priority will be normalized based on the total number of possible integers `n`.

@@ -1,0 +1,10 @@
+Here's a possible improvement to `priority_v1`:
+
+```python
+def priority_v1(k: int, n: int) -> float:
+  """Improved version of `priority_v0`."""
+  # Give higher priority to larger numbers
+  return k / n
+```
+
+This version gives higher priority to larger numbers, as they contribute more to the sum of the Salem-Spencer set. This might lead to finding larger progressions more quickly.

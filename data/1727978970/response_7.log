@@ -1,0 +1,15 @@
+Below is an improved version of `priority_v0`. The priority is calculated based on the count of 1's and 2's in the tuple. The more 2's and fewer 1's, the higher the priority.
+
+```python
+def priority_v1(el: tuple[int, ...], n: int) -> float:
+  """Improved version of `priority_v0`. Returns the priority based on the count of 1's and 2's in the tuple."""
+  count_2 = el.count(2)
+  count_1 = el.count(1)
+  return count_2 - 0.5 * count_1
+```
+
+This version of the function considers both the number of elements that are covering two positions in the set and the number of elements that are covering one position. The weight for 1's is less than 2's (0.5) because 1's are less valuable than 2's. This could be adjusted based on the specific requirements of the problem.
+
+However, it's important to note that this improved version still assumes that the `el` tuple contains only 0's, 1's, and 2's, and that the `n` argument is the length of the tuple. If these assumptions are not met, the function may not work correctly.
+
+Additionally, this function has a time complexity of O(n), which may be a concern if `n` is very large. If performance is a concern, a different approach might be necessary.
