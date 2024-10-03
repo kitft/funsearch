@@ -96,6 +96,13 @@ pip install .
 funsearch run examples/cap_set_spec.py 11
 ```
 
+Once a run is complete - or after interrupting using Ctrl-C, we can analyse the results using the backups file:
+
+```
+INFO:absl:Saving backup to data/backups/program_db_priority_1727991117_0.pickle.
+
+>>> funsearch ls data/backups/program_db_priority_1727991117_0.pickle
+```
 
 ---
 
