@@ -1,166 +1,211 @@
-import threading
-import queue
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
+from typing import List
+import logging
+import multiprocessing
+from multiprocessing import Process, Queue
 import time
-from typing import Any, Callable
-import jax.random as random
 
-#generic multi-threading code for testing- implemented three worker types: sampler, evaluator and a database for storing programs
-#THIS IS NOT FUNCTIONAL YET
+from funsearch import programs_database, evaluator, sampler, config as config_lib
+import pathlib
 
-class ProgramDatabase:
-    def __init__(self):
-        self.programs = {}
-        self.lock = threading.Lock()
+import csv
+from datetime import datetime
+import os
 
-    def add_program(self, name: str, program: Callable):
-        with self.lock:
-            self.programs[name] = program
-            print(f"Program '{name}' added to the database.")
+# Add these imports
+from torch.utils.tensorboard import SummaryWriter
+#import torch
 
-    def get_program(self, name: str) -> Callable:
-        with self.lock:
-            program = self.programs.get(name)
-            if program:
-                print(f"Program '{name}' retrieved from the database.")
-            else:
-                print(f"Program '{name}' not found in the database.")
-            return program
+class AsyncProgramsDatabase(programs_database.ProgramsDatabase):
+    def __init__(self, database: programs_database.ProgramsDatabase):
+        # Initialize with the same attributes as the original database
+        for attr_name, attr_value in database.__dict__.items():
+            setattr(self, attr_name, attr_value)
+        self.orig_database = database
 
-class Sampler(threading.Thread):
-    def __init__(self, sampler_id: int, program_queue: queue.Queue, proposal_queue: queue.Queue, rng_key):
-        super().__init__()
-        self.sampler_id = sampler_id
-        self.program_queue = program_queue
-        self.proposal_queue = proposal_queue
-        self.rng_key = rng_key
-        self.running = True
+    async def get_prompt(self) -> programs_database.Prompt:
+        #print("Getting prompt")
+        return self.orig_database.get_prompt()
 
-    def run(self):
-        while self.running:
-            try:
-                program_name = self.program_queue.get(timeout=1)
-                print(f"Sampler {self.sampler_id} is sampling program '{program_name}'.")
-                # Simulate sampling new implementation
-                new_program = self.sample_program(program_name)
-                self.proposal_queue.put((program_name, new_program))
-                self.program_queue.task_done()
-            except queue.Empty:
-                continue
+    async def register_program(self, program, island_id, scores_per_test, island_version=None):
+        self.orig_database.register_program(program, island_id, scores_per_test, island_version)
 
-    def sample_program(self, program_name: str) -> Callable:
-        # Placeholder for actual sampling logic using JAX
-        def new_implementation(*args, **kwargs):
-            return f"New implementation of {program_name}"
-        return new_implementation
+# class AsyncEvaluator(evaluator.Evaluator):
+#     async def async_analyse(self, sample: str, island_id: int | None, version_generated: int | None) -> None:
+#         self.analyse(sample, island_id, version_generated)
 
-    def stop(self):
-        self.running = False
+# class AsyncSampler(sampler.Sampler):
+#     async def async_sample(self, prompt, eval_queue, db_queue):
+#         return self.sample(prompt, eval_queue, db_queue)
 
-class Evaluator(threading.Thread):
-    def __init__(self, evaluator_id: int, proposal_queue: queue.Queue, evaluation_results: queue.Queue, rng_key):
-        super().__init__()
-        self.evaluator_id = evaluator_id
-        self.proposal_queue = proposal_queue
-        self.evaluation_results = evaluation_results  # Fixed typo: evaluation_queue -> evaluation_results
-        self.rng_key = rng_key
-        self.running = True
-        # This code initializes an Evaluator thread with:
-        # - A unique ID
-        # - A queue for receiving program proposals to evaluate
-        # - A queue for sending back evaluation results
-        # - A random number generator key for reproducibility
-        # - A flag to control the thread's execution
+def evaluator_process(eval_queue: Queue, result_queue: Queue, config: config_lib.Config, multitestingconfig: config_lib.MultiTestingConfig, id: int):
+    evaluator_instance = evaluator.Evaluator(
+        AsyncProgramsDatabase(config.programs_database),
+        multitestingconfig.sandbox_class(base_path=multitestingconfig.log_path, id=id),
+        multitestingconfig.template,
+        multitestingconfig.function_to_evolve,
+        multitestingconfig.function_to_run,
+        multitestingconfig.parsed_inputs,
+        id=id
+    )
+    #evaluator_process is synchronous, and initialised on alternate processes
+    #time.sleep(id*0.1)
+    while True:
+        try:
+            task = eval_queue.get(timeout=1)
+            if task is None:
+                break
+            sample, island_id, version_generated, island_version = task
+            # Log the length of eval_queue and result_queue
+            eval_queue_size = eval_queue.qsize()
+            result_queue_size = result_queue.qsize()
+            result = evaluator_instance.analyse(sample, island_id, version_generated, island_version)
+            #logging.info(f"Evaluator {id}: Eval Queue size: {eval_queue_size}, Result Queue size: {result_queue_size}, Result: {bool(result)}")
+            if result:
+                result_queue.put(result)
+        except multiprocessing.queues.Empty:
+            time.sleep(0.01)
+            continue
 
-    def run(self):
-        while self.running:
-            try:
-                program_name, program = self.proposal_queue.get(timeout=1)
-                print(f"Evaluator {self.evaluator_id} is evaluating program '{program_name}'.")
-                score = self.evaluate_program(program)
-                self.evaluation_results.put((program_name, score))
-                self.proposal_queue.task_done()
-            except queue.Empty:
-                continue
+async def database_worker(result_queue: multiprocessing.Queue, database: AsyncProgramsDatabase):
+    while True:
+        try:
+            result = result_queue.get_nowait()
+            if result is None:
+                break
+            new_function, island_id, scores_per_test, island_version = result
+            await database.register_program(new_function, island_id, scores_per_test, island_version)
+        except multiprocessing.queues.Empty:
+            await asyncio.sleep(0.01)
 
-    def evaluate_program(self, program: Callable) -> float:
-        # Placeholder for actual evaluation logic
-        time.sleep(0.5)  # Simulate evaluation time
-        return random.uniform(self.rng_key, (1,)).item()
+async def sampler_worker(sampler: sampler.Sampler, eval_queue: multiprocessing.Queue, database: AsyncProgramsDatabase):
+    while True:
+        #logging.info('Sampling with sampler %d', sampler.label)
+        prompt = await database.get_prompt()
+        await sampler.sample(prompt, eval_queue)
+        # Adaptive sleep based on queue size
+        queue_size = eval_queue.qsize()
+        sleep_time = min(0.1 * (queue_size), 5)  # Cap at 5 seconds
+        if sleep_time > 0.5:
+            logging.info('Slowed down sampling to %f seconds', sleep_time)
+        await asyncio.sleep(sleep_time)
 
-    def stop(self):
-        self.running = False
+async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, multitestingconfig: config_lib.MultiTestingConfig):
+    #num_cores = min(multiprocessing.cpu_count(), config.num_evaluators,2)
 
-class FunSearchSystem:
-    def __init__(self, num_samplers: int, num_evaluators: int):
-        self.program_db = ProgramDatabase()
-        self.program_queue = queue.Queue()
-        self.proposal_queue = queue.Queue()
-        self.evaluation_results = queue.Queue()
-        self.samplers = []
-        self.evaluators = []
-        key = random.PRNGKey(0)
+    num_cores = min(multiprocessing.cpu_count()-1, config.num_evaluators)
+    logging.info("Nummber of cores/evaluators to be used: %d", num_cores)
+    eval_queue = multiprocessing.Queue()
+    result_queue = multiprocessing.Queue()
 
-        # Initialize samplers
-        for i in range(num_samplers):
-            sampler = Sampler(
-                sampler_id=i,
-                program_queue=self.program_queue,
-                proposal_queue=self.proposal_queue,
-                rng_key=random.fold_in(key, i)
-            )
-            self.samplers.append(sampler)
+    # Start evaluator processes
+    evaluator_processes = []
+    for id in range(num_cores):
+        p = Process(target=evaluator_process, args=(eval_queue, result_queue, config, multitestingconfig, id))
+        p.start()
+        evaluator_processes.append(p)
 
-        # Initialize evaluators
-        for i in range(num_evaluators):
-            evaluator = Evaluator(
-                evaluator_id=i,
-                proposal_queue=self.proposal_queue,
-                evaluation_results=self.evaluation_results,
-                rng_key=random.fold_in(key, i + num_samplers)
-            )
-            self.evaluators.append(evaluator)
+    # Create samplers
+    samplers = [sampler.Sampler(database, None, multitestingconfig.lm[i], i) for i in range(config.num_samplers)]
 
-    def start(self):
-        for sampler in self.samplers:
-            sampler.start()
-        for evaluator in self.evaluators:
-            evaluator.start()
+    # Create and start tasks
+    db_worker = asyncio.create_task(database_worker(result_queue, database))
 
-    def add_program(self, name: str, program: Callable):
-        self.program_db.add_program(name, program)
-        self.program_queue.put(name)
+    # Initial evaluation
+    initial = multitestingconfig.template.get_function(multitestingconfig.function_to_evolve).body
+    eval_queue.put((initial, None, None, None))
+    time.sleep(3)
+    logging.info("Initialising samplers")
+    sampler_tasks = [asyncio.create_task(sampler_worker(s, eval_queue, database)) for s in samplers]
 
-    def get_evaluation_results(self):
-        results = []
-        while not self.evaluation_results.empty():
-            results.append(self.evaluation_results.get())
-        return results
+    timestamp = multitestingconfig.timestamp
+    os.makedirs("./data/scores", exist_ok=True)
+    csv_filename = f"./data/scores/scores_log_{timestamp}.csv"
+    
+    #Create a TensorBoard SummaryWriter
+    tb_log_dir = f"./data/tensorboard_logs/{timestamp}"
+    writer = SummaryWriter(log_dir=tb_log_dir)
 
-    def stop(self):
-        for sampler in self.samplers:
-            sampler.stop()
-        for evaluator in self.evaluators:
-            evaluator.stop()
-        for sampler in self.samplers:
-            sampler.join()
-        for evaluator in self.evaluators:
-            evaluator.join()
+    with open(csv_filename, 'w', newline='') as csvfile:
+        csv_writer = csv.writer(csvfile)
+        csv_writer.writerow(['Time', 'Island', 'Best Score', 'Average Score'])
 
-if __name__ == "__main__":
-    # Initialize the FunSearch system with 2 samplers and 3 evaluators
-    system = FunSearchSystem(num_samplers=2, num_evaluators=3)
-    system.start()
+    try:
+        start_time = time.time()
+        while time.time() - start_time < config.run_duration:
+            current_time = time.time() - start_time
+            if current_time >= 10 * (current_time // 10):
+                eval_queue_size = eval_queue.qsize()
+                result_queue_size = result_queue.qsize()
+                best_scores_per_island = database._best_score_per_island
+                
+                # Calculate average scores per island
+                avg_scores_per_island = []
+                for island in database._islands:
+                    island_scores = [cluster.score for cluster in island._clusters.values()]
+                    avg_score = sum(island_scores) / len(island_scores) if island_scores else 0
+                    avg_scores_per_island.append(avg_score)
 
-    # Add initial programs to the database
-    system.add_program("priority", lambda x: x)
+                # Calculate best score overall and average score overall
+                best_score_overall = max(best_scores_per_island)
+                avg_score_overall = sum(avg_scores_per_island) / len(avg_scores_per_island) if avg_scores_per_island else 0
 
-    # Let the system run for a short period
-    time.sleep(5)
+                if eval_queue_size > 0 or result_queue_size > 0:
+                    logging.info(f"Time: {current_time:.2f}s, Eval Queue size: {eval_queue_size}, Result Queue size: {result_queue_size}")
 
-    # Retrieve and print evaluation results
-    results = system.get_evaluation_results()
-    for program_name, score in results:
-        print(f"Program '{program_name}' scored {score}.")
+                # Log scores to CSV
+                with open(csv_filename, 'a', newline='') as csvfile:
+                    csv_writer = csv.writer(csvfile)
+                    for island, best_score, avg_score in zip(range(len(best_scores_per_island)), best_scores_per_island, avg_scores_per_island):
+                        csv_writer.writerow([f"{current_time:.2f}", island, best_score, avg_score])
+                        
+                        # Log to TensorBoard
+                        writer.add_scalar(f'Best Score/Island {island}', best_score, int(current_time))
+                        writer.add_scalar(f'Average Score/Island {island}', avg_score, int(current_time))
+                
+                # Log best score overall and average score overall to TensorBoard
+                writer.add_scalar('Overall/Best Score', best_score_overall, int(current_time))
+                writer.add_scalar('Overall/Average Score', avg_score_overall, int(current_time))
+                
+                # Log queue sizes to TensorBoard
+                writer.add_scalar('Queue Sizes/Eval Queue', eval_queue_size, int(current_time))
+                writer.add_scalar('Queue Sizes/Result Queue', result_queue_size, int(current_time))
 
-    # Stop the system
-    system.stop()
+                total_api_calls = sum(sampler.api_calls for sampler in samplers)
+                writer.add_scalar('API Calls', total_api_calls, int(current_time))
+
+            await asyncio.sleep(10)
+            if eval_queue.qsize() > 10:
+                logging.warning("Eval queue size exceeded 10. Initiating shutdown.")
+                break
+    except asyncio.CancelledError:
+        logging.info("Cancellation requested. Shutting down gracefully.")
+    finally:
+        # Cancel all tasks
+        for task in sampler_tasks:
+            task.cancel()
+        logging.info(f"Length of result_queue upon termination: {result_queue.qsize()}")
+        await asyncio.sleep(1)
+        db_worker.cancel()
+        logging.info(f"Length of result_queue after shutting down: {result_queue.qsize()}")
+        # Signal processes to shut down
+        for _ in evaluator_processes:
+            eval_queue.put(None)
+        result_queue.put(None)
+        logging.info("All tasks cancelled, workers signaled to shut down")
+
+        # Wait for processes to finish
+        for p in evaluator_processes:
+            p.join()
+
+        # Wait for all tasks to finish
+        await asyncio.gather(*sampler_tasks, db_worker, return_exceptions=True)
+
+        logging.info(f"Total programs processed: {database._program_counter}")
+        logging.info(f"Best scores per island: {database._best_score_per_island}")
+        
+        # Close the TensorBoard writer
+        writer.close()
+
+    return database.get_best_programs_per_island()

@@ -14,8 +14,8 @@ import funsearch
 @funsearch.run
 def evaluate(n: int) -> int:
   """Returns the size of a salem-spencer set for n variables"""
-  capset = solve(n)
-  return len(capset)
+  ss_set = solve(n)
+  return len(ss_set)
 
 
 def solve(n: int) -> np.ndarray:
@@ -26,7 +26,7 @@ def solve(n: int) -> np.ndarray:
   priorities = np.array([priority(int, n) for int in all_integers])
 
   # Build `set` greedily, using priorities for prioritization.
-  capset = np.empty(shape=(0,), dtype=np.int32)
+  ss_set = np.empty(shape=(0,), dtype=np.int32)
   while np.any(priorities != -np.inf):
     # Add a integer with maximum priority to `set`, and set priorities of
     # invalidated integers to `-inf`, so that they never get selected.
@@ -34,9 +34,9 @@ def solve(n: int) -> np.ndarray:
     pick_new_int = all_integers[None, max_index]  # [1, n]
 
     #identify the elements which would form part of an arithmetic progression
-    blocking = 2*pick_new_int - capset
-    blocking2= 2*capset - pick_new_int
-    blocking3 = (pick_new_int + capset) / 2
+    blocking = 2*pick_new_int - ss_set
+    blocking2= 2*ss_set - pick_new_int
+    blocking3 = (pick_new_int + ss_set) / 2
     blocking3 = np.round(blocking3[np.isclose(blocking3, np.round(blocking3))]).astype(int)
 
     #remove those elements from the priority list
@@ -44,9 +44,9 @@ def solve(n: int) -> np.ndarray:
     blocking_all = blocking_all[(blocking_all < n) & (blocking_all >= 0)]
     priorities[blocking_all] = -np.inf
     priorities[max_index] = -np.inf
-    capset = np.concatenate([capset, pick_new_int], axis=0)
+    ss_set = np.concatenate([ss_set, pick_new_int], axis=0)
 
-  return capset
+  return ss_set
 
 
 @funsearch.evolve

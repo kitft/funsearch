@@ -23,7 +23,7 @@ from typing import Any, Tuple
 from funsearch import code_manipulation
 from funsearch import programs_database
 from funsearch import sandbox
-
+import asyncio
 """
   Regex to find all methods named 'priority_vX'.
   With each match, start from the 'def priority_vX(' and continue until there's a new line with any of
@@ -137,13 +137,14 @@ class Evaluator:
 
   def __init__(
       self,
-      database: programs_database.ProgramsDatabase,
+      database: programs_database.ProgramsDatabase or multi_testing.AsyncProgramsDatabase,
       sbox: sandbox.DummySandbox,
       template: code_manipulation.Program,
       function_to_evolve: str,
       function_to_run: str,
       inputs: Sequence[Any],
       timeout_seconds: int = 30,
+      id: int = 0,
   ):
     self._database = database
     self._template = template
@@ -152,12 +153,17 @@ class Evaluator:
     self._inputs = inputs
     self._timeout_seconds = timeout_seconds
     self._sandbox = sbox
+    self._id = id
+    #self._sandbox.id = id
+    #print("eval id: ", self._id)
+    #print("sandbox id: ", self._sandbox.id)
 
   def analyse(
       self,
       sample: str,
       island_id: int | None,
-      version_generated: int | None,
+      version_generated: int | None,#db_queue: asyncio.Queue | None,
+      island_version: int | None,
   ) -> None:
     """Compiles the sample into a program and executes it on test inputs."""
     new_function, program = _sample_to_program(
@@ -173,4 +179,31 @@ class Evaluator:
           raise ValueError('@function.run did not return an int/float score.')
         scores_per_test[current_input] = test_output
     if scores_per_test:
-      self._database.register_program(new_function, island_id, scores_per_test)
+      #print("Putting in queue inside evaluator")
+      #self._database.register_program(new_function, island_id, scores_per_test)
+      #db_queue.put((new_function, island_id, scores_per_test))
+      return (new_function, island_id, scores_per_test, island_version)
+
+
+  # async def analyse_sync(
+  #     self,
+  #     sample: str,
+  #     island_id: int | None,
+  #     version_generated: int | None,
+  # ) -> dict:
+  #   """Compiles the sample into a program and executes it on test inputs."""
+  #   new_function, program = _sample_to_program(
+  #       sample, version_generated, self._template, self._function_to_evolve)
+
+  #   scores_per_test = {}
+  #   for current_input in self._inputs:
+  #     test_output, runs_ok = self._sandbox.run(
+  #         program, self._function_to_run, current_input, self._timeout_seconds)
+  #     if (runs_ok and not _calls_ancestor(program, self._function_to_evolve)
+  #         and test_output is not None):
+  #       if not isinstance(test_output, (int, float)):
+  #         raise ValueError('@function.run did not return an int/float score.')
+  #       scores_per_test[current_input] = test_output
+  #   if scores_per_test:
+  #     await self._database.register_program(new_function, island_id, scores_per_test)
+  #     #db_queue.put((new_function, island_id, scores_per_test))

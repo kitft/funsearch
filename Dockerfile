@@ -2,17 +2,28 @@ FROM docker.io/python:3.11.6
 
 WORKDIR /workspace
 
-# Use PDM to keep track of exact versions of dependencies
+# Install PDM and other essential tools
 RUN pip install pdm
+
+# Copy dependency files
 COPY pyproject.toml README.md pdm.lock ./
-# install dependencies first. PDM also creates a /workspace/.venv here.
+
+# Install dependencies
 ENV PATH="/workspace/.venv/bin:$PATH"
-RUN pdm install  --no-self
+RUN pdm install --no-self
+RUN pip install mistralai tensorboard torch
+
+# Copy application code
 COPY examples ./examples
 COPY funsearch ./funsearch
 
+# Install the application
 RUN pip install --no-deps . && rm -r ./funsearch ./build
-RUN pip install llm-mistral
+
+# Uncomment if needed - will instead be installed in the container when plotting commands are run
+#RUN pip install pandas matplotlib
+#RUN pip install llm-mistral
 
 # Set Mistral API key
-CMD echo '{"mistral": "'$MISTRAL_API_KEY'"}'>  $(llm keys path); /bin/bash
+#CMD echo '{"mistral": "'$MISTRAL_API_KEY'"}' > $(llm keys path); /bin/bash
+CMD /bin/bash

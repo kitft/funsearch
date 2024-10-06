@@ -38,7 +38,10 @@ def run(samplers, database, iterations: int = -1):
   try:
     # This loop can be executed in parallel on remote sampler machines. As each
     # sampler enters an infinite loop, without parallelization only the first
-    # sampler will do any work.
+    # sampler will do any work. 
+    # This is the original comment on the code - I'm not sure it's correct. Depending on
+    # implementation, s.sample() should not give an infinite loop - not as the code is 
+    # currently written. In any case, it needs to be significantly modified for parallelisation.
     while iterations != 0:
       for s in samplers:
         s.sample()

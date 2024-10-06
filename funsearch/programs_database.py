@@ -72,6 +72,7 @@ class Prompt:
   code: str
   version_generated: int
   island_id: int
+  island_version: int
 
 
 class ProgramsDatabase:
@@ -139,8 +140,11 @@ class ProgramsDatabase:
   def get_prompt(self) -> Prompt:
     """Returns a prompt containing implementations from one chosen island."""
     island_id = np.random.randint(len(self._islands))
+    #print("Getting prompt from island: ", island_id)
     code, version_generated = self._islands[island_id].get_prompt()
-    return Prompt(code, version_generated, island_id)
+    island_version = self._islands[island_id]._island_version
+    #print("Prompt: ", code)
+    return Prompt(code, version_generated, island_id, island_version)
 
   def _register_program_in_island(
       self,
@@ -165,6 +169,7 @@ class ProgramsDatabase:
       program: code_manipulation.Function,
       island_id: int | None,
       scores_per_test: ScoresPerTest,
+      island_version: int | None = None,
   ) -> None:
     """Registers `program` in the database."""
     # In an asynchronous implementation we should consider the possibility of
@@ -174,12 +179,14 @@ class ProgramsDatabase:
       # This is a program added at the beginning, so adding it to all islands.
       for island_id in range(len(self._islands)):
         self._register_program_in_island(program, island_id, scores_per_test)
-    else:
+    elif island_version is not None and self._islands[island_id]._island_version == island_version:
       self._register_program_in_island(program, island_id, scores_per_test)
+    #otherwise discard the program
 
     # Check whether it is time to reset an island.
     if (time.time() - self._last_reset_time > self._config.reset_period):
       self._last_reset_time = time.time()
+      print("Resetting islands...")
       self.reset_islands()
 
     # Backup every N iterations
@@ -204,7 +211,8 @@ class ProgramsDatabase:
           self._function_to_evolve,
           self._config.functions_per_prompt,
           self._config.cluster_sampling_temperature_init,
-          self._config.cluster_sampling_temperature_period)
+          self._config.cluster_sampling_temperature_period,
+          self._islands[island_id]._island_version+1)#increment the island version
       self._best_score_per_island[island_id] = -float('inf')
       founder_island_id = np.random.choice(keep_islands_ids)
       founder = self._best_program_per_island[founder_island_id]
@@ -222,6 +230,7 @@ class Island:
       functions_per_prompt: int,
       cluster_sampling_temperature_init: float,
       cluster_sampling_temperature_period: int,
+      island_version: int = 0,
   ) -> None:
     self._template: code_manipulation.Program = template
     self._function_to_evolve: str = function_to_evolve
@@ -232,6 +241,7 @@ class Island:
 
     self._clusters: dict[Signature, Cluster] = {}
     self._num_programs: int = 0
+    self._island_version: int = island_version
 
   def register_program(
       self,
@@ -249,9 +259,12 @@ class Island:
 
   def get_prompt(self) -> tuple[str, int]:
     """Constructs a prompt containing functions from this island."""
+    #print("Island: Getting prompt from island: ", self._num_programs)
     signatures = list(self._clusters.keys())
     cluster_scores = np.array(
         [self._clusters[signature].score for signature in signatures])
+
+    #print("Island: Cluster scores: ", cluster_scores)
 
     # Convert scores to probabilities using softmax with temperature schedule.
     period = self._cluster_sampling_temperature_period
@@ -268,6 +281,7 @@ class Island:
     chosen_signatures = [signatures[i] for i in idx]
     implementations = []
     scores = []
+    #print("going through chosen signatures")
     for signature in chosen_signatures:
       cluster = self._clusters[signature]
       implementations.append(cluster.sample_program())
