@@ -1,25 +1,42 @@
 # FunSearch
+
 Forked from https://github.com/google-deepmind/funsearch via https://github.com/jonppe/funsearch
 
+## Overview
 
-Currently, the search is only single-threaded with no async.
+FunSearch is an implementation of an evolutionary algorithm for program search using large language models. This fork provides an asynchronous and parallel implementation with the following key features:
 
-Usage:
-You can run FunSearch containerised using Docker (or Podman). You must pass your MISTRAL_API_KEY to the container when you run it.
+- Asynchronous main loop using `asyncio`
+- Evaluators run in separate processes via `multiprocessing`
+- Thread-safe communication using `multiprocessing.Queue`
+- Concurrent sampling with multiple asynchronous API calls
+- Asynchronous database operations for non-blocking access
+- Adaptive sampling rate based on CPU/evaluator capacity
 
-First install docker. Then, whilst in the project directory, run:
+## Installation and Setup
+
+### Using Docker (Recommended)
+
+Install Docker
+2. Clone the repository and navigate to the project directory
+3. Set your Mistral API key:
+   ```
+   export MISTRAL_API_KEY=<your_key_here>
+   ```
+4. Build the Docker image:
+   ```
+   docker build . -t funsearch
+   ```
+5. Create a data folder and run the container:
+   ```
+   mkdir data
+   docker run -it -v ./data:/workspace/data -e MISTRAL_API_KEY=$MISTRAL_API_KEY funsearch
+
 
 ```
-export MISTRAL_API_KEY=<######your_key#####>    #i.e. export MISTRAL_API_KEY=SfD6...
-docker build . -t funsearch 
-
-# Create a folder to share with the container
-mkdir data
-docker run -it -v ./data:/workspace/data -e MISTRAL_API_KEY=$MISTRAL_API_KEY funsearch
-
-#'llm models' will list the available models. Run the search with the desired model using the '--model_name' attribute.
-# A good one to use for testing, as an extremely cheap model, is 'mistral/mistral-tiny-latest'. 
-# The best one for our use case is probably 'mistral/codestral-latest', which is 4x more expensive per output token.
+# Run the search with the desired model using the '--model_name' attribute.
+# A good one to use for testing, as an extremely cheap model, is 'mistral-tiny-latest'. 
+# The best one for our use case is probably 'codestral-latest', which is 4x more expensive per output token.
 # Either model is still relatively cheap: with codestral, 1 million output tokens is $0.6.
 
 `funsearch run` takes two arguments:
@@ -38,10 +55,10 @@ Examples of valid INPUTS:
 - 8,9,10
 - ./examples/cap_set_input_data.json`
 
-funsearch run examples/cap_set_spec.py 11 --sandbox_type ExternalProcessSandbox --model_name mistral/codestral-latest --samplers 1 --num_islands 10
+funsearch runasync examples/cap_set_spec.py 8 --sandbox_type ExternalProcessSandbox --model_name codestral-latest --samplers 20 --num_islands 10  --run_duration 3000
 
-This implementation is single-threaded, so we can only set the #of samplers to 1 (i.e. --samplers 1)
-We choose the number of islands via --num_islands
+This implementation limits the number of evaluators to the number of cores minus 1, or the number of evaluators specified in the config file, whichever is smaller.
+We choose the number of islands via --num_islands. 10 is typically a good default.
 Any parameters not listed here can be modified in funsearch/config.py
 
 
@@ -56,6 +73,11 @@ Here are the rest of the run params:
 - `--samplers`: The number of sampler threads to run. Default is 15.
 - `--sandbox_type`: The type of sandbox to use for code execution. Default is "ContainerSandbox".
 - `--num_islands`: The number of islands for the island model in the genetic algorithm. Default is 10.
+- `--run_duration`: The duration in seconds for which the search should run. Default is 3600 (1 hour).
+- `--num_evaluators`: The number of evaluator processes to run. Default is the number of CPU cores minus 1.
+- `--lm`: The language model configuration to use. This can be specified multiple times for different samplers.
+- `--function_to_evolve`: The name of the function to evolve in the spec file. Default is "priority".
+- `--function_to_run`: The name of the function to run for evaluation in the spec file. Default is "solve".
 You can adjust these parameters to customize your FunSearch run. For example:
 
 
@@ -63,7 +85,7 @@ You can adjust these parameters to customize your FunSearch run. For example:
 Here, we are searching for the algorithm to find maximum cap sets for dimension 11.
 You should see something like:
 ```
-root@11c22cd7aeac:/workspace# funsearch run examples/cap_set_spec.py 11 --sandbox_type ExternalProcessSandbox --model_name mistral/codestral-latest
+root@11c22cd7aeac:/workspace# funsearch run examples/cap_set_spec.py 11 --sandbox_type ExternalProcessSandbox --model_name codestral-latest
 INFO:root:Writing logs to data/1704956206
 INFO:absl:Best score of island 0 increased to 2048
 INFO:absl:Best score of island 1 increased to 2048
@@ -82,6 +104,8 @@ INFO:absl:Best score of island 8 increased to 2684
 INFO:absl:Saving backup to data/backups/program_db_priority_1704956206_0.pickle.
 ```
 
+You may also see `INFO:httpx:HTTP Request: POST https://api.mistral.ai/v1/chat/completions "HTTP/1.1 200 OK"` for each successful API call.
+
 Note that in the last command, we use the ExternalProcessSandbox. This is not fully 'safe', but does make it a bit less likely that invalid code from LLM could break things. The default is ContainerSandbox. However, as we are running the entire thing inside a Docker container, this is not strictly necessary.
 
 Alternatively, you can run the main Python process on a host computer outside of any container and let
@@ -94,13 +118,19 @@ pip install .
 funsearch run examples/cap_set_spec.py 11
 ```
 
-Once a run is complete - or after interrupting using Ctrl-C, we can analyse the results using the backups file:
+You can monitor the progress of the search using tensorboard: in a separate terminal, run `tensorboard --logdir ./data/tensorboard_logs/` to see score graphs for each island.
+
+Once a run is complete - or after interrupting using Ctrl-C, we can analyse our results using the backups file:
 
 ```
 INFO:absl:Saving backup to data/backups/program_db_priority_1727991117_0.pickle.
 
 >>> funsearch ls data/backups/program_db_priority_1727991117_0.pickle
 ```
+
+Additionally, the scores are logged to a csv file in `./data/scores/`, and at the end of the `runasync` a graph of the best scores per island over time is generated in `./data/graphs/` (at this point, matplotlib and pandas are installed - this is just to improve docker compilation time). This can be generated by hand using `funsearch makegraphs <timestamp>`.
+
+
 
 ---
 

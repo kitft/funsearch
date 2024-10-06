@@ -15,6 +15,7 @@
 
 """Configuration of a FunSearch experiment."""
 import dataclasses
+from funsearch import sandbox
 
 @dataclasses.dataclass(frozen=True)
 class ProgramsDatabaseConfig:
@@ -33,7 +34,7 @@ class ProgramsDatabaseConfig:
   """
   functions_per_prompt: int = 2
   num_islands: int = 10  # Default value, can be overridden during initialization
-  reset_period: int = 4 * 60 * 60
+  reset_period: int =  60 * 60 #4*60*60
   cluster_sampling_temperature_init: float = 0.1
   cluster_sampling_temperature_period: int = 30_000
   backup_period: int = 30
@@ -70,6 +71,11 @@ class Config:
   num_samplers: int = 15
   num_evaluators: int = 140
   samples_per_prompt: int = 4
+  num_batches=2
+  run_duration: int = 10000000
+  top_p: float = 0.95
+  temperature: float = 1
+
 
   def __init__(self, num_islands: int = 10, **kwargs):
     object.__setattr__(self, 'num_islands', num_islands)
@@ -77,3 +83,17 @@ class Config:
     for key, value in kwargs.items():
       if hasattr(self, key):
         object.__setattr__(self, key, value)
+
+@dataclasses.dataclass(frozen=False)
+class MultiTestingConfig:
+  """Configuration for multi-testing."""
+  log_path: str
+  sandbox_class: type[sandbox.DummySandbox]
+  parsed_inputs: list
+  template: None
+  function_to_evolve: None
+  function_to_run: None
+  lm: None
+  timestamp: str
+
+

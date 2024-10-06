@@ -62,9 +62,10 @@ class ExternalProcessSandbox(DummySandbox):
   funsearch algorithm. It might be easier to set up and thus nice environment to tune the prompts and other code.
   """
 
-  def __init__(self, base_path: pathlib.Path, timeout_secs: int = 30, python_path: str = "python"):
+  def __init__(self, base_path: pathlib.Path, timeout_secs: int = 30, python_path: str = "python", id: int = 0):
     super(ExternalProcessSandbox, self).__init__()
 
+    self.id = id
     self.output_path = pathlib.Path(base_path) / f"sandbox{self.id}"
     self.timeout_secs = timeout_secs
     self.python_path = python_path
@@ -140,7 +141,6 @@ class ExternalProcessSandbox(DummySandbox):
     with open(filepath, "w+") as f:
       f.write(program)
 
-
 class ContainerSandbox(ExternalProcessSandbox):
   """Basic sandbox that runs unsafe code in Podman or Docker container.
   - the sandbox should be safe against inadvertent bad code by LLM but not against malicious attacks.
@@ -174,7 +174,7 @@ class ContainerSandbox(ExternalProcessSandbox):
     os.system(cmd)
     cls.image_built = True
 
-  def __init__(self, base_path: pathlib.Path, extra_pip_packages: str = "numpy", timeout_secs=30):
+  def __init__(self, base_path: pathlib.Path, extra_pip_packages: str = "numpy", timeout_secs=30, id: int = 0):
     super(ContainerSandbox, self).__init__(base_path, timeout_secs)
 
     if not ContainerSandbox.image_built:
@@ -184,17 +184,18 @@ class ContainerSandbox(ExternalProcessSandbox):
     """Use podman/docker to execute python in a container.
     - The main.py shall execute the LLM generated method from prog.pickle file providing
       input.pickle as the input for the method.
-    - main.py writes the output of the method into output.pickle.
+    - main.py writes the output of the method into output_{id}.pickle.
     Everything except the /workspace folder will be read-only so that the environment remains good
     for future runs.
     """
+    output_file = call_data_path / f"output_{self.id}.pickle"
     cmd = (f"{self.executable} run "
            f"--stop-timeout={self.timeout_secs} "
            f"-v {CONTAINER_MAIN}:/main.py:ro "
            f"-v {call_data_path}:/workspace "
            f"-v {input_path}:/input.pickle:ro "
            f"{IMAGE_NAME}:latest /usr/local/bin/python3 "
-           f"/main.py /workspace/prog.pickle /input.pickle /workspace/output.pickle"
-           f"  2> {error_file_path}")
+           f"/main.py /workspace/prog.pickle /input.pickle {output_file}"
+           f" 2> {error_file_path}")
     logging.debug(f"Executing: {cmd}")
     return os.system(cmd)

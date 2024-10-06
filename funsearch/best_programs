@@ -1,0 +1,690 @@
+Found 10 programs
+0: Program with score 375
+def priority(el: tuple[int, ...], n: int) -> float:
+  """Returns the priority with which we want to add `element` to the cap set.
+  el is a tuple of length n with values 0-2.
+  """
+  """Improved version of `priority_v0`."""
+
+  # Same calculations as in priority_v0
+  num_zeros = el.count(0)
+  num_ones = el.count(1)
+  num_twos = el.count(2)
+
+  coverage_ratio = (num_zeros + num_ones + 2 * num_twos) / n
+  frequency = np.bincount(el)
+  probabilities = frequency / n
+  diversity = -np.sum(probabilities * np.log2(probabilities, where=(probabilities != 0)))
+  variation = np.std(el)
+  reward_zeros = num_zeros ** 2
+  penalty_twos = num_twos ** 2
+  balance_ones_twos = (num_twos - num_ones) ** 2
+  unique_elements = len(set(el))
+  ones_penalty = (num_ones - n / 3) ** 2
+  zeros_penalty = (num_zeros - n / 3) ** 2
+  twos_penalty = (num_twos - n / 3) ** 2
+  unique_elements_penalty = (unique_elements - n / 3) ** 2
+  variation_penalty = variation ** 2
+  evenness = np.std([num_zeros, num_ones, num_twos])
+  type_penalty = (max(num_zeros, num_ones, num_twos) - n / 3) ** 2
+  zeros_ratio = num_zeros / n
+  zeros_ratio_penalty = (zeros_ratio - 1/3) ** 2
+  sum_of_elements = sum(el)
+  ideal_sum = 3 * n / 2
+  sum_penalty = (sum_of_elements - ideal_sum) ** 2
+
+  # Calculate the priority as a weighted sum of various elements
+  priority = (
+      coverage_ratio * diversity * reward_zeros * balance_ones_twos * unique_elements -
+      coverage_ratio * diversity * variation * penalty_twos * ones_penalty * zeros_penalty * twos_penalty *
+      unique_elements_penalty * variation_penalty * evenness * type_penalty * zeros_ratio_penalty * sum_penalty
+  )
+
+  # Normalize the priority score to be between 0 and 1
+  priority /= (3 * n)
+
+  return priority
+
+
+
+
+1: Program with score 375
+def priority(el: tuple[int, ...], n: int) -> float:
+  """Returns the priority with which we want to add `element` to the cap set.
+  el is a tuple of length n with values 0-2.
+  """
+  """Improved version of `priority_v0`."""
+
+  # Same calculations as in priority_v0
+  num_zeros = el.count(0)
+  num_ones = el.count(1)
+  num_twos = el.count(2)
+
+  coverage_ratio = (num_zeros + num_ones + 2 * num_twos) / n
+  frequency = np.bincount(el)
+  probabilities = frequency / n
+  diversity = -np.sum(probabilities * np.log2(probabilities, where=(probabilities != 0)))
+  variation = np.std(el)
+  reward_zeros = num_zeros ** 2
+  penalty_twos = num_twos ** 2
+  balance_ones_twos = (num_twos - num_ones) ** 2
+  unique_elements = len(set(el))
+  ones_penalty = (num_ones - n / 3) ** 2
+  zeros_penalty = (num_zeros - n / 3) ** 2
+  twos_penalty = (num_twos - n / 3) ** 2
+  unique_elements_penalty = (unique_elements - n / 3) ** 2
+  variation_penalty = variation ** 2
+  evenness = np.std([num_zeros, num_ones, num_twos])
+  type_penalty = (max(num_zeros, num_ones, num_twos) - n / 3) ** 2
+  zeros_ratio = num_zeros / n
+  zeros_ratio_penalty = (zeros_ratio - 1/3) ** 2
+  sum_of_elements = sum(el)
+  ideal_sum = 3 * n / 2
+  sum_penalty = (sum_of_elements - ideal_sum) ** 2
+
+  # Calculate the priority as a weighted sum of various elements
+  priority = (
+      coverage_ratio * diversity * reward_zeros * balance_ones_twos * unique_elements -
+      coverage_ratio * diversity * variation * penalty_twos * ones_penalty * zeros_penalty * twos_penalty *
+      unique_elements_penalty * variation_penalty * evenness * type_penalty * zeros_ratio_penalty * sum_penalty
+  )
+
+  # Normalize the priority score to be between 0 and 1
+  priority /= (3 * n)
+
+  return priority
+
+
+
+
+2: Program with score 375
+def priority(el: tuple[int, ...], n: int) -> float:
+  """Returns the priority with which we want to add `element` to the cap set.
+  el is a tuple of length n with values 0-2.
+  """
+  """Improved version of `priority_v0`."""
+
+  # Same calculations as in priority_v0
+  num_zeros = el.count(0)
+  num_ones = el.count(1)
+  num_twos = el.count(2)
+
+  coverage_ratio = (num_zeros + num_ones + 2 * num_twos) / n
+  frequency = np.bincount(el)
+  probabilities = frequency / n
+  diversity = -np.sum(probabilities * np.log2(probabilities, where=(probabilities != 0)))
+  variation = np.std(el)
+  reward_zeros = num_zeros ** 2
+  penalty_twos = num_twos ** 2
+  balance_ones_twos = (num_twos - num_ones) ** 2
+  unique_elements = len(set(el))
+  ones_penalty = (num_ones - n / 3) ** 2
+  zeros_penalty = (num_zeros - n / 3) ** 2
+  twos_penalty = (num_twos - n / 3) ** 2
+  unique_elements_penalty = (unique_elements - n / 3) ** 2
+  variation_penalty = variation ** 2
+  evenness = np.std([num_zeros, num_ones, num_twos])
+  type_penalty = (max(num_zeros, num_ones, num_twos) - n / 3) ** 2
+  zeros_ratio = num_zeros / n
+  zeros_ratio_penalty = (zeros_ratio - 1/3) ** 2
+  sum_of_elements = sum(el)
+  ideal_sum = 3 * n / 2
+  sum_penalty = (sum_of_elements - ideal_sum) ** 2
+
+  # Calculate the priority as a weighted sum of various elements
+  priority = (
+      coverage_ratio * diversity * reward_zeros * balance_ones_twos * unique_elements -
+      coverage_ratio * diversity * variation * penalty_twos * ones_penalty * zeros_penalty * twos_penalty *
+      unique_elements_penalty * variation_penalty * evenness * type_penalty * zeros_ratio_penalty * sum_penalty
+  )
+
+  # Normalize the priority score to be between 0 and 1
+  priority /= (3 * n)
+
+  return priority
+
+
+
+
+3: Program with score 375
+def priority(el: tuple[int, ...], n: int) -> float:
+  """Returns the priority with which we want to add `element` to the cap set.
+  el is a tuple of length n with values 0-2.
+  """
+  """Improved version of `priority_v0`."""
+
+  # Same calculations as in priority_v0
+  num_zeros = el.count(0)
+  num_ones = el.count(1)
+  num_twos = el.count(2)
+
+  coverage_ratio = (num_zeros + num_ones + 2 * num_twos) / n
+  frequency = np.bincount(el)
+  probabilities = frequency / n
+  diversity = -np.sum(probabilities * np.log2(probabilities, where=(probabilities != 0)))
+  variation = np.std(el)
+  reward_zeros = num_zeros ** 2
+  penalty_twos = num_twos ** 2
+  balance_ones_twos = (num_twos - num_ones) ** 2
+  unique_elements = len(set(el))
+  ones_penalty = (num_ones - n / 3) ** 2
+  zeros_penalty = (num_zeros - n / 3) ** 2
+  twos_penalty = (num_twos - n / 3) ** 2
+  unique_elements_penalty = (unique_elements - n / 3) ** 2
+  variation_penalty = variation ** 2
+  evenness = np.std([num_zeros, num_ones, num_twos])
+  type_penalty = (max(num_zeros, num_ones, num_twos) - n / 3) ** 2
+  zeros_ratio = num_zeros / n
+  zeros_ratio_penalty = (zeros_ratio - 1/3) ** 2
+  sum_of_elements = sum(el)
+  ideal_sum = 3 * n / 2
+  sum_penalty = (sum_of_elements - ideal_sum) ** 2
+
+  # Calculate the priority as a weighted sum of various elements
+  priority = (
+      coverage_ratio * diversity * reward_zeros * balance_ones_twos * unique_elements -
+      coverage_ratio * diversity * variation * penalty_twos * ones_penalty * zeros_penalty * twos_penalty *
+      unique_elements_penalty * variation_penalty * evenness * type_penalty * zeros_ratio_penalty * sum_penalty
+  )
+
+  # Normalize the priority score to be between 0 and 1
+  priority /= (3 * n)
+
+  return priority
+
+
+
+
+4: Program with score 374
+def priority(el: tuple[int, ...], n: int) -> float:
+  """Returns the priority with which we want to add `element` to the cap set.
+  el is a tuple of length n with values 0-2.
+  """
+  """Improved version of `priority_v1`."""
+
+  # Calculate the number of each type of element in the set
+  num_zeros = el.count(0)
+  num_ones = el.count(1)
+  num_twos = el.count(2)
+
+  # Calculate the coverage ratio of the set
+  coverage_ratio = (num_zeros + num_ones + 2 * num_twos) / n
+
+  # Calculate the diversity of the set
+  frequency = np.bincount(el)
+  probabilities = frequency / n
+  diversity = -np.sum(probabilities * np.log2(probabilities, where=(probabilities != 0)))
+
+  # Calculate the variation of the set
+  variation = np.std(el)
+
+  # Calculate the penalty for having more 2s in the set
+  penalty_twos = num_twos ** 2
+
+  # Introduce a reward for having more 0s in the set
+  reward_zeros = num_zeros ** 2
+
+  # Calculate the balance between 1s and 2s
+  balance_ones_twos = (num_twos - num_ones) ** 2
+
+  # Calculate the number of unique elements in the set
+  unique_elements = len(set(el))
+
+  # Calculate the penalty for having too many or too few 1s
+  ones_penalty = (num_ones - n / 3) ** 2
+
+  # Calculate the penalty for having too many or too few 0s
+  zeros_penalty = (num_zeros - n / 3) ** 2
+
+  # Calculate the penalty for having too many or too few 2s
+  twos_penalty = (num_twos - n / 3) ** 2
+
+  # Calculate the penalty for having too many or too few unique elements
+  unique_elements_penalty = (unique_elements - n / 3) ** 2
+
+  # Calculate the penalty for having too much variation
+  variation_penalty = variation ** 2
+
+  # Calculate the evenness of the set
+  evenness = np.std([num_zeros, num_ones, num_twos])
+
+  # Introduce a penalty for having too many or too few elements of a certain type
+  type_penalty = (max(num_zeros, num_ones, num_twos) - n / 3) ** 2
+
+  # Calculate the ratio of zeros to the total number of elements
+  zeros_ratio = num_zeros / n
+
+  # Calculate the penalty for having too many or too few zeros in relation to the total number of elements
+  zeros_ratio_penalty = (zeros_ratio - 1/3) ** 2
+
+  # Calculate the sum of elements in the set
+  sum_of_elements = sum(el)
+
+  # Calculate the ideal sum of elements in the set
+  ideal_sum = 3 * n / 2
+
+  # Calculate the penalty for having a sum of elements that deviates too much from the ideal sum
+  sum_penalty = (sum_of_elements - ideal_sum) ** 2
+
+  # Calculate the priority as a harmonic mean of various elements
+  priority = 17 * (coverage_ratio * diversity * reward_zeros * balance_ones_twos * unique_elements) / (
+      coverage_ratio + diversity + variation + penalty_twos + reward_zeros + balance_ones_twos + unique_elements +
+      ones_penalty + zeros_penalty + twos_penalty + unique_elements_penalty + variation_penalty + evenness +
+      type_penalty + zeros_ratio_penalty + sum_penalty
+  )
+
+  # Normalize the priority score to be between 0 and 1
+  priority /= (17 * n)
+
+  return priority
+
+
+
+
+5: Program with score 374
+def priority(el: tuple[int, ...], n: int) -> float:
+  """Returns the priority with which we want to add `element` to the cap set.
+  el is a tuple of length n with values 0-2.
+  """
+  """Improved version of `priority_v1`."""
+
+  # Calculate the number of each type of element in the set
+  num_zeros = el.count(0)
+  num_ones = el.count(1)
+  num_twos = el.count(2)
+
+  # Calculate the coverage ratio of the set
+  coverage_ratio = (num_zeros + num_ones + 2 * num_twos) / n
+
+  # Calculate the diversity of the set
+  frequency = np.bincount(el)
+  probabilities = frequency / n
+  diversity = -np.sum(probabilities * np.log2(probabilities, where=(probabilities != 0)))
+
+  # Calculate the variation of the set
+  variation = np.std(el)
+
+  # Calculate the penalty for having more 2s in the set
+  penalty_twos = num_twos ** 2
+
+  # Introduce a reward for having more 0s in the set
+  reward_zeros = num_zeros ** 2
+
+  # Calculate the balance between 1s and 2s
+  balance_ones_twos = (num_twos - num_ones) ** 2
+
+  # Calculate the number of unique elements in the set
+  unique_elements = len(set(el))
+
+  # Calculate the penalty for having too many or too few 1s
+  ones_penalty = (num_ones - n / 3) ** 2
+
+  # Calculate the penalty for having too many or too few 0s
+  zeros_penalty = (num_zeros - n / 3) ** 2
+
+  # Calculate the penalty for having too many or too few 2s
+  twos_penalty = (num_twos - n / 3) ** 2
+
+  # Calculate the penalty for having too many or too few unique elements
+  unique_elements_penalty = (unique_elements - n / 3) ** 2
+
+  # Calculate the penalty for having too much variation
+  variation_penalty = variation ** 2
+
+  # Calculate the evenness of the set
+  evenness = np.std([num_zeros, num_ones, num_twos])
+
+  # Introduce a penalty for having too many or too few elements of a certain type
+  type_penalty = (max(num_zeros, num_ones, num_twos) - n / 3) ** 2
+
+  # Calculate the ratio of zeros to the total number of elements
+  zeros_ratio = num_zeros / n
+
+  # Calculate the penalty for having too many or too few zeros in relation to the total number of elements
+  zeros_ratio_penalty = (zeros_ratio - 1/3) ** 2
+
+  # Calculate the sum of elements in the set
+  sum_of_elements = sum(el)
+
+  # Calculate the ideal sum of elements in the set
+  ideal_sum = 3 * n / 2
+
+  # Calculate the penalty for having a sum of elements that deviates too much from the ideal sum
+  sum_penalty = (sum_of_elements - ideal_sum) ** 2
+
+  # Calculate the priority as a harmonic mean of various elements
+  priority = 17 * (coverage_ratio * diversity * reward_zeros * balance_ones_twos * unique_elements) / (
+      coverage_ratio + diversity + variation + penalty_twos + reward_zeros + balance_ones_twos + unique_elements +
+      ones_penalty + zeros_penalty + twos_penalty + unique_elements_penalty + variation_penalty + evenness +
+      type_penalty + zeros_ratio_penalty + sum_penalty
+  )
+
+  # Normalize the priority score to be between 0 and 1
+  priority /= (17 * n)
+
+  return priority
+
+
+
+
+6: Program with score 374
+def priority(el: tuple[int, ...], n: int) -> float:
+  """Returns the priority with which we want to add `element` to the cap set.
+  el is a tuple of length n with values 0-2.
+  """
+  """Improved version of `priority_v1`."""
+
+  # Calculate the number of each type of element in the set
+  num_zeros = el.count(0)
+  num_ones = el.count(1)
+  num_twos = el.count(2)
+
+  # Calculate the coverage ratio of the set
+  coverage_ratio = (num_zeros + num_ones + 2 * num_twos) / n
+
+  # Calculate the diversity of the set
+  frequency = np.bincount(el)
+  probabilities = frequency / n
+  diversity = -np.sum(probabilities * np.log2(probabilities, where=(probabilities != 0)))
+
+  # Calculate the variation of the set
+  variation = np.std(el)
+
+  # Calculate the penalty for having more 2s in the set
+  penalty_twos = num_twos ** 2
+
+  # Introduce a reward for having more 0s in the set
+  reward_zeros = num_zeros ** 2
+
+  # Calculate the balance between 1s and 2s
+  balance_ones_twos = (num_twos - num_ones) ** 2
+
+  # Calculate the number of unique elements in the set
+  unique_elements = len(set(el))
+
+  # Calculate the penalty for having too many or too few 1s
+  ones_penalty = (num_ones - n / 3) ** 2
+
+  # Calculate the penalty for having too many or too few 0s
+  zeros_penalty = (num_zeros - n / 3) ** 2
+
+  # Calculate the penalty for having too many or too few 2s
+  twos_penalty = (num_twos - n / 3) ** 2
+
+  # Calculate the penalty for having too many or too few unique elements
+  unique_elements_penalty = (unique_elements - n / 3) ** 2
+
+  # Calculate the penalty for having too much variation
+  variation_penalty = variation ** 2
+
+  # Calculate the evenness of the set
+  evenness = np.std([num_zeros, num_ones, num_twos])
+
+  # Introduce a penalty for having too many or too few elements of a certain type
+  type_penalty = (max(num_zeros, num_ones, num_twos) - n / 3) ** 2
+
+  # Calculate the ratio of zeros to the total number of elements
+  zeros_ratio = num_zeros / n
+
+  # Calculate the penalty for having too many or too few zeros in relation to the total number of elements
+  zeros_ratio_penalty = (zeros_ratio - 1/3) ** 2
+
+  # Calculate the sum of elements in the set
+  sum_of_elements = sum(el)
+
+  # Calculate the ideal sum of elements in the set
+  ideal_sum = 3 * n / 2
+
+  # Calculate the penalty for having a sum of elements that deviates too much from the ideal sum
+  sum_penalty = (sum_of_elements - ideal_sum) ** 2
+
+  # Calculate the priority as a harmonic mean of various elements
+  priority = 17 * (coverage_ratio * diversity * reward_zeros * balance_ones_twos * unique_elements) / (
+      coverage_ratio + diversity + variation + penalty_twos + reward_zeros + balance_ones_twos + unique_elements +
+      ones_penalty + zeros_penalty + twos_penalty + unique_elements_penalty + variation_penalty + evenness +
+      type_penalty + zeros_ratio_penalty + sum_penalty
+  )
+
+  # Normalize the priority score to be between 0 and 1
+  priority /= (17 * n)
+
+  return priority
+
+
+
+
+7: Program with score 374
+def priority(el: tuple[int, ...], n: int) -> float:
+  """Returns the priority with which we want to add `element` to the cap set.
+  el is a tuple of length n with values 0-2.
+  """
+  """Improved version of `priority_v1`."""
+
+  # Calculate the number of each type of element in the set
+  num_zeros = el.count(0)
+  num_ones = el.count(1)
+  num_twos = el.count(2)
+
+  # Calculate the coverage ratio of the set
+  coverage_ratio = (num_zeros + num_ones + 2 * num_twos) / n
+
+  # Calculate the diversity of the set
+  frequency = np.bincount(el)
+  probabilities = frequency / n
+  diversity = -np.sum(probabilities * np.log2(probabilities, where=(probabilities != 0)))
+
+  # Calculate the variation of the set
+  variation = np.std(el)
+
+  # Calculate the penalty for having more 2s in the set
+  penalty_twos = num_twos ** 2
+
+  # Introduce a reward for having more 0s in the set
+  reward_zeros = num_zeros ** 2
+
+  # Calculate the balance between 1s and 2s
+  balance_ones_twos = (num_twos - num_ones) ** 2
+
+  # Calculate the number of unique elements in the set
+  unique_elements = len(set(el))
+
+  # Calculate the penalty for having too many or too few 1s
+  ones_penalty = (num_ones - n / 3) ** 2
+
+  # Calculate the penalty for having too many or too few 0s
+  zeros_penalty = (num_zeros - n / 3) ** 2
+
+  # Calculate the penalty for having too many or too few 2s
+  twos_penalty = (num_twos - n / 3) ** 2
+
+  # Calculate the penalty for having too many or too few unique elements
+  unique_elements_penalty = (unique_elements - n / 3) ** 2
+
+  # Calculate the penalty for having too much variation
+  variation_penalty = variation ** 2
+
+  # Calculate the evenness of the set
+  evenness = np.std([num_zeros, num_ones, num_twos])
+
+  # Introduce a penalty for having too many or too few elements of a certain type
+  type_penalty = (max(num_zeros, num_ones, num_twos) - n / 3) ** 2
+
+  # Calculate the ratio of zeros to the total number of elements
+  zeros_ratio = num_zeros / n
+
+  # Calculate the penalty for having too many or too few zeros in relation to the total number of elements
+  zeros_ratio_penalty = (zeros_ratio - 1/3) ** 2
+
+  # Calculate the sum of elements in the set
+  sum_of_elements = sum(el)
+
+  # Calculate the ideal sum of elements in the set
+  ideal_sum = 3 * n / 2
+
+  # Calculate the penalty for having a sum of elements that deviates too much from the ideal sum
+  sum_penalty = (sum_of_elements - ideal_sum) ** 2
+
+  # Calculate the priority as a harmonic mean of various elements
+  priority = 17 * (coverage_ratio * diversity * reward_zeros * balance_ones_twos * unique_elements) / (
+      coverage_ratio + diversity + variation + penalty_twos + reward_zeros + balance_ones_twos + unique_elements +
+      ones_penalty + zeros_penalty + twos_penalty + unique_elements_penalty + variation_penalty + evenness +
+      type_penalty + zeros_ratio_penalty + sum_penalty
+  )
+
+  # Normalize the priority score to be between 0 and 1
+  priority /= (17 * n)
+
+  return priority
+
+
+
+
+8: Program with score 374
+def priority(el: tuple[int, ...], n: int) -> float:
+  """Returns the priority with which we want to add `element` to the cap set.
+  el is a tuple of length n with values 0-2.
+  """
+  """Improved version of `priority_v1`."""
+
+  # Calculate the number of each type of element in the set
+  num_zeros = el.count(0)
+  num_ones = el.count(1)
+  num_twos = el.count(2)
+
+  # Calculate the coverage ratio of the set
+  coverage_ratio = (num_zeros + num_ones + 2 * num_twos) / n
+
+  # Calculate the diversity of the set
+  frequency = np.bincount(el)
+  probabilities = frequency / n
+  diversity = -np.sum(probabilities * np.log2(probabilities, where=(probabilities != 0)))
+
+  # Calculate the variation of the set
+  variation = np.std(el)
+
+  # Calculate the penalty for having more 2s in the set
+  penalty = num_twos ** 2
+
+  # Introduce a reward for having more 0s in the set
+  reward = num_zeros ** 2
+
+  # Calculate the balance between 1s and 2s
+  balance = (num_twos - num_ones) ** 2
+
+  # Calculate the imbalance in 0s, 1s, and 2s
+  imbalance = sum(probabilities ** 2)
+
+  # Calculate the number of unique elements in the set
+  unique_elements = len(set(el))
+
+  # Calculate the penalty for having too many or too few 1s
+  ones_penalty = (num_ones - n / 3) ** 2
+
+  # Calculate the penalty for having too many or too few 0s
+  zeros_penalty = (num_zeros - n / 3) ** 2
+
+  # Calculate the penalty for having too many or too few 2s
+  twos_penalty = (num_twos - n / 3) ** 2
+
+  # Calculate the penalty for having too many or too few unique elements
+  unique_elements_penalty = (unique_elements - n / 3) ** 2
+
+  # Calculate the penalty for having too much variation
+  variation_penalty = variation ** 2
+
+  # Calculate the additional penalty for the difference between number of 2s and 1s, 0s
+  diff_penalty = (num_twos - (num_ones + num_zeros)) ** 2
+
+  # Calculate the priority as a harmonic mean of coverage ratio, diversity, variation, penalty, reward, balance, imbalance, unique elements, ones penalty, zeros penalty, twos penalty, unique elements penalty, variation penalty, and difference penalty
+  priority = 22 * (coverage_ratio * diversity * reward * balance * unique_elements) / (coverage_ratio + diversity + variation + penalty + reward + balance + imbalance + unique_elements + ones_penalty + zeros_penalty + twos_penalty + unique_elements_penalty + variation_penalty + diff_penalty)
+
+  # Normalize the priority score to be between 0 and 1
+  priority /= (22 * n)
+
+  return priority
+
+
+
+
+9: Program with score 374
+def priority(el: tuple[int, ...], n: int) -> float:
+  """Returns the priority with which we want to add `element` to the cap set.
+  el is a tuple of length n with values 0-2.
+  """
+  """Improved version of `priority_v1`."""
+
+  # Calculate the number of each type of element in the set
+  num_zeros = el.count(0)
+  num_ones = el.count(1)
+  num_twos = el.count(2)
+
+  # Calculate the coverage ratio of the set
+  coverage_ratio = (num_zeros + num_ones + 2 * num_twos) / n
+
+  # Calculate the diversity of the set
+  frequency = np.bincount(el)
+  probabilities = frequency / n
+  diversity = -np.sum(probabilities * np.log2(probabilities, where=(probabilities != 0)))
+
+  # Calculate the variation of the set
+  variation = np.std(el)
+
+  # Calculate the penalty for having more 2s in the set
+  penalty_twos = num_twos ** 2
+
+  # Introduce a reward for having more 0s in the set
+  reward_zeros = num_zeros ** 2
+
+  # Calculate the balance between 1s and 2s
+  balance_ones_twos = (num_twos - num_ones) ** 2
+
+  # Calculate the number of unique elements in the set
+  unique_elements = len(set(el))
+
+  # Calculate the penalty for having too many or too few 1s
+  ones_penalty = (num_ones - n / 3) ** 2
+
+  # Calculate the penalty for having too many or too few 0s
+  zeros_penalty = (num_zeros - n / 3) ** 2
+
+  # Calculate the penalty for having too many or too few 2s
+  twos_penalty = (num_twos - n / 3) ** 2
+
+  # Calculate the penalty for having too many or too few unique elements
+  unique_elements_penalty = (unique_elements - n / 3) ** 2
+
+  # Calculate the penalty for having too much variation
+  variation_penalty = variation ** 2
+
+  # Calculate the evenness of the set
+  evenness = np.std([num_zeros, num_ones, num_twos])
+
+  # Introduce a penalty for having too many or too few elements of a certain type
+  type_penalty = (max(num_zeros, num_ones, num_twos) - n / 3) ** 2
+
+  # Calculate the ratio of zeros to the total number of elements
+  zeros_ratio = num_zeros / n
+
+  # Calculate the penalty for having too many or too few zeros in relation to the total number of elements
+  zeros_ratio_penalty = (zeros_ratio - 1/3) ** 2
+
+  # Calculate the sum of elements in the set
+  sum_of_elements = sum(el)
+
+  # Calculate the ideal sum of elements in the set
+  ideal_sum = 3 * n / 2
+
+  # Calculate the penalty for having a sum of elements that deviates too much from the ideal sum
+  sum_penalty = (sum_of_elements - ideal_sum) ** 2
+
+  # Calculate the priority as a harmonic mean of various elements
+  priority = 17 * (coverage_ratio * diversity * reward_zeros * balance_ones_twos * unique_elements) / (
+      coverage_ratio + diversity + variation + penalty_twos + reward_zeros + balance_ones_twos + unique_elements +
+      ones_penalty + zeros_penalty + twos_penalty + unique_elements_penalty + variation_penalty + evenness +
+      type_penalty + zeros_ratio_penalty + sum_penalty
+  )
+
+  # Normalize the priority score to be between 0 and 1
+  priority /= (17 * n)
+
+  return priority
