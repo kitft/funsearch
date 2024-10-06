@@ -17,8 +17,10 @@ FunSearch is an implementation of an evolutionary algorithm for program search u
 
 ### Using Docker (Recommended)
 
-Install Docker
+1. Install Docker
+   
 2. Clone the repository and navigate to the project directory
+   
 3. Set your Mistral API key:
    ```
    export MISTRAL_API_KEY=<your_key_here>
