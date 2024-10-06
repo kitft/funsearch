@@ -59,7 +59,7 @@ funsearch runasync examples/cap_set_spec.py 8 --sandbox_type ExternalProcessSand
 
 This implementation limits the number of evaluators to the number of cores minus 1, or the number of evaluators specified in the config file, whichever is smaller.
 We choose the number of islands via --num_islands. 10 is typically a good default.
-Any parameters not listed here can be modified in funsearch/config.py
+Any parameters not listed here can be modified in funsearch/config.py. Particular parameters of interest are the LLM top_p and temperature (as distinct from the temperature used for sampling from the islands). We set these to the same values as funsearch, 0.95 and 1 respectively. This probably requires some tuning for different problems/LLM models.
 
 
 Here are the rest of the run params:

@@ -26,3 +26,4 @@ MANIFEST
 
 #data files
 data/
+.DS_store
