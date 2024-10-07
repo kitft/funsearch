@@ -22,6 +22,7 @@ def solve(n: int) -> np.ndarray:
 @funsearch.evolve ####<<<< THIS TELLS FUNSEARCH WHAT TO EVOLVE>>>######
 def priority(el: tuple[int, ...], n: int) -> float: ### <<<MODIFY THE TYPE SIGNATURE IF NECESSARY. 
     #### THE EVO algorithm doesn't care what the type sig is, as it simply calls evaluate() to get the score>>>
+    #### HOWEVER, this function should still be called 'priority'
     """Returns the priority with which we want to add `element` to the EXAMPLE_PROBLEM.
     el is a tuple of length n with values 0-2.
     """
