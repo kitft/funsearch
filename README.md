@@ -4,7 +4,7 @@ Forked from https://github.com/google-deepmind/funsearch via https://github.com/
 
 ## Overview
 
-FunSearch is an implementation of an evolutionary algorithm for program search using large language models. This fork provides an asynchronous and parallel implementation with the following key features:
+FunSearch is an implementation of an evolutionary algorithm for program search using large language models. This fork provides an asynchronous and parallel implementation with the following features:
 
 - Asynchronous main loop using `asyncio`
 - Evaluators run in separate processes via `multiprocessing`
@@ -17,8 +17,10 @@ FunSearch is an implementation of an evolutionary algorithm for program search u
 
 ### Using Docker (Recommended)
 
-Install Docker
+1. Install Docker
+   
 2. Clone the repository and navigate to the project directory
+   
 3. Set your Mistral API key:
    ```
    export MISTRAL_API_KEY=<your_key_here>
