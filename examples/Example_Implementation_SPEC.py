@@ -8,7 +8,7 @@ import itertools ####<<<IF NECESSARY>>>>
 import numpy as np
 import funsearch
 
-@funsearch.run #####<<<< THIS IS THE ENTRY POINT >>>######
+@funsearch.run #####<<<< THIS IS THE ENTRY POINT for funsearchy, and returns the score!>>>######
 def evaluate(n: int) -> int:
     """Returns the size of an `n`-dimensional EXAMPLE_PROBLEM"""
     example_output = solve(n)
@@ -20,7 +20,8 @@ def solve(n: int) -> np.ndarray:
     pass  # TODO: Implement the solve function
 
 @funsearch.evolve ####<<<< THIS TELLS FUNSEARCH WHAT TO EVOLVE>>>######
-def priority(el: tuple[int, ...], n: int) -> float: ### <<<MODIFY THE TYPE SIGNATURE IF NECESSARY.>>>
+def priority(el: tuple[int, ...], n: int) -> float: ### <<<MODIFY THE TYPE SIGNATURE IF NECESSARY. 
+    #### THE EVO algorithm doesn't care what the type sig is, as it simply calls evaluate() to get the score>>>
     """Returns the priority with which we want to add `element` to the EXAMPLE_PROBLEM.
     el is a tuple of length n with values 0-2.
     """
