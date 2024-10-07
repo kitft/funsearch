@@ -259,6 +259,7 @@ def runAsync(spec_file, inputs, model_name, output_path, load_backup, iterations
 
     #model = [llm.get_model(model_name) for _ in range(samplers)]
     logging.info(f"Using LLM temperature: {llm_temperature}")
+    #initialising mistral models - probably don't need this many instances, but I'm not sure how async works across mistral's API. So this should work.
     model = [sampler.MistralModel(model_name, top_p=conf.top_p, temperature=llm_temperature) for _ in range(samplers)]
     for m in model:
         m.key = os.environ.get('MISTRAL_API_KEY')
