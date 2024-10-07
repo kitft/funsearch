@@ -56,6 +56,7 @@ FunSearch is an implementation of an evolutionary algorithm for program search u
    - Comma-separated input data
    - The files are expected to contain a list with at least one element
    - Elements will be passed to the `solve()` method one by one
+   - As it stands, we simply sum over the scores of each input. We may want to consider changing this, to appropriately weight the different results.
 
 Examples of valid INPUTS:
 - 8
@@ -142,10 +143,7 @@ Additionally, the scores are logged to a csv file in `./data/scores/`, and at th
 ---
 
 Adding additional programs:
-To add additional programs, add .py files to the examples/ directory. These should follow the same structure as the other examples - a priority function with an @funsearch.evolve decorator, and an evaluation function which returns a score decorated with @funsearch.run.
-
-Currently, only the cap set problem (examples/cap_set_spec.py) has been written in the form that can be directly
-used with the 'funsearch' executable.
+To add additional programs, add .py files to the examples/ directory. These should follow the same structure as the other examples - a priority function with an @funsearch.evolve decorator, and an evaluation function which returns a score decorated with @funsearch.run. See `examples/cap_set_spec.py` for a simple example, and see `examples/Example_Implementation_SPEC.py` for template which you can fill in. I have also been writing playground `*.ipynb` files in the `examples/playgrounds/` directory, where new environments can be developed and tested.
 
 This repository accompanies the publication
 

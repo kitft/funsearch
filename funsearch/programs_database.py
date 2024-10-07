@@ -50,7 +50,8 @@ def _softmax(logits: np.ndarray, temperature: float) -> np.ndarray:
 
 def _reduce_score(scores_per_test: ScoresPerTest) -> float:
   """Reduces per-test scores into a single score."""
-  return scores_per_test[list(scores_per_test.keys())[-1]]
+  #return scores_per_test[list(scores_per_test.keys())[-1]]
+  return sum(scores_per_test.values())
 
 
 def _get_signature(scores_per_test: ScoresPerTest) -> Signature:
