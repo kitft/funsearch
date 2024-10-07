@@ -11,7 +11,8 @@ COPY pyproject.toml README.md pdm.lock ./
 # Install dependencies
 ENV PATH="/workspace/.venv/bin:$PATH"
 RUN pdm install --no-self
-RUN pip install mistralai tensorboard torch
+RUN pip install mistralai tensorboard #torch==2.4.1+cpu
+RUN pip install torch --extra-index-url https://download.pytorch.org/whl/cpu
 
 # Copy application code
 COPY examples ./examples
