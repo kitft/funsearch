@@ -20,12 +20,16 @@ FunSearch is an implementation of an evolutionary algorithm for program search u
 1. Install Docker
    
 2. Clone the repository and navigate to the project directory
+
+`git clone https://github.com/kitft/funsearch.git` (or `gh repo clone kitft/funsearch` if you have GitHub CLI)
+`cd funsearch`
    
 3. Set your Mistral API key:
    ```
    export MISTRAL_API_KEY=<your_key_here>
    ```
-4. Build the Docker image:
+4. Build the Docker image. This may take a while, especially the first time. You will need to re-build if you update the Dockerfile or edit the code. You should not need to re-build if you are only updating the input python file or input data.
+
    ```
    docker build . -t funsearch
    ```
@@ -40,6 +44,7 @@ FunSearch is an implementation of an evolutionary algorithm for program search u
 # A good one to use for testing, as an extremely cheap model, is 'mistral-tiny-latest'. 
 # The best one for our use case is probably 'codestral-latest', which is 4x more expensive per output token.
 # Either model is still relatively cheap: with codestral, 1 million output tokens is $0.6.
+# We will need to manually add different API calls for OpenAI, Anthropic, etc. This is not difficult.
 
 `funsearch run` takes two arguments:
 
