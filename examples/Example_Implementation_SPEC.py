@@ -16,10 +16,11 @@ def evaluate(n: int) -> int:
 
 def solve(n: int) -> np.ndarray:
     """Returns an EXAMPLE in `n` dimensions."""
+    ####<<<AT SOME POINT YOU SHOULD CALL "priority(<whatever type you've specified below>)">>>
     pass  # TODO: Implement the solve function
 
 @funsearch.evolve ####<<<< THIS TELLS FUNSEARCH WHAT TO EVOLVE>>>######
-def priority(el: tuple[int, ...], n: int) -> float: ### <<<MODIFY THE TYPE SIGNATURE IF NECESSARY>>>
+def priority(el: tuple[int, ...], n: int) -> float: ### <<<MODIFY THE TYPE SIGNATURE IF NECESSARY.>>>
     """Returns the priority with which we want to add `element` to the EXAMPLE_PROBLEM.
     el is a tuple of length n with values 0-2.
     """
