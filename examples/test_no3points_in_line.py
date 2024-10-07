@@ -21,8 +21,8 @@ def are_collinear(p1, p2, p3):
 @funsearch.run
 def evaluate(n: int) -> int:
   """Returns the size of a point set on the nxn grid that does not contain 3 points in a line."""
-  capset = solve(n)
-  return len(capset),capset
+  grid_set = solve(n)
+  return len(grid_set)
 
 
 def solve(n: int) -> np.ndarray:
@@ -35,28 +35,28 @@ def solve(n: int) -> np.ndarray:
   priorities = np.array([priority(tuple(point), n) for point in all_points])
 
 
-  # Build `capset` greedily, using priorities for prioritization.
-  capset = np.empty(shape=(0,2), dtype=np.int32)
+  # Build `grid_set` greedily, using priorities for prioritization.
+  grid_set = np.empty(shape=(0,2), dtype=np.int32)
   while np.any(priorities != -np.inf):
-    # Add a vector with maximum priority to `capset`, and set priorities of
+    # Add a vector with maximum priority to `grid_set`, and set priorities of
     # invalidated vectors to `-inf`, so that they never get selected.
     max_index = np.argmax(priorities)
     new_points = all_points[None, max_index]  # [1, n]
     new_point = new_points[0]
     priorities[max_index] = -np.inf
 
-    # Block those points in all_points which lie on a line spanned by a point in capset and new_point
+    # Block those points in all_points which lie on a line spanned by a point in grid_set and new_point
 
     for index in range(len(all_points)):
-      if capset.size == 0:
+      if grid_set.size == 0:
           continue
-      elif any(are_collinear(new_point, all_points[index], cap) for cap in capset):
+      elif any(are_collinear(new_point, all_points[index], cap) for cap in grid_set):
         priorities[index] = -np.inf
 
-    capset = np.concatenate([capset, new_point.reshape(1, -1)], axis=0)
+    grid_set = np.concatenate([grid_set, new_point.reshape(1, -1)], axis=0)
     
 
-  return capset
+  return grid_set
 
 
 @funsearch.evolve
