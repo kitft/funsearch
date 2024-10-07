@@ -258,10 +258,11 @@ def runAsync(spec_file, inputs, model_name, output_path, load_backup, iterations
     conf = config.Config(num_evaluators=num_evaluators, num_islands=num_islands, sandbox=sandbox_type,num_samplers=samplers,run_duration=run_duration,llm_temperature=llm_temperature)
 
     #model = [llm.get_model(model_name) for _ in range(samplers)]
+    logging.info(f"Using LLM temperature: {llm_temperature}")
     model = [sampler.MistralModel(model_name, top_p=conf.top_p, temperature=llm_temperature) for _ in range(samplers)]
     for m in model:
         m.key = os.environ.get('MISTRAL_API_KEY')
-    lm = [sampler.LLM(2, m, log_path) for m in model]
+    lm = [sampler.LLM(conf.samples_per_prompt, m, log_path) for m in model]
 
     specification = spec_file.read()
     function_to_evolve, function_to_run = core._extract_function_names(specification)
