@@ -64,6 +64,7 @@ class Config:
     samples_per_prompt: How many independently sampled program continuations to
         obtain for each prompt.
     num_islands: Number of islands to maintain as a diversity mechanism.
+    llm_temperature: Temperature for the LLM.
   """
   num_islands: int = 10
   programs_database: ProgramsDatabaseConfig = dataclasses.field(
@@ -74,7 +75,7 @@ class Config:
   num_batches=2
   run_duration: int = 10000000
   top_p: float = 0.95
-  temperature: float = 1
+  llm_temperature: float = 1
 
 
   def __init__(self, num_islands: int = 10, **kwargs):
@@ -84,6 +85,7 @@ class Config:
       if hasattr(self, key):
         object.__setattr__(self, key, value)
 
+#config for multi-testing - not actually designed to be modified by users
 @dataclasses.dataclass(frozen=False)
 class MultiTestingConfig:
   """Configuration for multi-testing."""

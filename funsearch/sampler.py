@@ -16,7 +16,7 @@
 """Class for sampling new programs."""
 from collections.abc import Collection, Sequence
 
-import llm
+#import llm
 import numpy as np
 import time
 
@@ -68,12 +68,7 @@ class LLM:
 
   async def _draw_sample(self, prompt: str, label: int) -> str:
     """Returns a predicted continuation of `prompt`."""
-    #start_time = time.time()
-    #response = await asyncio.to_thread(self.model.prompt, prompt)
     response = await self.model.prompt(prompt)
-    #end_time = time.time()
-    #print(f"Awaited model.prompt for {end_time - start_time:.2f} seconds")
-    #print(f"Prompt count: {self.prompt_count}, Label: {label}")
     self._log(prompt, response, self.prompt_count, label)
     self.prompt_count += 1
     return response
@@ -110,7 +105,6 @@ class Sampler:
     """Continuously gets prompts, samples programs, sends them for analysis."""
     #prompt = await self._database.get_prompt()
     samples = await self._llm.draw_samples(prompt.code, self.label)
-    #print('done drawing samples')
     # This loop can be executed in parallel on remote evaluator machines.
     self.api_calls += len(samples)
     for sample in samples:

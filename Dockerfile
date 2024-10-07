@@ -26,4 +26,4 @@ RUN pip install --no-deps . && rm -r ./funsearch ./build
 
 # Set Mistral API key
 #CMD echo '{"mistral": "'$MISTRAL_API_KEY'"}' > $(llm keys path); /bin/bash
-CMD /bin/bash
+CMD ["bash"]

@@ -169,7 +169,7 @@ import time
 import asyncio
 
 import click
-import llm
+#import llm
 from dotenv import load_dotenv
 
 from funsearch import config, core, sandbox, sampler, programs_database, code_manipulation, evaluator, multi_testing
@@ -227,10 +227,11 @@ def main(ctx):
 @click.option('--iterations', default=-1, type=click.INT, help='Max iterations per sampler')
 @click.option('--samplers', default=1, type=click.INT, help='Number of samplers')
 @click.option('--sandbox_type', default="ContainerSandbox", type=click.Choice(SANDBOX_NAMES), help='Sandbox type')
-@click.option('--num_evaluators', default=1, type=click.INT, help='Number of evaluators')
+@click.option('--num_evaluators', default=10, type=click.INT, help='Number of evaluators')
 @click.option('--num_islands', default=10, type=click.INT, help='Number of islands')
 @click.option('--run_duration', default=10000, type=click.INT, help='Run duration')
-def runAsync(spec_file, inputs, model_name, output_path, load_backup, iterations, samplers, sandbox_type, num_islands,num_evaluators,run_duration):
+@click.option('--llm_temperature', default=1, type=click.FLOAT, help='LLM temperature')
+def runAsync(spec_file, inputs, model_name, output_path, load_backup, iterations, samplers, sandbox_type, num_islands,num_evaluators,run_duration,llm_temperature):
     """Execute the function-search algorithm.
 
     SPEC_FILE: A Python module providing the basis of the LLM prompt and the evaluation metric.
@@ -254,10 +255,10 @@ def runAsync(spec_file, inputs, model_name, output_path, load_backup, iterations
     if not log_path.exists():
         log_path.mkdir(parents=True)
         logging.info(f"Writing logs to {log_path}")
-    conf = config.Config(num_evaluators=num_evaluators, num_islands=num_islands, sandbox=sandbox_type,num_samplers=samplers,run_duration=run_duration)
+    conf = config.Config(num_evaluators=num_evaluators, num_islands=num_islands, sandbox=sandbox_type,num_samplers=samplers,run_duration=run_duration,llm_temperature=llm_temperature)
 
     #model = [llm.get_model(model_name) for _ in range(samplers)]
-    model = [sampler.MistralModel(model_name, top_p=conf.top_p, temperature=conf.temperature) for _ in range(samplers)]
+    model = [sampler.MistralModel(model_name, top_p=conf.top_p, temperature=llm_temperature) for _ in range(samplers)]
     for m in model:
         m.key = os.environ.get('MISTRAL_API_KEY')
     lm = [sampler.LLM(2, m, log_path) for m in model]
@@ -415,9 +416,8 @@ def plotscores(timestamp):
     # Convert Time to seconds (assuming it's already in seconds)
     df['Time'] = pd.to_numeric(df['Time'])
 
-    # Calculate the best overall score and average score at each time point
+    # Calculate the best overall score at each time point
     df['Best Overall'] = df.groupby('Time')['Best Score'].transform('max')
-    df['Average Overall'] = df.groupby('Time')['Best Score'].transform('mean')
 
     # Create the plot for best scores
     plt.figure(figsize=(12, 6))
@@ -451,13 +451,13 @@ def plotscores(timestamp):
     plt.figure(figsize=(12, 6))
 
     # Plot average overall score
-    plt.plot(df['Time'].unique(), df.groupby('Time')['Average Overall'].first(), 
+    plt.plot(df['Time'].unique(), df.groupby('Time')['Average Score'].first(), 
              label='Average Overall', linewidth=2, color='black')
 
     # Plot average scores per island
     for island in df['Island'].unique():
         island_data = df[df['Island'] == island]
-        plt.plot(island_data['Time'], island_data.groupby('Time')['Best Score'].mean(), 
+        plt.plot(island_data['Time'], island_data['Average Score'], 
                  label=f'Island {island}', alpha=0.7)
 
     plt.xlabel('Time (seconds)')
@@ -465,6 +465,8 @@ def plotscores(timestamp):
     plt.title(f'Average Scores Over Time (Timestamp: {timestamp})')
     plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
     plt.grid(True)
+    # Set y-axis limits
+    #plt.ylim(250, 410)
 
     # Adjust layout to prevent cutting off labels
     plt.tight_layout()

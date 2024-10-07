@@ -65,7 +65,7 @@ def evaluator_process(eval_queue: Queue, result_queue: Queue, config: config_lib
             if result:
                 result_queue.put(result)
         except multiprocessing.queues.Empty:
-            time.sleep(0.01)
+            time.sleep(0.001)
             continue
 
 async def database_worker(result_queue: multiprocessing.Queue, database: AsyncProgramsDatabase):
@@ -77,7 +77,7 @@ async def database_worker(result_queue: multiprocessing.Queue, database: AsyncPr
             new_function, island_id, scores_per_test, island_version = result
             await database.register_program(new_function, island_id, scores_per_test, island_version)
         except multiprocessing.queues.Empty:
-            await asyncio.sleep(0.01)
+            await asyncio.sleep(0.0001)
 
 async def sampler_worker(sampler: sampler.Sampler, eval_queue: multiprocessing.Queue, database: AsyncProgramsDatabase):
     while True:
@@ -95,7 +95,7 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
     #num_cores = min(multiprocessing.cpu_count(), config.num_evaluators,2)
 
     num_cores = min(multiprocessing.cpu_count()-1, config.num_evaluators)
-    logging.info("Nummber of cores/evaluators to be used: %d", num_cores)
+    logging.info("Number of cores/evaluators to be used: %d", num_cores)
     eval_queue = multiprocessing.Queue()
     result_queue = multiprocessing.Queue()
 
@@ -194,18 +194,29 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
             eval_queue.put(None)
         result_queue.put(None)
         logging.info("All tasks cancelled, workers signaled to shut down")
-
-        # Wait for processes to finish
+        # Wait for processes to finish with a timeout
         for p in evaluator_processes:
-            p.join()
+            p.join(timeout=10)  # Wait for up to 10 seconds
+            if p.is_alive():
+                logging.warning(f"Process {p.pid} did not terminate in time. Terminating forcefully.")
+                p.terminate()
+                p.join(timeout=5)  # Give it a bit more time to terminate
+                if p.is_alive():
+                    logging.error(f"Process {p.pid} could not be terminated. Killing.")
+                    p.kill()
 
-        # Wait for all tasks to finish
-        await asyncio.gather(*sampler_tasks, db_worker, return_exceptions=True)
+        # Wait for all tasks to finish with a timeout
+        try:
+            await asyncio.wait_for(asyncio.gather(*sampler_tasks, db_worker, return_exceptions=True), timeout=30)
+        except asyncio.TimeoutError:
+            logging.warning("Some tasks did not complete in time. Proceeding with shutdown.")
 
         logging.info(f"Total programs processed: {database._program_counter}")
         logging.info(f"Best scores per island: {database._best_score_per_island}")
         
         # Close the TensorBoard writer
         writer.close()
+
+        logging.info("Shutdown complete.")
 
     return database.get_best_programs_per_island()
