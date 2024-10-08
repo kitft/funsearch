@@ -11,7 +11,7 @@ COPY pyproject.toml README.md pdm.lock ./
 # Install dependencies
 ENV PATH="/workspace/.venv/bin:$PATH"
 RUN pdm install --no-self
-RUN pip install mistralai tensorboard #torch==2.4.1+cpu
+RUN pip install mistralai tensorboard pandas matplotlib #torch==2.4.1+cpu
 RUN pip install torch --extra-index-url https://download.pytorch.org/whl/cpu
 
 # Create necessary subfolders in data directory if they don't exist
@@ -37,3 +37,4 @@ RUN pip install --no-deps . && rm -r ./funsearch ./build
 EXPOSE 6006
 
 CMD ["bash"]
+
