@@ -11,7 +11,7 @@ COPY pyproject.toml README.md pdm.lock ./
 # Install dependencies
 ENV PATH="/workspace/.venv/bin:$PATH"
 RUN pdm install --no-self
-RUN pip install mistralai tensorboard #torch==2.4.1+cpu
+RUN pip install mistralai tensorboard pandas matplotlib #torch==2.4.1+cpu
 RUN pip install torch --extra-index-url https://download.pytorch.org/whl/cpu
 
 # Copy application code
@@ -28,3 +28,4 @@ RUN pip install --no-deps . && rm -r ./funsearch ./build
 # Set Mistral API key
 #CMD echo '{"mistral": "'$MISTRAL_API_KEY'"}' > $(llm keys path); /bin/bash
 CMD ["bash"]
+
