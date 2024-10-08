@@ -37,6 +37,7 @@ class ProgramsDatabaseConfig:
   reset_period: int =  60 * 60 #4*60*60
   cluster_sampling_temperature_init: float = 0.1
   cluster_sampling_temperature_period: int = 30_000
+  length_sample_temperature: float = 1.0
   backup_period: int = 30
   backup_folder: str = './data/backups'
 
@@ -75,7 +76,7 @@ class Config:
   num_batches=2
   run_duration: int = 10000000
   top_p: float = 0.95
-  llm_temperature: float = 1
+  llm_temperature: float = 1.0
 
 
   def __init__(self, num_islands: int = 10, **kwargs):

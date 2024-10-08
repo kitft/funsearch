@@ -350,8 +350,8 @@ class Cluster:
     self._lengths.append(len(str(program)))
 
   def sample_program(self) -> code_manipulation.Function:
-    """Samples a program, giving higher probability to shorther programs."""
+    """Samples a program, giving higher probability to shorter programs."""
     normalized_lengths = (np.array(self._lengths) - min(self._lengths)) / (
         max(self._lengths) + 1e-6)
-    probabilities = _softmax(-normalized_lengths, temperature=1.0)
+    probabilities = _softmax(-normalized_lengths, temperature=1.0)#self._config.length_sample_temperature)
     return np.random.choice(self._programs, p=probabilities)
