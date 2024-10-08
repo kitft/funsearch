@@ -444,6 +444,9 @@ def plotscores(timestamp):
     plt.tight_layout()
 
     # Save the best scores graph
+    
+    import os
+    os.makedirs('./data/graphs', exist_ok=True)
     plt.savefig(f'./data/graphs/best_scores_over_time_{timestamp}.png', bbox_inches='tight')
     plt.close()
 
