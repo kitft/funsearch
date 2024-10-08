@@ -96,7 +96,8 @@ class ProgramsDatabase:
       self._islands.append(
           Island(template, function_to_evolve, config.functions_per_prompt,
                  config.cluster_sampling_temperature_init,
-                 config.cluster_sampling_temperature_period))
+                 config.cluster_sampling_temperature_period,
+                 config.length_sample_temperature))
     self._best_score_per_island: list[float] = (
         [-float('inf')] * config.num_islands)
     self._best_program_per_island: list[code_manipulation.Function | None] = (
@@ -213,7 +214,8 @@ class ProgramsDatabase:
           self._config.functions_per_prompt,
           self._config.cluster_sampling_temperature_init,
           self._config.cluster_sampling_temperature_period,
-          self._islands[island_id]._island_version+1)#increment the island version
+          self._islands[island_id]._island_version+1,
+          self._islands[island_id]._length_sample_temperature)#increment the island version
       self._best_score_per_island[island_id] = -float('inf')
       founder_island_id = np.random.choice(keep_islands_ids)
       founder = self._best_program_per_island[founder_island_id]
@@ -232,6 +234,7 @@ class Island:
       cluster_sampling_temperature_init: float,
       cluster_sampling_temperature_period: int,
       island_version: int = 0,
+      length_sample_temperature: float = 1.0,
   ) -> None:
     self._template: code_manipulation.Program = template
     self._function_to_evolve: str = function_to_evolve
@@ -243,6 +246,7 @@ class Island:
     self._clusters: dict[Signature, Cluster] = {}
     self._num_programs: int = 0
     self._island_version: int = island_version
+    self._length_sample_temperature = length_sample_temperature
 
   def register_program(
       self,
@@ -253,7 +257,7 @@ class Island:
     signature = _get_signature(scores_per_test)
     if signature not in self._clusters:
       score = _reduce_score(scores_per_test)
-      self._clusters[signature] = Cluster(score, program)
+      self._clusters[signature] = Cluster(score, program, self._length_sample_temperature)
     else:
       self._clusters[signature].register_program(program)
     self._num_programs += 1
@@ -334,7 +338,8 @@ class Island:
 class Cluster:
   """A cluster of programs on the same island and with the same Signature."""
 
-  def __init__(self, score: float, implementation: code_manipulation.Function):
+  def __init__(self, score: float, implementation: code_manipulation.Function, length_sample_temperature: float):
+    self._length_sample_temperature = length_sample_temperature
     self._score = score
     self._programs: list[code_manipulation.Function] = [implementation]
     self._lengths: list[int] = [len(str(implementation))]
@@ -353,5 +358,5 @@ class Cluster:
     """Samples a program, giving higher probability to shorter programs."""
     normalized_lengths = (np.array(self._lengths) - min(self._lengths)) / (
         max(self._lengths) + 1e-6)
-    probabilities = _softmax(-normalized_lengths, temperature=1.0)#self._config.length_sample_temperature)
+    probabilities = _softmax(-normalized_lengths, temperature=self._length_sample_temperature)#1.0)#self._config.length_sample_temperature)
     return np.random.choice(self._programs, p=probabilities)

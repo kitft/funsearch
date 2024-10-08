@@ -27,7 +27,11 @@ def is_prime(n):
 def evaluate(n: int) -> float:
   """Returns the size of a certain `n`-dimensional cap set."""
   #capset = solve(n)
-  result = np.mean(np.equal(np.vectorize(is_prime)(np.arange(5, n)), np.vectorize(priority)(np.arange(5, n))))
+  result = np.sum(np.equal(np.vectorize(is_prime)(np.arange(5, n)), np.vectorize(priority)(np.arange(5, n))).astype(float))
+  # result = 0
+  # for m in range(5, n):
+  #     if is_prime(m) == priority(m):
+  #         result += 1
   return result
 
 
