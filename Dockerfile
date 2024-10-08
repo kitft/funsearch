@@ -21,6 +21,13 @@ COPY funsearch ./funsearch
 # Install the application
 RUN pip install --no-deps . && rm -r ./funsearch ./build
 
+
+# Create necessary subfolders in data directory if they don't exist
+RUN mkdir -p ./data && \
+    cd ./data && \
+    mkdir -p scores graphs backups tensorboard_logs &&\
+    cd ..
+
 # Uncomment if needed - will instead be installed in the container when plotting commands are run
 #RUN pip install pandas matplotlib
 #RUN pip install llm-mistral

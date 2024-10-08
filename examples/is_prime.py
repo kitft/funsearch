@@ -1,7 +1,7 @@
 """
 
 
-On every iteration, improve priority_v1 over the priority_vX methods from previous iterations.
+On every iteration, improve priority_vX+1 over the priority_vX methods from previous iterations.
 Make only small changes.
 Try to make the code short.
 """
@@ -13,13 +13,10 @@ import funsearch
 
 import math
 
-def is_prime_square(n):
-    if n <= 1:
+def is_prime_plus_two(n):
+    if n <= 3:
         return False
-    root = int(math.sqrt(n))
-    if root * root != n:
-        return False
-    return is_prime(root)
+    return is_prime(n - 2)
 
 def is_prime(n):
     if n <= 1:
@@ -29,13 +26,12 @@ def is_prime(n):
             return False
     return True
 
-
 @funsearch.run
 def evaluate(n: int) -> float:
-  """Returns the size of a certain `n`-dimensional cap set."""
-  #capset = solve(n)
-  result = np.mean(np.equal(np.vectorize(is_prime_square)(np.arange(2, n)), np.vectorize(priority)(np.arange(2, n))))
-  return result
+    """Returns the size of a certain `n`-dimensional cap set."""
+    #capset = solve(n)
+    result = np.mean(np.equal(np.vectorize(is_prime_plus_two)(np.arange(2, n)), np.vectorize(priority)(np.arange(2, n))))
+    return result
 
 
 @funsearch.evolve
