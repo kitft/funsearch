@@ -12,6 +12,7 @@ import pathlib
 import csv
 from datetime import datetime
 import os
+import numpy as np
 
 # Add these imports
 from torch.utils.tensorboard import SummaryWriter
@@ -79,7 +80,9 @@ async def database_worker(result_queue: multiprocessing.Queue, database: AsyncPr
         except multiprocessing.queues.Empty:
             await asyncio.sleep(0.0001)
 
-async def sampler_worker(sampler: sampler.Sampler, eval_queue: multiprocessing.Queue, database: AsyncProgramsDatabase):
+async def sampler_worker(sampler: sampler.Sampler, eval_queue: multiprocessing.Queue, database: AsyncProgramsDatabase, config: config_lib.Config):
+    #wait a random amount of time to avoid synchronisation issues and API ratelimits
+    await asyncio.sleep(np.random.rand()*config.num_samplers*0.5)
     while True:
         #logging.info('Sampling with sampler %d', sampler.label)
         prompt = await database.get_prompt()
@@ -117,7 +120,7 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
     eval_queue.put((initial, None, None, None))
     time.sleep(3)
     logging.info("Initialising samplers")
-    sampler_tasks = [asyncio.create_task(sampler_worker(s, eval_queue, database)) for s in samplers]
+    sampler_tasks = [asyncio.create_task(sampler_worker(s, eval_queue, database,config)) for s in samplers]
 
     timestamp = multitestingconfig.timestamp
     os.makedirs("./data/scores", exist_ok=True)
