@@ -36,7 +36,7 @@ FunSearch is an implementation of an evolutionary algorithm for program search u
 5. Create a data folder and run the container:
    ```
    mkdir data
-   docker run -it -v ./data:/workspace/data -e MISTRAL_API_KEY=$MISTRAL_API_KEY funsearch
+   docker run -it -v ./data:/workspace/data -p 6006:6006 -e MISTRAL_API_KEY=$MISTRAL_API_KEY funsearch
 
 
 ```
@@ -126,7 +126,7 @@ pip install .
 funsearch run examples/cap_set_spec.py 11
 ```
 
-You can monitor the progress of the search using tensorboard: in a separate terminal, run `tensorboard --logdir ./data/tensorboard_logs/` to see score graphs for each island. You will need to access the tensorboard server via `http://localhost:6006` on your host machine. Run this command from outside the docker! You may need to install tensorboard first: `pip install tensorboard`.
+You can monitor the progress of the search using tensorboard: in a separate terminal, run `tensorboard --logdir ./data/tensorboard_logs/ --host 0.0.0.0` to see score graphs for each island. You will need to access the tensorboard server via `http://localhost:6006` on your host machine. Run this command from outside the docker! You may need to install tensorboard first: `pip install tensorboard`.
 
 Once a run is complete - or after interrupting using Ctrl-C, we can analyse our results using the backups file:
 
