@@ -34,4 +34,6 @@ RUN mkdir -p ./data && \
 
 # Set Mistral API key
 #CMD echo '{"mistral": "'$MISTRAL_API_KEY'"}' > $(llm keys path); /bin/bash
+EXPOSE 6006
+
 CMD ["bash"]
