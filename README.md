@@ -46,7 +46,7 @@ FunSearch is an implementation of an evolutionary algorithm for program search u
 # Either model is still relatively cheap: with codestral, 1 million output tokens is $0.6.
 # We will need to manually add different API calls for OpenAI, Anthropic, etc. This is not difficult.
 
-`funsearch run` takes two arguments:
+`funsearch runasync` takes two arguments:
 
 1. `SPEC_FILE`: A Python module that provides the basis of the LLM prompt as well as the evaluation metric.
    - Example: See `examples/cap_set_spec.py`
@@ -93,7 +93,7 @@ You can adjust these parameters to customize your FunSearch run. For example:
 Here, we are searching for the algorithm to find maximum cap sets for dimension 11.
 You should see something like:
 ```
-root@11c22cd7aeac:/workspace# funsearch run examples/cap_set_spec.py 11 --sandbox_type ExternalProcessSandbox --model_name codestral-latest
+root@11c22cd7aeac:/workspace# funsearch runasync examples/cap_set_spec.py 11 --sandbox_type ExternalProcessSandbox --model_name codestral-latest
 INFO:root:Writing logs to data/1704956206
 INFO:absl:Best score of island 0 increased to 2048
 INFO:absl:Best score of island 1 increased to 2048
@@ -123,7 +123,7 @@ This variant could be also used, e.g., in Colab quite safely since the environme
 ```
 pip install .
 
-funsearch run examples/cap_set_spec.py 11
+funsearch runsync examples/cap_set_spec.py 11
 ```
 
 You can monitor the progress of the search using tensorboard: in a separate terminal, run `tensorboard --logdir ./data/tensorboard_logs/ --host 0.0.0.0` to see score graphs for each island. You will need to access the tensorboard server via `http://localhost:6006` on your host machine. Run this command from outside the docker! You may need to install tensorboard first: `pip install tensorboard`.

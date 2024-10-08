@@ -1,6 +1,4 @@
 """
-
-
 On every iteration, improve priority_vX+1 over the priority_vX methods from previous iterations.
 Make only small changes.
 Try to make the code short.
