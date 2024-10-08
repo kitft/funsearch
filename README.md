@@ -17,7 +17,7 @@ FunSearch is an implementation of an evolutionary algorithm for program search u
 
 ### Using Docker (Recommended)
 
-1. Install Docker
+1. Install Docker. Make sure the docker service is running.
    
 2. Clone the repository and navigate to the project directory
 
