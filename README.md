@@ -126,7 +126,7 @@ pip install .
 funsearch runsync examples/cap_set_spec.py 11
 ```
 
-You can monitor the progress of the search using tensorboard: in a separate terminal, run `tensorboard --logdir ./data/tensorboard_logs/ --host 0.0.0.0` to see score graphs for each island. You will need to access the tensorboard server via `http://localhost:6006` on your host machine. Run this command from outside the docker! You may need to install tensorboard first: `pip install tensorboard`.
+You can monitor the progress of the search using tensorboard: in a separate terminal, run `tensorboard --logdir ./data/tensorboard_logs/ --host 0.0.0.0` to see score graphs for each island. You will need to access the tensorboard server via `http://localhost:6006` on your host machine. You can run this from inside the docker container, inside a different instance of the same container, or from outside. In the latter case, you may need to install tensorboard first: `pip install tensorboard`.
 
 Once a run is complete - or after interrupting using Ctrl-C, we can analyse our results using the backups file:
 

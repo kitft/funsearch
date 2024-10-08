@@ -11,6 +11,15 @@ import funsearch
 
 import math
 
+
+@funsearch.run
+def evaluate(n: int) -> int:
+    """Returns the size of a certain `n`-dimensional cap set."""
+    #capset = solve(n)
+    result = np.mean(np.equal(np.vectorize(is_prime_plus_two)(np.arange(2, n)), np.vectorize(priority)(np.arange(2, n))))
+    return result
+
+
 def is_prime_plus_two(n):
     if n <= 3:
         return False
@@ -23,13 +32,6 @@ def is_prime(n):
         if n % i == 0:
             return False
     return True
-
-@funsearch.run
-def evaluate(n: int) -> float:
-    """Returns the size of a certain `n`-dimensional cap set."""
-    #capset = solve(n)
-    result = np.mean(np.equal(np.vectorize(is_prime_plus_two)(np.arange(2, n)), np.vectorize(priority)(np.arange(2, n))))
-    return result
 
 
 @funsearch.evolve
