@@ -2,6 +2,7 @@ from mistralai import Mistral
 import anthropic
 import openai
 import os
+import google.generativeai as genai
 import asyncio
 def get_model(model_name):
     if "codestral" in model_name.lower() or "mistral" in model_name.lower():
@@ -116,7 +117,6 @@ class GeminiModel:
         self.key = os.environ.get("GOOGLE_API_KEY")
         if not self.key:
             raise ValueError("GOOGLE_API_KEY environment variable is not set")
-        import google.generativeai as genai
         genai.configure(api_key=self.key)
         self.model = genai.GenerativeModel(model_name)
         self.top_p = top_p
