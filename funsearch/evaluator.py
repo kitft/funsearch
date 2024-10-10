@@ -23,7 +23,6 @@ from typing import Any, Tuple
 from funsearch import code_manipulation
 from funsearch import programs_database
 from funsearch import sandbox
-import asyncio
 """
   Regex to find all methods named 'priority_vX'.
   With each match, start from the 'def priority_vX(' and continue until there's a new line with any of
@@ -139,7 +138,7 @@ class Evaluator:
 
   def __init__(
       self,
-      database: programs_database.ProgramsDatabase or multi_testing.AsyncProgramsDatabase,
+      database: programs_database.ProgramsDatabase or multi_testing.AsyncProgramsDatabase, #undefined name 'multi_testing'
       sbox: sandbox.DummySandbox,
       template: code_manipulation.Program,
       function_to_evolve: str,
