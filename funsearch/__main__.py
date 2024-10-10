@@ -410,8 +410,8 @@ def plotscores(timestamp):
     #install dependencies
     import subprocess
     subprocess.check_call(["pip", "install", "pandas", "matplotlib"])
-    import pandas as pd
-    import matplotlib.pyplot as plt
+    #import pandas as pd
+    #import matplotlib.pyplot as plt
     #from pathlib import Path
 
     # Read the CSV file
