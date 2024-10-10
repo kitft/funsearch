@@ -36,7 +36,7 @@ FunSearch is an implementation of an evolutionary algorithm for program search u
 5. Create a data folder and run the container:
    ```
    mkdir data
-   docker run -it -v ./data:/workspace/data -p 6006:6006 -e MISTRAL_API_KEY=$MISTRAL_API_KEY funsearch
+   docker run -it -v ./data:/workspace/data -v ./examples:/workspace/examples -p 6006:6006 -e MISTRAL_API_KEY=$MISTRAL_API_KEY funsearch
 
 
 ```
@@ -63,7 +63,7 @@ Examples of valid INPUTS:
 - 8,9,10
 - ./examples/cap_set_input_data.json`
 
-funsearch runasync examples/cap_set_spec.py 8 --sandbox_type ExternalProcessSandbox --model_name codestral-latest --samplers 20 --num_islands 10  --run_duration 3000
+funsearch runasync /workspace/examples/cap_set_spec.py 8 --sandbox_type ExternalProcessSandbox --model_name codestral-latest --samplers 20 --num_islands 10  --run_duration 3000
 
 This implementation limits the number of evaluators to the number of cores minus 1, or the number of evaluators specified in the config file, whichever is smaller.
 We choose the number of islands via --num_islands. 10 is typically a good default.
@@ -93,7 +93,7 @@ You can adjust these parameters to customize your FunSearch run. For example:
 Here, we are searching for the algorithm to find maximum cap sets for dimension 11.
 You should see something like:
 ```
-root@11c22cd7aeac:/workspace# funsearch runasync examples/cap_set_spec.py 11 --sandbox_type ExternalProcessSandbox --model_name codestral-latest
+root@11c22cd7aeac:/workspace# funsearch runasync /workspace/examples/cap_set_spec.py 11 --sandbox_type ExternalProcessSandbox --model_name codestral-latest
 INFO:root:Writing logs to data/1704956206
 INFO:absl:Best score of island 0 increased to 2048
 INFO:absl:Best score of island 1 increased to 2048
@@ -123,10 +123,14 @@ This variant could be also used, e.g., in Colab quite safely since the environme
 ```
 pip install .
 
-funsearch runsync examples/cap_set_spec.py 11
+funsearch runsync /workspace/examples/cap_set_spec.py 11
 ```
 
-You can monitor the progress of the search using tensorboard: in a separate terminal, run `tensorboard --logdir ./data/tensorboard_logs/ --host 0.0.0.0` to see score graphs for each island. You will need to access the tensorboard server via the website `http://0.0.0.0:6006` on your host machine. You can run this from inside the docker container or from outside. In the latter case, you may need to install tensorboard first: `pip install tensorboard`.
+You can monitor the progress of the search using tensorboard: in a separate terminal, run
+```
+tensorboard --logdir ./data/tensorboard_logs/ --host 0.0.0.0
+```
+ to see score graphs for each island. You will need to access the tensorboard server via the website `http://0.0.0.0:6006` on your host machine. You can run this from inside the docker container or from outside. In the latter case, you may need to install tensorboard first: `pip install tensorboard`.
 
 Once a run is complete - or after interrupting using Ctrl-C, we can analyse our results using the backups file:
 
