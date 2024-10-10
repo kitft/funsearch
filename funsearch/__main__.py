@@ -490,3 +490,40 @@ def plotscores(timestamp):
 @click.argument("timestamp")
 def makegraphs(timestamp):
     plotscores(timestamp)
+
+
+@main.command()
+@click.argument("timestamp")
+def removetimestamp(timestamp):
+    """Remove all data associated with a specific timestamp."""
+    import os
+    import shutil
+
+    # Define paths
+    data_dir = './data'
+    graphs_dir = os.path.join(data_dir, 'graphs')
+
+    # Remove CSV file
+    csv_file = os.path.join(data_dir, f'{timestamp}.csv')
+    if os.path.exists(csv_file):
+        os.remove(csv_file)
+        print(f"Removed CSV file: {csv_file}")
+
+    # Remove graph files
+    best_scores_graph = os.path.join(graphs_dir, f'best_scores_over_time_{timestamp}.png')
+    avg_scores_graph = os.path.join(graphs_dir, f'average_scores_over_time_{timestamp}.png')
+    
+    for graph_file in [best_scores_graph, avg_scores_graph]:
+        if os.path.exists(graph_file):
+            os.remove(graph_file)
+            print(f"Removed graph file: {graph_file}")
+
+    # Remove timestamp directory if it exists
+    timestamp_dir = os.path.join(data_dir, timestamp)
+    if os.path.exists(timestamp_dir):
+        shutil.rmtree(timestamp_dir)
+        print(f"Removed timestamp directory: {timestamp_dir}")
+
+    print(f"All data associated with timestamp {timestamp} has been removed.")
+
+
