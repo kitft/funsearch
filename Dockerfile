@@ -1,5 +1,6 @@
 FROM docker.io/python:3.11.6
 
+
 WORKDIR /workspace
 
 # Install PDM and other essential tools
@@ -11,8 +12,10 @@ COPY pyproject.toml README.md pdm.lock ./
 # Install dependencies
 ENV PATH="/workspace/.venv/bin:$PATH"
 RUN pdm install --no-self
-RUN pip install mistralai tensorboard pandas matplotlib #torch==2.4.1+cpu
+RUN pip install mistralai tensorboard  
+RUN pip install anthropic openai google-api-python-client
 RUN pip install torch --extra-index-url https://download.pytorch.org/whl/cpu
+RUN pip install matplotlib pandas
 
 # Create necessary subfolders in data directory if they don't exist
 RUN mkdir -p ./data && \

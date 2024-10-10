@@ -359,29 +359,6 @@ files = [
     {file = "idna-3.6.tar.gz", hash = "sha256:9ecdbbd083b06798ae1e86adcbfe8ab1479cf864e4ee30fe4e46a003d12491ca"},
 ]
 
-[[package]]
-name = "llm"
-version = "0.12"
-requires_python = ">=3.7"
-summary = "A CLI utility and Python library for interacting with Large Language Models, including OpenAI, PaLM and local models installed on your own machine."
-groups = ["default"]
-dependencies = [
-    "PyYAML",
-    "click",
-    "click-default-group>=1.2.3",
-    "openai<1.0",
-    "pip",
-    "pluggy",
-    "pydantic>=1.10.2",
-    "python-ulid",
-    "setuptools",
-    "sqlite-migrate>=0.1a2",
-    "sqlite-utils>=3.35.0",
-]
-files = [
-    {file = "llm-0.12-py3-none-any.whl", hash = "sha256:8873ae105ce73030fb3e0e01379eee57cc456b58373bf17a5d7cf1b0977f5041"},
-    {file = "llm-0.12.tar.gz", hash = "sha256:e6a3fac275b9b80a29fe018a7b8467d97871fd4194912bcd2a8c844e9aab03d1"},
-]
 
 [[package]]
 name = "multidict"

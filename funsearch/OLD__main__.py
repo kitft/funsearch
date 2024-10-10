@@ -7,7 +7,7 @@ import time
 import asyncio
 
 import click
-import llm
+#import llm
 from dotenv import load_dotenv
 
 from funsearch import config, core, sandbox, sampler, programs_database, code_manipulation, evaluator, multi_testing
