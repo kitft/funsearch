@@ -151,6 +151,12 @@ funsearch removetimestamp <timestamp>
 ```
 
 
+
+
+If you are getting OPENAI Async doesn't exist errors, run `pip install openai>=1.2` in your Docker environment. This should happen on Dockerfile creation, but could be a problem if you have some legacy docker/pdm files.
+
+
+
 ---
 
 Adding additional programs:
