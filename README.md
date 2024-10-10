@@ -44,7 +44,7 @@ FunSearch is an implementation of an evolutionary algorithm for program search u
 # A good one to use for testing, as an extremely cheap model, is 'mistral-tiny-latest'. 
 # The best one for our use case is probably 'codestral-latest', which is 4x more expensive per output token.
 # Either model is still relatively cheap: with codestral, 1 million output tokens is $0.6.
-# We will need to manually add different API calls for OpenAI, Anthropic, etc. This is not difficult.
+# You can also pass in a model name from OpenAI or Anthropic, etc.
 
 `funsearch runasync` takes two arguments:
 
@@ -74,7 +74,7 @@ Here are the rest of the run params:
 
 - `spec_file`: A file containing the specification for the problem to be solved. This includes the base prompt for the LLM and the evaluation metric.
 - `inputs`: The input data for the problem. This can be a filename ending in .json or .pickle, or comma-separated values.
-- `--model_name`: The name of the language model to use. Default is "gpt-3.5-turbo-instruct".
+- `--model_name`: The name of the language model to use. Default is "codestral-latest".
 - `--output_path`: The directory where logs and data will be stored. Default is "./data/".
 - `--load_backup`: Path to a backup file of a previous program database to continue from a previous run.
 - `--iterations`: The maximum number of iterations per sampler. Default is -1 (unlimited).

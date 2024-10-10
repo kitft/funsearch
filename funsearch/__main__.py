@@ -260,17 +260,10 @@ def runAsync(spec_file, inputs, model_name, output_path, load_backup, iterations
     #model = [llm.get_model(model_name) for _ in range(samplers)]
     logging.info(f"Using LLM temperature: {llm_temperature}")
     logging.info(f"Using model: {model_name}")
-    #initialising mistral models - probably don't need this many instances, but I'm not sure how async works across mistral's API. So this should work.
-    if "codestral" in model_name.lower() or "mistral" in model_name.lower():
-        from funsearch.models import MistralModel as model_api_class
-    elif "gpt" in model_name.lower():
-        from funsearch.models import OpenAIModel as model_api_class
-    elif "claude" in model_name.lower():
-        from funsearch.models import AnthropicModel as model_api_class
-    elif "gemini" in model_name.lower():
-        from funsearch.models import GeminiModel as model_api_class
-    else:
-        raise ValueError(f"Unsupported model name: {model_name}")
+    
+    model_api_class = models.get_model(model_name)
+    
+    #initialising models - probably don't need this many instances, but I'm not sure how async works across mistral's API. So this should work.
     model = [model_api_class(model_name=model_name, top_p=conf.top_p, temperature=llm_temperature) for _ in range(samplers)]
     #for m in model:##done in models.py
     #    m.key = os.environ.get('MISTRAL_API_KEY')

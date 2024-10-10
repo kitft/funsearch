@@ -13,9 +13,9 @@ COPY pyproject.toml README.md pdm.lock ./
 ENV PATH="/workspace/.venv/bin:$PATH"
 RUN pdm install --no-self
 RUN pip install mistralai tensorboard  
-RUN pip install anthropic openai google-api-python-client
 RUN pip install torch --extra-index-url https://download.pytorch.org/whl/cpu
 RUN pip install matplotlib pandas
+RUN pip install anthropic openai>1.2 google-api-python-client
 
 # Create necessary subfolders in data directory if they don't exist
 RUN mkdir -p ./data && \

@@ -461,22 +461,6 @@ files = [
 ]
 
 [[package]]
-name = "openai"
-version = "0.28.1"
-requires_python = ">=3.7.1"
-summary = "Python client library for the OpenAI API"
-groups = ["default"]
-dependencies = [
-    "aiohttp",
-    "requests>=2.20",
-    "tqdm",
-]
-files = [
-    {file = "openai-0.28.1-py3-none-any.whl", hash = "sha256:d18690f9e3d31eedb66b57b88c2165d760b24ea0a01f150dd3f068155088ce68"},
-    {file = "openai-0.28.1.tar.gz", hash = "sha256:4be1dad329a65b4ce1a660fe6d5431b438f429b5855c883435f0f7fcb6d2dcc8"},
-]
-
-[[package]]
 name = "pip"
 version = "23.3.2"
 requires_python = ">=3.7"

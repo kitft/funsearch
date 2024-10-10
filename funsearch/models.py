@@ -3,6 +3,18 @@ import anthropic
 import openai
 import os
 import asyncio
+def get_model(model_name):
+    if "codestral" in model_name.lower() or "mistral" in model_name.lower():
+        return MistralModel
+    elif "gpt" in model_name.lower() or "o1" in model_name.lower():
+        return OpenAIModel
+    elif "claude" in model_name.lower():
+        return AnthropicModel
+    elif "gemini" in model_name.lower():
+        return GeminiModel
+    else:
+        raise ValueError(f"Unsupported model name: {model_name}. Have a look in __main__.py and models.py to add support for this model.")
+
 
 class MistralModel:
     def __init__(self, model_name="mistral-small-latest", top_p=0.9, temperature=0.7):
