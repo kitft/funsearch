@@ -172,7 +172,7 @@ import click
 #import llm
 from dotenv import load_dotenv
 
-from funsearch import config, core, sandbox, sampler, programs_database, code_manipulation, evaluator, multi_testing, models
+from funsearch import config, core, sandbox, sampler, programs_database, code_manipulation, multi_testing, models
 
 LOGLEVEL = os.environ.get('LOGLEVEL', 'INFO').upper()
 logging.basicConfig(level=LOGLEVEL)
@@ -408,7 +408,7 @@ if __name__ == "__main__":
 def plotscores(timestamp):
     """Generate a graph of best overall score and best scores per island over time."""
     #install dependencies
-    import subprocess
+    # import subprocess
     #subprocess.check_call(["pip", "install", "pandas", "matplotlib"])
     import pandas as pd
     import matplotlib.pyplot as plt
