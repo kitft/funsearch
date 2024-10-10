@@ -15,7 +15,8 @@ RUN pdm install --no-self
 RUN pip install mistralai tensorboard  
 RUN pip install torch --extra-index-url https://download.pytorch.org/whl/cpu
 RUN pip install matplotlib pandas
-RUN pip install anthropic openai>1.2 google-generativeai
+RUN pip install anthropic google-generativeai
+RUN pip install openai>=1.2 --force-reinstall
 
 # Create necessary subfolders in data directory if they don't exist
 RUN mkdir -p ./data && \

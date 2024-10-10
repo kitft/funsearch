@@ -409,9 +409,9 @@ def plotscores(timestamp):
     """Generate a graph of best overall score and best scores per island over time."""
     #install dependencies
     import subprocess
-    subprocess.check_call(["pip", "install", "pandas", "matplotlib"])
-    #import pandas as pd
-    #import matplotlib.pyplot as plt
+    #subprocess.check_call(["pip", "install", "pandas", "matplotlib"])
+    import pandas as pd
+    import matplotlib.pyplot as plt
     #from pathlib import Path
 
     # Read the CSV file
