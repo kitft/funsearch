@@ -17,12 +17,12 @@
 from collections.abc import Collection, Sequence
 
 #import llm
-import numpy as np
-import time
+#import numpy as np
+#import time
 
 from funsearch import evaluator
 from funsearch import programs_database
-import asyncio
+#import asyncio
 
 import os
 
@@ -59,7 +59,7 @@ class Sampler:
 
   def __init__(
       self,
-      database: programs_database.ProgramsDatabase or multi_testing.AsyncProgramsDatabase,
+      database: programs_database.ProgramsDatabase or multi_testing.AsyncProgramsDatabase, # # undefined name 'multi_testing'
       evaluators: Sequence[evaluator.Evaluator],
       model: LLM,
       label = 0

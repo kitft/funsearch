@@ -1,16 +1,16 @@
 import asyncio
-from concurrent.futures import ThreadPoolExecutor
-from typing import List
+# from concurrent.futures import ThreadPoolExecutor
+# from typing import List
 import logging
 import multiprocessing
 from multiprocessing import Process, Queue
 import time
 
 from funsearch import programs_database, evaluator, sampler, config as config_lib
-import pathlib
+# import pathlib
 
 import csv
-from datetime import datetime
+# from datetime import datetime
 import os
 import numpy as np
 
@@ -59,10 +59,8 @@ def evaluator_process(eval_queue: Queue, result_queue: Queue, config: config_lib
                 break
             sample, island_id, version_generated, island_version = task
             # Log the length of eval_queue and result_queue
-            eval_queue_size = eval_queue.qsize()
-            result_queue_size = result_queue.qsize()
             result = evaluator_instance.analyse(sample, island_id, version_generated, island_version)
-            #logging.info(f"Evaluator {id}: Eval Queue size: {eval_queue_size}, Result Queue size: {result_queue_size}, Result: {bool(result)}")
+            #logging.info(f"Evaluator {id}: Eval Queue size: {eval_queue.qsize()}, Result Queue size: {result_queue.qsize()}, Result: {bool(result)}")
             if result:
                 result_queue.put(result)
         except multiprocessing.queues.Empty:
