@@ -29,7 +29,9 @@ from funsearch import sandbox
   - a new 'def'
   - ` or ' or # without indentation
 """
-METHOD_MATCHER = re.compile(r"def priority_v\d\(.*?\) -> float:(?:\s*(?:[ \t]*(?!def|#|`|').*(?:\n|$)))+")
+#METHOD_MATCHER = re.compile(r"def priority_v\d\(.*?\) -> float:(?:\s*(?:[ \t]*(?!def|#|`|').*(?:\n|$)))+")
+# DDED ANY TYPE SIGNATURE OUTPUT, NOT JUST FLOAT
+METHOD_MATCHER = re.compile(r"def priority_v\d\(.*?\)(?:\s*->.*?)?:(?:\s*(?:[ \t]*(?!def|#|`|').*(?:\n|$)))+")
 METHOD_NAME_MATCHER = re.compile(r"priority_v\d+")
 
 

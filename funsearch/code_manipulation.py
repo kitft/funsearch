@@ -41,14 +41,35 @@ class Function:
   docstring: str | None = None
 
   def __str__(self) -> str:
+    #print("docs", self.docstring)
+    #print("body", self.body)
     return_type = f' -> {self.return_type}' if self.return_type else ''
+    # Get the indentation characters of the first line of body
+    body_lines = self.body.split('\n')
+    if body_lines:
+        first_line = body_lines[0]
+        indentation_chars = first_line[:len(first_line) - len(first_line.lstrip())]
+    else:
+        indentation_chars = ''
 
     function = f'def {self.name}({self.args}){return_type}:\n'
     if self.docstring:
-      # self.docstring is already indented on every line except the first one.
-      # Here, we assume the indentation is always two spaces.
-      new_line = '\n' if self.body else ''
-      function += f'  """{self.docstring}"""{new_line}'
+        # Indent the docstring
+        docstring_lines = self.docstring.split('\n')
+        indented_docstring = f'"""{docstring_lines[0]}\n'
+        for line in docstring_lines[1:]:
+            indented_docstring += indentation_chars + line + '\n'
+        indented_docstring += indentation_chars + '"""'
+        
+        # Add a newline if there's a body
+        new_line = '\n' if self.body else ''
+        function += indentation_chars + indented_docstring + new_line
+    #if self.docstring:
+    #  # self.docstring is already indented on every line except the first one.
+    #  # Here, we assume the indentation is always two spaces.
+    #  new_line = '\n' if self.body else ''
+    #  function += indentation_chars+f'"""{self.docstring}"""{new_line}'
+      
     # self.body is already indented.
     function += self.body + '\n\n'
     return function
@@ -126,7 +147,7 @@ class ProgramVisitor(ast.NodeVisitor):
       docstring = None
       if isinstance(node.body[0], ast.Expr) and isinstance(node.body[0].value,
                                                            ast.Str):
-        docstring = f'  """{ast.literal_eval(ast.unparse(node.body[0]))}"""'
+        docstring = f'  """{ast.literal_eval(ast.unparse(node.body[0]))}"""'##this adds two spaces to docstring
         if len(node.body) > 1:
           body_start_line = node.body[1].lineno - 1
         else:
