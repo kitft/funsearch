@@ -32,8 +32,8 @@ def solve(n: int) -> int:
   
 
 @funsearch.evolve
-def priority(n: int) -> float:
+def priority(n: int) -> bool:
   """Returns 1 if add to set, 0 otherwise.
   n is an int.
   """
-  return 0.0
+  return True
