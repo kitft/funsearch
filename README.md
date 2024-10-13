@@ -129,6 +129,8 @@ pip install .
 funsearch runsync /workspace/examples/cap_set_spec.py 11
 ```
 
+# LOGS AND GRAPHS
+
 You can monitor the progress of the search using tensorboard: in a separate terminal, run
 ```
 tensorboard --logdir ./data/tensorboard_logs/ --host 0.0.0.0
@@ -150,15 +152,16 @@ To remove/delete all data associated with a timestamp. This is not reversible, s
 funsearch removetimestamp <timestamp>
 ```
 
+# ERRORS
 
-
+PLEASE ENSURE YOU HAVE UPDATED TO THE LATEST VERSION OF THIS REPO
 
 If you are getting OPENAI Async doesn't exist errors, run `pip install openai>=1.2` in your Docker environment. This should happen on Dockerfile creation, but could be a problem if you have some legacy docker/pdm files.
 
 
 
 
-Adding additional programs:
+# Adding additional programs:
 To add additional programs, add .py files to the examples/ directory. These should follow the same structure as the other examples - a priority function with an @funsearch.evolve decorator, and an evaluation function which returns a score decorated with @funsearch.run. See `examples/cap_set_spec.py` for a simple example, and see `examples/Example_Implementation_SPEC.py` for template which you can fill in. I have also been writing playground `*.ipynb` files in the `examples/playgrounds/` directory, where new environments can be developed and tested.
 
 ---
