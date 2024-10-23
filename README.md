@@ -1,6 +1,6 @@
 # FunSearch
 
-Forked from https://github.com/google-deepmind/funsearch via https://github.com/jonppe/funsearch
+Forked from https://github.com/google-deepmind/funsearch via https://github.com/jonppe/funsearch via https://github.com/kitft/funsearch
 
 ## Overview
 
@@ -21,10 +21,10 @@ FunSearch is an implementation of an evolutionary algorithm for program search u
    
 2. Clone the repository and navigate to the project directory
 
-`git clone https://github.com/kitft/funsearch.git` (or `gh repo clone kitft/funsearch` if you have GitHub CLI)
+`git clone https://github.com/AndrewVSutherland/funsearch.git`
 `cd funsearch`
    
-3. Set your Mistral API key:
+3. Set your API key:
    ```
    export MISTRAL_API_KEY=<your_key_here>
    export GOOGLE_API_KEY=<your_key_here>
@@ -66,7 +66,7 @@ Examples of valid INPUTS:
 - 8,9,10
 - ./examples/cap_set_input_data.json`
 
-funsearch runasync /workspace/examples/cap_set_spec.py 8 --sandbox_type ExternalProcessSandbox --model_name codestral-latest --samplers 20 --num_islands 10  --run_duration 3000
+funsearch runasync /workspace/examples/cap_set_spec.py 8 --sandbox_type ExternalProcessSandbox --model_name codestral-latest --samplers 20 --islands 10  --duration 3000
 
 This implementation limits the number of evaluators to the number of cores minus 1, or the number of evaluators specified in the config file, whichever is smaller.
 We choose the number of islands via --num_islands. 10 is typically a good default.
@@ -77,18 +77,17 @@ Here are the rest of the run params:
 
 - `spec_file`: A file containing the specification for the problem to be solved. This includes the base prompt for the LLM and the evaluation metric.
 - `inputs`: The input data for the problem. This can be a filename ending in .json or .pickle, or comma-separated values.
-- `--model_name`: The name of the language model to use. Default is "codestral-latest".
+- `--model`: The name of the language model (or models) to use. Default is "codestral-latest".
 - `--output_path`: The directory where logs and data will be stored. Default is "./data/".
 - `--load_backup`: Path to a backup file of a previous program database to continue from a previous run.
 - `--iterations`: The maximum number of iterations per sampler. Default is -1 (unlimited).
-- `--samplers`: The number of sampler threads to run. Default is 15.
 - `--sandbox_type`: The type of sandbox to use for code execution. Default is "ContainerSandbox".
-- `--num_islands`: The number of islands for the island model in the genetic algorithm. Default is 10.
-- `--run_duration`: The duration in seconds for which the search should run. Default is 3600 (1 hour).
-- `--num_evaluators`: The number of evaluator processes to run. Default is the number of CPU cores minus 1.
-- `--lm`: The language model configuration to use. This can be specified multiple times for different samplers.
-- `--function_to_evolve`: The name of the function to evolve in the spec file. Default is "priority".
-- `--function_to_run`: The name of the function to run for evaluation in the spec file. Default is "solve".
+- `--samplers`: The number of sampler threads to run. Default is 15.
+- `--evaluators`: The number of evaluator processes to run. Default is the number of CPU cores minus 1.
+- `--islands`: The number of islands for the island model in the genetic algorithm. Default is 10.
+- `--reset`: The time between island resets. Default is 600 (10 minutes).
+- `--duration`: The duration in seconds for which the search should run. Default is 3600 (1 hour).
+- `--temperature`: LLM temperatur.  Default is 1.
 You can adjust these parameters to customize your FunSearch run. For example:
 
 
