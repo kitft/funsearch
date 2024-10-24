@@ -39,7 +39,7 @@ FunSearch is an implementation of an evolutionary algorithm for program search u
 5. Create a data folder and run the container:
    ```
    mkdir data
-   docker run -it -v ./data:/workspace/data -v ./examples:/workspace/examples -p 6006:6006 -e MISTRAL_API_KEY=$MISTRAL_API_KEY -e GOOGLE_API_KEY=$GOOGLE_API_KEY -e OPENAI_API_KEY=$OPENAI_API_KEY -e ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY funsearch
+   docker run -it -v ./data:/workspace/data -v ./examples:/workspace/examples -p 6006:6006 -e MISTRAL_API_KEY=$MISTRAL_API_KEY -e GOOGLE_API_KEY=$GOOGLE_API_KEY -e OPENAI_API_KEY=$OPENAI_API_KEY -e ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY -e DEEPINFRA_API_KEY=$DEEPINFRA_API_KEY funsearch
 
 
 ```
