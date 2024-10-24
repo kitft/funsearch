@@ -152,8 +152,7 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
                 best_score_overall = max(best_scores_per_island)
                 avg_score_overall = sum(avg_scores_per_island) / len(avg_scores_per_island) if avg_scores_per_island else 0
 
-                if eval_queue_size > 0 or result_queue_size > 0:
-                    logging.info(f"Time: {current_time:.2f}s, Eval Queue size: {eval_queue_size}, Result Queue size: {result_queue_size}")
+                logging.info(f"Time: {current_time:.2f}s, Eval Queue size: {eval_queue_size}, Result Queue size: {result_queue_size}")
 
                 # Log scores to CSV
                 with open(csv_filename, 'a', newline='') as csvfile:
@@ -179,6 +178,9 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
             await asyncio.sleep(10)
             if eval_queue.qsize() > 500:
                 logging.warning("Eval queue size exceeded 500. Initiating shutdown.")
+                break
+            if result_queue.qsize() > 500:
+                logging.warning("Result queue size exceeded 500. Initiating shutdown.")
                 break
     except asyncio.CancelledError:
         logging.info("Cancellation requested. Shutting down gracefully.")
