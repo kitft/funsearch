@@ -182,7 +182,7 @@ class Evaluator:
     new_function, program = _sample_to_program(
         sample, version_generated, self._template, self._function_to_evolve)
     if new_function is None:
-      logging.info(f"eval:parse-failed" {model}")
+      logging.info(f"eval:parse-failed {model}")
       return None
 
     scores_per_test = {}
