@@ -74,17 +74,17 @@ class Config:
   num_evaluators: int = 10
   samples_per_prompt: int = 4
   num_batches=2
-  run_duration: int = 10000000
+  run_duration: int = 86400
+  reset_period: int = 3600
   top_p: float = 0.95
   llm_temperature: float = 1.0
 
 
-  def __init__(self, num_islands: int = 10, **kwargs):
-    object.__setattr__(self, 'num_islands', num_islands)
-    object.__setattr__(self, 'programs_database', ProgramsDatabaseConfig(num_islands=num_islands))
+  def __init__(self, **kwargs):
     for key, value in kwargs.items():
       if hasattr(self, key):
         object.__setattr__(self, key, value)
+    object.__setattr__(self, 'programs_database', ProgramsDatabaseConfig(num_islands=self.num_islands,reset_period=self.reset_period))
 
 #config for multi-testing - not actually designed to be modified by users
 @dataclasses.dataclass(frozen=False)

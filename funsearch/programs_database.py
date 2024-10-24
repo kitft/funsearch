@@ -186,10 +186,9 @@ class ProgramsDatabase:
     #otherwise discard the program
 
     # Check whether it is time to reset an island.
-    print("*** register_program reset check ***")
-    logging.info("checking reset period %s"%(self._config_reset_period))
     if (time.time() - self._last_reset_time > self._config.reset_period):
       self._last_reset_time = time.time()
+      logging.info("Resetting islands")
       self.reset_islands()
 
     # Backup every N iterations
@@ -202,13 +201,13 @@ class ProgramsDatabase:
   def reset_islands(self) -> None:
     """Resets the weaker half of islands."""
     # We sort best scores after adding minor noise to break ties.
+    logging.info("best scores per island: %s"%(self._best_score_per_island))
     indices_sorted_by_score: np.ndarray = np.argsort(
         self._best_score_per_island +
         np.random.randn(len(self._best_score_per_island)) * 1e-6)
     num_islands_to_reset = self._config.num_islands // 2
-    logging.info("Best scores per island: %s"%(self._best_score_per_island))
     reset_islands_ids = indices_sorted_by_score[:num_islands_to_reset]
-    logging.info("Resetting islands: %s"%(reset_island_ids))
+    logging.info("reset islands: %s"%(reset_islands_ids))
     keep_islands_ids = indices_sorted_by_score[num_islands_to_reset:]
     for island_id in reset_islands_ids:
       self._islands[island_id] = Island(
