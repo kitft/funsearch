@@ -205,7 +205,7 @@ class ProgramsDatabase:
         self._best_score_per_island +
         np.random.randn(len(self._best_score_per_island)) * 1e-6)
     num_islands_to_reset = self._config.num_islands // 2
-    logging.info("Best scores per island: %s"%(self._best_score_per_island)")
+    logging.info("Best scores per island: %s"%(self._best_score_per_island))
     reset_islands_ids = indices_sorted_by_score[:num_islands_to_reset]
     logging.info("Resetting islands: %s"%(reset_island_ids))
     keep_islands_ids = indices_sorted_by_score[num_islands_to_reset:]
