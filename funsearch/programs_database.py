@@ -201,13 +201,13 @@ class ProgramsDatabase:
   def reset_islands(self) -> None:
     """Resets the weaker half of islands."""
     # We sort best scores after adding minor noise to break ties.
-    logging.info("best scores per island: %s"%(self._best_score_per_island))
+    logging.info("Best scores per island: %s"%(self._best_score_per_island))
     indices_sorted_by_score: np.ndarray = np.argsort(
         self._best_score_per_island +
         np.random.randn(len(self._best_score_per_island)) * 1e-6)
     num_islands_to_reset = self._config.num_islands // 2
     reset_islands_ids = indices_sorted_by_score[:num_islands_to_reset]
-    logging.info("reset islands: %s"%(reset_islands_ids))
+    logging.info("Reset islands: %s"%(reset_islands_ids))
     keep_islands_ids = indices_sorted_by_score[num_islands_to_reset:]
     for island_id in reset_islands_ids:
       self._islands[island_id] = Island(
