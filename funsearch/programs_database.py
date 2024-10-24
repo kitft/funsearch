@@ -186,6 +186,7 @@ class ProgramsDatabase:
     #otherwise discard the program
 
     # Check whether it is time to reset an island.
+    print("*** register_program reset check ***")
     logging.info("checking reset period %s"%(self._config_reset_period))
     if (time.time() - self._last_reset_time > self._config.reset_period):
       self._last_reset_time = time.time()
