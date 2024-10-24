@@ -57,10 +57,10 @@ def evaluator_process(eval_queue: Queue, result_queue: Queue, config: config_lib
             task = eval_queue.get(timeout=1)
             if task is None:
                 break
-            sample, island_id, version_generated, island_version = task
+            sample, island_id, version_generated, island_version, model = task
             # Log the length of eval_queue and result_queue
-            result = evaluator_instance.analyse(sample, island_id, version_generated, island_version)
-            #logging.info(f"Evaluator {id}: Eval Queue size: {eval_queue.qsize()}, Result Queue size: {result_queue.qsize()}, Result: {bool(result)}")
+            result = evaluator_instance.analyse(sample, island_id, version_generated, island_version, model)
+            #logging.info(f"Evaluator {id}, island {island_id}, version generated {version_generated}, island version {island_version}: Eval Queue size: {eval_queue.qsize()}, Result Queue size: {result_queue.qsize()}, Result: {bool(result)}")
             if result:
                 result_queue.put(result)
         except multiprocessing.queues.Empty:
@@ -115,9 +115,9 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
 
     # Initial evaluation
     initial = multitestingconfig.template.get_function(multitestingconfig.function_to_evolve).body
-    eval_queue.put((initial, None, None, None))
+    eval_queue.put((initial, None, None, None, None))
     time.sleep(3)
-    logging.info("Initialising samplers")
+    logging.info("Initialising %d samplers"%(len(samplers)))
     sampler_tasks = [asyncio.create_task(sampler_worker(s, eval_queue, database,config)) for s in samplers]
 
     timestamp = multitestingconfig.timestamp
@@ -177,8 +177,8 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
                 writer.add_scalar('API Calls', total_api_calls, int(current_time))
 
             await asyncio.sleep(10)
-            if eval_queue.qsize() > 10:
-                logging.warning("Eval queue size exceeded 10. Initiating shutdown.")
+            if eval_queue.qsize() > 500:
+                logging.warning("Eval queue size exceeded 500. Initiating shutdown.")
                 break
     except asyncio.CancelledError:
         logging.info("Cancellation requested. Shutting down gracefully.")

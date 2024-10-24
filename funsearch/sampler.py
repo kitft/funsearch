@@ -22,6 +22,8 @@ from collections.abc import Collection, Sequence
 
 from funsearch import evaluator
 from funsearch import programs_database
+import logging
+import time
 #import asyncio
 
 import os
@@ -37,7 +39,10 @@ class LLM:
 
   async def _draw_sample(self, prompt: str, label: int) -> str:
     """Returns a predicted continuation of `prompt`."""
+    start = time.time()
     response = await self.model.prompt(prompt)
+    end = time.time()
+    logging.info("sample:%s:%d:%d:%d:%d:%.3f:%.3f:%.3f"%(self.model.model,label,self.prompt_count,len(prompt),len(response),start,end,end-start))
     self._log(prompt, response, self.prompt_count, label)
     self.prompt_count += 1
     return response
@@ -78,6 +83,6 @@ class Sampler:
     self.api_calls += len(samples)
     for sample in samples:
       #chosen_evaluator = np.random.choice(self._evaluators)
-      eval_queue.put((sample, prompt.island_id, prompt.version_generated, prompt.island_version))
+      eval_queue.put((sample, prompt.island_id, prompt.version_generated, prompt.island_version, self._llm.model.model))
       #chosen_evaluator.analyse(
       #    sample, prompt.island_id, prompt.version_generated, self.label)
