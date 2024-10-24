@@ -199,7 +199,7 @@ class Evaluator:
       #self._database.register_program(new_function, island_id, scores_per_test)
       #db_queue.put((new_function, island_id, scores_per_test))
       logging.info(f"eval:success {model} {scores_per_test}")
-      return (new_function, island_id, scores_per_test, island_version)
+      return (new_function, island_id, scores_per_test, island_version, model)
     else:
       logging.info(f"eval:run-failed {model}")
 

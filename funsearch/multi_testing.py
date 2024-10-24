@@ -73,8 +73,8 @@ async def database_worker(result_queue: multiprocessing.Queue, database: AsyncPr
             result = result_queue.get_nowait()
             if result is None:
                 break
-            new_function, island_id, scores_per_test, island_version = result
-            await database.register_program(new_function, island_id, scores_per_test, island_version)
+            new_function, island_id, scores_per_test, island_version, model = result
+            await database.register_program(new_function, island_id, scores_per_test, island_version, model)
         except multiprocessing.queues.Empty:
             await asyncio.sleep(0.0001)
 
