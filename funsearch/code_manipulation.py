@@ -27,7 +27,7 @@ import dataclasses
 import io
 import tokenize
 
-from absl import logging
+import logging
 
 
 @dataclasses.dataclass
