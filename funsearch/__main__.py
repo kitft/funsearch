@@ -225,14 +225,14 @@ def main(ctx):
 @click.option('--output_path', default="./data/", type=click.Path(file_okay=False), help='Path for logs and data')
 @click.option('--load_backup', default=None, type=click.File("rb"), help='Use existing program database')
 @click.option('--iterations', default=-1, type=click.INT, help='Max iterations per sampler')
-@click.option('--sandbox_type', default="ContainerSandbox", type=click.Choice(SANDBOX_NAMES), help='Sandbox type')
+@click.option('--sandbox', default="ContainerSandbox", type=click.Choice(SANDBOX_NAMES), help='Sandbox type')
 @click.option('--samplers', default=1, type=click.INT, help='Number of samplers')
 @click.option('--evaluators', default=10, type=click.INT, help='Number of evaluators')
 @click.option('--islands', default=10, type=click.INT, help='Number of islands')
 @click.option('--reset', default=600, type=click.INT, help='Reset period in seconds')
 @click.option('--duration', default=3600, type=click.INT, help='Duration in seconds')
 @click.option('--temperature', default=1, type=click.FLOAT, help='LLM temperature')
-def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, sandbox_type, samplers, evaluators, islands, reset, duration, temperature):
+def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, sandbox, samplers, evaluators, islands, reset, duration, temperature):
     """Execute the function-search algorithm.
 
     SPEC_FILE: A Python module providing the basis of the LLM prompt and the evaluation metric.
@@ -270,7 +270,7 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
     logging.info(f"Sampling with {model_counts} copies of model(s): {model_list}")
     logging.info(f"Using LLM temperature: {temperature}")
 
-    conf = config.Config(sandbox=sandbox_type, num_samplers=samplers, num_evaluators=evaluators, num_islands=islands, reset_period=reset, run_duration=duration,llm_temperature=temperature)
+    conf = config.Config(sandbox=sandbox, num_samplers=samplers, num_evaluators=evaluators, num_islands=islands, reset_period=reset, run_duration=duration,llm_temperature=temperature)
     logging.info(f"run_duration = {conf.run_duration}, reset_period = {conf.reset_period}")
 
     model_list = sum([model_counts[i]*[model_list[i]] for i in range(len(model_list))],[])
@@ -286,7 +286,7 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
         database.load(load_backup)
 
     parsed_inputs = parse_input(inputs)
-    sandbox_class = next(c for c in SANDBOX_TYPES if c.__name__ == sandbox_type)
+    sandbox_class = next(c for c in SANDBOX_TYPES if c.__name__ == sandbox)
     multitestingconfig = config.MultiTestingConfig(log_path=log_path, sandbox_class=sandbox_class, parsed_inputs=parsed_inputs,
                                                     template=template, function_to_evolve=function_to_evolve, function_to_run=function_to_run, lm=lm,timestamp=timestamp)
 
@@ -316,6 +316,7 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
             pass
         # make plots
         plotscores(str(timestamp))
+        #raise Exception("STOP AND I MEAN STOP")
 
 @main.command()
 @click.argument("db_file", type=click.File("rb"))

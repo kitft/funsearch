@@ -29,8 +29,8 @@ class AsyncProgramsDatabase(programs_database.ProgramsDatabase):
         #print("Getting prompt")
         return self.orig_database.get_prompt()
 
-    async def register_program(self, program, island_id, scores_per_test, island_version=None):
-        self.orig_database.register_program(program, island_id, scores_per_test, island_version)
+    async def register_program(self, program, island_id, scores_per_test, island_version=None, model=None):
+        self.orig_database.register_program(program, island_id, scores_per_test, island_version, model)
 
 # class AsyncEvaluator(evaluator.Evaluator):
 #     async def async_analyse(self, sample: str, island_id: int | None, version_generated: int | None) -> None:

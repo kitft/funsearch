@@ -153,6 +153,7 @@ class ProgramsDatabase:
       program: code_manipulation.Function,
       island_id: int,
       scores_per_test: ScoresPerTest,
+      model: str,
   ) -> None:
     """Registers `program` in the specified island."""
     self._islands[island_id].register_program(program, scores_per_test)
@@ -161,8 +162,8 @@ class ProgramsDatabase:
       self._best_program_per_island[island_id] = program
       self._best_scores_per_test_per_island[island_id] = scores_per_test
       self._best_score_per_island[island_id] = score
-      logging.info('Best score of island %d increased to %s. All score for island: %s', 
-                   island_id, score, self._best_scores_per_test_per_island[island_id])
+      logging.info('Best score of island %d increased to %s via %s. All score for island: %s', 
+                   island_id, score, model, self._best_scores_per_test_per_island[island_id])
       #logging.info('Best score of island %d increased to %s. ', 
       #             island_id, score)
 
@@ -171,7 +172,8 @@ class ProgramsDatabase:
       program: code_manipulation.Function,
       island_id: int | None,
       scores_per_test: ScoresPerTest,
-      island_version: int | None = None,
+      island_version: int | None,
+      model: str | None = None,
   ) -> None:
     """Registers `program` in the database."""
     # In an asynchronous implementation we should consider the possibility of
@@ -180,9 +182,9 @@ class ProgramsDatabase:
     if island_id is None:
       # This is a program added at the beginning, so adding it to all islands.
       for island_id in range(len(self._islands)):
-        self._register_program_in_island(program, island_id, scores_per_test)
+        self._register_program_in_island(program, island_id, scores_per_test, model)
     elif island_version is not None and self._islands[island_id]._island_version == island_version:
-      self._register_program_in_island(program, island_id, scores_per_test)
+      self._register_program_in_island(program, island_id, scores_per_test, model)
     #otherwise discard the program
 
     # Check whether it is time to reset an island.
