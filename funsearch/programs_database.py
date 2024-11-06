@@ -153,7 +153,7 @@ class ProgramsDatabase:
       program: code_manipulation.Function,
       island_id: int,
       scores_per_test: ScoresPerTest,
-      model: str,
+      model: str | None = None,
   ) -> None:
     """Registers `program` in the specified island."""
     self._islands[island_id].register_program(program, scores_per_test)
@@ -190,8 +190,9 @@ class ProgramsDatabase:
     # Check whether it is time to reset an island.
     if (time.time() - self._last_reset_time > self._config.reset_period):
       self._last_reset_time = time.time()
-      logging.info("Resetting islands")
+      logging.info("Resetting islands...")
       self.reset_islands()
+      logging.info("Reset islands")
 
     # Backup every N iterations
     if self._program_counter > 0:
@@ -211,6 +212,7 @@ class ProgramsDatabase:
     reset_islands_ids = indices_sorted_by_score[:num_islands_to_reset]
     logging.info("Reset islands: %s"%(reset_islands_ids))
     keep_islands_ids = indices_sorted_by_score[num_islands_to_reset:]
+    logging.info("Keeping islands: %s"%(keep_islands_ids))
     for island_id in reset_islands_ids:
       self._islands[island_id] = Island(
           self._template,
@@ -225,6 +227,7 @@ class ProgramsDatabase:
       founder = self._best_program_per_island[founder_island_id]
       founder_scores = self._best_scores_per_test_per_island[founder_island_id]
       self._register_program_in_island(founder, island_id, founder_scores)
+      logging.info(f"Registered new founder of island {island_id} from island {founder_island_id}")
 
 
 class Island:

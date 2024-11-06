@@ -58,25 +58,30 @@ def evaluator_process(eval_queue: Queue, result_queue: Queue, config: config_lib
             if task is None:
                 break
             sample, island_id, version_generated, island_version, model = task
-            # Log the length of eval_queue and result_queue
             result = evaluator_instance.analyse(sample, island_id, version_generated, island_version, model)
-            #logging.info(f"Evaluator {id}, island {island_id}, version generated {version_generated}, island version {island_version}: Eval Queue size: {eval_queue.qsize()}, Result Queue size: {result_queue.qsize()}, Result: {bool(result)}")
+            logging.info(f"Evaluator {id}, island {island_id}, version generated {version_generated}, island version {island_version}: Eval Queue size: {eval_queue.qsize()}, Result Queue size: {result_queue.qsize()}, Result: {bool(result)}")
             if result:
                 result_queue.put(result)
+                #logging.info("increased result queue size to %d"%(result_queue.qsize()))
         except multiprocessing.queues.Empty:
-            time.sleep(0.001)
+            time.sleep(0.01)
             continue
 
 async def database_worker(result_queue: multiprocessing.Queue, database: AsyncProgramsDatabase):
+    logging.info("database worker start")
     while True:
         try:
             result = result_queue.get_nowait()
             if result is None:
+                logging.info("database worker exiting loop")
                 break
+            # else:
+            #    logging.info("reduced result queue size to %d"%(result_queue.qsize()))
             new_function, island_id, scores_per_test, island_version, model = result
             await database.register_program(new_function, island_id, scores_per_test, island_version, model)
         except multiprocessing.queues.Empty:
-            await asyncio.sleep(0.0001)
+            await asyncio.sleep(0.1)
+    logging.info("database worker end")
 
 async def sampler_worker(sampler: sampler.Sampler, eval_queue: multiprocessing.Queue, database: AsyncProgramsDatabase, config: config_lib.Config):
     #wait a random amount of time to avoid synchronisation issues and API ratelimits
@@ -136,7 +141,7 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
         start_time = time.time()
         while time.time() - start_time < config.run_duration:
             current_time = time.time() - start_time
-            if current_time >= 10 * (current_time // 10):
+            if current_time >= 5 * (current_time // 5):
                 eval_queue_size = eval_queue.qsize()
                 result_queue_size = result_queue.qsize()
                 best_scores_per_island = database._best_score_per_island
@@ -175,12 +180,12 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
                 total_api_calls = sum(sampler.api_calls for sampler in samplers)
                 writer.add_scalar('API Calls', total_api_calls, int(current_time))
 
-            await asyncio.sleep(10)
+            await asyncio.sleep(5)
             if eval_queue.qsize() > 500:
                 logging.warning("Eval queue size exceeded 500. Initiating shutdown.")
                 break
-            if result_queue.qsize() > 500:
-                logging.warning("Result queue size exceeded 500. Initiating shutdown.")
+            if result_queue.qsize() > 50:
+                logging.warning("Result queue size exceeded 50. Initiating shutdown.")
                 break
     except asyncio.CancelledError:
         logging.info("Cancellation requested. Shutting down gracefully.")
@@ -196,23 +201,8 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
         for _ in evaluator_processes:
             eval_queue.put(None)
         result_queue.put(None)
-        logging.info("All tasks cancelled, workers signaled to shut down")
-        # Wait for processes to finish with a timeout
-        for p in evaluator_processes:
-            p.join(timeout=10)  # Wait for up to 10 seconds
-            if p.is_alive():
-                logging.warning(f"Process {p.pid} did not terminate in time. Terminating forcefully.")
-                p.terminate()
-                p.join(timeout=5)  # Give it a bit more time to terminate
-                if p.is_alive():
-                    logging.error(f"Process {p.pid} could not be terminated. Killing.")
-                    p.kill()
-
-        # Wait for all tasks to finish with a timeout
-        try:
-            await asyncio.wait_for(asyncio.gather(*sampler_tasks, db_worker, return_exceptions=True), timeout=30)
-        except asyncio.TimeoutError:
-            logging.warning("Some tasks did not complete in time. Proceeding with shutdown.")
+        logging.info("All tasks cancelled, workers signaled to shut down, sleeping 1 second")
+        await asyncio.sleep(1)
 
         logging.info(f"Total programs processed: {database._program_counter}")
         logging.info(f"Best scores per island: {database._best_score_per_island}")

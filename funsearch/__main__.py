@@ -175,7 +175,7 @@ from dotenv import load_dotenv
 from funsearch import config, core, sandbox, sampler, programs_database, code_manipulation, multi_testing, models
 
 LOGLEVEL = os.environ.get('LOGLEVEL', 'INFO').upper()
-logging.basicConfig(level=LOGLEVEL)
+logging.basicConfig(format='%(asctime)s.%(msecs)03d:%(levelname)s:%(message)s',level=LOGLEVEL,datefmt='%Y-%m-%d-%H-%M-%S')
 
 
 def get_all_subclasses(cls):
@@ -250,7 +250,6 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
     """
     # Load environment variables from the .env file.
     load_dotenv()
-
     timestamp = str(int(time.time()))
     log_path = pathlib.Path(output_path) / timestamp
     if not log_path.exists():
@@ -258,7 +257,8 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
         logging.info(f"Writing logs to {log_path}")
     model_list = model.split(",")
     model_counts = [int(m.split(':')[1]) if ':' in m else 1 for m in model_list]
-    model_list = [m.split(':')[0] for m in model.split(",")]
+    model_keys = [int(m.split(':')[2]) if m.count(':') > 1 else 0 for m in model_list]
+    model_list = [m.split(':')[0] for m in model_list]
     if sum(model_counts) > samplers:
         samplers = sum(model_counts)
         logging.info(f"Setting samplers to {samplers}")
@@ -274,7 +274,9 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
     logging.info(f"run_duration = {conf.run_duration}, reset_period = {conf.reset_period}")
 
     model_list = sum([model_counts[i]*[model_list[i]] for i in range(len(model_list))],[])
-    lm = [sampler.LLM(conf.samples_per_prompt, models.get_model(m)(model_name=m, top_p=conf.top_p, temperature=temperature), log_path) for m in model_list]
+    keynum_list = sum([model_counts[i]*[model_keys[i]] for i in range(len(model_keys))],[])
+    logging.info(f"keynum list: {keynum_list}")
+    lm = [sampler.LLM(conf.samples_per_prompt, models.LLMModel(model_name=model_list[i], top_p=conf.top_p, temperature=temperature, keynum=keynum_list[i]), log_path) for i in range(len(model_list))]
 
     specification = spec_file.read()
     function_to_evolve, function_to_run = core._extract_function_names(specification)
