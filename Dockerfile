@@ -17,6 +17,9 @@ RUN pip install torch --extra-index-url https://download.pytorch.org/whl/cpu
 RUN pip install matplotlib pandas
 RUN pip install anthropic google-generativeai
 RUN pip install openai>=1.2 
+RUN pip install click
+RUN pip install cloudpickle
+RUN pip install scipy
 
 # Create necessary subfolders in data directory if they don't exist
 RUN mkdir -p ./data && \
