@@ -5,7 +5,9 @@ import os
 import google.generativeai as genai
 # import asyncio
 def get_model(model_name):
-    if "codestral" in model_name.lower() or "mistral" in model_name.lower():
+    if "/" in model_name.lower():
+        return OpenRouterModel
+    elif "codestral" in model_name.lower() or "mistral" in model_name.lower():
         return MistralModel
     elif "gpt" in model_name.lower() or "o1" in model_name.lower():
         return OpenAIModel
@@ -215,3 +217,49 @@ class GeminiModel:
                     return None
         return None  # If we've exhausted all retries
 
+class OpenRouterModel:
+    def __init__(self, model_name="openai/gpt-3.5-turbo", top_p=0.9, temperature=0.7):
+        self.key = os.environ.get("OPENROUTER_API_KEY")
+        if not self.key:
+            raise ValueError("OPENROUTER_API_KEY environment variable is not set")
+        self.client = openai.AsyncOpenAI(api_key=self.key, base_url="https://openrouter.ai/api/v1")  # Changed to AsyncOpenAI
+        self.model = model_name
+        self.top_p = top_p
+        self.temperature = temperature
+
+    async def prompt(self, prompt_text):
+        max_retries = 5
+        base_delay = 1  # Start with a 1-second delay
+        for attempt in range(max_retries):
+            try:
+                chat_response = await self.client.chat.completions.create(
+                    model=self.model,
+                    messages=[
+                        {
+                            "role": "user",
+                            "content": prompt_text
+                        }
+                    ],
+                    max_tokens=4096,
+                    top_p=self.top_p,
+                    temperature=self.temperature
+                )
+                if chat_response is not None:
+                    return chat_response.choices[0].message.content
+                else:
+                    print("Error: No response received from OpenAI API")
+                    return None
+            except Exception as e:
+                if isinstance(e, openai.RateLimitError):
+                    if attempt < max_retries - 1:
+                        delay = base_delay * (2 ** attempt)  # Exponential backoff
+                        print(f"Rate limit exceeded. Retrying in {delay} seconds...")
+                        await asyncio.sleep(delay)
+                    else:
+                        print("Max retries reached. Unable to get a response.")
+                        return None
+                else:
+                    print(f"Error in OperRouter.prompt: {e}")
+                    return None
+            #OPENAI seems to not have a 429 status code, so no need to check for that - it retries on its own
+        return None  # If we've exhausted all retries
