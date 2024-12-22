@@ -30,6 +30,7 @@ FunSearch is an implementation of an evolutionary algorithm for program search u
    export GOOGLE_API_KEY=<your_key_here>
    export OPENAI_API_KEY=<your_key_here>
    export ANTHROPIC_API_KEY=<your_key_here>
+   export OPENROUTER_API_KEY=<your_key_here>
    ```
 4. Build the Docker image. This may take a while, especially the first time. You will need to re-build if you update the Dockerfile or edit the code. You should not need to re-build if you are only updating the input python file or input data.
 
@@ -39,7 +40,7 @@ FunSearch is an implementation of an evolutionary algorithm for program search u
 5. Create a data folder and run the container:
    ```
    mkdir data
-   docker run -it -v ./data:/workspace/data -v ./examples:/workspace/examples -p 6006:6006 -e MISTRAL_API_KEY=$MISTRAL_API_KEY -e GOOGLE_API_KEY=$GOOGLE_API_KEY -e OPENAI_API_KEY=$OPENAI_API_KEY -e ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY funsearch
+   docker run -it -v ./data:/workspace/data -v ./examples:/workspace/examples -p 6006:6006 -e MISTRAL_API_KEY=$MISTRAL_API_KEY -e GOOGLE_API_KEY=$GOOGLE_API_KEY -e OPENAI_API_KEY=$OPENAI_API_KEY -e ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY -e OPENROUTER_API_KEY=$OPENROUTER_API_KEY funsearch
 
 
 ```
