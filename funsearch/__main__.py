@@ -225,7 +225,7 @@ def main(ctx):
 @click.option('--output_path', default="./data/", type=click.Path(file_okay=False), help='Path for logs and data')
 @click.option('--load_backup', default=None, type=click.File("rb"), help='Use existing program database')
 @click.option('--iterations', default=-1, type=click.INT, help='Max iterations per sampler')
-@click.option('--sandbox', default="ContainerSandbox", type=click.Choice(SANDBOX_NAMES), help='Sandbox type')
+@click.option('--sandbox', default="ExternalProcessSandbox", type=click.Choice(SANDBOX_NAMES), help='Sandbox type')
 @click.option('--samplers', default=1, type=click.INT, help='Number of samplers')
 @click.option('--evaluators', default=10, type=click.INT, help='Number of evaluators')
 @click.option('--islands', default=10, type=click.INT, help='Number of islands')
@@ -256,9 +256,9 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
         log_path.mkdir(parents=True)
         logging.info(f"Writing logs to {log_path}")
     model_list = model.split(",")
-    model_counts = [int(m.split(':')[1]) if ':' in m else 1 for m in model_list]
-    model_keys = [int(m.split(':')[2]) if m.count(':') > 1 else 0 for m in model_list]
-    model_list = [m.split(':')[0] for m in model_list]
+    model_counts = [int(m.split('*')[1]) if '*' in m else 1 for m in model_list]
+    model_keys = [int(m.split('*')[2]) if m.count('*') > 1 else 0 for m in model_list]
+    model_list = [m.split('*')[0] for m in model_list]
     if sum(model_counts) > samplers:
         samplers = sum(model_counts)
         logging.info(f"Setting samplers to {samplers}")
