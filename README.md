@@ -209,7 +209,7 @@ This variant could be also used, e.g., in Colab quite safely since the environme
 
 ```
 pip install .
-
+source .env #need to source the .env file to get the API keys
 funsearch runasync examples/cap_set_spec.py 11
 ```
 
