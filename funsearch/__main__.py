@@ -1,3 +1,19 @@
+import json
+import logging
+import os
+import pathlib
+import pickle
+import time
+import asyncio
+
+import click
+#import llm
+from dotenv import load_dotenv
+
+from funsearch import config, core, sandbox, sampler, programs_database, code_manipulation, multi_testing, models
+
+LOGLEVEL = os.environ.get('LOGLEVEL', 'INFO').upper()
+logging.basicConfig(format='%(asctime)s.%(msecs)03d:%(levelname)s:%(message)s',level=LOGLEVEL,datefmt='%Y-%m-%d-%H-%M-%S')
 # import json
 # import logging
 # import os
@@ -160,22 +176,6 @@
 
 
 
-import json
-import logging
-import os
-import pathlib
-import pickle
-import time
-import asyncio
-
-import click
-#import llm
-from dotenv import load_dotenv
-
-from funsearch import config, core, sandbox, sampler, programs_database, code_manipulation, multi_testing, models
-
-LOGLEVEL = os.environ.get('LOGLEVEL', 'INFO').upper()
-logging.basicConfig(format='%(asctime)s.%(msecs)03d:%(levelname)s:%(message)s',level=LOGLEVEL,datefmt='%Y-%m-%d-%H-%M-%S')
 
 
 def get_all_subclasses(cls):
@@ -232,7 +232,8 @@ def main(ctx):
 @click.option('--reset', default=600, type=click.INT, help='Reset period in seconds')
 @click.option('--duration', default=3600, type=click.INT, help='Duration in seconds')
 @click.option('--temperature', default=1, type=click.FLOAT, help='LLM temperature')
-def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, sandbox, samplers, evaluators, islands, reset, duration, temperature):
+@click.option('--team', default=None, type=str, help='wandb team name')
+def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, sandbox, samplers, evaluators, islands, reset, duration, temperature, team):
     """Execute the function-search algorithm.
 
     SPEC_FILE: A Python module providing the basis of the LLM prompt and the evaluation metric.
@@ -294,7 +295,7 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
 
     async def initiate_search():
         async_database = multi_testing.AsyncProgramsDatabase(database)
-        await multi_testing.runAsync(conf, async_database, multitestingconfig)
+        await multi_testing.runAsync(conf, async_database, multitestingconfig, team)
 
     try:
         asyncio.run(initiate_search())

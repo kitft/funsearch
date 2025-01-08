@@ -5,6 +5,8 @@ import logging
 import multiprocessing
 from multiprocessing import Process, Queue
 import time
+import getpass
+import sys
 
 from funsearch import programs_database, evaluator, sampler, config as config_lib
 # import pathlib
@@ -95,13 +97,111 @@ async def sampler_worker(sampler: sampler.Sampler, eval_queue: multiprocessing.Q
             logging.info('Slowed down sampling to %f seconds', sleep_time)
         await asyncio.sleep(sleep_time)
 
-async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, multitestingconfig: config_lib.MultiTestingConfig):
+def countdown_timer(seconds):
+    """Display a countdown timer."""
+    for i in range(seconds, 0, -1):
+        sys.stdout.write(f"\rUsing default team in {i} seconds... Press Enter to select different entity ")
+        sys.stdout.flush()
+        # Check if user pressed Enter
+        if sys.stdin in select([sys.stdin], [], [], 1)[0]:
+            sys.stdin.readline()
+            sys.stdout.write('\r' + ' ' * 70 + '\r')  # Clear the line
+            return False
+        time.sleep(1)
+    sys.stdout.write('\r' + ' ' * 70 + '\r')  # Clear the line
+    return True
+
+def select_wandb_entity(team=None):
+    """Select wandb entity, with optional team default."""
+    try:
+        if team:
+            print(f"\nTeam '{team}' will be used as default.")
+            # Import select at top level to avoid name conflicts
+            import select as select_module
+            # Check if user wants to override team before timeout
+            if countdown_timer(10):  # countdown_timer already handles the select check
+                return team
+                
+        # If user pressed Enter or no team provided, ask for entity
+        entity = input("\nEnter wandb entity (press enter for default): ").strip()
+        return entity if entity else None
+            
+    except Exception as e:
+        logging.warning(f"Error in entity selection: {e}")
+        return team  # Fall back to team parameter if there's an error
+async def validate_model(lm: sampler.LLM, timeout=30):
+    """Test if the model is responding correctly with timeout.
+    
+    Args:
+        lm: The language model to test (instance of sampler.LLM)
+        timeout: Maximum time in seconds to wait for response (default: 30)
+    """
+    try:
+        test_prompt = "Write a simple Python function that adds two numbers."
+        
+        # Create task with timeout
+        try:
+            async with asyncio.timeout(timeout):
+                # Use LLM's draw_sample method directly
+                response = await lm._draw_sample(test_prompt, label=0)
+                if not response or len(response) < 10:  # Basic check for a reasonable response
+                    raise ValueError(f"Model {lm.model.model} returned an invalid response")
+                logging.info(f"Successfully validated model {lm.model.model}")
+                return True
+        except asyncio.TimeoutError:
+            logging.error(f"Model {lm.model.model} validation timed out after {timeout} seconds")
+            return False
+            
+    except Exception as e:
+        logging.error(f"Failed to validate model {lm.model.model}: {str(e)}")
+        return False
+
+async def validate_all_models(lm_list):
+    """Validate all models before starting the main loop."""
+    print("\nValidating models...")
+    valid_models = []
+    validated_model_names = set()
+    
+    for lm in lm_list:
+        model_name = lm.model.model
+        if model_name in validated_model_names:
+            # Skip validation but add to valid models if we already validated this model name
+            valid_models.append(lm)
+            continue
+            
+        print(f"Testing {model_name}...")  # Add progress indicator
+        if await validate_model(lm):
+            valid_models.append(lm)
+            validated_model_names.add(model_name)
+            print(f"✓ {model_name} passed validation")
+        else:
+            print(f"✗ {model_name} failed validation - skipping")
+    
+    if not valid_models:
+        raise RuntimeError("No valid models available. Please check your API keys and model configurations.")
+    
+    if len(valid_models) < len(lm_list):
+        print(f"\nWarning: Only {len(valid_models)}/{len(lm_list)} models passed validation")
+        response = input("Continue with valid models? (Y/n): ").strip().lower()
+        if response == 'n':
+            raise RuntimeError("User chose to abort due to model validation failures")
+    
+    return valid_models
+
+async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, multitestingconfig: config_lib.MultiTestingConfig, team=None):
     #num_cores = min(multiprocessing.cpu_count(), config.num_evaluators,2)
 
     num_cores = min(multiprocessing.cpu_count()-1, config.num_evaluators)
     logging.info("Number of cores/evaluators to be used: %d", num_cores)
     eval_queue = multiprocessing.Queue()
     result_queue = multiprocessing.Queue()
+
+    # Validate models before starting
+    valid_lm = await validate_all_models(multitestingconfig.lm)
+    if len(valid_lm) != len(multitestingconfig.lm):
+        config.num_samplers = len(valid_lm)
+        logging.info(f"Adjusted number of samplers to {config.num_samplers} based on valid models")
+    multitestingconfig.lm = valid_lm
 
     # Start evaluator processes
     evaluator_processes = []
@@ -110,7 +210,7 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
         p.start()
         evaluator_processes.append(p)
 
-    # Create samplers
+    # Create samplers with validated models
     samplers = [sampler.Sampler(database, None, multitestingconfig.lm[i], i) for i in range(config.num_samplers)]
 
     # Create and start tasks
@@ -127,10 +227,15 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
     os.makedirs("./data/scores", exist_ok=True)
     csv_filename = f"./data/scores/scores_log_{timestamp}.csv"
     
+    # Get wandb entity from user
+    entity = select_wandb_entity(team=team)
+    
     # Initialize wandb
     wandb.init(
+        entity=entity,
         project="funsearch",
         name=f"run_{timestamp}",
+
         config={
             "num_cores": num_cores,
             "num_samplers": config.num_samplers,

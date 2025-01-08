@@ -68,6 +68,7 @@ class LLMModel:
         self.timeout = timeout
         self.retries = retries
         logging.info(f"Created {self.provider} {self.model} sampler {self.id} using {keyname}")
+        logging.info(f"Ensure temperature defaults are correct for this model??")
 
     async def complete(self, prompt_text):
         if self.provider == "mistral":

@@ -12,6 +12,7 @@ FunSearch is an implementation of an evolutionary algorithm for program search u
 - Concurrent sampling with multiple asynchronous API calls
 - Asynchronous database operations for non-blocking access
 - Adaptive sampling rate based on CPU/evaluator capacity
+- Integration with Weights & Biases (wandb) for experiment tracking
 
 ## Installation and Setup
 
@@ -49,11 +50,24 @@ FunSearch is an implementation of an evolutionary algorithm for program search u
   - 'anthropic/claude-3-opus'
   - 'google/gemini-pro'
   - 'meta-llama/llama-2-70b-chat'
-  - 'mistral/mixtral-8x7b'
+  - 'mistralai/mixtral-8x7b'
 - You can find the full list of available models at https://openrouter.ai/docs
 - Multiple models can be specified using comma separation with optional counts and key numbers:
   - 'model1*count1*key1,model2*count2*key2'
   - Example: 'codestral-latest*10*0,mistral-tiny-latest*5*1'
+
+### Model Validation
+Before starting the search, each model is validated to ensure it's working correctly:
+- Tests each model with a simple prompt
+- 30-second timeout per model
+- Shows progress with checkmarks (✓) for passed and crosses (✗) for failed models
+- If some models fail:
+  - Shows warning with count of valid/invalid models
+  - Asks if you want to continue with just the valid ones
+- If all models fail:
+  - Shows error about API keys/configuration
+  - Exits before starting the search
+- Automatically adjusts number of samplers based on valid models
 
 ## Advice
 - Run the search with the desired model using the '--model' attribute.
@@ -63,7 +77,7 @@ FunSearch is an implementation of an evolutionary algorithm for program search u
 - You can also pass in a model name from OpenAI or Anthropic, etc. If this doesn't work, have a look at models.py
 
 ## Running the search
-`funsearch runasync` takes two arguments:
+`funsearch runasync` takes two arguments and several options:
 
 1. `SPEC_FILE`: A Python module that provides the basis of the LLM prompt as well as the evaluation metric.
    - Example: See `examples/cap_set_spec.py`
@@ -73,16 +87,58 @@ FunSearch is an implementation of an evolutionary algorithm for program search u
    - Comma-separated input data
    - The files are expected to contain a list with at least one element
    - Elements will be passed to the `solve()` method one by one
-   - As it stands, we simply sum over the scores of each input. We may want to consider changing this, to appropriately weight the different results.
 
 Examples of valid INPUTS:
 - 8
 - 8,9,10
 - ./examples/cap_set_input_data.json
 
-funsearch runasync /workspace/examples/cap_set_spec.py 8 --sandbox ExternalProcessSandbox --model mistralai/codestral-latest --samplers 20 --islands 10 --duration 3000
+Key options:
+- `--model`: The LLM model to use (default: "mistralai/codestral-latest")
+- `--samplers`: Number of sampler threads (default: 15)
+- `--evaluators`: Number of evaluator processes (default: CPU cores - 1)
+- `--islands`: Number of islands for genetic algorithm (default: 10)
+- `--duration`: Run duration in seconds (default: 3600)
+- `--team`: Wandb team/entity for logging (optional)
 
-This implementation uses a multi-process architecture with separate evaluator processes and asynchronous sampling. The number of evaluator processes is limited to the number of CPU cores minus 1, or the number specified in --evaluators, whichever is smaller.
+Example command:
+```bash
+funsearch runasync /workspace/examples/cap_set_spec.py 8 --sandbox ExternalProcessSandbox --model mistralai/codestral-latest --samplers 20 --islands 10 --duration 3000 --team <team>
+```
+
+### Weights & Biases Integration
+
+The search progress is automatically logged to Weights & Biases (wandb). You can specify a team/entity for logging in two ways:
+
+1. Using the `--team` option:
+   - If provided, will use that team as default with a 10-second countdown
+   - During countdown, you can press Enter to enter a different entity
+   - After countdown, automatically proceeds with the specified team
+
+2. Without `--team`:
+   - Prompts for entity name
+   - Press Enter to use wandb default (no entity)
+
+To use wandb:
+1. Set your wandb API key:
+   ```bash
+   export WANDB_API_KEY=<your_wandb_key_here>
+   ```
+2. Run funsearch with optional team:
+   ```bash
+   funsearch runasync ... --team myteam
+   ```
+
+The following metrics are logged to wandb:
+- Best and average scores for each island
+- Overall best and average scores
+- Queue sizes
+- API call counts
+- Other relevant metrics
+
+Additionally, scores are logged to CSV files in `./data/scores/`, and graphs are generated in `./data/graphs/` showing the progression of scores over time.
+
+The number of evaluator processes is limited to the number of CPU cores minus 1, or the number specified in --evaluators, whichever is smaller.
 
 The number of islands is controlled via --islands. 10 is typically a good default as it provides a good balance between exploration and exploitation.
 
@@ -260,24 +316,6 @@ If you use the code or data in this package, please cite:
 
 ## License and disclaimer
 ```
-Copyright 2023 DeepMind Technologies Limited
-
-All software is licensed under the Apache License, Version 2.0 (Apache 2.0);
-you may not use this file except in compliance with the Apache 2.0 license.
-You may obtain a copy of the Apache 2.0 license at:
-https://www.apache.org/licenses/LICENSE-2.0
-
-All other materials are licensed under the Creative Commons Attribution 4.0
-International License (CC-BY). You may obtain a copy of the CC-BY license at:
-https://creativecommons.org/licenses/by/4.0/legalcode
-
-Unless required by applicable law or agreed to in writing, all software and
-materials distributed here under the Apache 2.0 or CC-BY licenses are
-distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
-either express or implied. See the licenses for the specific language governing
-permissions and limitations under those licenses.
-
-This is not an official Google product.
 Copyright 2023 DeepMind Technologies Limited
 
 All software is licensed under the Apache License, Version 2.0 (Apache 2.0);
