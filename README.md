@@ -43,11 +43,12 @@ FunSearch is an implementation of an evolutionary algorithm for program search u
    mkdir data
    docker run -it -v ./data:/workspace/data -v ./examples:/workspace/examples -e MISTRAL_API_KEY=$MISTRAL_API_KEY -e GOOGLE_API_KEY=$GOOGLE_API_KEY -e OPENAI_API_KEY=$OPENAI_API_KEY -e ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY -e DEEPINFRA_API_KEY=$DEEPINFRA_API_KEY -e OPENROUTER_API_KEY=$OPENROUTER_API_KEY -e WANDB_API_KEY=$WANDB_API_KEY funsearch
 
-# Run the search with the desired model using the '--model_name' attribute.
-# A good one to use for testing, as an extremely cheap model, is 'mistral-tiny-latest'. 
-# The best one for our use case is probably 'codestral-latest', which is 4x more expensive per output token.
-# Either model is still relatively cheap: with codestral, 1 million output tokens is $0.6.
-# You can also pass in a model name from OpenAI or Anthropic, etc. If this doesn't work, have a look at models.py
+## Advice
+- Run the search with the desired model using the '--model_name' attribute.
+- A good one to use for testing, as an extremely cheap model, is 'mistral-tiny-latest'. 
+- The best one for our use case is probably 'codestral-latest', which is 4x more expensive per output token.
+- Either model is still relatively cheap: with codestral, 1 million output tokens is $0.6.
+- You can also pass in a model name from OpenAI or Anthropic, etc. If this doesn't work, have a look at models.py
 
 `funsearch runasync` takes two arguments:
 
