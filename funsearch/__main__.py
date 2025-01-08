@@ -5,6 +5,7 @@ import pathlib
 import pickle
 import time
 import asyncio
+from typing import Union
 
 import click
 #import llm
@@ -233,7 +234,8 @@ def main(ctx):
 @click.option('--duration', default=3600, type=click.INT, help='Duration in seconds')
 @click.option('--temperature', default="1.0", type=str, help='LLM temperature or comma-separated list of temperatures')
 @click.option('--team', default=None, type=str, help='wandb team name')
-def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, sandbox, samplers, evaluators, islands, reset, duration, temperature, team):
+@click.option('--envfile', default=None, type=Union[None, str], help='path to .env file')
+def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, sandbox, samplers, evaluators, islands, reset, duration, temperature, team, envfile):
     """Execute the function-search algorithm.
 
     SPEC_FILE: A Python module providing the basis of the LLM prompt and the evaluation metric.
@@ -250,7 +252,12 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
             ./examples/cap_set_input_data.json
     """
     # Load environment variables from the .env file.
-    load_dotenv()
+    if envfile is not None:
+        logging.info(f"Loading environment variables from {envfile}")
+        load_dotenv(envfile)
+    else:
+        logging.info("No .env file specified, using environment variables")
+    
     timestamp = str(int(time.time()))
     log_path = pathlib.Path(output_path) / timestamp
     if not log_path.exists():

@@ -59,7 +59,7 @@ FunSearch is an implementation of an evolutionary algorithm for program search u
 - You can find the full list of available models at https://openrouter.ai/docs
 - Multiple models can be specified using comma separation with optional counts and key numbers:
   - 'model1*count1*key1,model2*count2*key2'
-  - Example: 'codestral-latest*10*0,mistralai/mistral-tiny-latest*5*1' will use 10 codestrals from mistral, and 5 mistral-tinys from openrouter.
+  - Example: 'codestral-latest*10*0,mistralai/codestral_mamba*5*1' will use 10 codestrals from mistral, and 5 mistral-tinys from openrouter.
 - Note the key numbers are used to differentiate between different API keys for the same model. These can be passed as separate environment variables with integers on the end. The separate ones will only be used if the key number is greater than 0.
 - You can also specify a model from OpenAI or Anthropic, etc. If this doesn't work, have a look at models.py
 
@@ -175,6 +175,7 @@ Here are the available run parameters:
 - `--duration`: The duration in seconds for which the search should run. Default is 3600 (1 hour).
 - `--temperature`: LLM temperature. Default is 1.0. Can also give a list of temperatures - one for each entry in --model. Format: "temperature1,temperature2,..."
 - `--team`: Wandb team/entity for logging (optional)
+- `--envfile`: Path to a .env file to load environment variables from. This is only useful if you are running the search outside of a container.
 
 ```
 Here, we are searching for the algorithm to find maximum cap sets for dimension 11.
