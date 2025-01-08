@@ -120,33 +120,34 @@ class LLMModel:
         return chat_response
 
     async def prompt(self, prompt_text):
-        max_retries = 6
-        base_timeout = 0.5  # Initial timeout for exponential backoff
+        max_retries = 10
+        base_timeout = 10  # Initial timeout for exponential backoff
+        base_of_exponential_backoff = 1.1
         begin = time.time()
         for attempt in range(max_retries):
             try:
                 start = time.time()
-                logging.DEBUG(f"prompt:start:{self.model}:{self.id}:{self.counter}:{attempt}")
+                logging.debug(f"prompt:start:{self.model}:{self.id}:{self.counter}:{attempt}")
                 task = self.complete(prompt_text)
-                chat_response = await asyncio.wait_for(task, timeout=base_timeout * (2 ** attempt))
+                chat_response = await asyncio.wait_for(task, timeout=base_timeout * (base_of_exponential_backoff ** attempt))
                 end = time.time()
-                logging.DEBUG(f"prompt:end:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
+                logging.debug(f"prompt:end:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
                 if chat_response is not None:
-                    logging.DEBUG(f"prompt:success:{self.model}:{self.id}:{self.counter}:{attempt}:{end-begin:.3f}",)
+                    logging.debug(f"prompt:success:{self.model}:{self.id}:{self.counter}:{attempt}:{end-begin:.3f}",)
                     self.counter += 1
                     return chat_response
-                logging.WARNING(f"prompt:error-empty:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
+                logging.warning(f"prompt:error-empty:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
             except Exception as e:
                 end = time.time()
                 if '429' in str(e):#if it's a rate limit error, not a big issue
-                    logging.DEBUG(f"prompt:error:exception:{e}:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
+                    logging.debug(f"prompt:error:exception:{e}:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
                 else:
-                    logging.WARNING(f"prompt:error:exception:{e}:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
+                    logging.warning(f"prompt:error:exception:{e}:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
                 if attempt < max_retries - 1:
-                    sleep_time = base_timeout * (2 ** attempt)
-                    logging.DEBUG(f"prompt:sleep:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}:{sleep_time:.3f}")
+                    sleep_time = base_timeout * (base_of_exponential_backoff ** attempt)
+                    logging.debug(f"prompt:sleep:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}:{sleep_time:.3f}")
                     await asyncio.sleep(sleep_time)
                     end = time.time()
-                    logging.info(f"prompt:awoke:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
+                    logging.warning(f"prompt:awoke:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
         logging.error(f"prompt:error-fatal:{self.model}:{self.id}:{self.counter}:{attempt}:{max_retries} attempts failed")
         return None  # If we've exhausted all retries

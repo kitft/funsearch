@@ -18,6 +18,8 @@ import numpy as np
 
 import wandb
 
+import select as select_module
+
 class AsyncProgramsDatabase(programs_database.ProgramsDatabase):
     def __init__(self, database: programs_database.ProgramsDatabase):
         # Initialize with the same attributes as the original database
@@ -103,7 +105,7 @@ def countdown_timer(seconds):
         sys.stdout.write(f"\rUsing default team in {i} seconds... Press Enter to select different entity ")
         sys.stdout.flush()
         # Check if user pressed Enter
-        if sys.stdin in select([sys.stdin], [], [], 1)[0]:
+        if sys.stdin in select_module.select([sys.stdin], [], [], 1)[0]:
             sys.stdin.readline()
             sys.stdout.write('\r' + ' ' * 70 + '\r')  # Clear the line
             return False
@@ -117,7 +119,6 @@ def select_wandb_entity(team=None):
         if team:
             print(f"\nTeam '{team}' will be used as default.")
             # Import select at top level to avoid name conflicts
-            import select as select_module
             # Check if user wants to override team before timeout
             if countdown_timer(10):  # countdown_timer already handles the select check
                 return team
@@ -234,18 +235,20 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
         wandb.login(key=wandb_api_key)
     # Get wandb entity from user
     entity = select_wandb_entity(team=team)
-    
+    names_of_models = multitestingconfig.model_names
     # Initialize wandb
     wandb.init(
         entity=entity,
         project="funsearch",
-        name=f"run_{timestamp}",
+        name=f"run_names_of_models_{timestamp}",
 
         config={
+            "model_names": [lm.model.model for lm in multitestingconfig.lm],
             "num_cores": num_cores,
             "num_samplers": config.num_samplers,
             "run_duration": config.run_duration,
             "num_islands": len(database._islands)
+
         }
     )
 

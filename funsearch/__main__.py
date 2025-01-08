@@ -231,7 +231,7 @@ def main(ctx):
 @click.option('--islands', default=10, type=click.INT, help='Number of islands')
 @click.option('--reset', default=600, type=click.INT, help='Reset period in seconds')
 @click.option('--duration', default=3600, type=click.INT, help='Duration in seconds')
-@click.option('--temperature', default=1, type=click.FLOAT, help='LLM temperature')
+@click.option('--temperature', default="1.0", type=str, help='LLM temperature or comma-separated list of temperatures')
 @click.option('--team', default=None, type=str, help='wandb team name')
 def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, sandbox, samplers, evaluators, islands, reset, duration, temperature, team):
     """Execute the function-search algorithm.
@@ -260,6 +260,13 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
     model_counts = [int(m.split('*')[1]) if '*' in m else 1 for m in model_list]
     model_keys = [int(m.split('*')[2]) if m.count('*') > 1 else 0 for m in model_list]
     model_list = [m.split('*')[0] for m in model_list]
+    if ',' in temperature:
+        temperature_list = temperature.split(",")
+    else:
+        temperature_list = [temperature] * len(model_list)
+    if len(temperature_list) != len(model_list):
+        raise Exception(f"Temperature list length {len(temperature_list)} does not match model list length {len(model_list)}")
+
     if sum(model_counts) > samplers:
         samplers = sum(model_counts)
         logging.info(f"Setting samplers to {samplers}")
@@ -269,15 +276,17 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
             model_counts[i] += 1
             i = (i+1) % len(model_counts)
     logging.info(f"Sampling with {model_counts} copies of model(s): {model_list}")
-    logging.info(f"Using LLM temperature: {temperature}")
+    logging.info(f"Using LLM temperature(s): {temperature}")
 
     conf = config.Config(sandbox=sandbox, num_samplers=samplers, num_evaluators=evaluators, num_islands=islands, reset_period=reset, run_duration=duration,llm_temperature=temperature)
     logging.info(f"run_duration = {conf.run_duration}, reset_period = {conf.reset_period}")
 
+    temperature_list = sum([model_counts[i]*[float(temperature_list[i])] for i in range(len(model_list))],[])
     model_list = sum([model_counts[i]*[model_list[i]] for i in range(len(model_list))],[])
     keynum_list = sum([model_counts[i]*[model_keys[i]] for i in range(len(model_keys))],[])
+
     logging.info(f"keynum list: {keynum_list}")
-    lm = [sampler.LLM(conf.samples_per_prompt, models.LLMModel(model_name=model_list[i], top_p=conf.top_p, temperature=temperature, keynum=keynum_list[i]), log_path) for i in range(len(model_list))]
+    lm = [sampler.LLM(conf.samples_per_prompt, models.LLMModel(model_name=model_list[i], top_p=conf.top_p, temperature=temperature_list[i], keynum=keynum_list[i]), log_path) for i in range(len(model_list))]
 
     specification = spec_file.read()
     function_to_evolve, function_to_run = core._extract_function_names(specification)
@@ -291,7 +300,7 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
     parsed_inputs = parse_input(inputs)
     sandbox_class = next(c for c in SANDBOX_TYPES if c.__name__ == sandbox)
     multitestingconfig = config.MultiTestingConfig(log_path=log_path, sandbox_class=sandbox_class, parsed_inputs=parsed_inputs,
-                                                    template=template, function_to_evolve=function_to_evolve, function_to_run=function_to_run, lm=lm,timestamp=timestamp)
+                                                    template=template, function_to_evolve=function_to_evolve, function_to_run=function_to_run, lm=lm,timestamp=timestamp,model_names=model)
 
     async def initiate_search():
         async_database = multi_testing.AsyncProgramsDatabase(database)
