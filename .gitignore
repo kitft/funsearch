@@ -27,5 +27,8 @@ MANIFEST
 #data files
 data/
 .DS_store
-pyproject.toml
 pdm.lock
+
+# Environment variables
+.env
+.env.*
