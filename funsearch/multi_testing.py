@@ -258,9 +258,10 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
 
     try:
         start_time = time.time()
+        logging_info_interval = config.logging_info_interval
         while time.time() - start_time < config.run_duration:
             current_time = time.time() - start_time
-            if current_time >= 5 * (current_time // 5):
+            if current_time >= logging_info_interval * (current_time // logging_info_interval):
                 eval_queue_size = eval_queue.qsize()
                 result_queue_size = result_queue.qsize()
                 best_scores_per_island = database._best_score_per_island
@@ -301,7 +302,7 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
                     'time': current_time
                 })
 
-            await asyncio.sleep(5)
+            await asyncio.sleep(logging_info_interval)
             if eval_queue.qsize() > 500:
                 logging.warning("Eval queue size exceeded 500. Initiating shutdown.")
                 break

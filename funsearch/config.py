@@ -78,6 +78,7 @@ class Config:
   reset_period: int = 3600
   top_p: float = 0.95
   llm_temperature: float = 1.0
+  logging_info_interval: int = 5
 
 
   def __init__(self, **kwargs):
