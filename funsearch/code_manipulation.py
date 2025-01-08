@@ -41,8 +41,8 @@ class Function:
   docstring: str | None = None
 
   def __str__(self) -> str:
-    print("\n\ndocs\n", self.docstring)
-    print("body\n", self.body)
+    #print("\n\ndocs\n", self.docstring)
+    #print("body\n", self.body)
     return_type = f' -> {self.return_type}' if self.return_type else ''
     # Get the indentation characters of the first line of body
     body_lines = self.body.split('\n')
@@ -199,8 +199,8 @@ class ProgramVisitor(ast.NodeVisitor):
       #     body_start_line = function_end_line
 
           
-      print("PV:docstring:\n", docstring)
-      print("PV:body:\n", '\n'.join(self._codelines[body_start_line:function_end_line]))
+      #print("PV:docstring:\n", docstring)
+      #print("PV:body:\n", '\n'.join(self._codelines[body_start_line:function_end_line]))
       self._functions.append(Function(
           name=node.name,
           args=ast.unparse(node.args),
@@ -219,7 +219,6 @@ def text_to_program(text: str) -> Program:
   try:
     # We assume that the program is composed of some preface (e.g. imports,
     # classes, assignments, ...) followed by a sequence of functions.
-    print("text_to_program:\n", text)
     tree = ast.parse(text)
     visitor = ProgramVisitor(text)
     visitor.visit(tree)

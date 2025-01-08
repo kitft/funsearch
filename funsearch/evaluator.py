@@ -104,7 +104,6 @@ def _trim_function_body(generated_code: str) -> str:
   visitor = _FunctionLineVisitor(method_name)
   visitor.visit(tree)
   body_lines = code.splitlines()[1:visitor.function_end_line]
-  print("\n\n\n\n\nOUT:\n", '\n'.join(body_lines) + '\n\n' + "END\n\n\n\n")
   return '\n'.join(body_lines) + '\n\n'
 
 
@@ -126,10 +125,7 @@ def _sample_to_program(
 
   program = copy.deepcopy(template)
   evolved_function = program.get_function(function_to_evolve)
-  print("doc_and_body",doc_and_body)
   evolved_function.body = doc_and_body
-  print("evolved_function",evolved_function.body)
-  print("program",str(program),"done")
   return evolved_function, str(program)
 
 
