@@ -102,7 +102,7 @@ async def sampler_worker(sampler: sampler.Sampler, eval_queue: multiprocessing.Q
 def countdown_timer(seconds):
     """Display a countdown timer."""
     for i in range(seconds, 0, -1):
-        sys.stdout.write(f"\rUsing default team in {i} seconds... Press Enter to select different entity ")
+        sys.stdout.write(f"\rUsing default team in {i} seconds... Press Enter to select different entity/skip wait. ")
         sys.stdout.flush()
         # Check if user pressed Enter
         if sys.stdin in select_module.select([sys.stdin], [], [], 1)[0]:
@@ -237,10 +237,12 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
     entity = select_wandb_entity(team=team)
     names_of_models = multitestingconfig.model_names
     # Initialize wandb
+    name_of_run = "run_" + names_of_models + "_" + timestamp
+    logging.info(f"Initialising wandb with name: {name_of_run}")
     wandb.init(
         entity=entity,
         project="funsearch",
-        name=f"run_{names_of_models}_{timestamp}",
+        name=name_of_run,
 
         config={
             "model_names": [lm.model.model for lm in multitestingconfig.lm],

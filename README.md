@@ -163,7 +163,7 @@ Here are the available run parameters:
 
 - `spec_file`: A file containing the specification for the problem to be solved. This includes the base prompt for the LLM and the evaluation metric.
 - `inputs`: The input data for the problem. This can be a filename ending in .json or .pickle, or comma-separated values.
-- `--model`: The name of the language model (or models) to use. Default is "codestral-latest". Format: "model1*count1*key1,model2*count2*key2",...etc
+- `--model`: The name of the language model (or models) to use. Default is "codestral-latest", which uses the Mistral api. Format: "model1*count1*key1,model2*count2*key2",...etc
 - `--output_path`: The directory where logs and data will be stored. Default is "./data/".
 - `--load_backup`: Path to a backup file of a previous program database to continue from a previous run.
 - `--iterations`: The maximum number of iterations per sampler. Default is -1 (unlimited).
