@@ -19,6 +19,7 @@ import re
 from collections.abc import Sequence
 import copy
 from typing import Any, Tuple
+import logging
 
 from funsearch import code_manipulation
 from funsearch import programs_database
@@ -75,6 +76,12 @@ def _trim_function_body(generated_code: str) -> str:
   if not type(generated_code) is str:
     generated_code = str(generated_code)
 
+  # 3 lines below added by AVS on 10/23/2024 to ignore lines that are not indented (or defining a function)
+  # This helps deal with some of the cases where the LLM is adding commentary that is not valid code
+  lines = generated_code.split('\n')
+  lines = [s for s in lines if (len(s) > 1 and s[:2] in ["de", "  "])]
+  generated_code = '\n'.join(lines)
+
   method_name = "fake_function_header"
   # Check is the response only a continuation for our prompt or full method implementation with header
   if "def priority_v" in generated_code:
@@ -108,6 +115,8 @@ def _sample_to_program(
 ) -> tuple[code_manipulation.Function, str]:
   """Returns the compiled generated function and the full runnable program."""
   body = _trim_function_body(generated_code)
+  if not body:
+    return None, None
   if version_generated is not None:
     body = code_manipulation.rename_function_calls(
         body,
@@ -167,10 +176,14 @@ class Evaluator:
       island_id: int | None,
       version_generated: int | None,#db_queue: asyncio.Queue | None,
       island_version: int | None,
+      model: str | None,
   ) -> None:
     """Compiles the sample into a program and executes it on test inputs."""
     new_function, program = _sample_to_program(
         sample, version_generated, self._template, self._function_to_evolve)
+    if new_function is None:
+      logging.info(f"eval:parse-failed {model}")
+      return None
 
     scores_per_test = {}
     for current_input in self._inputs:
@@ -185,7 +198,10 @@ class Evaluator:
       #print("Putting in queue inside evaluator")
       #self._database.register_program(new_function, island_id, scores_per_test)
       #db_queue.put((new_function, island_id, scores_per_test))
-      return (new_function, island_id, scores_per_test, island_version)
+      logging.info(f"eval:success {model} {scores_per_test}")
+      return (new_function, island_id, scores_per_test, island_version, model)
+    else:
+      logging.info(f"eval:run-failed {model}")
 
 
   # async def analyse_sync(

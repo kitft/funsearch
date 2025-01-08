@@ -175,7 +175,7 @@ from dotenv import load_dotenv
 from funsearch import config, core, sandbox, sampler, programs_database, code_manipulation, multi_testing, models
 
 LOGLEVEL = os.environ.get('LOGLEVEL', 'INFO').upper()
-logging.basicConfig(level=LOGLEVEL)
+logging.basicConfig(format='%(asctime)s.%(msecs)03d:%(levelname)s:%(message)s',level=LOGLEVEL,datefmt='%Y-%m-%d-%H-%M-%S')
 
 
 def get_all_subclasses(cls):
@@ -221,17 +221,18 @@ def main(ctx):
 @main.command()
 @click.argument("spec_file", type=click.File("r"))
 @click.argument('inputs')
-@click.option('--model_name', default="mistral/codestral-latest", help='LLM model')
+@click.option('--model', default="mistral/codestral-latest", help='LLM model (or comma-separated list of models or model:count entries)')
 @click.option('--output_path', default="./data/", type=click.Path(file_okay=False), help='Path for logs and data')
 @click.option('--load_backup', default=None, type=click.File("rb"), help='Use existing program database')
 @click.option('--iterations', default=-1, type=click.INT, help='Max iterations per sampler')
+@click.option('--sandbox', default="ExternalProcessSandbox", type=click.Choice(SANDBOX_NAMES), help='Sandbox type')
 @click.option('--samplers', default=1, type=click.INT, help='Number of samplers')
-@click.option('--sandbox_type', default="ContainerSandbox", type=click.Choice(SANDBOX_NAMES), help='Sandbox type')
-@click.option('--num_evaluators', default=10, type=click.INT, help='Number of evaluators')
-@click.option('--num_islands', default=10, type=click.INT, help='Number of islands')
-@click.option('--run_duration', default=10000, type=click.INT, help='Run duration')
-@click.option('--llm_temperature', default=1, type=click.FLOAT, help='LLM temperature')
-def runAsync(spec_file, inputs, model_name, output_path, load_backup, iterations, samplers, sandbox_type, num_islands,num_evaluators,run_duration,llm_temperature):
+@click.option('--evaluators', default=10, type=click.INT, help='Number of evaluators')
+@click.option('--islands', default=10, type=click.INT, help='Number of islands')
+@click.option('--reset', default=600, type=click.INT, help='Reset period in seconds')
+@click.option('--duration', default=3600, type=click.INT, help='Duration in seconds')
+@click.option('--temperature', default=1, type=click.FLOAT, help='LLM temperature')
+def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, sandbox, samplers, evaluators, islands, reset, duration, temperature):
     """Execute the function-search algorithm.
 
     SPEC_FILE: A Python module providing the basis of the LLM prompt and the evaluation metric.
@@ -249,25 +250,33 @@ def runAsync(spec_file, inputs, model_name, output_path, load_backup, iterations
     """
     # Load environment variables from the .env file.
     load_dotenv()
-
     timestamp = str(int(time.time()))
     log_path = pathlib.Path(output_path) / timestamp
     if not log_path.exists():
         log_path.mkdir(parents=True)
         logging.info(f"Writing logs to {log_path}")
-    conf = config.Config(num_evaluators=num_evaluators, num_islands=num_islands, sandbox=sandbox_type,num_samplers=samplers,run_duration=run_duration,llm_temperature=llm_temperature)
+    model_list = model.split(",")
+    model_counts = [int(m.split('*')[1]) if '*' in m else 1 for m in model_list]
+    model_keys = [int(m.split('*')[2]) if m.count('*') > 1 else 0 for m in model_list]
+    model_list = [m.split('*')[0] for m in model_list]
+    if sum(model_counts) > samplers:
+        samplers = sum(model_counts)
+        logging.info(f"Setting samplers to {samplers}")
+    elif sum(model_counts) < samplers:
+        i = 0
+        while sum(model_counts) < samplers:
+            model_counts[i] += 1
+            i = (i+1) % len(model_counts)
+    logging.info(f"Sampling with {model_counts} copies of model(s): {model_list}")
+    logging.info(f"Using LLM temperature: {temperature}")
 
-    #model = [llm.get_model(model_name) for _ in range(samplers)]
-    logging.info(f"Using LLM temperature: {llm_temperature}")
-    logging.info(f"Using model: {model_name}")
-    
-    model_api_class = models.get_model(model_name)
-    
-    #initialising models - probably don't need this many instances, but I'm not sure how async works across mistral's API. So this should work.
-    model = [model_api_class(model_name=model_name, top_p=conf.top_p, temperature=llm_temperature) for _ in range(samplers)]
-    #for m in model:##done in models.py
-    #    m.key = os.environ.get('MISTRAL_API_KEY')
-    lm = [sampler.LLM(conf.samples_per_prompt, m, log_path) for m in model]
+    conf = config.Config(sandbox=sandbox, num_samplers=samplers, num_evaluators=evaluators, num_islands=islands, reset_period=reset, run_duration=duration,llm_temperature=temperature)
+    logging.info(f"run_duration = {conf.run_duration}, reset_period = {conf.reset_period}")
+
+    model_list = sum([model_counts[i]*[model_list[i]] for i in range(len(model_list))],[])
+    keynum_list = sum([model_counts[i]*[model_keys[i]] for i in range(len(model_keys))],[])
+    logging.info(f"keynum list: {keynum_list}")
+    lm = [sampler.LLM(conf.samples_per_prompt, models.LLMModel(model_name=model_list[i], top_p=conf.top_p, temperature=temperature, keynum=keynum_list[i]), log_path) for i in range(len(model_list))]
 
     specification = spec_file.read()
     function_to_evolve, function_to_run = core._extract_function_names(specification)
@@ -279,7 +288,7 @@ def runAsync(spec_file, inputs, model_name, output_path, load_backup, iterations
         database.load(load_backup)
 
     parsed_inputs = parse_input(inputs)
-    sandbox_class = next(c for c in SANDBOX_TYPES if c.__name__ == sandbox_type)
+    sandbox_class = next(c for c in SANDBOX_TYPES if c.__name__ == sandbox)
     multitestingconfig = config.MultiTestingConfig(log_path=log_path, sandbox_class=sandbox_class, parsed_inputs=parsed_inputs,
                                                     template=template, function_to_evolve=function_to_evolve, function_to_run=function_to_run, lm=lm,timestamp=timestamp)
 
@@ -309,6 +318,7 @@ def runAsync(spec_file, inputs, model_name, output_path, load_backup, iterations
             pass
         # make plots
         plotscores(str(timestamp))
+        #raise Exception("STOP AND I MEAN STOP")
 
 @main.command()
 @click.argument("db_file", type=click.File("rb"))

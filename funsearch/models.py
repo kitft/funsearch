@@ -2,264 +2,144 @@ from mistralai import Mistral
 import anthropic
 import openai
 import os
+import asyncio
 import google.generativeai as genai
-# import asyncio
-def get_model(model_name):
-    if "/" in model_name.lower():
-        return OpenRouterModel
-    elif "codestral" in model_name.lower() or "mistral" in model_name.lower():
-        return MistralModel
+import logging
+import time
+import shortuuid
+
+system_prompt="""You are a state-of-the-art python code completion system that will be used as part of a genetic algorithm.
+On each iteration, improve the function priority_v1 over priority_vX functions from previous iterations.
+1. Make only small changes but be sure to make some change.
+2. Try to keep the code short and any comments concise.
+3. Your response should be an implementation of the function priority_v1; do not include any examples or extraneous functions.
+The code you generate will be appended to the user prompt and run as a python program.
+"""
+
+def get_model_provider(model_name):
+    if "codestral" in model_name.lower() or "mistral" in model_name.lower():
+        return "mistral"
     elif "gpt" in model_name.lower() or "o1" in model_name.lower():
-        return OpenAIModel
+        return "openai"
     elif "claude" in model_name.lower():
-        return AnthropicModel
+        return "anthropic"
     elif "gemini" in model_name.lower():
-        return GeminiModel
+        return "google"
+    elif "llama" in model_name.lower() or "deepseek" in model_name.lower() or "qwen" in model_name.lower() or "mixtral" in model_name.lower():
+        return "deepinfra"
     else:
         raise ValueError(f"Unsupported model name: {model_name}. Have a look in __main__.py and models.py to add support for this model.")
 
-class MistralModel:
-    def __init__(self, model_name="mistral-small-latest", top_p=0.9, temperature=0.7):
-        self.key = os.environ.get("MISTRAL_API_KEY")
+class LLMModel:
+    def __init__(self, model_name="codestral-latest", top_p=0.9, temperature=0.7, keynum=0, timeout=10, retries=10, id=None):
+        self.id = str(shortuuid.uuid()) if id is None else str(id)
+        if '%' in model_name:
+            s = model_name.split('%')
+            assert len(s)==2
+            self.provider = s[0]
+            model_name = s[1]
+        else:
+            self.provider = get_model_provider(model_name)
+        keyname = self.provider.upper() + "_API_KEY"
+        if keynum > 0:
+            keyname += str(keynum)
+        self.key = os.environ.get(keyname)
         if not self.key:
-            raise ValueError("MISTRAL_API_KEY environment variable is not set")
-        self.client = Mistral(api_key=self.key)
+            raise ValueError(f"{keyname} environment variable is not set")
+        if self.provider == "mistral":
+            self.client = Mistral(api_key=self.key)
+        elif self.provider == "anthropic":
+            self.client = anthropic.AsyncAnthropic(api_key=self.key)
+        elif self.provider == "openai":
+            self.client = openai.AsyncOpenAI(api_key=self.key)
+        elif self.provider == "google":
+            genai.configure(api_key=self.key)
+            self.client = genai.GenerativeModel(model_name,system_instruction=system_prompt)
+        elif self.provider == "deepinfra":
+            self.client = openai.AsyncOpenAI(api_key=self.key,base_url="https://api.deepinfra.com/v1/openai/")
+        elif self.provider == "openrouter":
+            self.client = openai.AsyncOpenAI(api_key=self.key,base_url="https://openrouter.ai/api/v1")
         self.model = model_name
         self.top_p = top_p
         self.temperature = temperature
+        self.counter = 0
+        self.timeout = timeout
+        self.retries = retries
+        logging.info(f"Created {self.provider} {self.model} sampler {self.id} using {keyname}")
+
+    async def complete(self, prompt_text):
+        if self.provider == "mistral":
+            response = await self.client.chat.complete_async(
+                model=self.model,
+                messages=[
+                    { "role": "system", "content": system_prompt },
+                    { "role": "user", "content": prompt_text },
+                ],
+                top_p=self.top_p,
+                temperature=self.temperature
+            )
+            chat_response = None if response is None else response.choices[0].message.content
+        elif self.provider == "anthropic":
+            response = await self.client.messages.create(
+                model=self.model,
+                system=system_prompt,
+                messages=[{ "role": "user", "content": prompt_text }],
+                max_tokens=4096,
+                top_p=self.top_p,
+                temperature=self.temperature
+            )
+            chat_response = None if response is None else response.content[0].text
+        elif self.provider in ["openai", "deepinfra", "openrouter"]:
+            response = await self.client.chat.completions.create(
+                model=self.model,
+                messages=[
+                    { "role": "system", "content": system_prompt },
+                    { "role": "user", "content": prompt_text },
+                ],
+                max_tokens=4096,
+                top_p=self.top_p,
+                temperature=self.temperature
+            )
+            chat_response = None if response is None else response.choices[0].message.content
+        elif self.provider == "google":
+            response = await self.client.generate_content_async(
+                prompt_text,
+                generation_config={
+                    "temperature": self.temperature,
+                    "top_p": self.top_p,
+                    "max_output_tokens": 4096,
+                }
+            )
+            chat_response = None if response is None else response.text
+        else:
+            return None
+
+        return chat_response
+
     async def prompt(self, prompt_text):
-        max_retries = 5
-        base_delay = 1  # Start with a 1-second delay
+        max_retries = 10
+        timeout = 10
+        begin = time.time()
         for attempt in range(max_retries):
             try:
-                chat_response = await self.client.chat.complete_async(
-                    model=self.model,
-                    messages=[
-                        {
-                            "role": "user",
-                            "content": prompt_text
-                        }
-                    ],
-                    top_p=self.top_p,
-                    temperature=self.temperature
-                )
+                start = time.time()
+                logging.info(f"prompt:start:{self.model}:{self.id}:{self.counter}:{attempt}")
+                task = self.complete(prompt_text)
+                chat_response = await asyncio.wait_for(task, timeout=timeout)
+                end = time.time()
+                logging.info(f"prompt:end:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
                 if chat_response is not None:
-                    return chat_response.choices[0].message.content
-                else:
-                    print("Error: No response received from Mistral API")
-                    return None
-            except Exception as e:
-                if isinstance(e, Mistral.APIError) and e.status_code == 429:
-                    if attempt < max_retries - 1:
-                        delay = base_delay * (2 ** attempt)  # Exponential backoff
-                        print(f"Rate limit exceeded. Retrying in {delay} seconds...")
-                        await asyncio.sleep(delay)
-                    else:
-                        print("Max retries reached. Unable to get a response.")
-                        return None
-                else:
-                    print(f"Error in MistralModel.prompt: {e}")
-                    return None
-            
-            # Check for INFO log about 429 status
-            if "HTTP/1.1 429 Too Many Requests" in str(chat_response):
-                if attempt < max_retries - 1:
-                    delay = base_delay * (2 ** attempt)  # Exponential backoff
-                    print(f"Rate limit (429) detected. Retrying in {delay} seconds...")
-                    await asyncio.sleep(delay)
-                else:
-                    print("Max retries reached. Unable to get a response.")
-                    return None
-            
-        return None  # If we've exhausted all retries
-
-class AnthropicModel:
-    def __init__(self, model_name="claude-3-sonnet-20240620", top_p=0.9, temperature=0.7):
-        self.key = os.environ.get("ANTHROPIC_API_KEY")
-        if not self.key:
-            raise ValueError("ANTHROPIC_API_KEY environment variable is not set")
-        self.client = anthropic.AsyncAnthropic(api_key=self.key)
-        self.model = model_name
-        self.top_p = top_p
-        self.temperature = temperature
-
-    async def prompt(self, prompt_text):
-        max_retries = 5
-        base_delay = 1  # Start with a 1-second delay
-        for attempt in range(max_retries):
-            try:
-                chat_response = await self.client.messages.create(
-                    model=self.model,
-                    messages=[
-                        {"role": "user", "content": prompt_text}
-                    ],
-                    max_tokens=4096,
-                    top_p=self.top_p,
-                    temperature=self.temperature
-                )
-                if chat_response is not None:
-                    return chat_response.content[0].text
-                else:
-                    print("Error: No response received from Anthropic API")
-                    return None
-            except Exception as e:
-                if isinstance(e, anthropic.RateLimitError):
-                    if attempt < max_retries - 1:
-                        delay = base_delay * (2 ** attempt)  # Exponential backoff
-                        print(f"Rate limit exceeded. Retrying in {delay} seconds...")
-                        await asyncio.sleep(delay)
-                    else:
-                        print("Max retries reached. Unable to get a response.")
-                        return None
-                else:
-                    print(f"Error in AnthropicModel.prompt: {e}")
-                    return None
-            
-            # Check for INFO log about 429 status
-            if "HTTP/1.1 429 Too Many Requests" in str(chat_response):
-                if attempt < max_retries - 1:
-                    delay = base_delay * (2 ** attempt)  # Exponential backoff
-                    print(f"Rate limit (429) detected. Retrying in {delay} seconds...")
-                    await asyncio.sleep(delay)
-                else:
-                    print("Max retries reached. Unable to get a response.")
-                    return None
-            
-        return None  # If we've exhausted all retries
-
-class OpenAIModel:
-    def __init__(self, model_name="gpt-4o", top_p=0.9, temperature=0.7):
-        self.key = os.environ.get("OPENAI_API_KEY")
-        if not self.key:
-            raise ValueError("OPENAI_API_KEY environment variable is not set")
-        self.client = openai.AsyncOpenAI(api_key=self.key)  # Changed to AsyncOpenAI
-        self.model = model_name
-        self.top_p = top_p
-        self.temperature = temperature
-
-    async def prompt(self, prompt_text):
-        max_retries = 5
-        base_delay = 1  # Start with a 1-second delay
-        for attempt in range(max_retries):
-            try:
-                chat_response = await self.client.chat.completions.create(
-                    model=self.model,
-                    messages=[
-                        {
-                            "role": "user",
-                            "content": prompt_text
-                        }
-                    ],
-                    max_tokens=4096,
-                    top_p=self.top_p,
-                    temperature=self.temperature
-                )
-                if chat_response is not None:
-                    return chat_response.choices[0].message.content
-                else:
-                    print("Error: No response received from OpenAI API")
-                    return None
-            except Exception as e:
-                if isinstance(e, openai.RateLimitError):
-                    if attempt < max_retries - 1:
-                        delay = base_delay * (2 ** attempt)  # Exponential backoff
-                        print(f"Rate limit exceeded. Retrying in {delay} seconds...")
-                        await asyncio.sleep(delay)
-                    else:
-                        print("Max retries reached. Unable to get a response.")
-                        return None
-                else:
-                    print(f"Error in OpenAIModel.prompt: {e}")
-                    return None
-            #OPENAI seems to not have a 429 status code, so no need to check for that - it retries on its own
-        return None  # If we've exhausted all retries
-
-
-class GeminiModel:
-    def __init__(self, model_name="gemini-1.5-flash", top_p=0.9, temperature=0.7):
-        self.key = os.environ.get("GOOGLE_API_KEY")
-        if not self.key:
-            raise ValueError("GOOGLE_API_KEY environment variable is not set")
-        genai.configure(api_key=self.key)
-        self.model = genai.GenerativeModel(model_name)
-        self.top_p = top_p
-        self.temperature = temperature
-
-    async def prompt(self, prompt_text):
-        max_retries = 5
-        base_delay = 1  # Start with a 1-second delay
-        for attempt in range(max_retries):
-            try:
-                response = await self.model.generate_content_async(
-                    prompt_text,
-                    generation_config={
-                        "temperature": self.temperature,
-                        "top_p": self.top_p,
-                        "max_output_tokens": 4096,
-                    }
-                )
-                if response is not None:
-                    return response.text
-                else:
-                    print("Error: No response received from Gemini API")
-                    return None
-            except Exception as e:
-                if isinstance(e, genai.RateLimitError):
-                    if attempt < max_retries - 1:
-                        delay = base_delay * (2 ** attempt)  # Exponential backoff
-                        print(f"Rate limit exceeded. Retrying in {delay} seconds...")
-                        await asyncio.sleep(delay)
-                    else:
-                        print("Max retries reached. Unable to get a response.")
-                        return None
-                else:
-                    print(f"Error in GeminiModel.prompt: {e}")
-                    return None
-        return None  # If we've exhausted all retries
-
-class OpenRouterModel:
-    def __init__(self, model_name="openai/gpt-3.5-turbo", top_p=0.9, temperature=0.7):
-        self.key = os.environ.get("OPENROUTER_API_KEY")
-        if not self.key:
-            raise ValueError("OPENROUTER_API_KEY environment variable is not set")
-        self.client = openai.AsyncOpenAI(api_key=self.key, base_url="https://openrouter.ai/api/v1")  # Changed to AsyncOpenAI
-        self.model = model_name
-        self.top_p = top_p
-        self.temperature = temperature
-
-    async def prompt(self, prompt_text):
-        max_retries = 5
-        base_delay = 1  # Start with a 1-second delay
-        for attempt in range(max_retries):
-            try:
-                chat_response = await self.client.chat.completions.create(
-                    model=self.model,
-                    messages=[
-                        {
-                            "role": "user",
-                            "content": prompt_text
-                        }
-                    ],
-                    max_tokens=4096,
-                    top_p=self.top_p,
-                    temperature=self.temperature
-                )
-                if chat_response is not None:
-                    return chat_response.choices[0].message.content
-                else:
-                    print("Error: No response received from OpenAI API")
-                    return None
-            except Exception as e:
-                if isinstance(e, openai.RateLimitError):
-                    if attempt < max_retries - 1:
-                        delay = base_delay * (2 ** attempt)  # Exponential backoff
-                        print(f"Rate limit exceeded. Retrying in {delay} seconds...")
-                        await asyncio.sleep(delay)
-                    else:
-                        print("Max retries reached. Unable to get a response.")
-                        return None
-                else:
-                    print(f"Error in OperRouter.prompt: {e}")
-                    return None
-            #OPENAI seems to not have a 429 status code, so no need to check for that - it retries on its own
+                    logging.info(f"prompt:success:{self.model}:{self.id}:{self.counter}:{attempt}:{end-begin:.3f}")
+                    self.counter += 1
+                    return chat_response
+                logging.info(f"prompt:error-empty:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
+            except:
+                end = time.time()
+                logging.info(f"prompt:error:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
+                if end < start+timeout:
+                    logging.info(f"prompt:sleep:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}:{timeout-(end-start):.3f}")
+                    await asyncio.sleep(timeout-(end-start))
+                    end = time.time()
+                    logging.info(f"prompt:awoke:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
+        logging.error(f"prompt:error-fatal:{self.model}:{self.id}:{self.counter}:{attempt}:{max_retries} attempts failed")
         return None  # If we've exhausted all retries
