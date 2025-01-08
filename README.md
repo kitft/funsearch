@@ -25,15 +25,19 @@ FunSearch is an implementation of an evolutionary algorithm for program search u
 `git clone https://github.com/AndrewVSutherland/funsearch.git`
 `cd funsearch`
    
-3. Set your API key:
+3. Set your API keys by creating a `.env` file in the project root (this file will be automatically gitignored):
    ```
-   export MISTRAL_API_KEY=<your_key_here>
-   export GOOGLE_API_KEY=<your_key_here>
-   export OPENAI_API_KEY=<your_key_here>
-   export ANTHROPIC_API_KEY=<your_key_here>
-   export OPENROUTER_API_KEY=<your_key_here>
-   export WANDB_API_KEY=<your_wandb_key_here>
-   export DEEPINFRA_API_KEY=<your_deepinfra_key_here>
+   # Create a .env file in the project root
+   touch .env
+   
+   # Add your API keys to the .env file:
+   MISTRAL_API_KEY=<your_key_here>
+   GOOGLE_API_KEY=<your_key_here>
+   OPENAI_API_KEY=<your_key_here>
+   ANTHROPIC_API_KEY=<your_key_here>
+   OPENROUTER_API_KEY=<your_key_here>
+   WANDB_API_KEY=<your_wandb_key_here>
+   DEEPINFRA_API_KEY=<your_deepinfra_key_here>
    ```
 4. If you're using Docker desktop, open the app. Then, build the Docker image with the command below. This may take a while, especially the first time. You will need to re-build if you update the Dockerfile or edit the code. You should not need to re-build if you are only updating the input python file or input data.
 
@@ -43,7 +47,8 @@ FunSearch is an implementation of an evolutionary algorithm for program search u
 5. Create a data folder and run the container:
    ```
    mkdir data
-   docker run -it -v ./data:/workspace/data -v ./examples:/workspace/examples -e MISTRAL_API_KEY=$MISTRAL_API_KEY -e GOOGLE_API_KEY=$GOOGLE_API_KEY -e OPENAI_API_KEY=$OPENAI_API_KEY -e ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY -e DEEPINFRA_API_KEY=$DEEPINFRA_API_KEY -e OPENROUTER_API_KEY=$OPENROUTER_API_KEY -e WANDB_API_KEY=$WANDB_API_KEY funsearch
+   docker run -it -v ./data:/workspace/data -v ./examples:/workspace/examples --env-file .env funsearch
+   ```
 
 ## Model Selection
 - Any model name containing a slash (/) will automatically use the OpenRouter API. For example:
@@ -347,7 +352,7 @@ This variant could be also used, e.g., in Colab quite safely since the environme
 ```
 pip install .
 
-funsearch runsync /workspace/examples/cap_set_spec.py 11
+funsearch runasync /workspace/examples/cap_set_spec.py 8 --sandbox ExternalProcessSandbox --model mistralai/codestral-mamba --samplers 20 --islands 10 --duration 3000 --team <team>
 ```
 
 # LOGS AND GRAPHS
