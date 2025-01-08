@@ -227,6 +227,11 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
     os.makedirs("./data/scores", exist_ok=True)
     csv_filename = f"./data/scores/scores_log_{timestamp}.csv"
     
+    # Check if WANDB_API_KEY is set in environment variables
+    wandb_api_key = os.environ.get('WANDB_API_KEY')
+    if wandb_api_key:
+        logging.info("Logging into wandb with env API key")
+        wandb.login(key=wandb_api_key)
     # Get wandb entity from user
     entity = select_wandb_entity(team=team)
     
