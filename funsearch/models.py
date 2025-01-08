@@ -81,6 +81,8 @@ class LLMModel:
                 top_p=self.top_p,
                 temperature=self.temperature
             )
+            if hasattr(response, 'status_code') and response.status_code == 429:
+                raise httpx.HTTPStatusError("Rate limit exceeded: 429", request=None, response=response)
             chat_response = None if response is None else response.choices[0].message.content
         elif self.provider == "anthropic":
             response = await self.client.messages.create(
@@ -92,6 +94,8 @@ class LLMModel:
                 temperature=self.temperature
             )
             chat_response = None if response is None else response.content[0].text
+            if hasattr(response, 'status_code') and response.status_code == 429:
+                raise httpx.HTTPStatusError("Rate limit exceeded: 429", request=None, response=response)
         elif self.provider in ["openai", "deepinfra", "openrouter"]:
             response = await self.client.chat.completions.create(
                 model=self.model,
@@ -104,6 +108,8 @@ class LLMModel:
                 temperature=self.temperature
             )
             chat_response = None if response is None else response.choices[0].message.content
+            if hasattr(response, 'status_code') and response.status_code == 429:
+                raise httpx.HTTPStatusError("Rate limit exceeded: 429", request=None, response=response)
         elif self.provider == "google":
             response = await self.client.generate_content_async(
                 prompt_text,
@@ -114,6 +120,8 @@ class LLMModel:
                 }
             )
             chat_response = None if response is None else response.text
+            if hasattr(response, 'status_code') and response.status_code == 429:
+                raise httpx.HTTPStatusError("Rate limit exceeded: 429", request=None, response=response)
         else:
             return None
 
