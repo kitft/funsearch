@@ -14,9 +14,8 @@ import csv
 import os
 import numpy as np
 
-# Add these imports
-from torch.utils.tensorboard import SummaryWriter
-#import torch
+# Replace TensorBoard with wandb
+import wandb
 
 class AsyncProgramsDatabase(programs_database.ProgramsDatabase):
     def __init__(self, database: programs_database.ProgramsDatabase):
@@ -124,9 +123,17 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
     os.makedirs("./data/scores", exist_ok=True)
     csv_filename = f"./data/scores/scores_log_{timestamp}.csv"
     
-    #Create a TensorBoard SummaryWriter
-    tb_log_dir = f"./data/tensorboard_logs/{timestamp}"
-    writer = SummaryWriter(log_dir=tb_log_dir)
+    # Initialize wandb
+    wandb.init(
+        project="funsearch",
+        name=f"run_{timestamp}",
+        config={
+            "num_cores": num_cores,
+            "num_samplers": config.num_samplers,
+            "run_duration": config.run_duration,
+            "num_islands": len(database._islands)
+        }
+    )
 
     with open(csv_filename, 'w', newline='') as csvfile:
         csv_writer = csv.writer(csvfile)
@@ -161,20 +168,22 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
                     for island, best_score, avg_score in zip(range(len(best_scores_per_island)), best_scores_per_island, avg_scores_per_island):
                         csv_writer.writerow([f"{current_time:.2f}", island, best_score, avg_score])
                         
-                        # Log to TensorBoard
-                        writer.add_scalar(f'Best Score/Island {island}', best_score, int(current_time))
-                        writer.add_scalar(f'Average Score/Island {island}', avg_score, int(current_time))
+                        # Log to wandb
+                        wandb.log({
+                            f'Best Score/Island {island}': best_score,
+                            f'Average Score/Island {island}': avg_score,
+                            'time': current_time
+                        })
                 
-                # Log best score overall and average score overall to TensorBoard
-                writer.add_scalar('Overall/Best Score', best_score_overall, int(current_time))
-                writer.add_scalar('Overall/Average Score', avg_score_overall, int(current_time))
-                
-                # Log queue sizes to TensorBoard
-                writer.add_scalar('Queue Sizes/Eval Queue', eval_queue_size, int(current_time))
-                writer.add_scalar('Queue Sizes/Result Queue', result_queue_size, int(current_time))
-
-                total_api_calls = sum(sampler.api_calls for sampler in samplers)
-                writer.add_scalar('API Calls', total_api_calls, int(current_time))
+                # Log overall metrics to wandb
+                wandb.log({
+                    'Overall/Best Score': best_score_overall,
+                    'Overall/Average Score': avg_score_overall,
+                    'Queue Sizes/Eval Queue': eval_queue_size,
+                    'Queue Sizes/Result Queue': result_queue_size,
+                    'API Calls': sum(sampler.api_calls for sampler in samplers),
+                    'time': current_time
+                })
 
             await asyncio.sleep(10)
             if eval_queue.qsize() > 10:
@@ -215,8 +224,8 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
         logging.info(f"Total programs processed: {database._program_counter}")
         logging.info(f"Best scores per island: {database._best_score_per_island}")
         
-        # Close the TensorBoard writer
-        writer.close()
+        # Close wandb
+        wandb.finish()
 
         logging.info("Shutdown complete.")
 

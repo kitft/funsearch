@@ -12,7 +12,7 @@ COPY pyproject.toml README.md pdm.lock ./
 # Install dependencies
 ENV PATH="/workspace/.venv/bin:$PATH"
 RUN pdm install --no-self
-RUN pip install mistralai tensorboard  
+RUN pip install mistralai wandb
 RUN pip install torch --extra-index-url https://download.pytorch.org/whl/cpu
 RUN pip install matplotlib pandas
 RUN pip install anthropic google-generativeai
@@ -24,7 +24,7 @@ RUN pip install scipy
 # Create necessary subfolders in data directory if they don't exist
 RUN mkdir -p ./data && \
     cd ./data && \
-    mkdir -p scores graphs backups tensorboard_logs &&\
+    mkdir -p scores graphs backups && \
     cd ..
 
 # Copy application code
@@ -41,6 +41,8 @@ RUN pip install --no-deps . && rm -r ./funsearch ./build
 
 # Set Mistral API key
 #CMD echo '{"mistral": "'$MISTRAL_API_KEY'"}' > $(llm keys path); /bin/bash
+
+
 EXPOSE 6006
 
 CMD ["bash"]
