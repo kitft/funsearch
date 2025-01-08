@@ -234,7 +234,7 @@ def main(ctx):
 @click.option('--duration', default=3600, type=click.INT, help='Duration in seconds')
 @click.option('--temperature', default="1.0", type=str, help='LLM temperature or comma-separated list of temperatures')
 @click.option('--team', default=None, type=str, help='wandb team name')
-@click.option('--envfile', default=None, type=Union[None, str], help='path to .env file')
+@click.option('--envfile', default=None, type= str, help='path to .env file')
 def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, sandbox, samplers, evaluators, islands, reset, duration, temperature, team, envfile):
     """Execute the function-search algorithm.
 
