@@ -254,7 +254,16 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
     # Load environment variables from the .env file.
     if envfile is not None:
         logging.info(f"Loading environment variables from {envfile}")
+        if not os.path.exists(envfile):
+            raise Exception(f"Environment file {envfile} does not exist")
         load_dotenv(envfile)
+        if envfile is not None:
+            with open(envfile, 'r') as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith('#'):
+                        key = line.split('=')[0]
+                        print(f"Found environment variable: {key}")
     else:
         logging.info("No .env file specified, using environment variables")
     
