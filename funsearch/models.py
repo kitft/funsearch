@@ -148,6 +148,6 @@ class LLMModel:
                     logging.debug(f"prompt:sleep:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}:{sleep_time:.3f}")
                     await asyncio.sleep(sleep_time)
                     end = time.time()
-                    logging.warning(f"prompt:awoke:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
+                    logging.debug(f"prompt:awoke:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
         logging.error(f"prompt:error-fatal:{self.model}:{self.id}:{self.counter}:{attempt}:{max_retries} attempts failed")
         return None  # If we've exhausted all retries

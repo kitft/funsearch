@@ -112,24 +112,24 @@ def countdown_timer(seconds):
         time.sleep(1)
     sys.stdout.write('\r' + ' ' * 70 + '\r')  # Clear the line
     return True
-
 def select_wandb_entity(team=None):
     """Select wandb entity, with optional team default."""
     try:
         if team:
             print(f"\nTeam '{team}' will be used as default.")
-            # Import select at top level to avoid name conflicts
-            # Check if user wants to override team before timeout
-            if countdown_timer(10):  # countdown_timer already handles the select check
+            # Use the existing countdown_timer function
+            if countdown_timer(10):
+                # Countdown completed without interruption - use default team
                 return team
-                
-        # If user pressed Enter or no team provided, ask for entity
-        entity = input("\nEnter wandb entity (press enter for default): ").strip()
-        return entity if entity else None
-            
+            else:
+                # User interrupted - prompt for new entity
+                entity = input("\nEnter entity name (leave empty for default): ").strip()
+                return entity if entity else None
+     
     except Exception as e:
         logging.warning(f"Error in entity selection: {e}")
-        return team  # Fall back to team parameter if there's an error
+        return None  # Default to no entity on error
+
 async def validate_model(lm: sampler.LLM, timeout=30):
     """Test if the model is responding correctly with timeout.
     
@@ -234,7 +234,15 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
         logging.info("Logging into wandb with env API key")
         wandb.login(key=wandb_api_key)
     # Get wandb entity from user
-    entity = select_wandb_entity(team=team)
+    if team==None:
+        entity = select_wandb_entity(team)
+    else:
+        entity = team
+    if entity==None:
+        logging.info("Logging to wandb to default entity (typically personal account)")
+    else:
+        logging.info(f"Logging to wandb to entity: {entity}")
+    
     names_of_models = multitestingconfig.model_names
     # Initialize wandb
     name_of_run = "run_" + names_of_models + "_" + timestamp

@@ -227,7 +227,7 @@ The search progress will be automatically logged to your wandb project "funsearc
 3. Opening the "funsearch" project
 4. Selecting your run
 
-Each run will be named with a timestamp (e.g., "run_1704956206") and will track:
+Each run will be named with a timestamp (e.g., "run_<model_name>_1704956206") and will track:
 - Best and average scores for each island
 - Overall best and average scores
 - Queue sizes
