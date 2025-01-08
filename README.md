@@ -154,7 +154,7 @@ Here are the available run parameters:
 
 - `spec_file`: A file containing the specification for the problem to be solved. This includes the base prompt for the LLM and the evaluation metric.
 - `inputs`: The input data for the problem. This can be a filename ending in .json or .pickle, or comma-separated values.
-- `--model`: The name of the language model (or models) to use. Default is "codestral-latest".
+- `--model`: The name of the language model (or models) to use. Default is "codestral-latest". Format: "model1*count1*key1,model2*count2*key2",...etc
 - `--output_path`: The directory where logs and data will be stored. Default is "./data/".
 - `--load_backup`: Path to a backup file of a previous program database to continue from a previous run.
 - `--iterations`: The maximum number of iterations per sampler. Default is -1 (unlimited).
@@ -164,8 +164,8 @@ Here are the available run parameters:
 - `--islands`: The number of islands for the island model in the genetic algorithm. Default is 10.
 - `--reset`: The time between island resets in seconds. Default is 600 (10 minutes).
 - `--duration`: The duration in seconds for which the search should run. Default is 3600 (1 hour).
-- `--temperature`: LLM temperature. Default is 1.
-
+- `--temperature`: LLM temperature. Default is 1.0. Can also give a list of temperatures - one for each entry in --model. Format: "temperature1,temperature2,..."
+- `--team`: Wandb team/entity for logging (optional)
 
 ```
 Here, we are searching for the algorithm to find maximum cap sets for dimension 11.
@@ -314,62 +314,6 @@ If you use the code or data in this package, please cite:
 }
 ```
 
-## License and disclaimer
-```
-Copyright 2023 DeepMind Technologies Limited
-
-All software is licensed under the Apache License, Version 2.0 (Apache 2.0);
-you may not use this file except in compliance with the Apache 2.0 license.
-You may obtain a copy of the Apache 2.0 license at:
-https://www.apache.org/licenses/LICENSE-2.0
-
-All other materials are licensed under the Creative Commons Attribution 4.0
-International License (CC-BY). You may obtain a copy of the CC-BY license at:
-https://creativecommons.org/licenses/by/4.0/legalcode
-
-Unless required by applicable law or agreed to in writing, all software and
-materials distributed here under the Apache 2.0 or CC-BY licenses are
-distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
-either express or implied. See the licenses for the specific language governing
-permissions and limitations under those licenses.
-
-This is not an official Google product.
-Copyright 2023 DeepMind Technologies Limited
-
-All software is licensed under the Apache License, Version 2.0 (Apache 2.0);
-you may not use this file except in compliance with the Apache 2.0 license.
-You may obtain a copy of the Apache 2.0 license at:
-https://www.apache.org/licenses/LICENSE-2.0
-
-All other materials are licensed under the Creative Commons Attribution 4.0
-International License (CC-BY). You may obtain a copy of the CC-BY license at:
-https://creativecommons.org/licenses/by/4.0/legalcode
-
-Unless required by applicable law or agreed to in writing, all software and
-materials distributed here under the Apache 2.0 or CC-BY licenses are
-distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
-either express or implied. See the licenses for the specific language governing
-permissions and limitations under those licenses.
-
-This is not an official Google product.
-Copyright 2023 DeepMind Technologies Limited
-
-All software is licensed under the Apache License, Version 2.0 (Apache 2.0);
-you may not use this file except in compliance with the Apache 2.0 license.
-You may obtain a copy of the Apache 2.0 license at:
-https://www.apache.org/licenses/LICENSE-2.0
-
-All other materials are licensed under the Creative Commons Attribution 4.0
-International License (CC-BY). You may obtain a copy of the CC-BY license at:
-https://creativecommons.org/licenses/by/4.0/legalcode
-
-Unless required by applicable law or agreed to in writing, all software and
-materials distributed here under the Apache 2.0 or CC-BY licenses are
-distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
-either express or implied. See the licenses for the specific language governing
-permissions and limitations under those licenses.
-
-This is not an official Google product.
 Here, we are searching for the algorithm to find maximum cap sets for dimension 11.
 You should see something like:
 ```
@@ -474,34 +418,6 @@ those sets in a numerical format for convenience.
 format, satisfying the combinatorial degeneration constraints described for the
 corners-free problem in the Supplementary Information.
 
-- `implementation` contains an implementation of the evolutionary algorithm,
-code manipulation routines, and a single-threaded implementation of the
-FunSearch pipeline. It does not contain language models for generating new
-programs, the sandbox for executing untrusted code, nor the infrastructure for
-running FunSearch on our distributed system. This directory is intended to be
-useful for understanding the details of our method, and for adapting it for use
-with any available language models, sandboxes, and distributed systems.
-
-## Installation
-
-No installation is required. All notebooks can be opened and run in Google
-Colab.
-
-## Usage
-
-- `cap_set`: The notebook `cap_set.ipynb` can be opened via
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-deepmind/funsearch/blob/master/cap_set/cap_set.ipynb).
-
-- `admissible_set`: The notebook `admissible_set.ipynb` can be opened
-via
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-deepmind/funsearch/blob/master/admissible_set/admissible_set.ipynb).
-
-- `bin_packing`: The notebook `bin_packing.ipynb` can be opened via
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-deepmind/funsearch/blob/master/bin_packing/bin_packing.ipynb).
-
-- `cyclic_graphs`: The notebook `cyclic_graphs.ipynb` can be opened via
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-deepmind/funsearch/blob/master/cyclic_graphs/cyclic_graphs.ipynb).
-
 ## Citing this work
 
 If you use the code or data in this package, please cite:
@@ -518,3 +434,21 @@ If you use the code or data in this package, please cite:
 
 ## License and disclaimer
 
+Copyright 2023 DeepMind Technologies Limited
+
+All software is licensed under the Apache License, Version 2.0 (Apache 2.0);
+you may not use this file except in compliance with the Apache 2.0 license.
+You may obtain a copy of the Apache 2.0 license at:
+https://www.apache.org/licenses/LICENSE-2.0
+
+All other materials are licensed under the Creative Commons Attribution 4.0
+International License (CC-BY). You may obtain a copy of the CC-BY license at:
+https://creativecommons.org/licenses/by/4.0/legalcode
+
+Unless required by applicable law or agreed to in writing, all software and
+materials distributed here under the Apache 2.0 or CC-BY licenses are
+distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+either express or implied. See the licenses for the specific language governing
+permissions and limitations under those licenses.
+
+This is not an official Google product.
