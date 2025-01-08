@@ -278,7 +278,7 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
     logging.info(f"Sampling with {model_counts} copies of model(s): {model_list}")
     logging.info(f"Using LLM temperature(s): {temperature}")
 
-    conf = config.Config(sandbox=sandbox, num_samplers=samplers, num_evaluators=evaluators, num_islands=islands, reset_period=reset, run_duration=duration,llm_temperature=temperature)
+    conf = config.Config(sandbox=sandbox, num_samplers=samplers, num_evaluators=evaluators, num_islands=islands, reset_period=reset, run_duration=duration,llm_temperature=temperature_list)
     logging.info(f"run_duration = {conf.run_duration}, reset_period = {conf.reset_period}")
 
     temperature_list = sum([model_counts[i]*[float(temperature_list[i])] for i in range(len(model_list))],[])

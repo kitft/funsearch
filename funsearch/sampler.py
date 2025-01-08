@@ -42,7 +42,7 @@ class LLM:
     start = time.time()
     response = await self.model.prompt(prompt)
     end = time.time()
-    logging.info("sample:%s:%d:%d:%d:%d:%.3f:%.3f:%.3f"%(self.model.model,label,self.prompt_count,len(prompt),len(response),start,end,end-start))
+    logging.debug("sample:%s:%d:%d:%d:%d:%.3f:%.3f:%.3f"%(self.model.model,label,self.prompt_count,len(prompt),len(response),start,end,end-start))
     self._log(prompt, response, self.prompt_count, label)
     self.prompt_count += 1
     return response
