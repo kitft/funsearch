@@ -48,7 +48,10 @@ class Function:
     body_lines = self.body.split('\n')
     if body_lines:
         first_line = body_lines[0]
-        indentation_chars = first_line[:len(first_line) - len(first_line.lstrip())]
+        if first_line == '':
+          indentation_chars = ''#two spaces 
+        else: 
+          indentation_chars = first_line[:len(first_line) - len(first_line.lstrip())]
     else:
         indentation_chars = ''
 
