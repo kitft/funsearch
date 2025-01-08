@@ -182,7 +182,7 @@ class Evaluator:
     new_function, program = _sample_to_program(
         sample, version_generated, self._template, self._function_to_evolve)
     if new_function is None:
-      logging.info(f"eval:parse-failed {model}")
+      logging.info(f"eval:parse-failed {model}, island_id: {island_id}, version_generated: {version_generated}, island_version: {island_version}")
       return None
 
     scores_per_test = {}
@@ -201,7 +201,7 @@ class Evaluator:
       logging.info(f"eval:success {model} {scores_per_test}")
       return (new_function, island_id, scores_per_test, island_version, model)
     else:
-      logging.info(f"eval:run-failed {model}")
+      logging.info(f"eval: program failed to run: {model}, {scores_per_test}, island_id: {island_id}, version_generated: {version_generated}, island_version: {island_version}")
 
 
   # async def analyse_sync(

@@ -94,7 +94,7 @@ Examples of valid INPUTS:
 - ./examples/cap_set_input_data.json
 
 Key options:
-- `--model`: The LLM model to use (default: "mistralai/codestral-latest")
+- `--model`: The LLM model to use (default: "codestral-latest","mistralai/codestral-mamba")
 - `--samplers`: Number of sampler threads (default: 15)
 - `--evaluators`: Number of evaluator processes (default: CPU cores - 1)
 - `--islands`: Number of islands for genetic algorithm (default: 10)
@@ -103,7 +103,7 @@ Key options:
 
 Example command:
 ```bash
-funsearch runasync /workspace/examples/cap_set_spec.py 8 --sandbox ExternalProcessSandbox --model mistralai/codestral-latest --samplers 20 --islands 10 --duration 3000 --team <team>
+funsearch runasync /workspace/examples/cap_set_spec.py 8 --sandbox ExternalProcessSandbox --model mistralai/codestral-mamba --samplers 20 --islands 10 --duration 3000 --team <team>
 ```
 
 ### Weights & Biases Integration
