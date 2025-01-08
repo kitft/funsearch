@@ -99,10 +99,13 @@ async def sampler_worker(sampler: sampler.Sampler, eval_queue: multiprocessing.Q
             logging.info('Slowed down sampling to %f seconds', sleep_time)
         await asyncio.sleep(sleep_time)
 
-def countdown_timer(seconds):
+def countdown_timer(seconds,team=None):
     """Display a countdown timer."""
     for i in range(seconds, 0, -1):
-        sys.stdout.write(f"\rUsing default team in {i} seconds... Press Enter to select different entity/skip wait. ")
+        if team:
+            sys.stdout.write(f"\rUsing team '{team}' in {i} seconds... Press Enter to select different entity/skip wait. ")
+        else:
+            sys.stdout.write(f"\rUsing wandb default team (typically personal account) in {i} seconds... Press Enter to select different entity/skip wait. ")
         sys.stdout.flush()
         # Check if user pressed Enter
         if sys.stdin in select_module.select([sys.stdin], [], [], 1)[0]:
@@ -115,16 +118,14 @@ def countdown_timer(seconds):
 def select_wandb_entity(team=None):
     """Select wandb entity, with optional team default."""
     try:
-        if team:
-            print(f"\nTeam '{team}' will be used as default.")
-            # Use the existing countdown_timer function
-            if countdown_timer(10):
-                # Countdown completed without interruption - use default team
-                return team
-            else:
-                # User interrupted - prompt for new entity
-                entity = input("\nEnter entity name (leave empty for default): ").strip()
-                return entity if entity else None
+        # Use the existing countdown_timer function
+        if countdown_timer(10,team):
+            # Countdown completed without interruption - use default team
+            return team
+        else:
+            # User interrupted - prompt for new entity
+            entity = input("\nEnter entity name (leave empty for wandb default (typically personal account)): ").strip()
+            return entity if entity else None
      
     except Exception as e:
         logging.warning(f"Error in entity selection: {e}")
