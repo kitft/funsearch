@@ -240,7 +240,7 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
     wandb.init(
         entity=entity,
         project="funsearch",
-        name=f"run_names_of_models_{timestamp}",
+        name=f"run_{names_of_models}_{timestamp}",
 
         config={
             "model_names": [lm.model.model for lm in multitestingconfig.lm],
