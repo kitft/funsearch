@@ -30,6 +30,7 @@ FunSearch is an implementation of an evolutionary algorithm for program search u
    export GOOGLE_API_KEY=<your_key_here>
    export OPENAI_API_KEY=<your_key_here>
    export ANTHROPIC_API_KEY=<your_key_here>
+   export OPENROUTER_API_KEY=<your_key_here>
    ```
 4. Build the Docker image. This may take a while, especially the first time. You will need to re-build if you update the Dockerfile or edit the code. You should not need to re-build if you are only updating the input python file or input data.
 
@@ -39,7 +40,7 @@ FunSearch is an implementation of an evolutionary algorithm for program search u
 5. Create a data folder and run the container:
    ```
    mkdir data
-   docker run -it -v ./data:/workspace/data -v ./examples:/workspace/examples -p 6006:6006 -e MISTRAL_API_KEY=$MISTRAL_API_KEY -e GOOGLE_API_KEY=$GOOGLE_API_KEY -e OPENAI_API_KEY=$OPENAI_API_KEY -e ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY funsearch
+   docker run -it -v ./data:/workspace/data -v ./examples:/workspace/examples -p 6006:6006 -e MISTRAL_API_KEY=$MISTRAL_API_KEY -e GOOGLE_API_KEY=$GOOGLE_API_KEY -e OPENAI_API_KEY=$OPENAI_API_KEY -e ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY -e OPENROUTER_API_KEY=$OPENROUTER_API_KEY funsearch
 
 
 ```
@@ -129,6 +130,8 @@ pip install .
 funsearch runsync /workspace/examples/cap_set_spec.py 11
 ```
 
+# LOGS AND GRAPHS
+
 You can monitor the progress of the search using tensorboard: in a separate terminal, run
 ```
 tensorboard --logdir ./data/tensorboard_logs/ --host 0.0.0.0
@@ -150,15 +153,16 @@ To remove/delete all data associated with a timestamp. This is not reversible, s
 funsearch removetimestamp <timestamp>
 ```
 
+# ERRORS
 
-
+PLEASE ENSURE YOU HAVE UPDATED TO THE LATEST VERSION OF THIS REPO
 
 If you are getting OPENAI Async doesn't exist errors, run `pip install openai>=1.2` in your Docker environment. This should happen on Dockerfile creation, but could be a problem if you have some legacy docker/pdm files.
 
 
 
 
-Adding additional programs:
+# Adding additional programs:
 To add additional programs, add .py files to the examples/ directory. These should follow the same structure as the other examples - a priority function with an @funsearch.evolve decorator, and an evaluation function which returns a score decorated with @funsearch.run. See `examples/cap_set_spec.py` for a simple example, and see `examples/Example_Implementation_SPEC.py` for template which you can fill in. I have also been writing playground `*.ipynb` files in the `examples/playgrounds/` directory, where new environments can be developed and tested.
 
 ---
