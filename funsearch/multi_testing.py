@@ -14,7 +14,6 @@ import csv
 import os
 import numpy as np
 
-# Replace TensorBoard with wandb
 import wandb
 
 class AsyncProgramsDatabase(programs_database.ProgramsDatabase):
