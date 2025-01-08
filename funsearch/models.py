@@ -17,7 +17,9 @@ The code you generate will be appended to the user prompt and run as a python pr
 """
 
 def get_model_provider(model_name):
-    if "codestral" in model_name.lower() or "mistral" in model_name.lower():
+    if "/" in model_name.lower():
+        return "openrouter"
+    elif "codestral" in model_name.lower() or "mistral" in model_name.lower():
         return "mistral"
     elif "gpt" in model_name.lower() or "o1" in model_name.lower():
         return "openai"

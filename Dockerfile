@@ -20,6 +20,8 @@ RUN pip install openai>=1.2
 RUN pip install click
 RUN pip install cloudpickle
 RUN pip install scipy
+RUN pip install absl-py
+RUN pip install shortuuid
 
 # Create necessary subfolders in data directory if they don't exist
 RUN mkdir -p ./data && \
