@@ -59,7 +59,10 @@ FunSearch is an implementation of an evolutionary algorithm for program search u
 - You can find the full list of available models at https://openrouter.ai/docs
 - Multiple models can be specified using comma separation with optional counts and key numbers:
   - 'model1*count1*key1,model2*count2*key2'
-  - Example: 'codestral-latest*10*0,mistral-tiny-latest*5*1'
+  - Example: 'codestral-latest*10*0,mistralai/mistral-tiny-latest*5*1' will use 10 codestrals from mistral, and 5 mistral-tinys from openrouter.
+- Note the key numbers are used to differentiate between different API keys for the same model. These can be passed as separate environment variables with integers on the end. The separate ones will only be used if the key number is greater than 0.
+- You can also specify a model from OpenAI or Anthropic, etc. If this doesn't work, have a look at models.py
+
 
 ### Model Validation
 Before starting the search, each model is validated to ensure it's working correctly:
@@ -78,6 +81,7 @@ Before starting the search, each model is validated to ensure it's working corre
 - Run the search with the desired model using the '--model' attribute.
 - A good one to use for testing, as an extremely cheap model, is 'mistral-tiny-latest'. 
 - The best one for our use case is probably 'codestral-latest', which is 4x more expensive per output token.
+- Another great one might be deepseek/deepseek-chat, which is competitive with claude-3-5-sonnet and much cheaper.
 - Either model is still relatively cheap: with codestral, 1 million output tokens is $0.6.
 - You can also pass in a model name from OpenAI or Anthropic, etc. If this doesn't work, have a look at models.py
 
@@ -163,7 +167,7 @@ Here are the available run parameters:
 - `--output_path`: The directory where logs and data will be stored. Default is "./data/".
 - `--load_backup`: Path to a backup file of a previous program database to continue from a previous run.
 - `--iterations`: The maximum number of iterations per sampler. Default is -1 (unlimited).
-- `--sandbox_type`: The type of sandbox to use for code execution. Default is "ContainerSandbox".
+- `--sandbox`: The type of sandbox to use for code execution. Default is "ContainerSandbox".
 - `--samplers`: The number of sampler threads to run. Default is 15.
 - `--evaluators`: The number of evaluator processes to run. Default is the number of CPU cores minus 1.
 - `--islands`: The number of islands for the island model in the genetic algorithm. Default is 10.
@@ -176,7 +180,7 @@ Here are the available run parameters:
 Here, we are searching for the algorithm to find maximum cap sets for dimension 11.
 You should see something like:
 ```
-root@11c22cd7aeac:/workspace# funsearch runasync /workspace/examples/cap_set_spec.py 11 --sandbox_type ExternalProcessSandbox --model_name codestral-latest
+root@11c22cd7aeac:/workspace# funsearch runasync /workspace/examples/cap_set_spec.py 11 --sandbox ExternalProcessSandbox --model codestral-latest
 INFO:root:Writing logs to data/1704956206
 INFO:absl:Best score of island 0 increased to 2048
 INFO:absl:Best score of island 1 increased to 2048
@@ -206,12 +210,13 @@ This variant could be also used, e.g., in Colab quite safely since the environme
 ```
 pip install .
 
-funsearch runsync /workspace/examples/cap_set_spec.py 11
+funsearch runasync /workspace/examples/cap_set_spec.py 11
 ```
 
 # LOGS AND GRAPHS
 
-You can monitor the progress of the search using Weights & Biases (wandb). First, make sure you have set your wandb API key:
+You can monitor the progress of the search using Weights & Biases (wandb). First, make sure you have set your wandb API key (in the .env file), or otherwise set the WANDB_API_KEY environment variable inside the container.
+
 ```
 export WANDB_API_KEY=<your_wandb_key_here>
 ```
