@@ -9,10 +9,10 @@ import time
 import shortuuid
 
 system_prompt="""You are a state-of-the-art python code completion system that will be used as part of a genetic algorithm.
-On each iteration, improve the function priority_v1 over priority_vX functions from previous iterations.
+On each iteration, improve the function priority_vN over priority_vM functions from previous iterations.
 1. Make only small changes but be sure to make some change.
 2. Try to keep the code short and any comments concise.
-3. Your response should be an implementation of the function priority_v1; do not include any examples or extraneous functions.
+3. Your response should be an implementation of the function priority_vM; do not include any examples or extraneous functions.
 The code you generate will be appended to the user prompt and run as a python program.
 """
 

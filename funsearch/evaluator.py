@@ -70,7 +70,7 @@ def _find_method_implementation(generated_code: str) -> Tuple[str, str]:
 
 
 def _trim_function_body(generated_code: str) -> str:
-  """Extracts the body of the generated function, trimming anything after it."""
+  """Extracts the body of the generated function, trimming anything after it. Includes docstring."""
   if not generated_code:
     return ''
   if not type(generated_code) is str:
@@ -87,7 +87,7 @@ def _trim_function_body(generated_code: str) -> str:
   if "def priority_v" in generated_code:
     code, method_name = _find_method_implementation(generated_code)
   else:
-    code = f'def {method_name}():\n{generated_code}'
+    code = f'def {method_name}():\n{generated_code}' #this is temporary and doesn't matter that it's incorrect typing?
 
   # Finally parse the code to make sure it's valid Python
   tree = None
@@ -104,6 +104,7 @@ def _trim_function_body(generated_code: str) -> str:
   visitor = _FunctionLineVisitor(method_name)
   visitor.visit(tree)
   body_lines = code.splitlines()[1:visitor.function_end_line]
+  print("\n\n\n\n\nOUT:\n", '\n'.join(body_lines) + '\n\n' + "END\n\n\n\n")
   return '\n'.join(body_lines) + '\n\n'
 
 
@@ -114,20 +115,21 @@ def _sample_to_program(
     function_to_evolve: str,
 ) -> tuple[code_manipulation.Function, str]:
   """Returns the compiled generated function and the full runnable program."""
-  body = _trim_function_body(generated_code)
-  if not body:
+  doc_and_body = _trim_function_body(generated_code)
+  if not doc_and_body:
     return None, None
   if version_generated is not None:
-    body = code_manipulation.rename_function_calls(
-        body,
+    doc_and_body = code_manipulation.rename_function_calls(
+        doc_and_body,
         f'{function_to_evolve}_v{version_generated}',
         function_to_evolve)
 
   program = copy.deepcopy(template)
   evolved_function = program.get_function(function_to_evolve)
-  evolved_function.body = body
-  #print("evolved_function",evolved_function)
-  #print("program",str(program))
+  print("doc_and_body",doc_and_body)
+  evolved_function.body = doc_and_body
+  print("evolved_function",evolved_function.body)
+  print("program",str(program),"done")
   return evolved_function, str(program)
 
 

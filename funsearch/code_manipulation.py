@@ -41,8 +41,8 @@ class Function:
   docstring: str | None = None
 
   def __str__(self) -> str:
-    #print("docs", self.docstring)
-    #print("body", self.body)
+    print("\n\ndocs\n", self.docstring)
+    print("body\n", self.body)
     return_type = f' -> {self.return_type}' if self.return_type else ''
     # Get the indentation characters of the first line of body
     body_lines = self.body.split('\n')
@@ -54,6 +54,13 @@ class Function:
 
     function = f'def {self.name}({self.args}){return_type}:\n'
     if self.docstring:
+        # Remove leading/trailing newlines, spaces and triple quotes from docstring
+        self.docstring = self.docstring.strip('\n')
+        if self.docstring.startswith('"""'):
+            self.docstring = self.docstring[3:]
+        if self.docstring.endswith('"""'):
+            self.docstring = self.docstring[:-3]
+        self.docstring = self.docstring.strip()
         # Indent the docstring
         docstring_lines = self.docstring.split('\n')
         indented_docstring = f'"""{docstring_lines[0]}\n'
@@ -63,7 +70,7 @@ class Function:
         
         # Add a newline if there's a body
         new_line = '\n' if self.body else ''
-        function += indentation_chars + indented_docstring + new_line
+        function += indentation_chars + indented_docstring + new_line# need first indentation chars
     #if self.docstring:
     #  # self.docstring is already indented on every line except the first one.
     #  # Here, we assume the indentation is always two spaces.
@@ -72,12 +79,33 @@ class Function:
       
     # self.body is already indented.
     function += self.body + '\n\n'
+    #print("function:\n", function,"\n\n\n\n\n\n")
     return function
 
   def __setattr__(self, name: str, value: str) -> None:
     # Ensure there aren't leading & trailing new lines in `body`.
     if name == 'body':
       value = value.strip('\n')
+    # Remove the first docstring from body if present
+    if name == 'body':
+      # Look for a docstring at the start of the body
+      lines = value.split('\n')
+      if lines and lines[0].strip().startswith('"""'):
+        # Find the end of the docstring
+        docstring_end = -1
+        # Handle single-line docstring
+        if lines[0].strip().endswith('"""'):
+          docstring_end = 0
+        else:# Handle multi-line docstring
+          for i, line in enumerate(lines[1:]):
+            if '"""' in line:
+              docstring_end = i+1
+              break
+        # Remove the docstring lines if we found an end marker
+        if docstring_end >= 0:
+          value = '\n'.join(lines[docstring_end+1:])
+        else:
+          value = ''
     # Ensure there aren't leading & trailing quotes in `docstring``.
     if name == 'docstring' and value is not None:
       if '"""' in value:
@@ -143,16 +171,36 @@ class ProgramVisitor(ast.NodeVisitor):
         self._preface = '\n'.join(self._codelines[:node.lineno - 1])
       function_end_line = node.end_lineno
       body_start_line = node.body[0].lineno - 1
-      # Extract the docstring.
+      # # Extract the docstring.
       docstring = None
       if isinstance(node.body[0], ast.Expr) and isinstance(node.body[0].value,
                                                            ast.Str):
-        docstring = f'  """{ast.literal_eval(ast.unparse(node.body[0]))}"""'##this adds two spaces to docstring
+        docstring = f'  {ast.literal_eval(ast.unparse(node.body[0]))}'##this adds two spaces to docstring
         if len(node.body) > 1:
           body_start_line = node.body[1].lineno - 1
         else:
           body_start_line = function_end_line
+      # Extract all docstrings
+      # docstrings = []
+      # current_node_index = 0
+      # while (current_node_index < len(node.body) and 
+      #        isinstance(node.body[current_node_index], ast.Expr) and 
+      #        isinstance(node.body[current_node_index].value, ast.Str)):
+      #   docstrings.append(ast.literal_eval(ast.unparse(node.body[current_node_index])))
+      #   current_node_index += 1
+      
+      # # Combine docstrings if multiple exist
+      # docstring = None
+      # if docstrings:
+      #   docstring = '\n'.join(docstrings)
+      #   if current_node_index < len(node.body):
+      #     body_start_line = node.body[current_node_index].lineno - 1
+      #   else:
+      #     body_start_line = function_end_line
 
+          
+      print("PV:docstring:\n", docstring)
+      print("PV:body:\n", '\n'.join(self._codelines[body_start_line:function_end_line]))
       self._functions.append(Function(
           name=node.name,
           args=ast.unparse(node.args),
@@ -171,6 +219,7 @@ def text_to_program(text: str) -> Program:
   try:
     # We assume that the program is composed of some preface (e.g. imports,
     # classes, assignments, ...) followed by a sequence of functions.
+    print("text_to_program:\n", text)
     tree = ast.parse(text)
     visitor = ProgramVisitor(text)
     visitor.visit(tree)

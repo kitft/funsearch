@@ -340,10 +340,11 @@ class Island:
     # Replace functions in the template with the list constructed here.
     prompt = dataclasses.replace(self._template, functions=versioned_functions)
     return str(prompt)
+  
 
 
 class Cluster:
-  """A cluster of programs on the same island and with the same Signature."""
+  """A cluster of programs on the same island and with the same Signature, where signature is a tuple of scores"""
 
   def __init__(self, score: float, implementation: code_manipulation.Function, length_sample_temperature: float):
     self._length_sample_temperature = length_sample_temperature

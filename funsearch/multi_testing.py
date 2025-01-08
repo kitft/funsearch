@@ -145,7 +145,7 @@ async def validate_model(lm: sampler.LLM, timeout=30):
         try:
             async with asyncio.timeout(timeout):
                 # Use LLM's draw_sample method directly
-                response = await lm._draw_sample(test_prompt, label=0)
+                response = await lm._draw_sample(test_prompt, label=None) #do not log this, so set label to None
                 if not response or len(response) < 10:  # Basic check for a reasonable response
                     raise ValueError(f"Model {lm.model.model} returned an invalid response")
                 logging.info(f"Successfully validated model {lm.model.model}")
@@ -288,7 +288,7 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
                 best_score_overall = max(best_scores_per_island)
                 avg_score_overall = sum(avg_scores_per_island) / len(avg_scores_per_island) if avg_scores_per_island else 0
 
-                logging.info(f"Time: {current_time:.2f}s, Eval Queue size: {eval_queue_size}, Result Queue size: {result_queue_size}")
+                logging.info(f"Time: {current_time:.2f}s, best score: {best_score_overall:.2f}, average score: {avg_score_overall:.2f}, Eval Queue size: {eval_queue_size}, Result Queue size: {result_queue_size}")
 
                 # Log scores to CSV
                 with open(csv_filename, 'a', newline='') as csvfile:
