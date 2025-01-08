@@ -210,7 +210,7 @@ This variant could be also used, e.g., in Colab quite safely since the environme
 ```
 pip install .
 
-funsearch runasync /workspace/examples/cap_set_spec.py 11
+funsearch runasync examples/cap_set_spec.py 11
 ```
 
 # LOGS AND GRAPHS
