@@ -190,7 +190,7 @@ async def validate_all_models(lm_list):
     
     return valid_models
 
-async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, multitestingconfig: config_lib.MultiTestingConfig, team=None):
+async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, multitestingconfig: config_lib.MultiTestingConfig, team=None, name=None):
     #num_cores = min(multiprocessing.cpu_count(), config.num_evaluators,2)
 
     num_cores = min(multiprocessing.cpu_count()-1, config.num_evaluators)
@@ -224,10 +224,10 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
     time.sleep(3)
     logging.info("Initialising %d samplers"%(len(samplers)))
     sampler_tasks = [asyncio.create_task(sampler_worker(s, eval_queue, database,config)) for s in samplers]
-
-    timestamp = multitestingconfig.timestamp
+    if name == None:
+        name_val = multitestingconfig.timestamp
     os.makedirs("./data/scores", exist_ok=True)
-    csv_filename = f"./data/scores/scores_log_{timestamp}.csv"
+    csv_filename = f"./data/scores/scores_log_{name_val}.csv"
     
     # Check if WANDB_API_KEY is set in environment variables
     wandb_api_key = os.environ.get('WANDB_API_KEY')
@@ -246,7 +246,7 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
     
     names_of_models = multitestingconfig.model_names
     # Initialize wandb
-    name_of_run = "run_" + names_of_models + "_" + timestamp
+    name_of_run = "run_" + names_of_models + "_" + name_val
     logging.info(f"Initialising wandb with name: {name_of_run}")
     wandb.init(
         entity=entity,

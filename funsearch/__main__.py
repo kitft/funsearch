@@ -235,7 +235,8 @@ def main(ctx):
 @click.option('--temperature', default="1.0", type=str, help='LLM temperature or comma-separated list of temperatures')
 @click.option('--team', default=None, type=str, help='wandb team name')
 @click.option('--envfile', default=None, type= str, help='path to .env file')
-def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, sandbox, samplers, evaluators, islands, reset, duration, temperature, team, envfile):
+@click.option('--name', default=None, help='Unique ID for wandb. Default is timestamp')
+def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, sandbox, samplers, evaluators, islands, reset, duration, temperature, team, envfile, name):
     """Execute the function-search algorithm.
 
     SPEC_FILE: A Python module providing the basis of the LLM prompt and the evaluation metric.
@@ -322,7 +323,7 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
 
     async def initiate_search():
         async_database = multi_testing.AsyncProgramsDatabase(database)
-        await multi_testing.runAsync(conf, async_database, multitestingconfig, team)
+        await multi_testing.runAsync(conf, async_database, multitestingconfig, team, name)
 
     try:
         asyncio.run(initiate_search())

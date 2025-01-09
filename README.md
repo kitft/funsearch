@@ -109,6 +109,7 @@ Key options:
 - `--islands`: Number of islands for genetic algorithm (default: 10)
 - `--duration`: Run duration in seconds (default: 3600)
 - `--team`: Wandb team/entity for logging (optional)
+- `--name`: Wandb ID for run
 
 Example command:
 ```bash
