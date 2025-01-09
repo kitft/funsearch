@@ -22,7 +22,7 @@ FunSearch is an implementation of an evolutionary algorithm for program search u
    
 2. Clone the repository and navigate to the project directory
 
-`git clone https://github.com/AndrewVSutherland/funsearch.git`
+`git clone https://github.com/kitft/funsearch.git`
 `cd funsearch`
    
 3. Set your API keys by creating a `.env` file in the project root (this file will be automatically gitignored):
