@@ -130,7 +130,7 @@ class LLMModel:
 
     async def prompt(self, prompt_text):
         max_retries = 10
-        base_timeout = 10  # Initial timeout for exponential backoff
+        base_timeout = 30  # Initial timeout for exponential backoff
         base_of_exponential_backoff = 1.1
         begin = time.time()
         for attempt in range(max_retries):
@@ -138,7 +138,7 @@ class LLMModel:
                 start = time.time()
                 logging.debug(f"prompt:start:{self.model}:{self.id}:{self.counter}:{attempt}")
                 task = self.complete(prompt_text)
-                chat_response = await asyncio.wait_for(task, timeout=base_timeout * (base_of_exponential_backoff ** attempt))
+                chat_response = await asyncio.wait_for(task, timeout=base_timeout * (base_of_exponential_ ** attempt))
                 end = time.time()
                 logging.debug(f"prompt:end:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
                 if chat_response is not None:
