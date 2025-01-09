@@ -130,10 +130,14 @@ class ProgramsDatabase:
 
   def backup(self):
     folder_name = f"program_db_{self._function_to_evolve}_{self.identifier}"
-    filename = f"{folder_name}_{self._backups_done}.pickle"
     p = pathlib.Path(os.path.join(self._config.backup_folder, folder_name))
     if not p.exists():
       p.mkdir(parents=True, exist_ok=True)
+
+    # Keep last 5 backups, rotating old ones out
+    max_backups = 5
+    backup_num = self._backups_done % max_backups
+    filename = f"{folder_name}_{backup_num}.pickle"
     filepath = p / filename
     logging.info(f"Saving backup to {filepath}.")
 
