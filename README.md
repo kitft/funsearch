@@ -165,7 +165,7 @@ Here are the available run parameters:
 - `inputs`: The input data for the problem. This can be a filename ending in .json or .pickle, or comma-separated values.
 - `--model`: The name of the language model (or models) to use. Default is "codestral-latest", which uses the Mistral api. Format: "model1*count1*key1,model2*count2*key2",...etc
 - `--output_path`: The directory where logs and data will be stored. Default is "./data/".
-- `--load_backup`: Path to a backup file of a previous program database to continue from a previous run.
+- `--load_backup`: Path to a backup file of a previous program database to continue from a previous run: e.g. "./data/backups/program_db_priority_identifier_0.pickle"
 - `--iterations`: The maximum number of iterations per sampler. Default is -1 (unlimited).
 - `--sandbox`: The type of sandbox to use for code execution. Default is "ContainerSandbox".
 - `--samplers`: The number of sampler threads to run. Default is 15.
@@ -213,6 +213,12 @@ pip install .
 source .env #need to source the .env file to get the API keys
 funsearch runasync examples/cap_set_spec.py 11
 ```
+
+# PROGRAM DATABASE BACKUPS
+
+The program database is automatically backed up every 500 programs, with 5 rotating backups. These are stored in the `./data/backups/` directory. You can resume from a backup with the `--load_backup` option.
+
+To inspect a backup of a program database, you can use the `funsearch lsasync ./data/backups/program_db_priority_<identifier>/program_db_priority_<identifier>_<backup_number>.pickle` command.
 
 # LOGS AND GRAPHS
 
