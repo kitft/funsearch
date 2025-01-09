@@ -181,6 +181,8 @@ class LLMModel:
         self.counter = 0
         self.timeout = timeout
         self.retries = retries
+        self.log_stats = True
+        self.log_detailed_stats = False
         logging.info(f"Created {self.provider} {self.model} sampler {self.id} using {keyname}")
         #logging.info(f"Ensure temperature defaults are correct for this model??")
 
@@ -255,7 +257,7 @@ class LLMModel:
             chat_response = None if response is None else response.choices[0].message.content
             if hasattr(response, 'status_code') and response.status_code == 429:
                 raise httpx.HTTPStatusError("Rate limit exceeded: 429", request=None, response=response)
-            if self.provider == "openrouter":
+            if self.provider == "openrouter" and self.log_stats:
                 id = response.id
                 ## TODO - log cost of response and number of tokens used
                 
@@ -272,7 +274,7 @@ class LLMModel:
                     
                     # Fetch detailed stats asynchronously
                     detailed_stats = False#await self.get_openrouter_stats(response.id)
-                    if detailed_stats:# and 'data' in detailed_stats:
+                    if self.log_detailed_stats and detailed_stats:# and 'data' in detailed_stats:
                         data = detailed_stats['data']
                         usage_stats.total_cost = data.get('total_cost')
                         usage_stats.generation_time = data.get('generation_time')
