@@ -94,7 +94,7 @@ async def sampler_worker(sampler: sampler.Sampler, eval_queue: multiprocessing.Q
         await sampler.sample(prompt, eval_queue)
         # Adaptive sleep based on queue size
         queue_size = eval_queue.qsize()
-        sleep_time = min(0.1 * (queue_size), 5)  # Cap at 5 seconds
+        sleep_time = min(0.1 * (queue_size), 30)  # Cap at 5 seconds
         if sleep_time > 0.5:
             logging.info('Slowed down sampling to %f seconds', sleep_time)
         await asyncio.sleep(sleep_time)
