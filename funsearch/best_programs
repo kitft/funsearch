@@ -688,3 +688,5 @@ def priority(el: tuple[int, ...], n: int) -> float:
   priority /= (17 * n)
 
   return priority
+
+

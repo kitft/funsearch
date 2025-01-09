@@ -346,3 +346,5 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
         logging.info("Shutdown complete.")
 
     return database.get_best_programs_per_island()
+
+

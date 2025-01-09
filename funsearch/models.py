@@ -160,3 +160,5 @@ class LLMModel:
                     logging.debug(f"prompt:awoke:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
         logging.error(f"prompt:error-fatal:{self.model}:{self.id}:{self.counter}:{attempt}:{max_retries} attempts failed")
         return None  # If we've exhausted all retries
+
+

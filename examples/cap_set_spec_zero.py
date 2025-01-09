@@ -49,3 +49,4 @@ def priority(el: tuple[int, ...], n: int) -> float:
   el is a tuple of length n with values 0-2.
   """
   return 0.0
+

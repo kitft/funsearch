@@ -32,3 +32,5 @@ pdm.lock
 # Environment variables
 .env
 .env.*
+
+

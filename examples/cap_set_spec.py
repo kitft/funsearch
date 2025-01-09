@@ -38,3 +38,5 @@ def priority(v: tuple[int, ...], n: int) -> float:
   The cap set will be constructed by adding vectors that do not create a line in order by priority.
   """
   return 0.0
+
+

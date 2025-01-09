@@ -38,3 +38,5 @@ def priority(p: int, n: int) -> int:
   Returns the nonzero residue class to avoid modulo p when constructing an admissible tuple of width n.
   """
   return 1
+
+

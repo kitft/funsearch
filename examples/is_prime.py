@@ -37,3 +37,4 @@ def priority(n: int) -> bool:
   n is an int.
   """
   return True
+

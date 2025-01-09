@@ -49,3 +49,5 @@ EXPOSE 6006
 
 CMD ["bash"]
 
+
+

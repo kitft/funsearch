@@ -323,3 +323,5 @@ def yield_decorated(code: str, module: str, name: str) -> Iterator[str]:
             and attribute.value.id == module
             and attribute.attr == name):
           yield node.name
+
+
