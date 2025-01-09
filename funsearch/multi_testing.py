@@ -274,7 +274,7 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
         logging_info_interval = config.logging_info_interval
         while time.time() - start_time < config.run_duration:
             # Add wandb run state check
-            if not wandb.run.alive:
+            if not wandb.run:
                 logging.info("Wandb run stopped externally. Initiating graceful shutdown.")
                 break
 
