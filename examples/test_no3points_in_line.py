@@ -64,4 +64,3 @@ def priority(el: tuple[int, int], n: int) -> float:
   """Returns the priority with which we want to add `element` to the cap set."""
   return 0.0
      
-

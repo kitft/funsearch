@@ -43,4 +43,3 @@ def test_parse_input():
   assert parse_input("1,2,3") == [1, 2, 3]
   assert parse_input(str(ROOT_DIR / "examples" / "cap_set_input_data.json")) == [8, 9, 10]
 
-

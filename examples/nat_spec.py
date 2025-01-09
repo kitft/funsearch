@@ -39,4 +39,3 @@ def priority(p: int, n: int) -> int:
   """
   return 1
 
-

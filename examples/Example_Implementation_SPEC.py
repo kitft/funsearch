@@ -31,4 +31,3 @@ def priority(el: tuple[int, ...], n: int) -> float: ### <<<MODIFY THE TYPE SIGNA
     pass  # TODO: Implement the priority function
 
 
-

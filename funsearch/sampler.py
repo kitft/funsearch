@@ -88,4 +88,3 @@ class Sampler:
       #chosen_evaluator.analyse(
       #    sample, prompt.island_id, prompt.version_generated, self.label)
 
-

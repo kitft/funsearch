@@ -324,4 +324,3 @@ def yield_decorated(code: str, module: str, name: str) -> Iterator[str]:
             and attribute.attr == name):
           yield node.name
 
-

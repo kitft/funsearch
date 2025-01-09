@@ -376,4 +376,3 @@ class Cluster:
     probabilities = _softmax(-normalized_lengths, temperature=self._length_sample_temperature)#1.0)#self._config.length_sample_temperature)
     return np.random.choice(self._programs, p=probabilities)
 
-

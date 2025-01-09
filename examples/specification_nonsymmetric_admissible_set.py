@@ -95,4 +95,3 @@ def priority(el: tuple[int, ...], n: int, w: int) -> float:
   """
   return 0.0
 
-

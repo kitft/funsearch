@@ -55,4 +55,3 @@ def priority(k: int, n: int) -> float:
   n is the number of possible integers, and k is the integer we want to determine priority for. 
   """
   return 0.0
-

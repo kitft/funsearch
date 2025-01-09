@@ -39,4 +39,3 @@ def priority(v: tuple[int, ...], n: int) -> float:
   """
   return 0.0
 
-
