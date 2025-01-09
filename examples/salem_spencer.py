@@ -1,4 +1,4 @@
-"""Finds large salem-spencer progressions, i.e. sequences of integershere no three elements form an arithmetic progression.
+"""Finds large salem-spencer progressions, i.e. sequences of integers where no three elements form an arithmetic progression.
 
 On every iteration, improve priority_v1 over the priority_vX methods from previous iterations.
 Make only small changes.
