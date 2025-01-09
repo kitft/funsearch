@@ -315,8 +315,9 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
 
     parsed_inputs = parse_input(inputs)
     sandbox_class = next(c for c in SANDBOX_TYPES if c.__name__ == sandbox)
+    name_for_saving = model_names + "_T"+ temperature
     multitestingconfig = config.MultiTestingConfig(log_path=log_path, sandbox_class=sandbox_class, parsed_inputs=parsed_inputs,
-                                                    template=template, function_to_evolve=function_to_evolve, function_to_run=function_to_run, lm=lm,timestamp=timestamp,model_names=model)
+                                                    template=template, function_to_evolve=function_to_evolve, function_to_run=function_to_run, lm=lm,timestamp=timestamp,model_names=name_for_saving)
 
     async def initiate_search():
         async_database = multi_testing.AsyncProgramsDatabase(database)
