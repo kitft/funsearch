@@ -149,7 +149,25 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
     database = programs_database.ProgramsDatabase(
         conf.programs_database, template, function_to_evolve, identifier=timestamp)
     if load_backup:
-        database.load(load_backup)
+        # If load_backup is a file that exists directly, use it
+        if os.path.isfile(load_backup):
+            database.load(load_backup)
+        else:
+            # If it's a string/number or partial path, search in backups folder
+            backup_dir = "./data/backups"
+            matching_files = []
+            for root, dirs, files in os.walk(backup_dir):
+                for file in files:
+                    if load_backup in file:
+                        matching_files.append(os.path.join(root, file))
+            
+            if matching_files:
+                # Get most recently modified matching file
+                latest_file = max(matching_files, key=os.path.getmtime)
+                logging.info(f"Found backup file: {latest_file}")
+                database.load(latest_file)
+            else:
+                raise FileNotFoundError(f"Could not find backup file matching '{load_backup}' in {backup_dir}")
 
     parsed_inputs = parse_input(inputs)
     sandbox_class = next(c for c in SANDBOX_TYPES if c.__name__ == sandbox)
