@@ -221,7 +221,7 @@ funsearch runasync examples/cap_set_spec.py 11
 The program database is automatically backed up every 500 programs, with 5 rotating backups labelled 0-4, where the most recent backup is not necessarily labelled 0. These are stored in the `./data/backups/` directory. You can resume from a backup with the `--load_backup` option. 
 
 
-To inspect a backup of a program database, you can use the `funsearch lsasync ./data/backups/program_db_priority_<identifier>/program_db_priority_<identifier>_<backup_number>.pickle` command.
+To inspect a backup of a program database, you can use the `funsearch ls./data/backups/program_db_priority_<identifier>/program_db_priority_<identifier>_<backup_number>.pickle` command.
 
 # LOGS AND GRAPHS
 

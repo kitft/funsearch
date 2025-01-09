@@ -273,6 +273,11 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
         start_time = time.time()
         logging_info_interval = config.logging_info_interval
         while time.time() - start_time < config.run_duration:
+            # Add wandb run state check
+            if not wandb.run.alive:
+                logging.info("Wandb run stopped externally. Initiating graceful shutdown.")
+                break
+
             current_time = time.time() - start_time
             if current_time >= logging_info_interval * (current_time // logging_info_interval):
                 eval_queue_size = eval_queue.qsize()
@@ -325,6 +330,8 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
     except asyncio.CancelledError:
         logging.info("Cancellation requested. Shutting down gracefully.")
     finally:
+
+
         # Cancel all tasks
         for task in sampler_tasks:
             task.cancel()
@@ -342,10 +349,14 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
         logging.info(f"Total programs processed: {database._program_counter}")
         logging.info(f"Best scores per island: {database._best_score_per_island}")
         
-        # Close wandb
-        wandb.finish()
+        try:
+            if wandb.run is not None:
+                wandb.finish()
+        except Exception as e:
+            logging.warning(f"Error while closing wandb: {e}")
 
         logging.info("Shutdown complete.")
+                # Add additional cleanup for wandb
 
     return database.get_best_programs_per_island()
 
