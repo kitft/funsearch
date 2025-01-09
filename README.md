@@ -1,6 +1,6 @@
 # FunSearch
 
-Forked from https://github.com/google-deepmind/funsearch via https://github.com/jonppe/funsearch via https://github.com/kitft/funsearch
+Forked from https://github.com/google-deepmind/funsearch via https://github.com/jonppe/funsearch 
 
 ## Overview
 

@@ -149,9 +149,9 @@ class LLMModel:
             except Exception as e:
                 end = time.time()
                 if '429' in str(e):#if it's a rate limit error, not a big issue
-                    logging.debug(f"prompt:error:exception:{e}:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
+                    logging.debug(f"prompt:error:exception_ratelimit:{e}:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
                 else:
-                    logging.warning(f"prompt:error:exception:{e}:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
+                    logging.warning(f"prompt:error:exception_other:{e}:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
                 if attempt < max_retries - 1:
                     sleep_time = base_timeout * (base_of_exponential_backoff ** attempt)
                     logging.debug(f"prompt:sleep:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}:{sleep_time:.3f}")
