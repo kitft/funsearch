@@ -226,6 +226,8 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
     sampler_tasks = [asyncio.create_task(sampler_worker(s, eval_queue, database,config)) for s in samplers]
     if name == None:
         name_val = multitestingconfig.timestamp
+    else:
+        name_val = name
     os.makedirs("./data/scores", exist_ok=True)
     csv_filename = f"./data/scores/scores_log_{name_val}.csv"
     
