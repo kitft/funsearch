@@ -105,8 +105,23 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
     else:
         logging.info("No .env file specified, using environment variables")
     
+
+    names_of_models = model
     timestamp = str(int(time.time()))
-    log_path = pathlib.Path(output_path) / timestamp
+    problem_name = spec_file.name.split("/")[-1].split(".")[0]
+
+    if name == None:
+        timestamp = timestamp
+    else:
+        timestamp = name
+    problem_identifier = problem_name + "_" + timestamp
+    model_identifier =  names_of_models + "_T"+ temperature
+
+    name_for_saving = model_identifier + "_" + problem_identifier
+    #names_of_models = model
+    #name_of_run = "run_" + names_of_models + "_" + name_val
+
+    log_path = pathlib.Path(output_path) / problem_name / timestamp
     if not log_path.exists():
         log_path.mkdir(parents=True)
         logging.info(f"Writing logs to {log_path}")
@@ -172,13 +187,13 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
     parsed_inputs = parse_input(inputs)
     sandbox_class = next(c for c in SANDBOX_TYPES if c.__name__ == sandbox)
 
-    name_for_saving =  model + "_T"+ temperature
     multitestingconfig = config.MultiTestingConfig(log_path=log_path, sandbox_class=sandbox_class, parsed_inputs=parsed_inputs,
-                                                    template=template, function_to_evolve=function_to_evolve, function_to_run=function_to_run, lm=lm,timestamp=timestamp,model_names=name_for_saving)
+                                                    template=template, function_to_evolve=function_to_evolve, function_to_run=function_to_run, 
+                                                    lm=lm,model_identifier=model_identifier,problem_name=problem_name,timestamp=timestamp)
 
     async def initiate_search():
         async_database = multi_testing.AsyncProgramsDatabase(database)
-        await multi_testing.runAsync(conf, async_database, multitestingconfig, team, name)
+        await multi_testing.runAsync(conf, async_database, multitestingconfig, team)
 
     try:
         asyncio.run(initiate_search())
@@ -201,7 +216,7 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
             # No running event loop
             pass
         # make plots
-        plotscores(str(timestamp))
+        plotscores(problem_identifier)
         #raise Exception("STOP AND I MEAN STOP")
 
 @main.command()
@@ -299,7 +314,7 @@ if __name__ == "__main__":
 #     subprocess.check_call(["pip", "install", "pandas", "matplotlib"])
 #     generate_score_graph(timestamp)
 
-def plotscores(timestamp):
+def plotscores(name):
     """Generate a graph of best overall score and best scores per island over time."""
     #install dependencies
     # import subprocess
@@ -309,8 +324,8 @@ def plotscores(timestamp):
     #from pathlib import Path
 
     # Read the CSV file
-    timestamp = str(timestamp)
-    csv_filename = f"./data/scores/scores_log_{timestamp}.csv"
+    timestamp = str(name)
+    csv_filename = f"./data/scores/scores_log_{name}.csv"
     df = pd.read_csv(csv_filename)
 
     # Convert Time to seconds (assuming it's already in seconds)
@@ -390,6 +405,8 @@ def makegraphs(timestamp):
 @click.argument("timestamps", nargs=-1)
 def removetimestamp(timestamps):
     """Remove all data associated with the specified timestamps."""
+    print("TEMPORARILY REMOVED")
+    return 0
     import os
     import shutil
 
@@ -403,6 +420,7 @@ def removetimestamp(timestamps):
 
     for timestamp in timestamps:
         # Remove CSV file
+
         csv_file = os.path.join(data_dir, f'{timestamp}.csv')
         if os.path.exists(csv_file):
             os.remove(csv_file)

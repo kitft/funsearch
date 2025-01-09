@@ -99,7 +99,7 @@ class MultiTestingConfig:
   function_to_run: None
   lm: None
   timestamp: str
-  model_names: str
-
+  model_identifier: str
+  problem_name: str
 
 

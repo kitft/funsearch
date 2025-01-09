@@ -87,34 +87,51 @@ class Function:
 
   def __setattr__(self, name: str, value: str) -> None:
     # Ensure there aren't leading & trailing new lines in `body`.
+    valueinit = value
     if name == 'body':
       value = value.strip('\n')
     # Remove the first docstring from body if present
     if name == 'body':
-      # Look for a docstring at the start of the body
-      lines = value.split('\n')
-      if lines and lines[0].strip().startswith('"""'):
+      # Keep removing docstrings until none are left
+      while True:
+        lines = value.split('\n')
+        # Skip any leading empty/whitespace lines
+        while lines and not lines[0].strip():
+          lines = lines[1:]
+        if not lines:
+          break
+          
+        # Count number of """ in first non-empty line
+        first_line = lines[0].strip()
+        if not first_line.startswith('"""') or first_line.count('"""') % 2 == 0:
+          break
+          
         # Find the end of the docstring
         docstring_end = -1
         # Handle single-line docstring
-        if lines[0].strip().endswith('"""'):
+        if first_line.count('"""') == 1 and first_line.endswith('"""') and first_line.count('"""') % 2 == 0:
           docstring_end = 0
         else:# Handle multi-line docstring
           for i, line in enumerate(lines[1:]):
-            if '"""' in line:
+            # Only count odd numbers of """ as docstring terminators
+            if line.count('"""') % 2 == 1:
               docstring_end = i+1
               break
+              
         # Remove the docstring lines if we found an end marker
         if docstring_end >= 0:
           value = '\n'.join(lines[docstring_end+1:])
         else:
           value = ''
+          break
     # Ensure there aren't leading & trailing quotes in `docstring``.
     if name == 'docstring' and value is not None:
       if '"""' in value:
         value = value.strip()
         value = value.replace('"""', '')
     super().__setattr__(name, value)
+    if value.count('"""') % 2 == 1:
+      print("name:", name, "valueinit:\n", valueinit, "value:\n", value,"\n\n")
 
 
 @dataclasses.dataclass(frozen=True)

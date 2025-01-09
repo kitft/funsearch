@@ -190,9 +190,10 @@ async def validate_all_models(lm_list):
     
     return valid_models
 
-async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, multitestingconfig: config_lib.MultiTestingConfig, team=None, name=None):
+async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, multitestingconfig: config_lib.MultiTestingConfig, team=None):
     #num_cores = min(multiprocessing.cpu_count(), config.num_evaluators,2)
-
+    problem_identifier = multitestingconfig.problem_name + "_" + multitestingconfig.timestamp
+    name_for_saving_to_wandb = multitestingconfig.model_identifier + "_" + problem_identifier
     num_cores = min(multiprocessing.cpu_count()-1, config.num_evaluators)
     logging.info("Number of cores/evaluators to be used: %d", num_cores)
     eval_queue = multiprocessing.Queue()
@@ -224,12 +225,8 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
     time.sleep(3)
     logging.info("Initialising %d samplers"%(len(samplers)))
     sampler_tasks = [asyncio.create_task(sampler_worker(s, eval_queue, database,config)) for s in samplers]
-    if name == None:
-        name_val = multitestingconfig.timestamp
-    else:
-        name_val = name
     os.makedirs("./data/scores", exist_ok=True)
-    csv_filename = f"./data/scores/scores_log_{name_val}.csv"
+    csv_filename = f"./data/scores/scores_log_{problem_identifier}.csv"
     
     # Check if WANDB_API_KEY is set in environment variables
     wandb_api_key = os.environ.get('WANDB_API_KEY')
@@ -246,21 +243,20 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
     else:
         logging.info(f"Logging to wandb to entity: {entity}")
     
-    names_of_models = multitestingconfig.model_names
-    # Initialize wandb
-    name_of_run = "run_" + names_of_models + "_" + name_val
-    logging.info(f"Initialising wandb with name: {name_of_run}")
+    logging.info(f"Initialising wandb with name: {name_for_saving_to_wandb}")
     wandb.init(
         entity=entity,
         project="funsearch",
-        name=name_of_run,
+        name=name_for_saving_to_wandb,
 
         config={
             "model_names": [lm.model.model for lm in multitestingconfig.lm],
             "num_cores": num_cores,
             "num_samplers": config.num_samplers,
             "run_duration": config.run_duration,
-            "num_islands": len(database._islands)
+            "num_islands": len(database._islands),
+            "problem_name": multitestingconfig.problem_name,
+            "temperatures": [lm.model.temperature for lm in multitestingconfig.lm]
 
         }
     )
