@@ -38,7 +38,7 @@ class ProgramsDatabaseConfig:
   cluster_sampling_temperature_init: float = 0.1
   cluster_sampling_temperature_period: int = 30_000
   length_sample_temperature: float = 1.0
-  backup_period: int = 30
+  backup_period: int = 300
   backup_folder: str = './data/backups'
 
   def __init__(self, **kwargs):

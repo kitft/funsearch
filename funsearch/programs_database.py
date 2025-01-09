@@ -128,8 +128,9 @@ class ProgramsDatabase:
       setattr(self, key, data[key])
 
   def backup(self):
-    filename = f"program_db_{self._function_to_evolve}_{self.identifier}_{self._backups_done}.pickle"
-    p = pathlib.Path(self._config.backup_folder)
+    folder_name = f"program_db_{self._function_to_evolve}_{self.identifier}"
+    filename = f"{folder_name}_{self._backups_done}.pickle"
+    p = pathlib.Path(os.path.join(self._config.backup_folder, folder_name))
     if not p.exists():
       p.mkdir(parents=True, exist_ok=True)
     filepath = p / filename
@@ -195,7 +196,7 @@ class ProgramsDatabase:
       logging.info("Reset islands")
 
     # Backup every N iterations
-    if self._program_counter > 0:
+    if True: #self._program_counter > 0:
       self._program_counter += 1
       if self._program_counter > self._config.backup_period:
         self._program_counter = 0
@@ -309,6 +310,7 @@ class Island:
       implementations: Sequence[code_manipulation.Function]) -> str:
     """Creates a prompt containing a sequence of function `implementations`."""
     implementations = copy.deepcopy(implementations)  # We will mutate these.
+    
 
     # Format the names and docstrings of functions to be included in the prompt.
     versioned_functions: list[code_manipulation.Function] = []
