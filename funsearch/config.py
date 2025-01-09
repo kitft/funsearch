@@ -101,5 +101,7 @@ class MultiTestingConfig:
   timestamp: str
   model_identifier: str
   problem_name: str
+  name_for_saving: str
+  problem_identifier: str
 
 

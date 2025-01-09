@@ -155,7 +155,8 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
     keynum_list = sum([model_counts[i]*[model_keys[i]] for i in range(len(model_keys))],[])
 
     logging.info(f"keynum list: {keynum_list}")
-    lm = [sampler.LLM(conf.samples_per_prompt, models.LLMModel(model_name=model_list[i], top_p=conf.top_p, temperature=temperature_list[i], keynum=keynum_list[i]), log_path) for i in range(len(model_list))]
+    lm = [sampler.LLM(conf.samples_per_prompt, models.LLMModel(model_name=model_list[i], top_p=conf.top_p,
+        temperature=temperature_list[i], keynum=keynum_list[i],id = i,log_path=log_path), log_path=log_path) for i in range(len(model_list))]
 
     specification = spec_file.read()
     function_to_evolve, function_to_run = core._extract_function_names(specification)
@@ -189,7 +190,7 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
 
     multitestingconfig = config.MultiTestingConfig(log_path=log_path, sandbox_class=sandbox_class, parsed_inputs=parsed_inputs,
                                                     template=template, function_to_evolve=function_to_evolve, function_to_run=function_to_run, 
-                                                    lm=lm,model_identifier=model_identifier,problem_name=problem_name,timestamp=timestamp)
+                                                    lm=lm,model_identifier=model_identifier,problem_name=problem_name,timestamp=timestamp,name_for_saving=name_for_saving,problem_identifier=problem_identifier)
 
     async def initiate_search():
         async_database = multi_testing.AsyncProgramsDatabase(database)

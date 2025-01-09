@@ -193,7 +193,7 @@ async def validate_all_models(lm_list):
 async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, multitestingconfig: config_lib.MultiTestingConfig, team=None):
     #num_cores = min(multiprocessing.cpu_count(), config.num_evaluators,2)
     problem_identifier = multitestingconfig.problem_name + "_" + multitestingconfig.timestamp
-    name_for_saving_to_wandb = multitestingconfig.model_identifier + "_" + problem_identifier
+    name_for_saving_to_wandb = multitestingconfig.name_for_saving 
     num_cores = min(multiprocessing.cpu_count()-1, config.num_evaluators)
     logging.info("Number of cores/evaluators to be used: %d", num_cores)
     eval_queue = multiprocessing.Queue()

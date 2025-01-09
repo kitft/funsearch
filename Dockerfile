@@ -22,6 +22,7 @@ RUN pip install cloudpickle
 RUN pip install scipy
 RUN pip install absl-py
 RUN pip install shortuuid
+RUN pip install aiohttp
 
 # Create necessary subfolders in data directory if they don't exist
 RUN mkdir -p ./data && \
