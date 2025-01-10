@@ -7,23 +7,23 @@ This version adds parallel processing, updated tooling, and many more features t
 
 ## Features
 
-# Modified to support non-priority-function program search
+### Modified to support non-priority-function program search
 - Search for any type signature, not just priority functions
 
-# Integration with Weights & Biases
+### Integration with Weights & Biases
 - Real-time monitoring and logging
 - Automatic score logging and graphing
 
-# Multi-Model Support
+### Multi-Model Support
 - Use any combination of modern LLMs including Claude/GPT-4o/Gemini/Mistral/Deepseek/etc through direct APIs or OpenRouter
 - Use multiple models in the same run:  multiple models with different temperatures, etc
 - Adaptive sampling rates based on LLM/CPU/evaluator capacity
 
-# Parallel Processing
+### Parallel Processing
 - Runs multiple program evaluations simultaneously across CPU cores
 - Makes asynchronous API calls to sampler/evaluator/database agents
 
-# Safety Features
+### Safety Features
 - Sandboxed code execution (container or process-based) *in progress* - see discussion below
 - Model validation before search starts/graceful handling of API failures
 
