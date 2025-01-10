@@ -1,18 +1,37 @@
-# FunSearch
 
-Forked from https://github.com/google-deepmind/funsearch via https://github.com/jonppe/funsearch 
+#### Funsearch
 
-## Overview
+A high-performance implementation of program search using LLMs, built for discovering mathematical algorithms and solving optimization problems. We essentially run a genetic algorithm with LLMs as the mutation/breeding operator.
 
-FunSearch is an implementation of an evolutionary algorithm for program search using large language models. This fork provides an asynchronous and parallel implementation with the following features:
+This version adds parallel processing, updated tooling, and many more features to the original DeepMind implementation.
 
-- Asynchronous main loop using `asyncio`
-- Evaluators run in separate processes via `multiprocessing`
-- Thread-safe communication using `multiprocessing.Queue`
-- Concurrent sampling with multiple asynchronous API calls
-- Asynchronous database operations for non-blocking access
-- Adaptive sampling rate based on CPU/evaluator capacity
-- Integration with Weights & Biases (wandb) for experiment tracking
+## Features
+
+# Modified to support non-priority-function program search
+- Search for any type signature, not just priority functions
+
+# Integration with Weights & Biases
+- Real-time monitoring and logging
+- Automatic score logging and graphing
+
+# Multi-Model Support
+- Use any combination of modern LLMs including Claude/GPT-4o/Gemini/Mistral/Deepseek/etc through direct APIs or OpenRouter
+- Use multiple models in the same run:  multiple models with different temperatures, etc
+- Adaptive sampling rates based on LLM/CPU/evaluator capacity
+
+# Parallel Processing
+- Runs multiple program evaluations simultaneously across CPU cores
+- Makes asynchronous API calls to sampler/evaluator/database agents
+
+# Safety Features
+- Sandboxed code execution (container or process-based) *in progress* - see discussion below
+- Model validation before search starts/graceful handling of API failures
+
+For implementation details and example problems, see the examples directory, particularly the section on *Adding additional programs*.
+
+
+
+
 
 ## Installation and Setup
 
@@ -408,6 +427,10 @@ If you are getting OPENAI Async doesn't exist errors, run `pip install openai>=1
 
 # Adding additional programs:
 To add additional programs, add .py files to the examples/ directory. These should follow the same structure as the other examples - a priority function with an @funsearch.evolve decorator, and an evaluation function which returns a score decorated with @funsearch.run. See `examples/cap_set_spec.py` for a simple example, and see `examples/Example_Implementation_SPEC.py` for template which you can fill in. I have also been writing playground `*.ipynb` files in the `examples/playgrounds/` directory, where new environments can be developed and tested.
+
+---
+
+forked from https://github.com/google-deepmind/funsearch via https://github.com/jonppe/funsearch 
 
 ---
 # Original Google DeepMind FunSearch Repository Data
