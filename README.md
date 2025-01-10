@@ -1,5 +1,5 @@
 
-#### Funsearch
+# Funsearch
 
 A high-performance implementation of program search using LLMs, built for discovering mathematical algorithms and solving optimization problems. We essentially run a genetic algorithm with LLMs as the mutation/breeding operator.
 
