@@ -81,20 +81,8 @@ For implementation details and example problems, see the examples directory, par
   - Example: 'codestral-latest*10*0,mistralai/codestral_mamba*5*1' will use 10 codestrals from mistral, and 5 mistral-tinys from openrouter.
 - Note the key numbers are used to differentiate between different API keys for the same model. These can be passed as separate environment variables with integers on the end. The separate ones will only be used if the key number is greater than 0.
 - You can also specify a model from OpenAI or Anthropic, etc. If this doesn't work, have a look at models.py
-
-
-### Model Validation
-Before starting the search, each model is validated to ensure it's working correctly:
-- Tests each model with a simple prompt
-- 30-second timeout per model
-- Shows progress with checkmarks (✓) for passed and crosses (✗) for failed models
-- If some models fail:
-  - Shows warning with count of valid/invalid models
-  - Asks if you want to continue with just the valid ones
-- If all models fail:
-  - Shows error about API keys/configuration
-  - Exits before starting the search
-- Automatically adjusts number of samplers based on valid models
+- Setting model temperatures: pass a list of temperatures, one for each model. Format: "temperature1,temperature2,..."
+- Before starting the search, each model is validated to ensure it's working correctly:
 
 ## Advice
 - Run the search with the desired model using the '--model' attribute.
@@ -197,6 +185,8 @@ Here are the available run parameters:
 - `--team`: Wandb team/entity for logging (optional)
 - `--envfile`: Path to a .env file to load environment variables from. This is only useful if you are running the search outside of a container.
 
+
+## Example
 ```
 Here, we are searching for the algorithm to find maximum cap sets for dimension 11.
 You should see something like:
