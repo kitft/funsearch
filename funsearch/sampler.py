@@ -40,24 +40,34 @@ class LLM:
   async def _draw_sample(self, prompt: str, label: int) -> str:
     """Returns a predicted continuation of `prompt`."""
     start = time.time()
-    response = await self.model.prompt(prompt)
+    response, usage_stats = await self.model.prompt(prompt)
     end = time.time()
+    usage_stats.prompt_count = self.prompt_count
+    usage_stats.sampler_id = label
     if label is not None:
-        self._log(prompt, response, self.prompt_count, label)
-        logging.debug("sample:%s:%d:%d:%d:%d:%.3f:%.3f:%.3f"%(self.model.model,label,self.prompt_count,len(prompt),len(response),start,end,end-start))
+        #self._log(usage_stats, self.prompt_count, label)
+        logging.debug("sample:%s:%d:%d:%d:%d:%.3f:%.3f:%.3f:%.3f"%(self.model.model,label,self.prompt_count,len(prompt),len(response),start,end,end-start,usage_stats.total_tokens))
     self.prompt_count += 1
-    return response
+    return response, usage_stats
 
   async def draw_samples(self, prompt: str, label: int) -> Collection[str]:
     """Returns multiple predicted continuations of `prompt`."""
     return [await self._draw_sample(prompt, label) for _ in range(self._samples_per_prompt)]
 
-  def _log(self, prompt: str, response: str, index: int, label: int):
-    if self.log_path is not None:
-      with open(self.log_path / f"prompt_{label}_{index}.log", "a") as f:
-        f.write(prompt)
-      with open(self.log_path / f"response_{label}_{index}.log", "a") as f:
-        f.write(str(response))
+  # def _log(self, prompt: str, response: str, index: int, label: int):
+  #   model_name_replaced = self.model.model.replace("/", "_")
+  #   name_for_log = f"{model_name_replaced}_{label}_{index}.log"
+  #   if self.log_path is not None:
+  #     with open(self.log_path / name_for_log, "a") as f:
+  #       f.write("=== PROMPT ===\n")
+  #       f.write(prompt)
+  #       f.write("\n=== RESPONSE ===\n")
+  #       f.write(str(response))
+  #       f.write("\n================\n")
+  #       f.write(f"Total tokens: {usage_stats.total_tokens}\n")
+  #       f.write(f"Prompt tokens: {usage_stats.tokens_prompt}\n")
+  #       f.write(f"Completion tokens: {usage_stats.tokens_completion}\n")
+  #       f.write(f"Model: {self.model.model}\n")
 
 
 class Sampler:
@@ -73,18 +83,22 @@ class Sampler:
     self._database = database
     self._evaluators = evaluators
     self._llm = model
-    self.label = label
+    self.sampler_id = label
     self.api_calls = 0
 
   async def sample(self, prompt, eval_queue):
     """Continuously gets prompts, samples programs, sends them for analysis."""
     #prompt = await self._database.get_prompt()
-    samples = await self._llm.draw_samples(prompt.code, self.label)
+    samples = await self._llm.draw_samples(prompt.code, self.sampler_id)
     # This loop can be executed in parallel on remote evaluator machines.
     self.api_calls += len(samples)
     for sample in samples:
       #chosen_evaluator = np.random.choice(self._evaluators)
-      eval_queue.put((sample, prompt.island_id, prompt.version_generated, prompt.island_version, self._llm.model.model))
+      sample, usage_stats = sample
+      usage_stats.island_id = prompt.island_id
+      usage_stats.version_generated = prompt.version_generated
+      usage_stats.island_version = prompt.island_version
+      eval_queue.put((sample,  usage_stats))
       #chosen_evaluator.analyse(
       #    sample, prompt.island_id, prompt.version_generated, self.label)
 

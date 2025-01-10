@@ -29,6 +29,7 @@ import scipy
 
 from funsearch import code_manipulation
 from funsearch import config as config_lib
+from funsearch import logging_stats
 
 Signature = tuple[float, ...]
 ScoresPerTest = Mapping[Any, float]
@@ -110,6 +111,7 @@ class ProgramsDatabase:
     self._program_counter = 0
     self._backups_done = 0
     self.identifier = identifier
+    self.database_worker_counter_dict = {}#counter for logging
 
   def get_best_programs_per_island(self) -> Iterable[Tuple[code_manipulation.Function | None]]:
     return sorted(zip(self._best_program_per_island, self._best_score_per_island), key=lambda t: t[1], reverse=True)
@@ -176,15 +178,58 @@ class ProgramsDatabase:
   def register_program(
       self,
       program: code_manipulation.Function,
-      island_id: int | None,
       scores_per_test: ScoresPerTest,
-      island_version: int | None,
-      model: str | None = None,
+      usage_stats: logging_stats.UsageStats,
   ) -> None:
     """Registers `program` in the database."""
     # In an asynchronous implementation we should consider the possibility of
     # registering a program on an island that had been reset after the prompt
     # was generated. Leaving that out here for simplicity.
+    island_id = usage_stats.island_id
+    island_version = usage_stats.island_version
+    model = usage_stats.model
+
+    total_tokens = usage_stats.total_tokens
+    tokens_prompt = usage_stats.tokens_prompt
+    tokens_completion = usage_stats.tokens_completion
+    sampler_id = usage_stats.sampler_id
+
+    eval_state = usage_stats.eval_state
+    if island_id is None:#this is the initial evaluation
+      pass
+    else:
+      if model not in self.database_worker_counter_dict.keys():
+        self.database_worker_counter_dict[model] = {
+            'sampler_ids': [sampler_id],
+            'eval_parse_failed': 0, 
+            'eval_did_not_run': 0, 
+            'eval_success': 0,
+            'total_tokens': 0,
+            'tokens_prompt': 0, 
+            'tokens_completion': 0,
+            'counts_each': {}
+        }
+      
+      if sampler_id not in self.database_worker_counter_dict[model]['counts_each'].keys():
+        self.database_worker_counter_dict[model]['counts_each'][sampler_id] = 0
+      self.database_worker_counter_dict[model]['counts_each'][sampler_id] += 1
+        
+      if sampler_id not in self.database_worker_counter_dict[model]['sampler_ids']:
+        self.database_worker_counter_dict[model]['sampler_ids'].append(sampler_id)
+      if eval_state not in ['success', 'parse_failed', 'did_not_run']:
+          raise Exception("Unhandled contingency")
+          
+      # Update eval state counter
+      self.database_worker_counter_dict[model][f'eval_{eval_state}'] += 1
+      
+      # Update token counts
+      self.database_worker_counter_dict[model]['total_tokens'] += total_tokens
+      self.database_worker_counter_dict[model]['tokens_prompt'] += tokens_prompt 
+      self.database_worker_counter_dict[model]['tokens_completion'] += tokens_completion
+
+
+      if eval_state == 'parse_failed' or eval_state == 'did_not_run':
+        return
     if island_id is None:
       # This is a program added at the beginning, so adding it to all islands.
       for island_id in range(len(self._islands)):
@@ -192,7 +237,6 @@ class ProgramsDatabase:
     elif island_version is not None and self._islands[island_id]._island_version == island_version:
       self._register_program_in_island(program, island_id, scores_per_test, model)
     #otherwise discard the program
-
     # Check whether it is time to reset an island.
     if (time.time() - self._last_reset_time > self._config.reset_period):
       self._last_reset_time = time.time()
@@ -234,7 +278,24 @@ class ProgramsDatabase:
       founder_scores = self._best_scores_per_test_per_island[founder_island_id]
       self._register_program_in_island(founder, island_id, founder_scores)
       logging.info(f"Registered new founder of island {island_id} from island {founder_island_id}")
-
+  def get_stats_per_model(self):
+    stats = {"success_rates": {},"parse_failed_rates": {},"did_not_run_rates": {}}
+    for model in self.database_worker_counter_dict.keys():
+        total_evals = (self.database_worker_counter_dict[model]['eval_success'] + 
+                      self.database_worker_counter_dict[model]['eval_parse_failed'] +
+                      self.database_worker_counter_dict[model]['eval_did_not_run'])
+        if total_evals > 0:
+            success_rate = self.database_worker_counter_dict[model]['eval_success'] / total_evals
+            parse_failed_rate = self.database_worker_counter_dict[model]['eval_parse_failed'] / total_evals
+            did_not_run_rate = self.database_worker_counter_dict[model]['eval_did_not_run'] / total_evals
+            stats["success_rates"][model] = success_rate
+            stats["parse_failed_rates"][model] = parse_failed_rate
+            stats["did_not_run_rates"][model] = did_not_run_rate
+        else:
+            stats["success_rates"][model] = 0.0
+            stats["parse_failed_rates"][model] = 0.0
+            stats["did_not_run_rates"][model] = 0.0
+    return stats
 
 class Island:
   """A sub-population of the programs database."""

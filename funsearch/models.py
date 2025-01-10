@@ -7,7 +7,6 @@ import google.generativeai as genai
 import logging
 import time
 import shortuuid
-from dataclasses import dataclass
 from typing import Optional
 import json
 from datetime import datetime
@@ -15,6 +14,7 @@ from pathlib import Path
 import atexit
 import httpx
 import aiohttp
+from funsearch import logging_stats
 
 system_prompt="""You are a state-of-the-art python code completion system that will be used as part of a genetic algorithm.
 You will be given a list of functions, and you should improve the incomplete last function in the list.
@@ -24,88 +24,6 @@ You will be given a list of functions, and you should improve the incomplete las
 4. You may use numpy.
 The code you generate will be appended to the user prompt and run as a python program.
 """
-
-@dataclass
-class UsageStats:
-    id: str
-    model: str
-    tokens_prompt: Optional[int] = None
-    tokens_completion: Optional[int] = None
-    total_tokens: Optional[int] = None
-    total_cost: Optional[float] = None
-    generation_time: Optional[float] = None
-    instance_id: Optional[str] = None
-    timestamp: str = datetime.utcnow().isoformat()
-
-    def to_dict(self):
-        return {k: v for k, v in self.__dict__.items() if v is not None}
-
-class UsageLogger:
-    def __init__(self,model_name, sampler_id: str, log_dir: str = "./data/usage"):
-        """
-        Args:
-            sampler_id: ID of the LLMModel instance
-            log_dir: Base directory for all usage logs
-        """
-        self.log_dir = Path(log_dir)
-        self.log_dir.mkdir(parents=True, exist_ok=True)
-        self.sampler_id = sampler_id
-        self.current_date = datetime.utcnow().date()
-        self.buffer = []
-        self.model_name = model_name
-        atexit.register(self.flush)
-        
-    @property
-    def log_file(self) -> Path:
-        """Get the current day's log file path, including model ID"""
-        return self.log_dir / "usage" / f"usage_stats_{self.model_name}_{self.sampler_id}.jsonl"
-    
-    def flush(self):
-        """Write buffered logs to file"""
-        if self.buffer:
-            # Ensure parent directories exist
-            self.log_file.parent.mkdir(parents=True, exist_ok=True)
-            with self.log_file.open('a') as f:
-                for entry in self.buffer:
-                    json.dump(entry, f)
-                    f.write('\n')
-            self.buffer = []
-    async def log_usage(self, stats: UsageStats, provider: str):
-        """Buffer usage statistics"""
-        # Check if we need to roll over to a new day's file
-        current_date = datetime.utcnow().date()
-        if current_date != self.current_date:
-            self.flush()  # Flush any remaining entries from previous day
-            self.current_date = current_date
-        
-        log_entry = stats.to_dict()
-        log_entry['provider'] = provider
-        self.buffer.append(log_entry)
-        
-        # Flush if buffer gets too large
-        if len(self.buffer) >= 100:
-            self.flush()
-    
-    def get_usage_summary(self, start_date=None, end_date=None, provider=None):
-        """Get usage summary for specified date range and/or provider"""
-        stats = []
-        log_files = sorted(self.log_dir.glob("usage/usage_stats_*.jsonl"))
-        
-        for log_file in log_files:
-            file_date = datetime.strptime(log_file.stem.split('_')[-1], '%Y-%m-%d').date()
-            if start_date and file_date < start_date:
-                continue
-            if end_date and file_date > end_date:
-                continue
-                
-            with log_file.open('r') as f:
-                for line in f:
-                    entry = json.loads(line)
-                    if provider and entry.get('provider') != provider:
-                        continue
-                    stats.append(entry)
-        
-        return stats
 
 def get_model_provider(model_name):
     if "/" in model_name.lower():
@@ -142,11 +60,7 @@ class LLMModel:
         #problem_identifier = config.problem_name + "_" + config.timestamp if config else "default"
         
         # Initialize usage logger with problem identifier and model ID
-        self.usage_logger = UsageLogger(
-            model_name=model_name,
-            sampler_id=self.id,
-            log_dir=log_path
-        )
+  
         
         if '%' in model_name:
             s = model_name.split('%')
@@ -186,13 +100,16 @@ class LLMModel:
         logging.info(f"Created {self.provider} {self.model} sampler {self.id} using {keyname}")
         #logging.info(f"Ensure temperature defaults are correct for this model??")
 
-    async def log_usage(self, usage_stats: UsageStats):
-        """Append usage statistics to the log file"""
-        with open(self.usage_log_file, 'a') as f:
-            f.write(usage_stats.to_json_line() + '\n')
+    # async def log_usage(self, usage_stats: UsageStats):
+    #     """Append usage statistics to the log file"""
+    #     with open(self.usage_log_file, 'a') as f:
+    #         f.write(usage_stats.to_json_line() + '\n')
+
+
     async def get_openrouter_stats(self, generation_id: str) -> dict:
         """Fetch detailed stats for an OpenRouter generation including token counts and costs
-        Does not work until some time after the generation is complete."""
+        Does not work until some time after the generation is complete.
+        We therefore do not use this for now."""
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.get(
@@ -218,6 +135,7 @@ class LLMModel:
             return None
 
     async def complete(self, prompt_text):
+        usage_stats = None
         if self.provider == "mistral":
             response = await self.client.chat.complete_async(
                 model=self.model,
@@ -231,6 +149,19 @@ class LLMModel:
             if hasattr(response, 'status_code') and response.status_code == 429:
                 raise httpx.HTTPStatusError("Rate limit exceeded: 429", request=None, response=response)
             chat_response = None if response is None else response.choices[0].message.content
+            if self.log_stats:
+                usage_stats = logging_stats.UsageStats(
+                    id=response.id,
+                    model=response.model,
+                    provider=self.provider,
+                    total_tokens=response.usage.total_tokens if hasattr(response, 'usage') else None,
+                    tokens_prompt=response.usage.prompt_tokens if hasattr(response, 'usage') else None,
+                    tokens_completion=response.usage.completion_tokens if hasattr(response, 'usage') else None,
+                    instance_id=self.id,
+                    prompt=prompt_text,
+                    response=chat_response
+                )
+
         elif self.provider == "anthropic":
             response = await self.client.messages.create(
                 model=self.model,
@@ -243,6 +174,18 @@ class LLMModel:
             chat_response = None if response is None else response.content[0].text
             if hasattr(response, 'status_code') and response.status_code == 429:
                 raise httpx.HTTPStatusError("Rate limit exceeded: 429", request=None, response=response)
+            if self.log_stats:
+                usage_stats = logging_stats.UsageStats(
+                    id=response.id,
+                    model=response.model,
+                    provider=self.provider,
+                    total_tokens=response.usage.total_tokens if hasattr(response, 'usage') else None,
+                    tokens_prompt=response.usage.prompt_tokens if hasattr(response, 'usage') else None,
+                    tokens_completion=response.usage.completion_tokens if hasattr(response, 'usage') else None,
+                    instance_id=self.id,
+                    prompt=prompt_text,
+                    response=chat_response
+                )
         elif self.provider in ["openai", "deepinfra", "openrouter"]:
             response = await self.client.chat.completions.create(
                 model=self.model,
@@ -257,19 +200,21 @@ class LLMModel:
             chat_response = None if response is None else response.choices[0].message.content
             if hasattr(response, 'status_code') and response.status_code == 429:
                 raise httpx.HTTPStatusError("Rate limit exceeded: 429", request=None, response=response)
-            if self.provider == "openrouter" and self.log_stats:
+            if self.log_stats:
                 id = response.id
                 ## TODO - log cost of response and number of tokens used
-                
                 if response:
                     # Log basic usage stats immediately
-                    usage_stats = UsageStats(
+                    usage_stats = logging_stats.UsageStats(
                         id=response.id,
                         model=response.model,
+                        provider=self.provider,
                         total_tokens=response.usage.total_tokens if hasattr(response, 'usage') else None,
                         tokens_prompt=response.usage.prompt_tokens if hasattr(response, 'usage') else None,
                         tokens_completion=response.usage.completion_tokens if hasattr(response, 'usage') else None,
-                        instance_id=self.id
+                        instance_id=self.id,
+                        prompt=prompt_text,
+                        response=chat_response
                     )
                     
                     # Fetch detailed stats asynchronously
@@ -279,7 +224,7 @@ class LLMModel:
                         usage_stats.total_cost = data.get('total_cost')
                         usage_stats.generation_time = data.get('generation_time')
                     
-                    await self.usage_logger.log_usage(usage_stats, self.provider)
+                    #await self.usage_logger.log_usage(usage_stats)
         
         elif self.provider == "google":
             response = await self.client.generate_content_async(
@@ -296,7 +241,7 @@ class LLMModel:
         else:
             return None
 
-        return chat_response
+        return chat_response, usage_stats
 
     async def prompt(self, prompt_text):
         max_retries = 10
@@ -308,13 +253,13 @@ class LLMModel:
                 start = time.time()
                 logging.debug(f"prompt:start:{self.model}:{self.id}:{self.counter}:{attempt}")
                 task = self.complete(prompt_text)
-                chat_response = await asyncio.wait_for(task, timeout=base_timeout * (base_of_exponential_backoff ** attempt))
+                chat_response, usage_stats = await asyncio.wait_for(task, timeout=base_timeout * (base_of_exponential_backoff ** attempt))
                 end = time.time()
                 logging.debug(f"prompt:end:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
                 if chat_response is not None:
                     logging.debug(f"prompt:success:{self.model}:{self.id}:{self.counter}:{attempt}:{end-begin:.3f}",)
                     self.counter += 1
-                    return chat_response
+                    return chat_response,usage_stats
                 logging.warning(f"prompt:error-empty:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
             except Exception as e:
                 end = time.time()
@@ -329,5 +274,5 @@ class LLMModel:
                     end = time.time()
                     logging.debug(f"prompt:awoke:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
         logging.error(f"prompt:error-fatal:{self.model}:{self.id}:{self.counter}:{attempt}:{max_retries} attempts failed")
-        return None  # If we've exhausted all retries
+        return None, None  # If we've exhausted all retries
 

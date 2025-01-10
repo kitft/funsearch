@@ -123,7 +123,9 @@ class ExternalProcessSandbox(DummySandbox):
 
       if retcode != 0:
         self._save_diagnostics(program, call_data_folder)
-        return None, False
+        with open(error_file, "r") as f:
+          outerr = f.read()
+        return outerr, False
 
       output_file = call_data_folder / "output.pickle"
       with open(output_file, "rb") as f:

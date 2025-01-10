@@ -8,7 +8,7 @@ import time
 import getpass
 import sys
 
-from funsearch import programs_database, evaluator, sampler, config as config_lib
+from funsearch import programs_database, evaluator, sampler, logging_stats, config as config_lib
 # import pathlib
 
 import csv
@@ -19,6 +19,8 @@ import numpy as np
 import wandb
 
 import select as select_module
+
+
 
 class AsyncProgramsDatabase(programs_database.ProgramsDatabase):
     def __init__(self, database: programs_database.ProgramsDatabase):
@@ -31,8 +33,8 @@ class AsyncProgramsDatabase(programs_database.ProgramsDatabase):
         #print("Getting prompt")
         return self.orig_database.get_prompt()
 
-    async def register_program(self, program, island_id, scores_per_test, island_version=None, model=None):
-        self.orig_database.register_program(program, island_id, scores_per_test, island_version, model)
+    async def register_program(self, program, scores_per_test,usage_stats):
+        self.orig_database.register_program(program, scores_per_test, usage_stats)
 
 # class AsyncEvaluator(evaluator.Evaluator):
 #     async def async_analyse(self, sample: str, island_id: int | None, version_generated: int | None) -> None:
@@ -50,7 +52,8 @@ def evaluator_process(eval_queue: Queue, result_queue: Queue, config: config_lib
         multitestingconfig.function_to_evolve,
         multitestingconfig.function_to_run,
         multitestingconfig.parsed_inputs,
-        id=id
+        id=id,
+        log_path=multitestingconfig.log_path
     )
     #evaluator_process is synchronous, and initialised on alternate processes
     #time.sleep(id*0.1)
@@ -59,15 +62,19 @@ def evaluator_process(eval_queue: Queue, result_queue: Queue, config: config_lib
             task = eval_queue.get(timeout=1)
             if task is None:
                 break
-            sample, island_id, version_generated, island_version, model = task
-            result = evaluator_instance.analyse(sample, island_id, version_generated, island_version, model)
-            logging.info(f"Evaluator {id}, island {island_id}, version generated {version_generated}, island version {island_version}: Eval Queue size: {eval_queue.qsize()}, Result Queue size: {result_queue.qsize()}, Result: {bool(result)}")
+            sample, usage_stats = task
+            result = evaluator_instance.analyse(sample,  usage_stats)
+            #logging.info(f"Evaluator {id}, island {usage_stats.island_id}, version generated {usage_stats.version_generated}, island version {usage_stats.island_version}: Eval Queue size: {eval_queue.qsize()}, Result Queue size: {result_queue.qsize()}, Result: {bool(result)}")
             if result:
                 result_queue.put(result)
                 #logging.info("increased result queue size to %d"%(result_queue.qsize()))
         except multiprocessing.queues.Empty:
             time.sleep(0.01)
             continue
+    
+
+
+    
 
 async def database_worker(result_queue: multiprocessing.Queue, database: AsyncProgramsDatabase):
     logging.info("database worker start")
@@ -77,10 +84,11 @@ async def database_worker(result_queue: multiprocessing.Queue, database: AsyncPr
             if result is None:
                 logging.info("database worker exiting loop")
                 break
+            new_function_or_error, scores_per_test, usage_stats = result
+            model_name = usage_stats.model
             # else:
             #    logging.info("reduced result queue size to %d"%(result_queue.qsize()))
-            new_function, island_id, scores_per_test, island_version, model = result
-            await database.register_program(new_function, island_id, scores_per_test, island_version, model)
+            await database.register_program(new_function_or_error,scores_per_test,usage_stats)
         except multiprocessing.queues.Empty:
             await asyncio.sleep(0.1)
     logging.info("database worker end")
@@ -145,7 +153,7 @@ async def validate_model(lm: sampler.LLM, timeout=30):
         try:
             async with asyncio.timeout(timeout):
                 # Use LLM's draw_sample method directly
-                response = await lm._draw_sample(test_prompt, label=None) #do not log this, so set label to None
+                response, usage_stats = await lm._draw_sample(test_prompt, label=None) #do not log this, so set label to None
                 if not response or len(response) < 10:  # Basic check for a reasonable response
                     raise ValueError(f"Model {lm.model.model} returned an invalid response")
                 logging.info(f"Successfully validated model {lm.model.model}")
@@ -213,6 +221,7 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
         p.start()
         evaluator_processes.append(p)
 
+    run_start_time = time.time()
     # Create samplers with validated models
     samplers = [sampler.Sampler(database, None, multitestingconfig.lm[i], i) for i in range(config.num_samplers)]
 
@@ -221,7 +230,7 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
 
     # Initial evaluation
     initial = multitestingconfig.template.get_function(multitestingconfig.function_to_evolve).body
-    eval_queue.put((initial, None, None, None, None))
+    eval_queue.put((initial, logging_stats.UsageStats(id=None, model=None, prompt=None, provider=None, response=None, eval_state=None, sandbox_current_call_count=None, prompt_count=None, sampler_id=None)))
     time.sleep(3)
     logging.info("Initialising %d samplers"%(len(samplers)))
     sampler_tasks = [asyncio.create_task(sampler_worker(s, eval_queue, database,config)) for s in samplers]
@@ -305,7 +314,27 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
                             f'Average Score/Island {island}': avg_score,
                             'time': current_time
                         })
-                
+                stats_per_model = database.get_stats_per_model()
+                if len(stats_per_model["success_rates"])==1:
+                    # For single model case, log rates without model name in path
+                    model = next(iter(stats_per_model["success_rates"]))
+                    wandb.log({
+                        'Rate/Success': stats_per_model["success_rates"][model],
+                        'Rate/Parse Failed': stats_per_model["parse_failed_rates"][model], 
+                        'Rate/Did Not Run': stats_per_model["did_not_run_rates"][model],
+                        'time': current_time
+                    })
+                elif len(stats_per_model["success_rates"])>1:
+                    for model in stats_per_model["success_rates"]:
+                        wandb.log({
+                            f'Rate/Success/{model}': stats_per_model["success_rates"][model],
+                            f'Rate/Parse Failed/{model}': stats_per_model["parse_failed_rates"][model],
+                            f'Rate/Did Not Run/{model}': stats_per_model["did_not_run_rates"][model],
+                            'time': current_time
+                        })
+
+                    
+                # total_prompt_tokens=
                 # Log overall metrics to wandb
                 wandb.log({
                     'Overall/Best Score': best_score_overall,
@@ -326,24 +355,42 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
     except asyncio.CancelledError:
         logging.info("Cancellation requested. Shutting down gracefully.")
     finally:
-
-
-        # Cancel all tasks
         for task in sampler_tasks:
             task.cancel()
         logging.info(f"Length of result_queue upon termination: {result_queue.qsize()}")
         await asyncio.sleep(1)
-        db_worker.cancel()
         logging.info(f"Length of result_queue after shutting down: {result_queue.qsize()}")
         # Signal processes to shut down
         for _ in evaluator_processes:
             eval_queue.put(None)
+
         result_queue.put(None)
-        logging.info("All tasks cancelled, workers signaled to shut down, sleeping 1 second")
-        await asyncio.sleep(1)
+        logging.info("All tasks cancelled, workers signaled to shut down")
+        
+        # Wait for evaluator processes to finish
+        for p in evaluator_processes:
+            p.join()
+        logging.info("All evaluator processes have terminated")
+            
+        # Wait for result queue to drain, with 30 second timeout
+        start_time = time.time()
+        while result_queue.qsize() > 0:
+            if time.time() - start_time > 30:
+                logging.warnin("Timed out waiting for result queue to drain")
+                break
+            await asyncio.sleep(0.1)
+        if result_queue.qsize() == 0:
+            logging.info("Result queue is empty")
+        else:
+            logging.warning(f"Result queue still has {result_queue.qsize()} items after timeout")
+        
+        # Cancel database worker
+        db_worker.cancel()
 
         logging.info(f"Total programs processed: {database._program_counter}")
         logging.info(f"Best scores per island: {database._best_score_per_island}")
+
+        print_usage_summary(database, run_start_time)
         
         try:
             if wandb.run is not None:
@@ -356,3 +403,100 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
 
     return database.get_best_programs_per_island()
 
+def print_usage_summary(database,start_time):
+    # Log total usage from all samplers grouped by model type
+    usage_by_model = {}
+    
+    # Collect data
+    for model_name, stats in database.orig_database.database_worker_counter_dict.items():
+        total_data = stats
+        
+        if model_name not in usage_by_model:
+            usage_by_model[model_name] = {
+                'sampler_ids': total_data['sampler_ids'],
+                'count': len(total_data['sampler_ids']),
+                'responses': total_data['eval_success']+total_data['eval_parse_failed']+total_data['eval_did_not_run'],
+                'prompt_tokens': total_data['tokens_prompt'],
+                'completion_tokens': total_data['tokens_completion'], 
+                'total_tokens': total_data['total_tokens'],
+                'eval_success': total_data['eval_success'],
+                'eval_parse_failed': total_data['eval_parse_failed'],
+                'eval_did_not_run': total_data['eval_did_not_run'],
+                'counts_each': total_data['counts_each']
+            }
+    # Print table header
+    print("\n\n")
+    # Print per-model statistics
+    total_samplers = 0
+    total_responses = 0
+    total_prompt_tokens = 0
+    total_completion_tokens = 0
+    total_success = 0
+    total_parse_failed = 0
+    total_did_not_run = 0
+    total_time = time.time() - start_time
+    amount_to_pad = max(max(len(key) for key in usage_by_model.keys()), 20)+2
+    logging.info(f"Total time: {total_time:.2f} seconds")
+    
+    # First table - Request statistics
+    logging.info("Response Statistics:")
+    logging.info("-" * 100)
+    logging.info(f"{'Model':<{amount_to_pad}} {'#':<6} {'responses':<8} {'Success':<8} {'Failed':<8} {'No Exec':<8} {'Req/s':<6}")
+    logging.info("-" * 100)
+
+    for model, stats in usage_by_model.items():
+        responses_per_sec = stats['responses'] / total_time
+        success_rate = (stats['eval_success'] / stats['responses'] * 100) if stats['responses'] > 0 else 0
+        parse_failed = (stats['eval_parse_failed'] / stats['responses'] * 100) if stats['responses'] > 0 else 0
+        no_exec = (stats['eval_did_not_run'] / stats['responses'] * 100) if stats['responses'] > 0 else 0
+        
+        logging.info(f"{model:<{amount_to_pad}} {stats['count']:<6} {stats['responses']:<8} {success_rate:>6.1f}% {parse_failed:>6.1f}% {no_exec:>7.1f}% {responses_per_sec:>5.1f}/s")
+        
+        total_samplers += stats['count']
+        total_responses += stats['responses']
+        total_prompt_tokens += stats['prompt_tokens']
+        total_completion_tokens += stats['completion_tokens']
+        total_success += stats['eval_success']
+        total_parse_failed += stats['eval_parse_failed']
+        total_did_not_run += stats['eval_did_not_run']
+
+    # Print totals for first table
+    logging.info("-" * 100)
+    total_success_rate = (total_success / total_responses * 100) if total_responses > 0 else 0
+    total_parse_failed_rate = (total_parse_failed / total_responses * 100) if total_responses > 0 else 0
+    total_no_exec_rate = (total_did_not_run / total_responses * 100) if total_responses > 0 else 0
+    total_responses_per_sec = total_responses / total_time
+    logging.info(f"{'TOTAL':<{amount_to_pad}} {total_samplers:<6} {total_responses:<8} {total_success_rate:>6.1f}% {total_parse_failed_rate:>6.1f}% {total_no_exec_rate:>7.1f}% {total_responses_per_sec:>5.1f}/s")
+
+    # Second table - Token statistics
+    print("\n")
+    logging.info("Token Statistics:")
+    logging.info("-" * 120)
+    logging.info(f"{'Model':<{amount_to_pad}} {'#':<6} {'Prompt':<10} {'Response':<10} {'Prompt/q':<10} {'Resp/q':<10} {'Tok/s':<8}")
+    logging.info("-" * 120)
+
+    for model, stats in usage_by_model.items():
+        total_tokens = stats['prompt_tokens'] + stats['completion_tokens']
+        tokens_per_sec = total_tokens / total_time
+        prompt_per_query = stats['prompt_tokens'] / stats['responses'] if stats['responses'] > 0 else 0
+        resp_per_query = stats['completion_tokens'] / stats['responses'] if stats['responses'] > 0 else 0
+        
+        logging.info(f"{model:<{amount_to_pad}} {stats['count']:<6} {stats['prompt_tokens']:<10} {stats['completion_tokens']:<10} {prompt_per_query:<10.1f} {resp_per_query:<10.1f} {tokens_per_sec:<8.1f}")
+
+    # Print totals for second table
+    logging.info("-" * 120)
+    total_all_tokens = total_prompt_tokens + total_completion_tokens
+    total_tokens_per_sec = total_all_tokens / total_time
+    total_prompt_per_query = total_prompt_tokens / total_responses if total_responses > 0 else 0
+    total_resp_per_query = total_completion_tokens / total_responses if total_responses > 0 else 0
+    logging.info(f"{'TOTAL':<{amount_to_pad}} {total_samplers:<6} {total_prompt_tokens:<10} {total_completion_tokens:<10} {total_prompt_per_query:<10.1f} {total_resp_per_query:<10.1f} {total_tokens_per_sec:<8.1f}")
+
+    # Print per-sampler statistics
+    print("\n")
+    logging.info("Per-Sampler Response Counts:")
+    logging.info("-" * 80)
+    for model, stats in usage_by_model.items():
+        sampler_ids = sorted(stats['counts_each'].keys())
+        counts = [stats['counts_each'][id] for id in sampler_ids]
+        logging.info(f"{model} samplers: {sampler_ids}, counts: {counts}")
+    logging.info("-" * 80)

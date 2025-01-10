@@ -17,7 +17,7 @@ def solve(n: int) -> np.ndarray:
   # that the relationship `i = all_vectors[i] @ powers` holds for all `i`.
   powers = 3 ** np.arange(n - 1, -1, -1)
   # Precompute all priorities.
-  priorities = np.array([priority(tuple(vector), n) for vector in all_vectors])
+  priorities = np.array([priority(tuple(vector), n) for vector in all_vectors],dtype=float)
   # Build `capset` greedily, using priorities for prioritization.
   capset = np.empty(shape=(0, n), dtype=np.int32)
   while np.any(priorities != -np.inf):
@@ -34,7 +34,7 @@ def solve(n: int) -> np.ndarray:
 @funsearch.evolve
 def priority(v: tuple[int, ...], n: int) -> float:
   """
-  Returns the priority of the vector `v` of length `n`. The vector 'v' is a tuple of values in {0,1,2}.
+  Returns the priority, as a floating point number, of the vector `v` of length `n`. The vector 'v' is a tuple of values in {0,1,2}.
   The cap set will be constructed by adding vectors that do not create a line in order by priority.
   """
   return 0.0

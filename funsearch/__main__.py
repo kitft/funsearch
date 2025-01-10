@@ -11,7 +11,7 @@ import click
 #import llm
 from dotenv import load_dotenv
 
-from funsearch import config, core, sandbox, sampler, programs_database, code_manipulation, multi_testing, models
+from funsearch import config, core, sandbox, sampler, programs_database, code_manipulation, multi_testing, models, logging_stats
 
 LOGLEVEL = os.environ.get('LOGLEVEL', 'INFO').upper()
 logging.basicConfig(format='%(asctime)s.%(msecs)03d:%(levelname)s:%(message)s',level=LOGLEVEL,datefmt='%Y-%m-%d-%H-%M-%S')
