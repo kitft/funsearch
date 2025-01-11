@@ -84,14 +84,14 @@ class Sampler:
     self._evaluators = evaluators
     self._llm = model
     self.sampler_id = label
-    self.api_calls = 0
+    self.api_responses = 0
 
   async def sample(self, prompt, eval_queue):
     """Continuously gets prompts, samples programs, sends them for analysis."""
     #prompt = await self._database.get_prompt()
     samples = await self._llm.draw_samples(prompt.code, self.sampler_id)
     # This loop can be executed in parallel on remote evaluator machines.
-    self.api_calls += len(samples)
+    self.api_responses += len(samples)
     for sample in samples:
       #chosen_evaluator = np.random.choice(self._evaluators)
       sample, usage_stats = sample

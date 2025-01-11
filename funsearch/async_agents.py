@@ -358,7 +358,7 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
                     'Overall/Average Score': avg_score_overall,
                     'Queue Sizes/Eval Queue': eval_queue_size,
                     'Queue Sizes/Result Queue': result_queue_size,
-                    'API Calls': sum(sampler.api_calls for sampler in samplers),
+                    'API Responses': sum(sampler.api_responses for sampler in samplers),
                     'time': current_time
                 })
 
