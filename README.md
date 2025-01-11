@@ -191,6 +191,7 @@ Here are the available run parameters:
 
 
 ## Example
+```
 Here, we are searching for the algorithm to find maximum cap sets for dimension 11.
 You should see something like:
 ```
