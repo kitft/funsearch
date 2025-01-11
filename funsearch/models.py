@@ -16,14 +16,6 @@ import httpx
 import aiohttp
 from funsearch import logging_stats
 
-system_prompt="""You are a state-of-the-art python code completion system that will be used as part of a genetic algorithm.
-You will be given a list of functions, and you should improve the incomplete last function in the list.
-1. Make only small changes but be sure to make some change.
-2. Try to keep the code short and any comments concise.
-3. Your response should be an implementation of the function priority_v# (where # is the current iteration number); do not include any examples or extraneous functions.
-4. You may use numpy.
-The code you generate will be appended to the user prompt and run as a python program.
-"""
 
 def get_model_provider(model_name):
     if "/" in model_name.lower():
@@ -53,6 +45,7 @@ class LLMModel:
         id=None,
         #config=None  # Add config parameter
         log_path=None
+        system_prompt="Improve the incomplete last function in the list."## See config.py for the default system prompt
     ):
         self.id = str(shortuuid.uuid()) if id is None else str(id)
         
@@ -83,7 +76,7 @@ class LLMModel:
             self.client = openai.AsyncOpenAI(api_key=self.key)
         elif self.provider == "google":
             genai.configure(api_key=self.key)
-            self.client = genai.GenerativeModel(model_name,system_instruction=system_prompt)
+            self.client = genai.GenerativeModel(model_name,system_instruction=self.system_prompt)
         elif self.provider == "deepinfra":
             self.client = openai.AsyncOpenAI(api_key=self.key,base_url="https://api.deepinfra.com/v1/openai/")
         elif self.provider == "openrouter":
@@ -97,6 +90,7 @@ class LLMModel:
         self.retries = retries
         self.log_stats = True
         self.log_detailed_stats = False
+        self.system_prompt = system_prompt
         logging.info(f"Created {self.provider} {self.model} sampler {self.id} using {keyname}")
         #logging.info(f"Ensure temperature defaults are correct for this model??")
 
@@ -140,7 +134,7 @@ class LLMModel:
             response = await self.client.chat.complete_async(
                 model=self.model,
                 messages=[
-                    { "role": "system", "content": system_prompt },
+                    { "role": "system", "content": self.system_prompt },
                     { "role": "user", "content": prompt_text },
                 ],
                 top_p=self.top_p,
@@ -165,7 +159,7 @@ class LLMModel:
         elif self.provider == "anthropic":
             response = await self.client.messages.create(
                 model=self.model,
-                system=system_prompt,
+                system=self.system_prompt,
                 messages=[{ "role": "user", "content": prompt_text }],
                 max_tokens=4096,
                 top_p=self.top_p,
@@ -190,7 +184,7 @@ class LLMModel:
             response = await self.client.chat.completions.create(
                 model=self.model,
                 messages=[
-                    { "role": "system", "content": system_prompt },
+                    { "role": "system", "content": self.system_prompt },
                     { "role": "user", "content": prompt_text },
                 ],
                 max_tokens=4096,
@@ -228,7 +222,7 @@ class LLMModel:
         
         elif self.provider == "google":
             response = await self.client.generate_content_async(
-                prompt_text,
+                prompt_text,#system prompt is defined in the client
                 generation_config={
                     "temperature": self.temperature,
                     "top_p": self.top_p,

@@ -11,7 +11,7 @@ import click
 #import llm
 from dotenv import load_dotenv
 
-from funsearch import config, core, sandbox, sampler, programs_database, code_manipulation, multi_testing, models, logging_stats
+from funsearch import async_agents, config, core, sandbox, sampler, programs_database, code_manipulation, models, logging_stats
 
 LOGLEVEL = os.environ.get('LOGLEVEL', 'INFO').upper()
 logging.basicConfig(format='%(asctime)s.%(msecs)03d:%(levelname)s:%(message)s',level=LOGLEVEL,datefmt='%Y-%m-%d-%H-%M-%S')
@@ -156,7 +156,7 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
 
     logging.info(f"keynum list: {keynum_list}")
     lm = [sampler.LLM(conf.samples_per_prompt, models.LLMModel(model_name=model_list[i], top_p=conf.top_p,
-        temperature=temperature_list[i], keynum=keynum_list[i],id = i,log_path=log_path), log_path=log_path) for i in range(len(model_list))]
+        temperature=temperature_list[i], keynum=keynum_list[i],id = i,log_path=log_path,system_prompt=conf.system_prompt), log_path=log_path) for i in range(len(model_list))]
 
     specification = spec_file.read()
     function_to_evolve, function_to_run = core._extract_function_names(specification)
@@ -188,13 +188,13 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
     parsed_inputs = parse_input(inputs)
     sandbox_class = next(c for c in SANDBOX_TYPES if c.__name__ == sandbox)
 
-    multitestingconfig = config.MultiTestingConfig(log_path=log_path, sandbox_class=sandbox_class, parsed_inputs=parsed_inputs,
+    portable_config = async_agents.PortableSystemConfig(log_path=log_path, sandbox_class=sandbox_class, parsed_inputs=parsed_inputs,
                                                     template=template, function_to_evolve=function_to_evolve, function_to_run=function_to_run, 
                                                     lm=lm,model_identifier=model_identifier,problem_name=problem_name,timestamp=timestamp,name_for_saving=name_for_saving,problem_identifier=problem_identifier)
 
     async def initiate_search():
-        async_database = multi_testing.AsyncProgramsDatabase(database)
-        await multi_testing.runAsync(conf, async_database, multitestingconfig, team)
+        async_database = async_agents.AsyncProgramsDatabase(database)
+        await async_agents.run_agents(conf, async_database, portable_config, team)
 
     try:
         asyncio.run(initiate_search())

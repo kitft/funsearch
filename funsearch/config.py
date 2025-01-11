@@ -15,7 +15,6 @@
 
 """Configuration of a FunSearch experiment."""
 import dataclasses
-from funsearch import sandbox
 
 @dataclasses.dataclass(frozen=True)
 class ProgramsDatabaseConfig:
@@ -79,29 +78,21 @@ class Config:
   top_p: float = 0.95
   llm_temperature: float = 1.0
   logging_info_interval: int = 10
+  system_prompt: str = system_prompt
 
-
+system_prompt ="""You are a state-of-the-art python code completion system that will be used as part of a genetic algorithm.
+You will be given a list of functions, and you should improve the incomplete last function in the list.
+1. Make only small changes but be sure to make some change.
+2. Try to keep the code short and any comments concise.
+3. Your response should be an implementation of the function priority_v# (where # is the current iteration number); do not include any examples or extraneous functions.
+4. You may use numpy and itertools.
+The code you generate will be appended to the user prompt and run as a python program.
+"""
   def __init__(self, **kwargs):
     for key, value in kwargs.items():
       if hasattr(self, key):
         object.__setattr__(self, key, value)
     object.__setattr__(self, 'programs_database', ProgramsDatabaseConfig(num_islands=self.num_islands,reset_period=self.reset_period))
 
-#config for multi-testing - not actually designed to be modified by users
-@dataclasses.dataclass(frozen=False)
-class MultiTestingConfig:
-  """Configuration for multi-testing."""
-  log_path: str
-  sandbox_class: type[sandbox.DummySandbox]
-  parsed_inputs: list
-  template: None
-  function_to_evolve: None
-  function_to_run: None
-  lm: None
-  timestamp: str
-  model_identifier: str
-  problem_name: str
-  name_for_saving: str
-  problem_identifier: str
 
 

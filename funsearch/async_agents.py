@@ -19,8 +19,25 @@ import numpy as np
 import wandb
 
 import select as select_module
+import dataclasses
+from funsearch import sandbox
 
-
+#config for multi-testing - not actually designed to be modified by users
+@dataclasses.dataclass(frozen=False)
+class PortableSystemConfig:
+  """Portable configuration class"""
+  log_path: str
+  sandbox_class: type[sandbox.DummySandbox]
+  parsed_inputs: list
+  template: None
+  function_to_evolve: None
+  function_to_run: None
+  lm: None
+  timestamp: str
+  model_identifier: str
+  problem_name: str
+  name_for_saving: str
+  problem_identifier: str
 
 class AsyncProgramsDatabase(programs_database.ProgramsDatabase):
     def __init__(self, database: programs_database.ProgramsDatabase):
@@ -44,16 +61,16 @@ class AsyncProgramsDatabase(programs_database.ProgramsDatabase):
 #     async def async_sample(self, prompt, eval_queue, db_queue):
 #         return self.sample(prompt, eval_queue, db_queue)
 
-def evaluator_process(eval_queue: Queue, result_queue: Queue, config: config_lib.Config, multitestingconfig: config_lib.MultiTestingConfig, id: int):
+def evaluator_process(eval_queue: Queue, result_queue: Queue, config: config_lib.Config, portable_config: PortableSystemConfig, id: int):
     evaluator_instance = evaluator.Evaluator(
         AsyncProgramsDatabase(config.programs_database),
-        multitestingconfig.sandbox_class(base_path=multitestingconfig.log_path, id=id),
-        multitestingconfig.template,
-        multitestingconfig.function_to_evolve,
-        multitestingconfig.function_to_run,
-        multitestingconfig.parsed_inputs,
+        portable_config.sandbox_class(base_path=portable_config.log_path, id=id),
+        portable_config.template,
+        portable_config.function_to_evolve,
+        portable_config.function_to_run,
+        portable_config.parsed_inputs,
         id=id,
-        log_path=multitestingconfig.log_path
+        log_path=portable_config.log_path
     )
     #evaluator_process is synchronous, and initialised on alternate processes
     #time.sleep(id*0.1)
@@ -198,38 +215,38 @@ async def validate_all_models(lm_list):
     
     return valid_models
 
-async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, multitestingconfig: config_lib.MultiTestingConfig, team=None):
+async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase, portable_config: PortableSystemConfig, team=None):
     #num_cores = min(multiprocessing.cpu_count(), config.num_evaluators,2)
-    problem_identifier = multitestingconfig.problem_name + "_" + multitestingconfig.timestamp
-    name_for_saving_to_wandb = multitestingconfig.name_for_saving 
+    problem_identifier = portable_config.problem_name + "_" + portable_config.timestamp
+    name_for_saving_to_wandb = portable_config.name_for_saving 
     num_cores = min(multiprocessing.cpu_count()-1, config.num_evaluators)
     logging.info("Number of cores/evaluators to be used: %d", num_cores)
     eval_queue = multiprocessing.Queue()
     result_queue = multiprocessing.Queue()
 
     # Validate models before starting
-    valid_lm = await validate_all_models(multitestingconfig.lm)
-    if len(valid_lm) != len(multitestingconfig.lm):
+    valid_lm = await validate_all_models(portable_config.lm)
+    if len(valid_lm) != len(portable_config.lm):
         config.num_samplers = len(valid_lm)
         logging.info(f"Adjusted number of samplers to {config.num_samplers} based on valid models")
-    multitestingconfig.lm = valid_lm
+    portable_config.lm = valid_lm
 
     # Start evaluator processes
     evaluator_processes = []
     for id in range(num_cores):
-        p = Process(target=evaluator_process, args=(eval_queue, result_queue, config, multitestingconfig, id))
+        p = Process(target=evaluator_process, args=(eval_queue, result_queue, config, portable_config, id))
         p.start()
         evaluator_processes.append(p)
 
     run_start_time = time.time()
     # Create samplers with validated models
-    samplers = [sampler.Sampler(database, None, multitestingconfig.lm[i], i) for i in range(config.num_samplers)]
+    samplers = [sampler.Sampler(database, None, portable_config.lm[i], i) for i in range(config.num_samplers)]
 
     # Create and start tasks
     db_worker = asyncio.create_task(database_worker(result_queue, database))
 
     # Initial evaluation
-    initial = multitestingconfig.template.get_function(multitestingconfig.function_to_evolve).body
+    initial = portable_config.template.get_function(portable_config.function_to_evolve).body
     eval_queue.put((initial, logging_stats.UsageStats(id=None, model=None, prompt=None, provider=None, response=None, eval_state=None, sandbox_current_call_count=None, prompt_count=None, sampler_id=None)))
     time.sleep(3)
     logging.info("Initialising %d samplers"%(len(samplers)))
@@ -259,13 +276,13 @@ async def runAsync(config: config_lib.Config, database: AsyncProgramsDatabase, m
         name=name_for_saving_to_wandb,
 
         config={
-            "model_names": [lm.model.model for lm in multitestingconfig.lm],
+            "model_names": [lm.model.model for lm in portable_config.lm],
             "num_cores": num_cores,
             "num_samplers": config.num_samplers,
             "run_duration": config.run_duration,
             "num_islands": len(database._islands),
-            "problem_name": multitestingconfig.problem_name,
-            "temperatures": [lm.model.temperature for lm in multitestingconfig.lm]
+            "problem_name": portable_config.problem_name,
+            "temperatures": [lm.model.temperature for lm in portable_config.lm]
 
         }
     )

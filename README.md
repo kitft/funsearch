@@ -155,11 +155,15 @@ The following metrics are logged to wandb:
 
 Additionally, scores are logged to CSV files in `./data/scores/`, and graphs are generated in `./data/graphs/` showing the progression of scores over time.
 
-The number of evaluator processes is limited to the number of CPU cores minus 1, or the number specified in --evaluators, whichever is smaller.
+The number of evaluator processes is limited to the number of CPU cores minus 1, or the number specified in --evaluators, whichever is smaller.AsyncAgentsConfig
+
+The number of samplers is controlled via --samplers. You should tune this number to match the capabilities of your API key(s).
 
 The number of islands is controlled via --islands. 10 is typically a good default as it provides a good balance between exploration and exploitation.
 
-Any parameters not listed here can be modified in funsearch/config.py. Particular parameters of interest are the LLM top_p and temperature (as distinct from the temperature used for sampling from the islands). We set these to the same values as the original funsearch paper: 0.95 and 1 respectively. This probably requires some tuning for different problems/LLM models.
+Any parameters not listed here can be modified in `funsearch/config.py`. Particular parameters of interest are the LLM top_p, temperature (as distinct from the temperature used for sampling from the islands). We set these to the same values as the original funsearch paper: 0.95 and 1.0 respectively. This probably requires some tuning for different problems/LLM models.
+
+You may be interested in modifying the system prompt in `funsearch/config.py`.
 
 The search will automatically stop if:
 - The eval queue size exceeds 500 items

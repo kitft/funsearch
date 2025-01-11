@@ -10,7 +10,7 @@ import click
 #import llm
 from dotenv import load_dotenv
 
-from funsearch import config, core, sandbox, sampler, programs_database, code_manipulation, evaluator, multi_testing
+from funsearch import async_agents, config, core, sandbox, sampler, programs_database, code_manipulation, evaluator
 
 LOGLEVEL = os.environ.get('LOGLEVEL', 'INFO').upper()
 logging.basicConfig(level=LOGLEVEL)
@@ -130,8 +130,8 @@ def run(spec_file, inputs, model_name, output_path, load_backup, iterations, sam
                 for _ in range(samplers)]
 
     async def initiate_search():
-        async_database = multi_testing.AsyncProgramsDatabase(database)
-        await multi_testing.runAsync(conf, async_database)
+        async_database = async_agents.AsyncProgramsDatabase(database)
+        await async_agents.runAsync(conf, async_database)
 
     try:
         asyncio.run(initiate_search())
