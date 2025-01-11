@@ -49,6 +49,15 @@ class ProgramsDatabaseConfig:
         object.__setattr__(self, key, value)
 
 
+system_prompt ="""You are a state-of-the-art python code completion system that will be used as part of a genetic algorithm.
+You will be given a list of functions, and you should improve the incomplete last function in the list.
+1. Make only small changes but be sure to make some change.
+2. Try to keep the code short and any comments concise.
+3. Your response should be an implementation of the function priority_v# (where # is the current iteration number); do not include any examples or extraneous functions.
+4. You may use numpy and itertools.
+The code you generate will be appended to the user prompt and run as a python program.
+"""
+
 @dataclasses.dataclass(frozen=True)
 class Config:
   """Configuration of a FunSearch experiment.
@@ -79,15 +88,7 @@ class Config:
   llm_temperature: float = 1.0
   logging_info_interval: int = 10
   system_prompt: str = system_prompt
-
-system_prompt ="""You are a state-of-the-art python code completion system that will be used as part of a genetic algorithm.
-You will be given a list of functions, and you should improve the incomplete last function in the list.
-1. Make only small changes but be sure to make some change.
-2. Try to keep the code short and any comments concise.
-3. Your response should be an implementation of the function priority_v# (where # is the current iteration number); do not include any examples or extraneous functions.
-4. You may use numpy and itertools.
-The code you generate will be appended to the user prompt and run as a python program.
-"""
+  
   def __init__(self, **kwargs):
     for key, value in kwargs.items():
       if hasattr(self, key):
