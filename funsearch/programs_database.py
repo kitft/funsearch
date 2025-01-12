@@ -91,6 +91,7 @@ class ProgramsDatabase:
     self._config: config_lib.ProgramsDatabaseConfig = config
     self._template: code_manipulation.Program = template
     self._function_to_evolve: str = function_to_evolve
+    self.has_nonzero_population = False
 
     # Initialize empty islands.
     self._islands: list[Island] = []
@@ -195,9 +196,7 @@ class ProgramsDatabase:
     sampler_id = usage_stats.sampler_id
 
     eval_state = usage_stats.eval_state
-    if island_id is None:#this is the initial evaluation
-      pass
-    else:
+    if island_id is not None:
       if model not in self.database_worker_counter_dict.keys():
         self.database_worker_counter_dict[model] = {
             'sampler_ids': [sampler_id],
@@ -230,10 +229,11 @@ class ProgramsDatabase:
 
       if eval_state == 'parse_failed' or eval_state == 'did_not_run':
         return
-    if island_id is None:
+    if island_id is None: #this is the initial evaluation
       # This is a program added at the beginning, so adding it to all islands.
       for island_id in range(len(self._islands)):
         self._register_program_in_island(program, island_id, scores_per_test, model)
+      self.has_nonzero_population = True
     elif island_version is not None and self._islands[island_id]._island_version == island_version:
       self._register_program_in_island(program, island_id, scores_per_test, model)
     #otherwise discard the program

@@ -52,6 +52,9 @@ class AsyncProgramsDatabase(programs_database.ProgramsDatabase):
 
     async def register_program(self, program, scores_per_test,usage_stats):
         self.orig_database.register_program(program, scores_per_test, usage_stats)
+    
+    def test_nonzero_population(self):
+        return self.orig_database.has_nonzero_population
 
 # class AsyncEvaluator(evaluator.Evaluator):
 #     async def async_analyse(self, sample: str, island_id: int | None, version_generated: int | None) -> None:
@@ -245,15 +248,6 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
     # Create and start tasks
     db_worker = asyncio.create_task(database_worker(result_queue, database))
 
-    # Initial evaluation
-    initial = portable_config.template.get_function(portable_config.function_to_evolve).body
-    eval_queue.put((initial, logging_stats.UsageStats(id=None, model=None, prompt=None, provider=None, response=None, eval_state=None, sandbox_current_call_count=None, prompt_count=None, sampler_id=None)))
-    time.sleep(3)
-    logging.info("Initialising %d samplers"%(len(samplers)))
-    sampler_tasks = [asyncio.create_task(sampler_worker(s, eval_queue, database,config)) for s in samplers]
-    os.makedirs("./data/scores", exist_ok=True)
-    csv_filename = f"./data/scores/scores_log_{problem_identifier}.csv"
-    
     # Check if WANDB_API_KEY is set in environment variables
     wandb_api_key = os.environ.get('WANDB_API_KEY')
     if wandb_api_key:
@@ -287,9 +281,22 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
         }
     )
 
+    os.makedirs("./data/scores", exist_ok=True)
+    csv_filename = f"./data/scores/scores_log_{problem_identifier}.csv"
     with open(csv_filename, 'w', newline='') as csvfile:
         csv_writer = csv.writer(csvfile)
         csv_writer.writerow(['Time', 'Island', 'Best Score', 'Average Score'])
+
+   # Initial evaluation
+    initial = portable_config.template.get_function(portable_config.function_to_evolve).body
+    eval_queue.put((initial, logging_stats.UsageStats(id=None, model=None, prompt=None, provider=None, response=None, eval_state=None, sandbox_current_call_count=None, prompt_count=None, sampler_id=None)))
+
+    logging.info("Waiting for initial program registration...")
+    while not database.test_nonzero_population():
+        await asyncio.sleep(0.1)
+    logging.info("Initialising %d samplers"%(len(samplers)))
+    sampler_tasks = [asyncio.create_task(sampler_worker(s, eval_queue, database,config)) for s in samplers]
+    
 
     try:
         start_time = time.time()

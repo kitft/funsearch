@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime
+import datetime
 from typing import Optional
 import json
 from pathlib import Path
@@ -16,7 +16,7 @@ class UsageStats:
     total_cost: Optional[float] = None
     generation_time: Optional[float] = None
     instance_id: Optional[str] = None
-    timestamp: str = datetime.utcnow().isoformat()
+    timestamp: str = datetime.datetime.now(datetime.UTC).isoformat()
     island_id: Optional[str] = None
     island_version: Optional[str] = None
     version_generated: Optional[str] = None
@@ -43,7 +43,7 @@ class UsageLogger:
         self.log_dir = Path(log_dir)
         self.log_dir.mkdir(parents=True, exist_ok=True)
         self.id = id
-        self.current_date = datetime.utcnow().date()
+        self.current_date = datetime.datetime.now(datetime.UTC).date()
         self.buffer = []
         #self.model_name = model_name
         self.total_requests = 0

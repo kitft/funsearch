@@ -4,7 +4,7 @@ import funsearch, functools
 
 @funsearch.run
 def evaluate(n: int) -> int:
-  """Returns the size of an `n`-dimensional cap set."""
+  """Returns the number of elements in a narrow admissible tuple of with at most"""
   tuple = solve(n)
   return len(tuple)
 

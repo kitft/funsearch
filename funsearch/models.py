@@ -49,12 +49,6 @@ class LLMModel:
     ):
         self.id = str(shortuuid.uuid()) if id is None else str(id)
         
-        # Get problem identifier from config
-        #problem_identifier = config.problem_name + "_" + config.timestamp if config else "default"
-        
-        # Initialize usage logger with problem identifier and model ID
-  
-        
         if '%' in model_name:
             s = model_name.split('%')
             assert len(s)==2
