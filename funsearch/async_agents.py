@@ -294,7 +294,7 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
     logging.info("Waiting for initial program registration...")
     while not database.test_nonzero_population():
         await asyncio.sleep(0.1)
-        
+
     logging.info("Initialising %d samplers"%(len(samplers)))
     sampler_tasks = [asyncio.create_task(sampler_worker(s, eval_queue, database,config)) for s in samplers]
     
@@ -383,27 +383,38 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
         for task in sampler_tasks:
             task.cancel()
         logging.info(f"Length of result_queue upon termination: {result_queue.qsize()}")
-        await asyncio.sleep(1)
-        logging.info(f"Length of result_queue after shutting down: {result_queue.qsize()}")
+        logging.info(f"Length of eval_queue upon termination: {eval_queue.qsize()}")
         # Signal processes to shut down
         for _ in evaluator_processes:
             eval_queue.put(None)
 
-        result_queue.put(None)
-        logging.info("All tasks cancelled, workers signaled to shut down")
+        logging.info("All evaluator workers requested to shut down")
+        # Wait up to 60 seconds total for all evaluator processes to finish
+        start_time = time.time()
+        remaining_processes = list(evaluator_processes)
         
-        # Wait for evaluator processes to finish
-        for p in evaluator_processes:
-            p.join()
-        logging.info("All evaluator processes have terminated")
+        while remaining_processes and (time.time() - start_time < 60):
+            for p in remaining_processes[:]:  # Iterate over copy to allow removal
+                if not p.is_alive():
+                    logging.info(f"Evaluator process {p.pid} terminated successfully")
+                    remaining_processes.remove(p)
+                else:
+                    p.join(timeout=0.1)  # Small timeout to check frequently
+                    
+        # Kill any remaining processes
+        for p in remaining_processes:
+            logging.warning(f"Evaluator process {p.pid} did not terminate within timeout, killing it")
+            p.kill()
+        logging.info("All evaluator processes have terminated; waiting for result queue to drain (length: %d)", result_queue.qsize())
+        result_queue.put(None)
             
         # Wait for result queue to drain, with 30 second timeout
         start_time = time.time()
         while result_queue.qsize() > 0:
             if time.time() - start_time > 30:
-                logging.warnin("Timed out waiting for result queue to drain")
+                logging.warning("Timed out waiting for result queue to drain")
                 break
-            await asyncio.sleep(0.1)
+            await asyncio.sleep(1)
         if result_queue.qsize() == 0:
             logging.info("Result queue is empty")
         else:

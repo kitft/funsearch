@@ -130,8 +130,10 @@ class Function:
         value = value.strip()
         value = value.replace('"""', '')
     super().__setattr__(name, value)
-    if value.count('"""') % 2 == 1:
-      print("name:", name, "valueinit:\n", valueinit, "value:\n", value,"\n\n")
+    #if value is None:
+    #  print("name:", name, "valueinit:\n", valueinit, "value:\n", value,"\n\n")
+    #if value.count('"""') % 2 == 1:
+    #  print("name:", name, "valueinit:\n", valueinit, "value:\n", value,"\n\n")
 
 
 @dataclasses.dataclass(frozen=True)
