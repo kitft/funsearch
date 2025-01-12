@@ -412,6 +412,7 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
             
         try:
             await asyncio.wait_for(db_worker, timeout=30)
+            logging.info("Database worker finished")
         except asyncio.TimeoutError:
             logging.warning("Database worker timed out during shutdown, final queue length: %d", result_queue.qsize())
             db_worker.cancel()
