@@ -44,7 +44,7 @@ class LLMModel:
         retries=10, 
         id=None,
         #config=None  # Add config parameter
-        log_path=None
+        log_path=None,
         system_prompt="Improve the incomplete last function in the list."## See config.py for the default system prompt
     ):
         self.id = str(shortuuid.uuid()) if id is None else str(id)

@@ -58,14 +58,11 @@ For implementation details and example problems, see the examples directory, par
    WANDB_API_KEY=<your_wandb_key_here>
    DEEPINFRA_API_KEY=<your_deepinfra_key_here>
    ```
-4. If you're using Docker desktop, open the app. Then, build the Docker image with the command below. This may take a while, especially the first time. You will need to re-build if you update the Dockerfile or edit the code. You should not need to re-build if you are only updating the input python file or input data.
+5. If you're using Docker desktop, open the app. Then, build the Docker image with the command below. This may take a while, especially the first time. You will need to re-build if you update the Dockerfile or edit the code. You should not need to re-build if you are only updating the input python file or input data. Create a data folder and run the container
 
    ```
-   docker build . -t funsearch
-   ```
-5. Create a data folder and run the container:
-   ```
    mkdir data
+   docker build . -t funsearch
    docker run -it -v ./data:/workspace/data -v ./examples:/workspace/examples --env-file .env funsearch
    ```
 
@@ -223,6 +220,7 @@ the process build and run separate sandbox containers (still requires Docker(/Po
 This variant could be also used, e.g., in Colab quite safely since the environment is some kind of container itself.
 
 ```
+mkdir -p data
 pip install .
 source .env #need to source the .env file to get the API keys
 funsearch runasync examples/cap_set_spec.py 11
