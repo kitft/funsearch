@@ -1,12 +1,8 @@
+####<<<<<ENSURE YOU ALSO MODIFY THE SYSTEM PROMPT IF NECESSARY! LOCATED IN CONFIG.PY>>>>>>>
 """<<<E.g. Finds EXAMPLE_PROBLEMS. A brief description of the problem you're solving might be a 
 good idea to include here, as it will go in to the prompt>>>
-
-<<<THE BELOW SHOULD ALWAYS BE INCLUDED>>>
-On every iteration, improve priority_v1 over the priority_vX methods from previous iterations.
-Make only small changes.
-Try to make the code short.
 """
-import itertools ####<<<IF NECESSARY>>>>
+import itertools ####<<<IF NECESSARY>>>>. Mention
 import numpy as np
 import funsearch
 
@@ -15,6 +11,8 @@ def evaluate(n: int) -> int:
     """Returns the size of an `n`-dimensional EXAMPLE_PROBLEM"""
     example_output = solve(n)
     return len(example_output)#### <<<<<THIS OUTPUT BECOMES THE SCORE>>>>>>
+
+####If you define additonal functions, ensure they have a docstring! This is to make the parser happy.
 
 def solve(n: int) -> np.ndarray:
     """Returns an EXAMPLE in `n` dimensions."""

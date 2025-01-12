@@ -11,7 +11,6 @@ from typing import Optional
 import json
 from datetime import datetime
 from pathlib import Path
-import atexit
 import httpx
 import aiohttp
 from funsearch import logging_stats

@@ -1,15 +1,18 @@
 """Finds narrow admissible tuples (lists of integers that do not fill every residue class modulo any prime)"""
 
 import funsearch, functools
+import numpy as np
+import itertools
 
 @funsearch.run
 def evaluate(n: int) -> int:
-  """Returns the number of elements in a narrow admissible tuple of with at most"""
+  """Returns the number of elements in a narrow admissible tuple of with at most n"""
   tuple = solve(n)
   return len(tuple)
 
 @functools.cache
 def primes(n):
+    """Returns a list of all primes up to n"""
     out = list()
     sieve = [True] * (n+1)
     for p in range(2, n+1):

@@ -294,6 +294,7 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
     logging.info("Waiting for initial program registration...")
     while not database.test_nonzero_population():
         await asyncio.sleep(0.1)
+        
     logging.info("Initialising %d samplers"%(len(samplers)))
     sampler_tasks = [asyncio.create_task(sampler_worker(s, eval_queue, database,config)) for s in samplers]
     

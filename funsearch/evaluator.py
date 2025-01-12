@@ -223,7 +223,7 @@ class Evaluator:
       self._log(usage_stats)
       return (new_function, scores_per_test,  usage_stats)
     else:
-      logging.info(f"eval:didnotrun:program: {model}, {scores_per_test}, island_id: {island_id}, file:s{usage_stats.sampler_id}p{usage_stats.prompt_count}e{self._id}c{usage_stats.sandbox_current_call_count} version_gen: {version_generated}, island_version: {island_version}")
+      logging.info(f"eval:didnotrun:program: {model}, island_id: {island_id}, file:s{usage_stats.sampler_id}p{usage_stats.prompt_count}e{self._id}c{usage_stats.sandbox_current_call_count} version_gen: {version_generated}, island_version: {island_version}")
       usage_stats.eval_state = 'did_not_run'
       self._log(usage_stats)
       return (None, {}, usage_stats)
