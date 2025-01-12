@@ -102,16 +102,16 @@ async def database_worker(result_queue: multiprocessing.Queue, database: AsyncPr
         try:
             result = result_queue.get_nowait()
             if result is None:
-                logging.info("database worker exiting loop")
+                logging.info("Database worker received shutdown signal")
                 break
             new_function_or_error, scores_per_test, usage_stats = result
-            model_name = usage_stats.model
+            #model_name = usage_stats.model
             # else:
             #    logging.info("reduced result queue size to %d"%(result_queue.qsize()))
             await database.register_program(new_function_or_error,scores_per_test,usage_stats)
         except multiprocessing.queues.Empty:
             await asyncio.sleep(0.1)
-    logging.info("database worker end")
+    logging.info("Database worker end")
 
 async def sampler_worker(sampler: sampler.Sampler, eval_queue: multiprocessing.Queue, database: AsyncProgramsDatabase, config: config_lib.Config):
     #wait a random amount of time to avoid synchronisation issues and API ratelimits
@@ -382,6 +382,8 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
     finally:
         for task in sampler_tasks:
             task.cancel()
+        await asyncio.gather(*sampler_tasks, return_exceptions=True)
+
         logging.info(f"Length of result_queue upon termination: {result_queue.qsize()}")
         logging.info(f"Length of eval_queue upon termination: {eval_queue.qsize()}")
         # Signal processes to shut down
@@ -408,22 +410,13 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
         logging.info("All evaluator processes have terminated; waiting for result queue to drain (length: %d)", result_queue.qsize())
         result_queue.put(None)
             
-        # Wait for result queue to drain, with 30 second timeout
-        start_time = time.time()
-        while result_queue.qsize() > 0:
-            if time.time() - start_time > 30:
-                logging.warning("Timed out waiting for result queue to drain")
-                break
-            await asyncio.sleep(1)
-        if result_queue.qsize() == 0:
-            logging.info("Result queue is empty")
-        else:
-            logging.warning(f"Result queue still has {result_queue.qsize()} items after timeout")
-        
-        # Cancel database worker
-        db_worker.cancel()
+        try:
+            await asyncio.wait_for(db_worker, timeout=30)
+        except asyncio.TimeoutError:
+            logging.warning("Database worker timed out during shutdown, final queue length: %d", result_queue.qsize())
+            db_worker.cancel()
 
-        logging.info(f"Total programs processed: {database._program_counter}")
+        logging.info(f"Total programs processed: {database._program_counter}") 
         logging.info(f"Best scores per island: {database._best_score_per_island}")
 
         print_usage_summary(database, run_start_time)

@@ -247,8 +247,7 @@ class ProgramsDatabase:
     # Backup every N iterations
     if True: #self._program_counter > 0:
       self._program_counter += 1
-      if self._program_counter > self._config.backup_period:
-        self._program_counter = 0
+      if self._program_counter % self._config.backup_period == 0:
         self.backup()
 
   def reset_islands(self) -> None:
