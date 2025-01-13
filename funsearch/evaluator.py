@@ -16,6 +16,7 @@
 """Class for evaluating programs proposed by the Sampler."""
 import ast
 import re
+import inspect
 from collections.abc import Sequence
 import copy
 from typing import Any, Tuple
@@ -35,6 +36,42 @@ from funsearch import logging_stats
 # DDED ANY TYPE SIGNATURE OUTPUT, NOT JUST FLOAT
 METHOD_MATCHER = re.compile(r"def priority_v\d\(.*?\)(?:\s*->.*?)?:(?:\s*(?:[ \t]*(?!def|#|`|').*(?:\n|$)))+")
 METHOD_NAME_MATCHER = re.compile(r"priority_v\d+")
+
+ALLOWED_FUNCTIONS = {'itertools', 'numpy', 'np'}
+DISALLOWED_BUILTINS = {'print','__import__','breakpoint','compile','open','dir','eval','exec','globals','input','repr'}
+
+class FunctionChecker(ast.NodeVisitor):
+    def __init__(self):
+        self.is_safe = True
+
+    def visit_Import(self, node):
+        for alias in node.names:
+            if alias.name not in ALLOWED_FUNCTIONS:
+                self.is_safe = False
+            self.generic_visit(node)
+
+    def visit_ImportFrom(self, node):
+        if node.module not in ALLOWED_FUNCTIONS:
+            self.is_safe = False
+        self.generic_visit(node)
+
+    def visit_Call(self, node):
+        # Check for disallowed built-in function calls
+        if isinstance(node.func, ast.Name):
+            if node.func.id in DISALLOWED_BUILTINS:
+                self.is_safe = False
+        # Check if function calls are from allowed modules
+        elif isinstance(node.func, ast.Attribute):
+            if node.func.value.id not in ALLOWED_FUNCTIONS:
+                self.is_safe = False
+        self.generic_visit(node)
+
+def is_function_safe(function_code: str) -> bool:
+    #function_code = inspect.getsource(func)
+    tree = ast.parse(function_code)
+    checker = FunctionChecker()
+    checker.visit(tree)
+    return checker.is_safe
 
 
 class _FunctionLineVisitor(ast.NodeVisitor):
@@ -196,6 +233,14 @@ class Evaluator:
       usage_stats.sandbox_current_call_count = -1
       self._log(usage_stats)
       return (None, {}, usage_stats)
+    
+    safe = is_function_safe(program)
+    if not safe:
+       logging.info(f"eval:unsafe {model}, island_id: {island_id}, version_generated: {version_generated}, island_version: {island_version}")
+       usage_stats.eval_state = 'unsafe'
+       usage_stats.sandbox_current_call_count = -1
+       self._log(usage_stats)
+       return (None, {}, usage_stats)
 
     scores_per_test = {}
     for current_input in self._inputs:
