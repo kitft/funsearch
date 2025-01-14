@@ -66,8 +66,9 @@ class FunctionChecker(ast.NodeVisitor):
                 self.is_safe = False
         self.generic_visit(node)
 
-def is_function_safe(function_code: str) -> bool:
+def is_function_safe(func:code_manipulation.Function)->bool:
     #function_code = inspect.getsource(func)
+    function_code = func.__str__()
     tree = ast.parse(function_code)
     checker = FunctionChecker()
     checker.visit(tree)
@@ -234,7 +235,7 @@ class Evaluator:
       self._log(usage_stats)
       return (None, {}, usage_stats)
     
-    safe = is_function_safe(program)
+    safe = is_function_safe(new_function)
     if not safe:
        logging.info(f"eval:unsafe {model}, island_id: {island_id}, version_generated: {version_generated}, island_version: {island_version}")
        usage_stats.eval_state = 'unsafe'
