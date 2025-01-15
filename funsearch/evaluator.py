@@ -37,7 +37,7 @@ from funsearch import logging_stats
 METHOD_MATCHER = re.compile(r"def priority_v\d\(.*?\)(?:\s*->.*?)?:(?:\s*(?:[ \t]*(?!def|#|`|').*(?:\n|$)))+")
 METHOD_NAME_MATCHER = re.compile(r"priority_v\d+")
 
-ALLOWED_FUNCTIONS = {'itertools', 'numpy', 'np', 'math'}
+ALLOWED_FUNCTIONS = {'itertools', 'numpy', 'np', 'math', 'functools'}
 DISALLOWED_BUILTINS = {'print','__import__','breakpoint','compile','open','dir','eval','exec','globals','input','repr'}
 
 class FunctionChecker(ast.NodeVisitor):
