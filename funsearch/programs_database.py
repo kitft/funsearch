@@ -283,6 +283,7 @@ class ProgramsDatabase:
       founder_scores = self._best_scores_per_test_per_island[founder_island_id]
       self._register_program_in_island(founder, island_id, founder_scores)
       logging.info(f"Registered new founder of island {island_id} from island {founder_island_id}")
+
   def get_stats_per_model(self):
     stats = {"success_rates": {},"parse_failed_rates": {},"did_not_run_rates": {},"unsafe_rates": {}}
     for model in self.database_worker_counter_dict.keys():

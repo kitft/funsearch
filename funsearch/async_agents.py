@@ -368,7 +368,7 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
                     'Overall/Average Score': avg_score_overall,
                     'Queue Sizes/Eval Queue': eval_queue_size,
                     'Queue Sizes/Result Queue': result_queue_size,
-                    'Programs Processed': database._program_counter,
+                    'Programs Processed': database.orig_database._program_counter,# non-mutable type, refer to original database
                     'API Responses': sum(sampler.api_responses for sampler in samplers),
                     'time': current_time
                 })
@@ -421,7 +421,7 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
             logging.warning("Database worker timed out during shutdown, final queue length: %d", result_queue.qsize())
             db_worker.cancel()
 
-        logging.info(f"Total programs processed: {database._program_counter}") 
+        logging.info(f"Total programs processed: {database.orig_database._program_counter}") ## non-mutable type, refer to original database
         logging.info(f"Best scores per island: {database._best_score_per_island}")
 
         print_usage_summary(database, run_start_time)
