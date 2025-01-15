@@ -122,7 +122,7 @@ async def sampler_worker(sampler: sampler.Sampler, eval_queue: multiprocessing.Q
         await sampler.sample(prompt, eval_queue)
         # Adaptive sleep based on queue size
         queue_size = eval_queue.qsize()
-        sleep_time = min(0.1 * (queue_size), 30)  # Cap at 5 seconds
+        sleep_time = min(0.1 * (queue_size), 60)  # Cap at 5 seconds
         if sleep_time > 0.5:
             logging.info('Slowed down sampling to %f seconds', sleep_time)
         await asyncio.sleep(sleep_time)
@@ -391,13 +391,14 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
         # Signal processes to shut down
         for _ in evaluator_processes:
             eval_queue.put(None)
-
-        logging.info("All evaluator workers requested to shut down")
+        evaluator_shutdown_timeout = 60
+        database_shutdown_timeout = 30
+        logging.info("All evaluator workers requested to shut down - waiting %d seconds for them to finish", evaluator_shutdown_timeout)
         # Wait up to 60 seconds total for all evaluator processes to finish
         start_time = time.time()
         remaining_processes = list(evaluator_processes)
         
-        while remaining_processes and (time.time() - start_time < 60):
+        while remaining_processes and (time.time() - start_time < evaluator_shutdown_timeout):
             for p in remaining_processes[:]:  # Iterate over copy to allow removal
                 if not p.is_alive():
                     logging.info(f"Evaluator process {p.pid} terminated successfully")
@@ -409,11 +410,11 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
         for p in remaining_processes:
             logging.warning(f"Evaluator process {p.pid} did not terminate within timeout, killing it")
             p.kill()
-        logging.info("All evaluator processes have terminated; waiting for result queue to drain (length: %d)", result_queue.qsize())
+        logging.info("All evaluator processes have terminated; waiting %d seconds for result queue to drain (length: %d)", database_shutdown_timeout, result_queue.qsize())
         result_queue.put(None)
             
         try:
-            await asyncio.wait_for(db_worker, timeout=30)
+            await asyncio.wait_for(db_worker, timeout=database_shutdown_timeout)
             logging.info("Database worker finished")
         except asyncio.TimeoutError:
             logging.warning("Database worker timed out during shutdown, final queue length: %d", result_queue.qsize())
