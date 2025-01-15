@@ -202,6 +202,7 @@ class ProgramsDatabase:
             'sampler_ids': [sampler_id],
             'eval_parse_failed': 0, 
             'eval_did_not_run': 0, 
+            'eval_unsafe': 0,
             'eval_success': 0,
             'total_tokens': 0,
             'tokens_prompt': 0, 
@@ -215,7 +216,7 @@ class ProgramsDatabase:
         
       if sampler_id not in self.database_worker_counter_dict[model]['sampler_ids']:
         self.database_worker_counter_dict[model]['sampler_ids'].append(sampler_id)
-      if eval_state not in ['success', 'parse_failed', 'did_not_run']:
+      if eval_state not in ['success', 'parse_failed', 'did_not_run', 'unsafe']:
           raise Exception("Unhandled contingency")
           
       # Update eval state counter
@@ -227,7 +228,7 @@ class ProgramsDatabase:
       self.database_worker_counter_dict[model]['tokens_completion'] += tokens_completion
 
 
-      if eval_state == 'parse_failed' or eval_state == 'did_not_run':
+      if eval_state == 'parse_failed' or eval_state == 'did_not_run' or eval_state == 'unsafe':
         return
     if island_id is None:
       if eval_state == 'success': #this is the initial evaluation
@@ -282,22 +283,26 @@ class ProgramsDatabase:
       self._register_program_in_island(founder, island_id, founder_scores)
       logging.info(f"Registered new founder of island {island_id} from island {founder_island_id}")
   def get_stats_per_model(self):
-    stats = {"success_rates": {},"parse_failed_rates": {},"did_not_run_rates": {}}
+    stats = {"success_rates": {},"parse_failed_rates": {},"did_not_run_rates": {},"unsafe_rates": {}}
     for model in self.database_worker_counter_dict.keys():
         total_evals = (self.database_worker_counter_dict[model]['eval_success'] + 
                       self.database_worker_counter_dict[model]['eval_parse_failed'] +
-                      self.database_worker_counter_dict[model]['eval_did_not_run'])
+                      self.database_worker_counter_dict[model]['eval_did_not_run'] +
+                      self.database_worker_counter_dict[model]['eval_unsafe'])
         if total_evals > 0:
             success_rate = self.database_worker_counter_dict[model]['eval_success'] / total_evals
             parse_failed_rate = self.database_worker_counter_dict[model]['eval_parse_failed'] / total_evals
             did_not_run_rate = self.database_worker_counter_dict[model]['eval_did_not_run'] / total_evals
+            unsafe_rate = self.database_worker_counter_dict[model]['eval_unsafe'] / total_evals
             stats["success_rates"][model] = success_rate
             stats["parse_failed_rates"][model] = parse_failed_rate
             stats["did_not_run_rates"][model] = did_not_run_rate
+            stats["unsafe_rates"][model] = unsafe_rate
         else:
             stats["success_rates"][model] = 0.0
             stats["parse_failed_rates"][model] = 0.0
             stats["did_not_run_rates"][model] = 0.0
+            stats["unsafe_rates"][model] = 0.0
     return stats
 
 class Island:
