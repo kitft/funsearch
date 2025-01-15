@@ -38,59 +38,113 @@ METHOD_MATCHER = re.compile(r"def priority_v\d\(.*?\)(?:\s*->.*?)?:(?:\s*(?:[ \t
 METHOD_NAME_MATCHER = re.compile(r"priority_v\d+")
 
 ALLOWED_FUNCTIONS = {'itertools', 'numpy', 'np', 'math', 'functools'}
-DISALLOWED_BUILTINS = {'__import__','breakpoint','compile','open','dir','eval','exec','globals','input','repr'}
+DISALLOWED = {'print(', '__import__(', 'breakpoint(', 'compile(', 'open(', 'dir(', 'eval(', 'exec(', 'globals(',
+              'input(', 'repr(', 'savetxt(', 'loadtxt(', 'genfromtxt(', 'fromfile(', 'tofile(', 'frombuffer(',
+              'save(', 'savez(', 'savez_compressed(', 'load(', 'savetxt as', 'loadtxt as', 'genfromtxt as', 
+              'fromfile as', 'tofile as', 'frombuffer as', 'save as', 'savez as', 'savez_compressed as',
+                'load as'}
+# DISALLOWED = {'print','__import__','breakpoint','compile','open','dir','eval','exec','globals',
+#               'input','repr','savetxt','loadtxt','genfromtxt','fromfile','tofile','frombuffer',
+#               'save', 'savez','savez_compressed','load'}
+# DISALLOWED_BUILTINS = {'__import__','breakpoint','compile','open','dir','eval','exec','globals','input','repr'}
+# ALLOWED_BUILTINS = {
+#     'abs', 'aiter', 'all', 'any', 'ascii', 'bin', 'bool', 'bytearray', 'bytes', 
+#     'callable', 'chr', 'classmethod', 'complex', 'delattr', 'dict', 
+#     'divmod', 'enumerate', 'filter', 'float', 'format', 'frozenset', 
+#     'getattr', 'hasattr', 'hash', 'help', 'hex', 'id', 'int', 
+#     'isinstance', 'issubclass', 'iter', 'len', 'list', 'locals', 'map', 
+#     'max', 'memoryview', 'min', 'next', 'object', 'oct', 'ord', 'pow', 
+#     'property', 'range', 'reversed', 'round', 'set', 'setattr', 'slice', 
+#     'sorted', 'staticmethod', 'str', 'sum', 'super', 'tuple', 'type', 
+#     'vars', 'zip'
+# }
 
-class FunctionChecker(ast.NodeVisitor):
-    def __init__(self):
-        self.is_safe = True
-        self.vars = []
+# class FunctionChecker(ast.NodeVisitor):
+#     def __init__(self):
+#         self.is_safe = True
+#         self.vars = []
 
-    def visit_Import(self, node):
-        for alias in node.names:
-            if alias.name not in ALLOWED_FUNCTIONS:
-                self.is_safe = False
-            self.generic_visit(node)
+#     def visit_Import(self, node):
+#         for alias in node.names:
+#             if alias.name not in ALLOWED_FUNCTIONS:
+#                 self.is_safe = False
+#             self.generic_visit(node)
 
-    def visit_ImportFrom(self, node):
-        if node.module not in ALLOWED_FUNCTIONS:
-            self.is_safe = False
-        self.generic_visit(node)
+#     def visit_ImportFrom(self, node):
+#         if node.module not in ALLOWED_FUNCTIONS:
+#             self.is_safe = False
+#         self.generic_visit(node)
     
-    def visit_Assign(self, node):
-        for target in node.targets:
-            if isinstance(target, ast.Name):
-                self.vars.append(target.id)
-        self.generic_visit(node)
+#     def visit_Assign(self, node):
+#         for target in node.targets:
+#             # Check if the target is a name
+#             if isinstance(target, ast.Name):
+#                 self.vars.append(target.id)
+#             # Check if the target is a tuple or list
+#             elif isinstance(target, (ast.Tuple, ast.List)):
+#                 for element in target.elts:
+#                     if isinstance(element, ast.Name):
+#                         self.vars.append(element.id)
 
-    def visit_arguments(self, node):
-        for arg in node.args:
-            if isinstance(arg, ast.arg):
-                if arg.arg not in self.vars:
-                    self.vars.append(arg.arg)
-        self.generic_visit(node)
+#     def visit_arguments(self, node):
+#         for arg in node.args:
+#             if isinstance(arg, ast.arg):
+#                 if arg.arg not in self.vars:
+#                     self.vars.append(arg.arg)
+#         self.generic_visit(node)
 
-    def visit_Call(self, node):
-        # Check for disallowed built-in function calls
-        if isinstance(node.func, ast.Name):
-            if node.func.id in DISALLOWED_BUILTINS:
-                self.is_safe = False
-        # Check if function calls are from allowed modules
-        elif isinstance(node.func, ast.Attribute):
-            # if node.func.value.id not in ALLOWED_FUNCTIONS:
-            #     self.is_safe = False
-            func_value = ast.unparse(node.func.value)
-            if func_value.split('.')[0] not in ALLOWED_FUNCTIONS and func_value.split('.')[0] not in self.vars:
-                self.is_safe = False
-        self.generic_visit(node)
+#     def visit_Call(self, node):
+#         # # Check for disallowed built-in function calls
+#         # if isinstance(node.func, ast.Name):
+#         #     if node.func.id in DISALLOWED_BUILTINS:
+#         #         self.is_safe = False
+#         # # Check if function calls are from allowed modules
+#         if isinstance(node.func, ast.Attribute):
+#             # if node.func.value.id not in ALLOWED_FUNCTIONS:
+#             #     self.is_safe = False
+#             func_value = ast.unparse(node.func.value)
+#             func_value = func_value.split('.')[0]
+#             if '(' in func_value:
+#                 func_value = func_value.split('(')[0]
+#             if '[' in func_value:
+#                 func_value = func_value.split('[')[0]
+#             if func_value not in ALLOWED_FUNCTIONS and func_value not in self.vars and func_value not in ALLOWED_BUILTINS:
+#                 print(func_value)
+#                 self.is_safe = False
+#         self.generic_visit(node)
 
-def is_function_safe(func:code_manipulation.Function)->bool:
-    #function_code = inspect.getsource(func)
-    function_code = func.__str__()
-    tree = ast.parse(function_code)
-    checker = FunctionChecker()
-    checker.visit(tree)
-    return checker.is_safe
+# def is_function_safe(func:code_manipulation.Function)->bool:
+#     #function_code = inspect.getsource(func)
+#     function_code = func.__str__()
+#     tree = ast.parse(function_code)
+#     checker = FunctionChecker()
+#     checker.visit(tree)
+#     return checker.is_safe
 
+def is_function_safe(func):
+    source = func.__str__()
+    parsed = ast.parse(source)
+
+    imported_packages = [
+        node.module for node in ast.walk(parsed)
+        if isinstance(node, ast.ImportFrom)
+    ]
+
+    if any(pkg not in ALLOWED_FUNCTIONS for pkg in imported_packages):
+        return False
+    
+    imported_packages = [
+        node.names for node in ast.walk(parsed) if isinstance(node, ast.Import)
+    ]
+    imported_packages = [name.name for node in imported_packages for name in node]
+
+    if any(pkg not in ALLOWED_FUNCTIONS for pkg in imported_packages):
+        return False
+    
+    if any (banned in source for banned in DISALLOWED):
+        return False
+    
+    return True
 
 class _FunctionLineVisitor(ast.NodeVisitor):
   """Visitor that finds the last line number of a function with a given name."""
