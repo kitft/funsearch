@@ -40,9 +40,11 @@ METHOD_NAME_MATCHER = re.compile(r"priority_v\d+")
 ALLOWED_FUNCTIONS = {'itertools', 'numpy', 'np', 'math', 'functools'}
 DISALLOWED = {'print(', '__import__(', 'breakpoint(', 'compile(', 'open(', 'dir(', 'eval(', 'exec(', 'globals(',
               'input(', 'repr(', 'savetxt(', 'loadtxt(', 'genfromtxt(', 'fromfile(', 'tofile(', 'frombuffer(',
-              'save(', 'savez(', 'savez_compressed(', 'load(', 'savetxt as', 'loadtxt as', 'genfromtxt as', 
-              'fromfile as', 'tofile as', 'frombuffer as', 'save as', 'savez as', 'savez_compressed as',
-                'load as'}
+              'save(', 'savez(', 'savez_compressed(', 'load(', 'savetxtas', 'loadtxtas', 'genfromtxtas', 
+              'fromfileas', 'tofileas', 'frombufferas', 'saveas', 'savezas', 'savez_compressedas',
+              'loadas','=print', '=__import__', '=breakpoint', '=compile', '=open', '=dir', '=eval', '=exec', '=globals',
+              '=input', '=repr', '=savetxt', '=loadtxt', '=genfromtxt', '=fromfile', '=tofile', '=frombuffer',
+              '=save', '=savez', '=savez_compressed', '=load',}
 # DISALLOWED = {'print','__import__','breakpoint','compile','open','dir','eval','exec','globals',
 #               'input','repr','savetxt','loadtxt','genfromtxt','fromfile','tofile','frombuffer',
 #               'save', 'savez','savez_compressed','load'}
@@ -140,8 +142,8 @@ def is_function_safe(func):
 
     if any(pkg not in ALLOWED_FUNCTIONS for pkg in imported_packages):
         return False
-    
-    if any (banned in source for banned in DISALLOWED):
+        
+    if any (banned in source.replace(" ", "") for banned in DISALLOWED):
         return False
     
     return True
