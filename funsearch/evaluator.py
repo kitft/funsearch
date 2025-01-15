@@ -38,7 +38,7 @@ METHOD_MATCHER = re.compile(r"def priority_v\d\(.*?\)(?:\s*->.*?)?:(?:\s*(?:[ \t
 METHOD_NAME_MATCHER = re.compile(r"priority_v\d+")
 
 ALLOWED_FUNCTIONS = {'itertools', 'numpy', 'np', 'math', 'functools'}
-DISALLOWED_BUILTINS = {'print','__import__','breakpoint','compile','open','dir','eval','exec','globals','input','repr'}
+DISALLOWED_BUILTINS = {'__import__','breakpoint','compile','open','dir','eval','exec','globals','input','repr'}
 
 class FunctionChecker(ast.NodeVisitor):
     def __init__(self):
@@ -60,6 +60,13 @@ class FunctionChecker(ast.NodeVisitor):
         for target in node.targets:
             if isinstance(target, ast.Name):
                 self.vars.append(target.id)
+        self.generic_visit(node)
+
+    def visit_arguments(self, node):
+        for arg in node.args:
+            if isinstance(arg, ast.arg):
+                if arg.arg not in self.vars:
+                    self.vars.append(arg.arg)
         self.generic_visit(node)
 
     def visit_Call(self, node):
