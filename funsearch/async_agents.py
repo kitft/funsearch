@@ -454,6 +454,7 @@ def print_usage_summary(database,start_time):
                 'eval_success': total_data['eval_success'],
                 'eval_parse_failed': total_data['eval_parse_failed'],
                 'eval_did_not_run': total_data['eval_did_not_run'],
+                'eval_unsafe': total_data['eval_unsafe'],
                 'counts_each': total_data['counts_each']
             }
     # Print table header

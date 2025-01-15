@@ -239,19 +239,19 @@ class Evaluator:
     new_function, program = _sample_to_program(
         sample, version_generated, self._template, self._function_to_evolve)
     if new_function is None:
-      logging.info(f"eval:parse-failed {model}, island_id: {island_id}, version_generated: {version_generated}, island_version: {island_version}")
       usage_stats.eval_state = 'parse_failed'
       usage_stats.sandbox_current_call_count = -1
+      logging.info(f"eval:parse-failed: {model}, island_id: {island_id}, file:s{usage_stats.sampler_id}p{usage_stats.prompt_count}e{self._id}c{usage_stats.sandbox_current_call_count} version_gen: {version_generated}, island_version: {island_version}")
       self._log(usage_stats)
       return (None, {}, usage_stats)
     
     safe = is_function_safe(new_function)
     if not safe:
-       logging.info(f"eval:unsafe {model}, island_id: {island_id}, version_generated: {version_generated}, island_version: {island_version}")
-       usage_stats.eval_state = 'unsafe'
-       usage_stats.sandbox_current_call_count = -1
-       self._log(usage_stats)
-       return (None, {}, usage_stats)
+      usage_stats.eval_state = 'unsafe'
+      usage_stats.sandbox_current_call_count = -1
+      logging.info(f"eval:unsafe: {model}, island_id: {island_id}, file:s{usage_stats.sampler_id}p{usage_stats.prompt_count}e{self._id}c{usage_stats.sandbox_current_call_count} version_gen: {version_generated}, island_v: {island_version}")
+      self._log(usage_stats)
+      return (None, {}, usage_stats)
 
     scores_per_test = {}
     for current_input in self._inputs:
@@ -279,7 +279,7 @@ class Evaluator:
       self._log(usage_stats)
       return (new_function, scores_per_test,  usage_stats)
     else:
-      logging.info(f"eval:didnotrun:program: {model}, island_id: {island_id}, file:s{usage_stats.sampler_id}p{usage_stats.prompt_count}e{self._id}c{usage_stats.sandbox_current_call_count} version_gen: {version_generated}, island_version: {island_version}")
+      logging.info(f"eval:didnotrun: {model}, island_id: {island_id}, file:s{usage_stats.sampler_id}p{usage_stats.prompt_count}e{self._id}c{usage_stats.sandbox_current_call_count} version_gen: {version_generated}, island_version: {island_version}")
       usage_stats.eval_state = 'did_not_run'
       self._log(usage_stats)
       return (None, {}, usage_stats)

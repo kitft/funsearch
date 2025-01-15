@@ -202,13 +202,14 @@ class ProgramsDatabase:
             'sampler_ids': [sampler_id],
             'eval_parse_failed': 0, 
             'eval_did_not_run': 0, 
-            'eval_unsafe': 0,
             'eval_success': 0,
+            'eval_unsafe': 0,
             'total_tokens': 0,
             'tokens_prompt': 0, 
             'tokens_completion': 0,
             'counts_each': {}
         }
+        
       
       if sampler_id not in self.database_worker_counter_dict[model]['counts_each'].keys():
         self.database_worker_counter_dict[model]['counts_each'][sampler_id] = 0
@@ -216,8 +217,8 @@ class ProgramsDatabase:
         
       if sampler_id not in self.database_worker_counter_dict[model]['sampler_ids']:
         self.database_worker_counter_dict[model]['sampler_ids'].append(sampler_id)
-      if eval_state not in ['success', 'parse_failed', 'did_not_run', 'unsafe']:
-          raise Exception("Unhandled contingency")
+      if eval_state not in ['success', 'parse_failed', 'did_not_run','unsafe']:
+          raise Exception(f"Unhandled contingency: {eval_state}")
           
       # Update eval state counter
       self.database_worker_counter_dict[model][f'eval_{eval_state}'] += 1
@@ -228,7 +229,7 @@ class ProgramsDatabase:
       self.database_worker_counter_dict[model]['tokens_completion'] += tokens_completion
 
 
-      if eval_state == 'parse_failed' or eval_state == 'did_not_run' or eval_state == 'unsafe':
+      if eval_state in ['parse_failed', 'did_not_run', 'unsafe']:
         return
     if island_id is None:
       if eval_state == 'success': #this is the initial evaluation
@@ -285,10 +286,7 @@ class ProgramsDatabase:
   def get_stats_per_model(self):
     stats = {"success_rates": {},"parse_failed_rates": {},"did_not_run_rates": {},"unsafe_rates": {}}
     for model in self.database_worker_counter_dict.keys():
-        total_evals = (self.database_worker_counter_dict[model]['eval_success'] + 
-                      self.database_worker_counter_dict[model]['eval_parse_failed'] +
-                      self.database_worker_counter_dict[model]['eval_did_not_run'] +
-                      self.database_worker_counter_dict[model]['eval_unsafe'])
+        total_evals = sum(self.database_worker_counter_dict[model][k] for k in ['eval_success', 'eval_parse_failed', 'eval_did_not_run', 'eval_unsafe'])
         if total_evals > 0:
             success_rate = self.database_worker_counter_dict[model]['eval_success'] / total_evals
             parse_failed_rate = self.database_worker_counter_dict[model]['eval_parse_failed'] / total_evals
