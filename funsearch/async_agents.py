@@ -347,6 +347,7 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
                         'Rate/Success': stats_per_model["success_rates"][model],
                         'Rate/Parse Failed': stats_per_model["parse_failed_rates"][model], 
                         'Rate/Did Not Run': stats_per_model["did_not_run_rates"][model],
+                        'Rate/Unsafe': stats_per_model["unsafe_rates"][model],
                         'time': current_time
                     })
                 elif len(stats_per_model["success_rates"])>1:
@@ -355,6 +356,7 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
                             f'Rate/Success/{model}': stats_per_model["success_rates"][model],
                             f'Rate/Parse Failed/{model}': stats_per_model["parse_failed_rates"][model],
                             f'Rate/Did Not Run/{model}': stats_per_model["did_not_run_rates"][model],
+                            f'Unsafe Rate/{model}': stats_per_model["unsafe_rates"][model],
                             'time': current_time
                         })
 
@@ -464,6 +466,7 @@ def print_usage_summary(database,start_time):
     total_success = 0
     total_parse_failed = 0
     total_did_not_run = 0
+    total_unsafe = 0
     total_time = time.time() - start_time
     amount_to_pad = max(max(len(key) for key in usage_by_model.keys()), 20)+2
     logging.info(f"Total time: {total_time:.2f} seconds")
@@ -471,16 +474,17 @@ def print_usage_summary(database,start_time):
     # First table - Request statistics
     logging.info("Response Statistics:")
     logging.info("-" * 100)
-    logging.info(f"{'Model':<{amount_to_pad}} {'#':<6} {'responses':<8} {'Success':<8} {'Failed':<8} {'No Exec':<8} {'Req/s':<6}")
+    logging.info(f"{'Model':<{amount_to_pad}} {'#':<6} {'responses':<8} {'Success':<8} {'No parse':<8} {'Unsafe':<8} {'No Exec':<8} {'Req/s':<6}")
     logging.info("-" * 100)
 
     for model, stats in usage_by_model.items():
         responses_per_sec = stats['responses'] / total_time
         success_rate = (stats['eval_success'] / stats['responses'] * 100) if stats['responses'] > 0 else 0
         parse_failed = (stats['eval_parse_failed'] / stats['responses'] * 100) if stats['responses'] > 0 else 0
+        unsafe_rate = (stats['eval_unsafe'] / stats['responses'] * 100) if stats['responses'] > 0 else 0
         no_exec = (stats['eval_did_not_run'] / stats['responses'] * 100) if stats['responses'] > 0 else 0
         
-        logging.info(f"{model:<{amount_to_pad}} {stats['count']:<6} {stats['responses']:<8} {success_rate:>6.1f}% {parse_failed:>6.1f}% {no_exec:>7.1f}% {responses_per_sec:>5.1f}/s")
+        logging.info(f"{model:<{amount_to_pad}} {stats['count']:<6} {stats['responses']:<8} {success_rate:>6.1f}% {parse_failed:>6.1f}% {unsafe_rate:>7.1f}% {no_exec:>7.1f}% {responses_per_sec:>5.1f}/s")
         
         total_samplers += stats['count']
         total_responses += stats['responses']
@@ -489,14 +493,15 @@ def print_usage_summary(database,start_time):
         total_success += stats['eval_success']
         total_parse_failed += stats['eval_parse_failed']
         total_did_not_run += stats['eval_did_not_run']
-
+        total_unsafe += stats['eval_unsafe']
     # Print totals for first table
     logging.info("-" * 100)
     total_success_rate = (total_success / total_responses * 100) if total_responses > 0 else 0
     total_parse_failed_rate = (total_parse_failed / total_responses * 100) if total_responses > 0 else 0
     total_no_exec_rate = (total_did_not_run / total_responses * 100) if total_responses > 0 else 0
+    total_unsafe_rate = (total_unsafe / total_responses * 100) if total_responses > 0 else 0
     total_responses_per_sec = total_responses / total_time
-    logging.info(f"{'TOTAL':<{amount_to_pad}} {total_samplers:<6} {total_responses:<8} {total_success_rate:>6.1f}% {total_parse_failed_rate:>6.1f}% {total_no_exec_rate:>7.1f}% {total_responses_per_sec:>5.1f}/s")
+    logging.info(f"{'TOTAL':<{amount_to_pad}} {total_samplers:<6} {total_responses:<8} {total_success_rate:>6.1f}% {total_parse_failed_rate:>6.1f}% {total_unsafe_rate:>7.1f}% {total_no_exec_rate:>7.1f}% {total_responses_per_sec:>5.1f}/s")
 
     # Second table - Token statistics
     print("\n")
