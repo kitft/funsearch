@@ -38,13 +38,16 @@ METHOD_MATCHER = re.compile(r"def priority_v\d\(.*?\)(?:\s*->.*?)?:(?:\s*(?:[ \t
 METHOD_NAME_MATCHER = re.compile(r"priority_v\d+")
 
 ALLOWED_FUNCTIONS = {'itertools', 'numpy', 'np', 'math', 'functools', 'collections', 'random'}
+ALLOWED_FUNCTIONS = {'itertools', 'numpy', 'np', 'math', 'functools', 'collections', 'random'}
 DISALLOWED = { '__import__(', 'breakpoint(', 'compile(', 'open(', 'dir(', 'eval(', 'exec(', 'globals(',
               'input(', 'repr(', 'savetxt(', 'loadtxt(', 'genfromtxt(', 'fromfile(', 'tofile(', 'frombuffer(',
               'save(', 'savez(', 'savez_compressed(', 'load(', 'savetxtas', 'loadtxtas', 'genfromtxtas', 
               'fromfileas', 'tofileas', 'frombufferas', 'saveas', 'savezas', 'savez_compressedas',
-              'loadas', '=__import__', '=breakpoint', '=compile', '=open', '=dir', '=eval', '=exec', '=globals',
-              '=input', '=repr', '=savetxt', '=loadtxt', '=genfromtxt', '=fromfile', '=tofile', '=frombuffer',
-              '=save', '=savez', '=savez_compressed', '=load',}
+              'loadas', '=__import__\n', '=breakpoint\n', '=compile\n', '=open\n', '=dir\n', '=eval\n', '=exec\n', '=globals\n',
+              '=input\n', '=repr\n', '=savetxt\n', '=loadtxt\n', '=genfromtxt\n', '=fromfile\n', '=tofile\n', '=frombuffer\n',
+              '=save\n', '=savez\n', '=savez_compressed\n', '=load\n', '=__import__,', '=breakpoint,', '=compile,', '=open,', '=dir,',
+              '=eval,', '=exec,', '=globals,', '=input,', '=repr,', '=savetxt,', '=loadtxt,', '=genfromtxt,', '=fromfile,',
+              '=tofile,', '=frombuffer,', '=save,', '=savez,', '=savez_compressed,', '=load,'}
 # DISALLOWED = {'print','__import__','breakpoint','compile','open','dir','eval','exec','globals',
 #               'input','repr','savetxt','loadtxt','genfromtxt','fromfile','tofile','frombuffer',
 #               'save', 'savez','savez_compressed','load'}
