@@ -1,4 +1,5 @@
-####<<<<<ENSURE YOU ALSO MODIFY THE SYSTEM PROMPT IF NECESSARY! LOCATED IN CONFIG.PY>>>>>>>
+####<<<<<ENSURE YOU ALSO MODIFY THE SYSTEM PROMPT IF NECESSARY! LOCATED IN CONFIG.PY.
+#### THE SYSTEM PROMPT ALSO LISTS PACKAGES THAT CAN BE USED >>>>>>
 """<<<E.g. Finds EXAMPLE_PROBLEMS. A brief description of the problem you're solving might be a 
 good idea to include here, as it will go in to the prompt>>>
 """
