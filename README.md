@@ -216,6 +216,10 @@ You may also see `INFO:httpx:HTTP Request: POST https://api.mistral.ai/v1/chat/c
 
 Note that in the last command, we use the ExternalProcessSandbox. This is not fully 'safe', but does make it a bit less likely that invalid code from LLM could break things. However, before code is executed, it is check for safety by ensuring that the code does not contain any forbidden functions, and only imports allowlisted libraries. These can be configured in `funsearch/evaluator.py`. There is also ContainerSandbox, which is more secure but not multithreaded.
 
+By default, the following packages are allowed: 'itertools', 'numpy', 'np', 'math', 'functools', 'collections', 'random'
+
+By default the following functions are blacklisted: '__import__', 'breakpoint', 'compile', 'open', 'dir', 'eval', 'exec', 'globals', 'input', 'repr', 'np.savetxt', 'np.loadtxt', 'np.genfromtxt', 'np.fromfile', 'np.tofile', 'np.frombuffer', 'np.save', 'np.savez', 'np.savez_compressed', 'np.load'
+
 Alternatively, you can run the main Python process on a host computer outside of any container and let
 the process build and run separate sandbox containers (still requires Docker(/Podman)).
 This variant could be also used, e.g., in Colab relatively safely since the environment is some kind of container itself.

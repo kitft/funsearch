@@ -2,19 +2,21 @@
 """<<<E.g. Finds EXAMPLE_PROBLEMS. A brief description of the problem you're solving might be a 
 good idea to include here, as it will go in to the prompt>>>
 """
-import itertools ####<<<IF NECESSARY>>>>. Mention
+import itertools ####<<<IF NECESSARY. DO NOT IMPORT ANY POTENTIALLY DANGEROUS PACKAGES HERE>>>>. 
 import numpy as np
 import funsearch
 
 @funsearch.run #####<<<< THIS IS THE ENTRY POINT for funsearchy, and returns the score!>>>######
 def evaluate(n: int) -> int:
     """Returns the size of an `n`-dimensional EXAMPLE_PROBLEM"""
+    import pickle #### <<<<IF NECESSARY. IMPORT ANY POTENTIALLY DANGLING IMPORTS HERE, SO THAT THE PRIORITY FUNCTION HAS NO ACCESS>>>>>
     example_output = solve(n)
     return len(example_output)#### <<<<<THIS OUTPUT BECOMES THE SCORE>>>>>>
 
 ####If you define additonal functions, ensure they have a docstring! This is to make the parser happy.
 
 def solve(n: int) -> np.ndarray:
+    import pickle #### <<<<IF NECESSARY. IMPORT ANY POTENTIALLY DANGLING IMPORTS HERE, SO THAT THE PRIORITY FUNCTION HAS NO ACCESS>>>>>
     """Returns an EXAMPLE in `n` dimensions."""
     ####<<<AT SOME POINT YOU SHOULD CALL "priority(<whatever type you've specified below>)">>>
     pass  # TODO: Implement the solve function
