@@ -88,6 +88,9 @@ For implementation details and example problems, see the examples directory, par
 - Another great one might be deepseek/deepseek-chat, which is competitive with claude-3-5-sonnet and much cheaper.
 - Either model is still relatively cheap: with codestral, 1 million output tokens is $0.6.
 - You can also pass in a model name from OpenAI or Anthropic, etc. If this doesn't work, have a look at models.py
+- One should be careful what functions are imorted at the start of the SPEC file, as this will be available to the priority function written by the LLM. You can change which functions and packages are allowed/blacklisted by changing evolve.py.
+-- By default, the following packages are allowed: 'itertools', 'numpy', 'np', 'math', 'functools', 'collections', 'random'
+-- By default the following functions are blacklisted: '\_\_import\_\_', 'breakpoint', 'compile', 'open', 'dir', 'eval', 'exec', 'globals', 'input', 'repr', 'np.savetxt', 'np.loadtxt', 'np.genfromtxt', 'np.fromfile', 'np.tofile', 'np.frombuffer', 'np.save', 'np.savez', 'np.savez_compressed', 'np.load'
 
 ## Running the search
 `funsearch runasync` takes two arguments and several options:
@@ -215,10 +218,6 @@ INFO:absl:Saving backup to data/backups/program_db_priority_1704956206_0.pickle.
 You may also see `INFO:httpx:HTTP Request: POST https://api.mistral.ai/v1/chat/completions "HTTP/1.1 200 OK"` for each successful API call.
 
 Note that in the last command, we use the ExternalProcessSandbox. This is not fully 'safe', but does make it a bit less likely that invalid code from LLM could break things. However, before code is executed, it is check for safety by ensuring that the code does not contain any forbidden functions, and only imports allowlisted libraries. These can be configured in `funsearch/evaluator.py`. There is also ContainerSandbox, which is more secure but not multithreaded.
-
-By default, the following packages are allowed: 'itertools', 'numpy', 'np', 'math', 'functools', 'collections', 'random'
-
-By default the following functions are blacklisted: '__import__', 'breakpoint', 'compile', 'open', 'dir', 'eval', 'exec', 'globals', 'input', 'repr', 'np.savetxt', 'np.loadtxt', 'np.genfromtxt', 'np.fromfile', 'np.tofile', 'np.frombuffer', 'np.save', 'np.savez', 'np.savez_compressed', 'np.load'
 
 Alternatively, you can run the main Python process on a host computer outside of any container and let
 the process build and run separate sandbox containers (still requires Docker(/Podman)).
