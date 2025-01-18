@@ -14,7 +14,8 @@ def evaluate(n: int) -> int:
     example_output = solve(n)
     return len(example_output)#### <<<<<THIS OUTPUT BECOMES THE SCORE>>>>>>
 
-####If you define additonal functions, ensure they have a docstring! This is to make the parser happy.
+#### If you define additonal functions, ensure they have a docstring! This is to make the parser happy. 
+#### Again, you will need to import any necessary packages inside their namespace.
 
 def solve(n: int) -> np.ndarray:
     import pickle #### <<<<IF NECESSARY. IMPORT ANY POTENTIALLY DANGEROUS IMPORTS HERE, SO THAT THE PRIORITY FUNCTION HAS NO ACCESS>>>>>
