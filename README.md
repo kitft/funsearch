@@ -1,7 +1,7 @@
 
 # Funsearch
 
-A high-performance implementation of program search using LLMs, built for discovering mathematical algorithms and solving optimization problems. We essentially run a genetic algorithm with LLMs as the mutation/breeding operator.
+A high-performance implementation of program search using LLMs, built for discovering mathematical algorithms and solving optimization problems. We essentially run a genetic programming algorithm with LLMs as the mutation/breeding operator.
 
 This version adds parallel processing, updated tooling, and many more features to the original DeepMind implementation.
 
@@ -11,8 +11,7 @@ This version adds parallel processing, updated tooling, and many more features t
 - Search for any type signature, not just priority functions
 
 ### Integration with Weights & Biases
-- Real-time monitoring and logging
-- Automatic score logging and graphing
+- Real-time monitoring and logging/graphing
 
 ### Multi-Model Support
 - Use any combination of modern LLMs including Claude/GPT-4o/Gemini/Mistral/Deepseek/etc through direct APIs or OpenRouter
