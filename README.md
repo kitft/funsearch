@@ -9,6 +9,7 @@ This version adds parallel processing, updated tooling, and many more features t
 
 ### Modified to support non-priority-function program search
 - Search for any type signature, not just priority functions
+- Runs on multiple inputs at once (e.g. n=8,9,10 for cap sets)
 
 ### Integration with Weights & Biases
 - Real-time monitoring and logging/graphing
@@ -102,6 +103,7 @@ For implementation details and example problems, see the examples directory, par
    - Comma-separated input data
    - The files are expected to contain a list with at least one element
    - Elements will be passed to the `solve()` method one by one
+   - Programs will be evaluated based on an aggregated score, which is the sum of the scores for each input. Each individual best score per input will be logged to wandb.
 
 Examples of valid INPUTS:
 - 8
