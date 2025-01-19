@@ -327,6 +327,22 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
 
                 logging.info(f"Time: {current_time:.2f}s, best score: {best_score_overall:.2f}, average score: {avg_score_overall:.2f}, Eval Queue size: {eval_queue_size}, Result Queue size: {result_queue_size}")
 
+                # Log best test scores across all islands
+                # Only log per-input scores if there are multiple inputs
+                if len(database._best_scores_per_test_per_island[0]) > 1:
+                    best_scores_by_test = {}
+                    for scores_per_test in database._best_scores_per_test_per_island:
+                        if scores_per_test is not None:
+                            for test_key, test_score in scores_per_test.items():
+                                if test_key not in best_scores_by_test or test_score > best_scores_by_test[test_key]:
+                                    best_scores_by_test[test_key] = test_score
+                    
+                    # Log all best test scores at once
+                    wandb.log({
+                        f'Best scores by input/Input {test_key}': score 
+                        for test_key, score in best_scores_by_test.items()
+                    } | {'time': current_time})
+
                 # Log scores to CSV
                 with open(csv_filename, 'a', newline='') as csvfile:
                     csv_writer = csv.writer(csvfile)
@@ -420,6 +436,7 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
         except asyncio.TimeoutError:
             logging.warning("Database worker timed out during shutdown, final queue length: %d", result_queue.qsize())
             db_worker.cancel()
+        db_worker.cancel()
 
         logging.info(f"Total programs processed: {database.orig_database._program_counter}") ## non-mutable type, refer to original database
         logging.info(f"Best scores per island: {database._best_score_per_island}")
