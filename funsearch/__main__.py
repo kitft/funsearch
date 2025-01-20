@@ -5,13 +5,14 @@ import pathlib
 import pickle
 import time
 import asyncio
-from typing import Union
+from typing import Union, Optional
 
 import click
 #import llm
 from dotenv import load_dotenv
 
 from funsearch import async_agents, config, core, sandbox, sampler, programs_database, code_manipulation, models, logging_stats
+from funsearch.utilities import oeis_util
 
 LOGLEVEL = os.environ.get('LOGLEVEL', 'INFO').upper()
 logging.basicConfig(format='%(asctime)s.%(msecs)03d:%(levelname)s:%(message)s',level=LOGLEVEL,datefmt='%Y-%m-%d-%H-%M-%S')
@@ -238,6 +239,22 @@ def ls(db_file):
         print(prog)
         print("\n")
 
+@main.command()
+@click.argument("a_number")
+@click.argument("save_path", required=False)
+@click.option('--max-terms', type=int, help='Maximum number of terms to fetch')
+def oeis(a_number: str, save_path: Optional[str], max_terms: Optional[int]):
+    """Fetch and save an OEIS sequence.
+    
+    A_NUMBER: The A-number of the sequence (e.g. 'A001011' or '001011')
+    SAVE_PATH: Optional path to save the pickle file. Defaults to ./examples/oeis_data/<seqname>.pkl
+    """
+    try:
+        file_path, sequence = oeis_util.save_oeis_sequence(a_number, save_path, max_terms)
+        print(f"Successfully saved sequence to {file_path}: first few elements are {sequence[:10]}")
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        raise click.Abort()
 
 if __name__ == "__main__":
     main()

@@ -267,6 +267,46 @@ To remove/delete all data associated with a timestamp(s), use the following comm
 funsearch removetimestamp <timestamp1> <timestamp2> ...
 ```
 
+
+
+## OEIS Integration
+
+The project includes functionality to fetch and save sequences from the Online Encyclopedia of Integer Sequences (OEIS). This is particularly useful when implementing mathematical sequence-based problems.
+
+### Using the OEIS Command
+
+You can fetch and save OEIS sequences using the CLI:
+
+```bash
+# Basic usage - saves to ./examples/oeis_data/A001011.pkl
+funsearch oeis A001011
+
+# Save to custom location
+funsearch oeis A001011 custom/path/
+
+# Limit number of terms
+funsearch oeis A001011 --max-terms 100
+```
+
+### Using OEIS Sequences in Your Implementation
+
+1. First, fetch the sequence using the CLI command as shown above
+2. Then in your implementation spec file, load it like this:
+```python
+
+def solve(n: int):
+   import pickle
+   """Your solve function"""
+   with open('examples/oeis_data/A001011.pkl', 'rb') as f:
+       sequence = pickle.load(f)
+   # Use sequence as needed
+
+If you want each element of the sequence to have performance logged separately, use the pkl file as your input to the funsearch runasync command.
+
+```
+
+The sequences are saved as Python lists of integers and can be easily integrated into your implementation specs.
+
 # ERRORS
 
 PLEASE ENSURE YOU HAVE UPDATED TO THE LATEST VERSION OF THIS REPO
@@ -274,10 +314,19 @@ PLEASE ENSURE YOU HAVE UPDATED TO THE LATEST VERSION OF THIS REPO
 If you are getting OPENAI Async doesn't exist errors, run `pip install openai>=1.2` in your Docker environment. This should happen on Dockerfile creation, but could be a problem if you have some legacy docker/pdm files.
 
 
+# Adding additional programs:
+To add additional programs, add .py files to the examples/ directory. These should follow the same structure as the other examples - a priority function with an @funsearch.evolve decorator, and an evaluation function which returns a score decorated with @funsearch.run. See `examples/cap_set_spec.py` for a simple example, and see `examples/Example_Implementation_SPEC.py` for template which you can fill in. I have also been writing playground `*.ipynb` files in the `examples/playgrounds/` directory, where new environments can be developed and tested.
+
+# ERRORS
+
+PLEASE ENSURE YOU HAVE UPDATED TO THE LATEST VERSION OF THIS REPO
+
+If you are getting OPENAI Async doesn't exist errors, run `pip install openai>=1.2` in your Docker environment. This should happen on Dockerfile creation, but could be a problem if you have some legacy docker/pdm files.
 
 
 # Adding additional programs:
 To add additional programs, add .py files to the examples/ directory. These should follow the same structure as the other examples - a priority function with an @funsearch.evolve decorator, and an evaluation function which returns a score decorated with @funsearch.run. See `examples/cap_set_spec.py` for a simple example, and see `examples/Example_Implementation_SPEC.py` for template which you can fill in. I have also been writing playground `*.ipynb` files in the `examples/playgrounds/` directory, where new environments can be developed and tested.
+
 
 ---
 # Original Google DeepMind FunSearch Repository Data
@@ -286,57 +335,6 @@ To add additional programs, add .py files to the examples/ directory. These shou
 This repository accompanies the publication
 
 > Romera-Paredes, B. et al. [Mathematical discoveries from program search with large language models](https://www.nature.com/articles/s41586-023-06924-6). *Nature* (2023)
-
-There are 6 independent directories:
-
-- `cap_set` contains functions discovered by FunSearch that construct large cap
-sets, and we also provide those cap sets in a numerical format for convenience.
-
-- `admissible_set` contains functions discovered by FunSearch that construct
-large admissible sets, and we also provide those admissible sets in a numerical
-format for convenience.
-
-- `bin_packing` contains heuristics discovered by FunSearch for online 1D bin
-packing problems, and an evaluation suite to reproduce the results reported in
-the paper.
-
-- `cyclic_graphs` contains functions discovered by FunSearch that construct
-large independent sets in strong products of cyclic graphs, and we also provide
-those sets in a numerical format for convenience.
-
-- `corner_free_sets` contains the discovered sets of indices, in numerical
-format, satisfying the combinatorial degeneration constraints described for the
-corners-free problem in the Supplementary Information.
-
-- `implementation` contains an implementation of the evolutionary algorithm,
-code manipulation routines, and a single-threaded implementation of the
-FunSearch pipeline. It does not contain language models for generating new
-programs, the sandbox for executing untrusted code, nor the infrastructure for
-running FunSearch on our distributed system. This directory is intended to be
-useful for understanding the details of our method, and for adapting it for use
-with any available language models, sandboxes, and distributed systems.
-
-## Installation
-
-No installation is required. All notebooks can be opened and run in Google
-Colab.
-
-## Usage
-
-- `cap_set`: The notebook `cap_set.ipynb` can be opened via
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-deepmind/funsearch/blob/master/cap_set/cap_set.ipynb).
-
-- `admissible_set`: The notebook `admissible_set.ipynb` can be opened
-via
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-deepmind/funsearch/blob/master/admissible_set/admissible_set.ipynb).
-
-- `bin_packing`: The notebook `bin_packing.ipynb` can be opened via
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-deepmind/funsearch/blob/master/bin_packing/bin_packing.ipynb).
-
-- `cyclic_graphs`: The notebook `cyclic_graphs.ipynb` can be opened via
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/google-deepmind/funsearch/blob/master/cyclic_graphs/cyclic_graphs.ipynb).
-
-## Citing this work
 
 If you use the code or data in this package, please cite:
 
@@ -350,126 +348,13 @@ If you use the code or data in this package, please cite:
 }
 ```
 
-Here, we are searching for the algorithm to find maximum cap sets for dimension 11.
-You should see something like:
-```
-root@11c22cd7aeac:/workspace# funsearch runasync /workspace/examples/cap_set_spec.py 11 --sandbox_type ExternalProcessSandbox --model_name codestral-latest
-INFO:root:Writing logs to data/1704956206
-INFO:absl:Best score of island 0 increased to 2048
-INFO:absl:Best score of island 1 increased to 2048
-INFO:absl:Best score of island 2 increased to 2048
-INFO:absl:Best score of island 3 increased to 2048
-INFO:absl:Best score of island 4 increased to 2048
-INFO:absl:Best score of island 5 increased to 2048
-INFO:absl:Best score of island 6 increased to 2048
-INFO:absl:Best score of island 7 increased to 2048
-INFO:absl:Best score of island 8 increased to 2048
-INFO:absl:Best score of island 9 increased to 2048
-INFO:absl:Best score of island 5 increased to 2053
-INFO:absl:Best score of island 1 increased to 2049
-INFO:absl:Best score of island 8 increased to 2684
-^C^CINFO:root:Keyboard interrupt. Stopping.
-INFO:absl:Saving backup to data/backups/program_db_priority_1704956206_0.pickle.
-```
-
-You may also see `INFO:httpx:HTTP Request: POST https://api.mistral.ai/v1/chat/completions "HTTP/1.1 200 OK"` for each successful API call.
-
-Note that in the last command, we use the ExternalProcessSandbox. This is not fully 'safe', but does make it a bit less likely that invalid code from LLM could break things. The default is ContainerSandbox. However, as we are running the entire thing inside a Docker container, this is not strictly necessary.
-
-Alternatively, you can run the main Python process on a host computer outside of any container and let
-the process build and run separate sandbox containers (still requires Docker(/Podman)).
-This variant could be also used, e.g., in Colab quite safely since the environment is some kind of container itself.
-
-```
-pip install .
-
-funsearch runasync /workspace/examples/cap_set_spec.py 8 --sandbox ExternalProcessSandbox --model mistralai/codestral-mamba --samplers 20 --islands 10 --duration 3000 --team <team>
-```
-
-# LOGS AND GRAPHS
-
-You can monitor the progress of the search using Weights & Biases (wandb). First, make sure you have set your wandb API key:
-```
-export WANDB_API_KEY=<your_wandb_key_here>
-```
-
-The search progress will be automatically logged to your wandb project "funsearch". You can view the results in real-time by:
-1. Going to https://wandb.ai
-2. Logging in with your account
-3. Opening the "funsearch" project
-4. Selecting your run
-
-Each run will be named with a timestamp (e.g., "run_1704956206") and will track:
-- Best and average scores for each island
-- Overall best and average scores
-- Queue sizes
-- API call counts
-- Other relevant metrics
-
-Additionally, the scores are logged to a csv file in `./data/scores/`, and at the end of the `runasync` a graph of the best scores per island over time is generated in `./data/graphs/` (at this point, matplotlib and pandas are installed - this is just to improve docker compilation time). This can be generated by hand using `funsearch makegraphs <timestamp>`.
-
-To remove/delete all data associated with a timestamp. This is not reversible, so be careful!
-```
-funsearch removetimestamp <timestamp>
-```
-
-# ERRORS
-
-PLEASE ENSURE YOU HAVE UPDATED TO THE LATEST VERSION OF THIS REPO
-
-If you are getting OPENAI Async doesn't exist errors, run `pip install openai>=1.2` in your Docker environment. This should happen on Dockerfile creation, but could be a problem if you have some legacy docker/pdm files.
 
 
-
-
-# Adding additional programs:
-To add additional programs, add .py files to the examples/ directory. These should follow the same structure as the other examples - a priority function with an @funsearch.evolve decorator, and an evaluation function which returns a score decorated with @funsearch.run. See `examples/cap_set_spec.py` for a simple example, and see `examples/Example_Implementation_SPEC.py` for template which you can fill in. I have also been writing playground `*.ipynb` files in the `examples/playgrounds/` directory, where new environments can be developed and tested.
 
 ---
 
 forked from https://github.com/google-deepmind/funsearch via https://github.com/jonppe/funsearch 
 
----
-# Original Google DeepMind FunSearch Repository Data
-
-
-This repository accompanies the publication
-
-> Romera-Paredes, B. et al. [Mathematical discoveries from program search with large language models](https://www.nature.com/articles/s41586-023-06924-6). *Nature* (2023)
-
-There are 6 independent directories:
-
-- `cap_set` contains functions discovered by FunSearch that construct large cap
-sets, and we also provide those cap sets in a numerical format for convenience.
-
-- `admissible_set` contains functions discovered by FunSearch that construct
-large admissible sets, and we also provide those admissible sets in a numerical
-format for convenience.
-
-- `bin_packing` contains heuristics discovered by FunSearch for online 1D bin
-packing problems, and an evaluation suite to reproduce the results reported in
-the paper.
-
-- `cyclic_graphs` contains functions discovered by FunSearch that construct
-large independent sets in strong products of cyclic graphs, and we also provide
-those sets in a numerical format for convenience.
-
-- `corner_free_sets` contains the discovered sets of indices, in numerical
-format, satisfying the combinatorial degeneration constraints described for the
-corners-free problem in the Supplementary Information.
-
-## Citing this work
-
-If you use the code or data in this package, please cite:
-
-```bibtex
-@Article{FunSearch2023,
-  author  = {Romera-Paredes, Bernardino and Barekatain, Mohammadamin and Novikov, Alexander and Balog, Matej and Kumar, M. Pawan and Dupont, Emilien and Ruiz, Francisco J. R. and Ellenberg, Jordan and Wang, Pengming and Fawzi, Omar and Kohli, Pushmeet and Fawzi, Alhussein},
-  journal = {Nature},
-  title   = {Mathematical discoveries from program search with large language models},
-  year    = {2023},
-  doi     = {10.1038/s41586-023-06924-6}
-}
 ```
 
 ## License and disclaimer

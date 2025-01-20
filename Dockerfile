@@ -46,7 +46,7 @@ RUN pip install --no-deps . && rm -r ./funsearch ./build
 #CMD echo '{"mistral": "'$MISTRAL_API_KEY'"}' > $(llm keys path); /bin/bash
 
 
-EXPOSE 6006
+#EXPOSE 6006
 
 CMD ["bash"]
 
