@@ -26,6 +26,7 @@ MANIFEST
 
 #data files
 data/
+examples/oeis_data/*
 .DS_store
 pdm.lock
 
