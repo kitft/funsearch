@@ -89,7 +89,9 @@ class Config:
   logging_info_interval: int = 10
   system_prompt: str = system_prompt
   api_call_timeout: int = 120
-  api_call_retries: int = 10
+  api_call_max_retries: int = 10
+  ratelimit_backoff: int = 30
+
   def __init__(self, **kwargs):
     for key, value in kwargs.items():
       if hasattr(self, key):

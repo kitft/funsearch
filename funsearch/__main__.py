@@ -158,7 +158,7 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
 
     logging.info(f"keynum list: {keynum_list}")
     lm = [sampler.LLM(conf.samples_per_prompt, models.LLMModel(model_name=model_list[i], top_p=conf.top_p,
-        temperature=temperature_list[i], keynum=keynum_list[i],id = i,log_path=log_path,system_prompt=conf.system_prompt), log_path=log_path,api_call_timeout=conf.api_call_timeout,api_call_retries=conf.api_call_retries) for i in range(len(model_list))]
+        temperature=temperature_list[i], keynum=keynum_list[i],id = i,log_path=log_path,system_prompt=conf.system_prompt), log_path=log_path,api_call_timeout=conf.api_call_timeout,api_call_max_retries=conf.api_call_max_retries,ratelimit_backoff=conf.ratelimit_backoff) for i in range(len(model_list))]
 
     specification = spec_file.read()
     function_to_evolve, function_to_run = core._extract_function_names(specification)

@@ -232,12 +232,13 @@ class LLMModel:
 
         return chat_response, usage_stats
 
-    async def prompt(self, prompt_text, base_timeout=30, max_retries=10):
+    async def prompt(self, prompt_text, time_cutoff=120, ratelimit_backoff=30, max_retries=10):
         """Sends a prompt to the LLM with retries and exponential backoff.
 
         Args:
             prompt_text (str): The text prompt to send to the model
-            base_timeout (int, optional): Initial timeout in seconds. Defaults to 30.
+            time_cutoff (int, optional): Initial timeout in seconds. Defaults to 120.
+            ratelimit_backoff (int, optional): Timeout in seconds for rate limit errors. Defaults to 30.
             max_retries (int, optional): Maximum number of retry attempts. Defaults to 10.
 
         Returns:
@@ -248,14 +249,19 @@ class LLMModel:
         The function implements exponential backoff, increasing the timeout duration with each retry.
         It logs various debug and warning messages to track the progress and any failures.
         """
-        base_of_exponential_backoff = 1.1
+        base_of_exponential_backoff=1.1
         begin = time.time()
         for attempt in range(max_retries):
             try:
                 start = time.time()
                 logging.debug(f"prompt:start:{self.model}:{self.id}:{self.counter}:{attempt}")
                 task = self.complete(prompt_text)
-                chat_response, usage_stats = await asyncio.wait_for(task, timeout=base_timeout * (base_of_exponential_backoff ** attempt))
+                try:
+                    chat_response, usage_stats = await asyncio.wait_for(task, timeout=time_cutoff)
+                except asyncio.TimeoutError:
+                    end = time.time()
+                    logging.warning(f"prompt:error:timeout:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
+                    continue
                 end = time.time()
                 logging.debug(f"prompt:end:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
                 if chat_response is not None:
@@ -266,11 +272,11 @@ class LLMModel:
             except Exception as e:
                 end = time.time()
                 if '429' in str(e):#if it's a rate limit error, not a big issue
-                    logging.debug(f"prompt:error:exception_ratelimit:{e}:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
+                    logging.debug(f"prompt:error:exception_ratelimit:{str(e)}:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
                 else:
-                    logging.warning(f"prompt:error:exception_other:{e}:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
+                    logging.warning(f"prompt:error:exception_other:{str(e)}:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
                 if attempt < max_retries - 1:
-                    sleep_time = base_timeout * (base_of_exponential_backoff ** attempt)
+                    sleep_time = ratelimit_backoff * (base_of_exponential_backoff ** attempt)
                     logging.debug(f"prompt:sleep:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}:{sleep_time:.3f}")
                     await asyncio.sleep(sleep_time)
                     end = time.time()
