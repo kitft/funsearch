@@ -365,7 +365,7 @@ class Island:
     functions_per_prompt = min(len(self._clusters), self._functions_per_prompt)
 
     idx = np.random.choice(
-        len(signatures), size=functions_per_prompt, p=probabilities)
+        len(signatures), size=functions_per_prompt, p=probabilities,replace=False) #sampling without replacement
     chosen_signatures = [signatures[i] for i in idx]
     implementations = []
     scores = []
