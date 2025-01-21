@@ -88,7 +88,8 @@ class Config:
   llm_temperature: float = 1.0
   logging_info_interval: int = 10
   system_prompt: str = system_prompt
-  
+  api_call_timeout: int = 120
+  api_call_retries: int = 10
   def __init__(self, **kwargs):
     for key, value in kwargs.items():
       if hasattr(self, key):

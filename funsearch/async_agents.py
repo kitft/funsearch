@@ -38,6 +38,7 @@ class PortableSystemConfig:
   problem_name: str
   name_for_saving: str
   problem_identifier: str
+  tag: str
 
 class AsyncProgramsDatabase(programs_database.ProgramsDatabase):
     def __init__(self, database: programs_database.ProgramsDatabase):
@@ -268,7 +269,7 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
         entity=entity,
         project="funsearch",
         name=name_for_saving_to_wandb,
-
+        tags=[portable_config.tag],
         config={
             "model_names": [lm.model.model for lm in portable_config.lm],
             "num_cores": num_cores,

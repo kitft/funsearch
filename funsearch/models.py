@@ -230,9 +230,22 @@ class LLMModel:
 
         return chat_response, usage_stats
 
-    async def prompt(self, prompt_text):
-        max_retries = 10
-        base_timeout = 30  # Initial timeout for exponential backoff
+    async def prompt(self, prompt_text, base_timeout=30, max_retries=10):
+        """Sends a prompt to the LLM with retries and exponential backoff.
+
+        Args:
+            prompt_text (str): The text prompt to send to the model
+            base_timeout (int, optional): Initial timeout in seconds. Defaults to 30.
+            max_retries (int, optional): Maximum number of retry attempts. Defaults to 10.
+
+        Returns:
+            tuple: A tuple containing:
+                - str | None: The model's response text, or None if all retries failed
+                - UsageStats | None: Usage statistics for the request, or None if all retries failed
+
+        The function implements exponential backoff, increasing the timeout duration with each retry.
+        It logs various debug and warning messages to track the progress and any failures.
+        """
         base_of_exponential_backoff = 1.1
         begin = time.time()
         for attempt in range(max_retries):

@@ -74,7 +74,8 @@ def main(ctx):
 @click.option('--team', default=None, type=str, help='wandb team name')
 @click.option('--envfile', default=None, type= str, help='path to .env file')
 @click.option('--name', default=None, help='Unique ID for wandb. Default is timestamp')
-def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, sandbox, samplers, evaluators, islands, reset, duration, temperature, team, envfile, name):
+@click.option('--tag', default=None, type=str, help='Tag for wandb. Default is None')
+def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, sandbox, samplers, evaluators, islands, reset, duration, temperature, team, envfile, name, tag):
     """Execute the function-search algorithm.
 
     SPEC_FILE: A Python module providing the basis of the LLM prompt and the evaluation metric.
@@ -157,7 +158,7 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
 
     logging.info(f"keynum list: {keynum_list}")
     lm = [sampler.LLM(conf.samples_per_prompt, models.LLMModel(model_name=model_list[i], top_p=conf.top_p,
-        temperature=temperature_list[i], keynum=keynum_list[i],id = i,log_path=log_path,system_prompt=conf.system_prompt), log_path=log_path) for i in range(len(model_list))]
+        temperature=temperature_list[i], keynum=keynum_list[i],id = i,log_path=log_path,system_prompt=conf.system_prompt), log_path=log_path,api_call_timeout=conf.api_call_timeout,api_call_retries=conf.api_call_retries) for i in range(len(model_list))]
 
     specification = spec_file.read()
     function_to_evolve, function_to_run = core._extract_function_names(specification)
@@ -191,7 +192,7 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
 
     portable_config = async_agents.PortableSystemConfig(log_path=log_path, sandbox_class=sandbox_class, parsed_inputs=parsed_inputs,
                                                     template=template, function_to_evolve=function_to_evolve, function_to_run=function_to_run, 
-                                                    lm=lm,model_identifier=model_identifier,problem_name=problem_name,timestamp=timestamp,name_for_saving=name_for_saving,problem_identifier=problem_identifier)
+                                                    lm=lm,model_identifier=model_identifier,problem_name=problem_name,timestamp=timestamp,name_for_saving=name_for_saving,problem_identifier=problem_identifier,tag=tag)
 
     async def initiate_search():
         async_database = async_agents.AsyncProgramsDatabase(database)

@@ -31,19 +31,22 @@ import os
 class LLM:
   """Language model that predicts continuation of provided source code."""
 
-  def __init__(self, samples_per_prompt: int, model, log_path=None) -> None:
+  def __init__(self, samples_per_prompt: int, model, log_path=None,api_call_timeout=30,api_call_retries=10) -> None:
     self._samples_per_prompt = samples_per_prompt
     self.model = model
     self.prompt_count = 0
     self.log_path = log_path
+    self.api_call_timeout = api_call_timeout
+    self.api_call_retries = api_call_retries
 
   async def _draw_sample(self, prompt: str, label: int) -> str:
     """Returns a predicted continuation of `prompt`."""
     start = time.time()
-    response, usage_stats = await self.model.prompt(prompt)
+    response, usage_stats = await self.model.prompt(prompt,base_timeout=self.api_call_timeout,max_retries=self.api_call_retries)
     end = time.time()
     usage_stats.prompt_count = self.prompt_count
     usage_stats.sampler_id = label
+    usage_stats.time_to_response = end-start
     if label is not None:
         #self._log(usage_stats, self.prompt_count, label)
         logging.debug("sample:%s:%d:%d:%d:%d:%.3f:%.3f:%.3f:%.3f"%(self.model.model,label,self.prompt_count,len(prompt),len(response),start,end,end-start,usage_stats.total_tokens))

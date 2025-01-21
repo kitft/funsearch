@@ -378,6 +378,7 @@ class Evaluator:
         f.write(f"Completion tokens: {usage_stats.tokens_completion}\n")
         f.write(f"generation_time: {usage_stats.generation_time}\n")
         f.write(f"scores_per_test: {usage_stats.scores_per_test}\n")
+        f.write(f"time_to_response: {usage_stats.time_to_response}\n")
         if usage_stats.std_err is not None:
           f.write(f"std_err: {usage_stats.std_err}\n")
     self.usage_logger.log_usage(usage_stats)

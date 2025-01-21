@@ -28,6 +28,7 @@ class UsageStats:
     sampler_id: Optional[int] = None
     scores_per_test: Optional[list] = None
     std_err: Optional[str] = None
+    time_to_response: Optional[float] = None
 
     def to_dict(self):
         return {k: v for k, v in self.__dict__.items() if v is not None}
