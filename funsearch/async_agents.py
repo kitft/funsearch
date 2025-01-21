@@ -264,7 +264,7 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
     else:
         logging.info(f"Logging to wandb to entity: {entity}")
     
-    logging.info(f"Initialising wandb with name: {name_for_saving_to_wandb}")
+    logging.info(f"Initialising wandb with name: {name_for_saving_to_wandb}, tagged as: {portable_config.tag}")
     wandb.init(
         entity=entity,
         project="funsearch",

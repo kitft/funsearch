@@ -44,7 +44,9 @@ class LLMModel:
         id=None,
         #config=None  # Add config parameter
         log_path=None,
-        system_prompt="Improve the incomplete last function in the list."## See config.py for the default system prompt
+        system_prompt="Improve the incomplete last function in the list.",## See config.py for the default system prompt
+        api_call_timeout=120,
+        api_call_retries=10
     ):
         self.id = str(shortuuid.uuid()) if id is None else str(id)
         

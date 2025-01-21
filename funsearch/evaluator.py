@@ -21,6 +21,7 @@ from collections.abc import Sequence
 import copy
 from typing import Any, Tuple
 import logging
+import time
 
 from funsearch import code_manipulation
 from funsearch import programs_database
@@ -334,7 +335,7 @@ class Evaluator:
         pass
       elif not runs_ok:
         usage_stats.std_err = test_output
-
+    usage_stats.time_of_eval = time.time()
     if scores_per_test:
       #print("Putting in queue inside evaluator")
       #self._database.register_program(new_function, island_id, scores_per_test)
@@ -378,7 +379,8 @@ class Evaluator:
         f.write(f"Completion tokens: {usage_stats.tokens_completion}\n")
         f.write(f"generation_time: {usage_stats.generation_time}\n")
         f.write(f"scores_per_test: {usage_stats.scores_per_test}\n")
-        f.write(f"time_to_response: {usage_stats.time_to_response}\n")
+        f.write(f"Recieved response: {time.strftime('%H:%M:%S', time.localtime(usage_stats.time_of_response))} after {(usage_stats.time_to_response):.3f} seconds\n")
+        f.write(f"time_of_eval: {time.strftime('%H:%M:%S', time.localtime(usage_stats.time_of_eval))}, {usage_stats.time_of_eval-usage_stats.time_of_response:.3f} seconds after time_of_response")
         if usage_stats.std_err is not None:
           f.write(f"std_err: {usage_stats.std_err}\n")
     self.usage_logger.log_usage(usage_stats)

@@ -47,6 +47,7 @@ class LLM:
     usage_stats.prompt_count = self.prompt_count
     usage_stats.sampler_id = label
     usage_stats.time_to_response = end-start
+    usage_stats.time_of_response = end
     if label is not None:
         #self._log(usage_stats, self.prompt_count, label)
         logging.debug("sample:%s:%d:%d:%d:%d:%.3f:%.3f:%.3f:%.3f"%(self.model.model,label,self.prompt_count,len(prompt),len(response),start,end,end-start,usage_stats.total_tokens))
