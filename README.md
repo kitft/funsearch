@@ -313,6 +313,7 @@ PLEASE ENSURE YOU HAVE UPDATED TO THE LATEST VERSION OF THIS REPO
 
 If you are getting OPENAI Async doesn't exist errors, run `pip install openai>=1.2` in your Docker environment. This should happen on Dockerfile creation, but could be a problem if you have some legacy docker/pdm files.
 
+Logging and debugging: can be set by running `export LOGGING_LEVEL=DEBUG` in the terminal before running funsearch.
 
 # Adding additional programs:
 To add additional programs, add .py files to the examples/ directory. These should follow the same structure as the other examples - a priority function with an @funsearch.evolve decorator, and an evaluation function which returns a score decorated with @funsearch.run. See `examples/cap_set_spec.py` for a simple example, and see `examples/Example_Implementation_SPEC.py` for template which you can fill in. I have also been writing playground `*.ipynb` files in the `examples/playgrounds/` directory, where new environments can be developed and tested.

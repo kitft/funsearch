@@ -364,8 +364,13 @@ class Island:
     # programs into the prompt.
     functions_per_prompt = min(len(self._clusters), self._functions_per_prompt)
 
-    idx = np.random.choice(
-        len(signatures), size=functions_per_prompt, p=probabilities,replace=False) #sampling without replacement
+    try:
+        idx = np.random.choice(
+            len(signatures), size=functions_per_prompt, p=probabilities, replace=False)
+    except ValueError as e:
+        logging.warning(f"Sampling without replacement failed: {e}. Falling back to with replacement.")
+        idx = np.random.choice(
+            len(signatures), size=functions_per_prompt, p=probabilities, replace=True)
     chosen_signatures = [signatures[i] for i in idx]
     implementations = []
     scores = []

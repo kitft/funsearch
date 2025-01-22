@@ -272,7 +272,7 @@ class LLMModel:
             except Exception as e:
                 end = time.time()
                 if '429' in str(e):#if it's a rate limit error, not a big issue
-                    logging.debug(f"prompt:error:exception_ratelimit:{str(e)}:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
+                    logging.info(f"prompt:error:exception_ratelimit:{str(e)}:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
                 else:
                     logging.warning(f"prompt:error:exception_other:{str(e)}:{self.model}:{self.id}:{self.counter}:{attempt}:{end-start:.3f}")
                 if attempt < max_retries - 1:

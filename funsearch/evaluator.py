@@ -380,7 +380,10 @@ class Evaluator:
         f.write(f"generation_time: {usage_stats.generation_time}\n")
         f.write(f"scores_per_test: {usage_stats.scores_per_test}\n")
         f.write(f"Recieved response: {time.strftime('%H:%M:%S', time.localtime(usage_stats.time_of_response))} after {(usage_stats.time_to_response):.3f} seconds\n")
-        f.write(f"time_of_eval: {time.strftime('%H:%M:%S', time.localtime(usage_stats.time_of_eval))}, {usage_stats.time_of_eval-usage_stats.time_of_response:.3f} seconds after time_of_response")
+        if usage_stats.time_of_eval is not None:
+            f.write(f"time_of_eval: {time.strftime('%H:%M:%S', time.localtime(usage_stats.time_of_eval))}, {usage_stats.time_of_eval-usage_stats.time_of_response:.3f} seconds after time_of_response")
+        else:
+            f.write("time_of_eval: None")
         if usage_stats.std_err is not None:
           f.write(f"std_err: {usage_stats.std_err}\n")
     self.usage_logger.log_usage(usage_stats)
