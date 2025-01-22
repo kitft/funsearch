@@ -367,8 +367,9 @@ class Island:
     try:
         idx = np.random.choice(
             len(signatures), size=functions_per_prompt, p=probabilities, replace=False)
+        #print("Sampling without replacement succeeded. probabilities,cluster_scores: ", probabilities,cluster_scores)
     except ValueError as e:
-        logging.warning(f"Sampling without replacement failed: {e}. Falling back to with replacement.")
+        #logging.warning(f"Sampling without replacement failed: {e}. Falling back to with replacement. probabilities: {probabilities}, cluster_scores: {cluster_scores}")
         idx = np.random.choice(
             len(signatures), size=functions_per_prompt, p=probabilities, replace=True)
     chosen_signatures = [signatures[i] for i in idx]
