@@ -365,11 +365,17 @@ class Island:
     functions_per_prompt = min(len(self._clusters), self._functions_per_prompt)
 
     try:
+        # may as well replace if the probability is close to one
+        if probabilities.max() >=0.9999:
+          replace = True
+        else:
+          replace = False
         idx = np.random.choice(
-            len(signatures), size=functions_per_prompt, p=probabilities, replace=False)
+            len(signatures), size=functions_per_prompt, p=probabilities, replace=replace)
         #print("Sampling without replacement succeeded. probabilities,cluster_scores: ", probabilities,cluster_scores)
     except ValueError as e:
         #logging.warning(f"Sampling without replacement failed: {e}. Falling back to with replacement. probabilities: {probabilities}, cluster_scores: {cluster_scores}")
+        #Fall back to with replacement
         idx = np.random.choice(
             len(signatures), size=functions_per_prompt, p=probabilities, replace=True)
     chosen_signatures = [signatures[i] for i in idx]
