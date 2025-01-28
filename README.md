@@ -24,7 +24,7 @@ This version adds parallel processing, updated tooling, and many more features t
 - Makes asynchronous API calls to sampler/evaluator/database agents
 
 ### Safety Features
-- Sandboxed code execution (container or process-based), code checked before runtime for safety. *in progress*
+- Sandboxed code execution (container or process-based), code checked before runtime for safety. NB - not fully 'safe' when multithreaded.
 - Model validation before search starts/graceful handling of API failures
 
 For implementation details and example problems, see the examples directory, particularly the section on *Adding additional programs*.
@@ -176,7 +176,7 @@ Here are the available run parameters:
 
 - `spec_file`: A file containing the specification for the problem to be solved. This includes the base prompt for the LLM and the evaluation metric.
 - `inputs`: The input data for the problem. This can be a filename ending in .json or .pickle, or comma-separated values.
-- `--model`: The name of the language model (or models) to use. Default is "codestral-latest", which uses the Mistral api. Format: `model1*count1*key1,model2*count2*key2`,...etc
+- `--model`: The name of the language model (or models) to use. Default is "codestral-latest", which uses the Mistral api. Format: model1*count1*key1,model2*count2*key2`,...etc
 - `--sandbox`: The type of sandbox to use for code execution. Default for multithreaded is "ExternalProcessSandbox".
 - `--output_path`: The directory where logs and data will be stored. Default is "./data/".
 - `--load_backup`: Path to a backup file of a previous program database to continue from a previous run: e.g. "./data/backups/program_db_priority_identifier_0.pickle"
@@ -218,7 +218,7 @@ INFO:absl:Saving backup to data/backups/program_db_priority_1704956206_0.pickle.
 
 You may also see `INFO:httpx:HTTP Request: POST https://api.mistral.ai/v1/chat/completions "HTTP/1.1 200 OK"` for each successful API call.
 
-Note that in the last command, we use the ExternalProcessSandbox. This is not fully 'safe', but does make it a bit less likely that invalid code from LLM could break things. However, before code is executed, it is check for safety by ensuring that the code does not contain any forbidden functions, and only imports allowlisted libraries. These can be configured in `funsearch/evaluator.py`. There is also ContainerSandbox, which is more secure but not multithreaded.
+Note that in the last command, we use the ExternalProcessSandbox. This is not fully 'safe', but does make it a bit less likely that invalid code from LLM could break things. However, before code is executed, it is checked for safety by ensuring that the code does not contain any forbidden functions, and only imports allowlisted libraries. There are many ways around the security implemented here, but it is judged to be sufficient for our purposes. These can be configured in `funsearch/evaluator.py`. There is also ContainerSandbox, which is more secure but not multithreaded. 
 
 Alternatively, you can run the main Python process on a host computer outside of any container and let
 the process build and run separate sandbox containers (still requires Docker(/Podman)).
