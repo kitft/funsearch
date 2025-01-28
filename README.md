@@ -74,8 +74,8 @@ For implementation details and example problems, see the examples directory, par
   - 'mistralai/mixtral-8x7b'
 - You can find the full list of available models at https://openrouter.ai/docs
 - Multiple models can be specified using comma separation with optional counts and key numbers:
-  - 'model1*count1*key1,model2*count2*key2'
-  - Example: 'codestral-latest*10*0,mistralai/codestral_mamba*5*1' will use 10 codestrals from mistral, and 5 mistral-tinys from openrouter.
+  - `model1*count1*key1,model2*count2*key2`
+  - Example: `codestral-latest*10*0,mistralai/codestral_mamba*5*1` will use 10 codestrals from mistral, and 5 mistral-tinys from openrouter.
 - Note the key numbers are used to differentiate between different API keys for the same model. These can be passed as separate environment variables with integers on the end. The separate ones will only be used if the key number is greater than 0.
 - You can also specify a model from OpenAI or Anthropic, etc. If this doesn't work, have a look at models.py
 - Setting model temperatures: pass a list of temperatures, one for each model. Format: "temperature1,temperature2,..."
@@ -176,7 +176,7 @@ Here are the available run parameters:
 
 - `spec_file`: A file containing the specification for the problem to be solved. This includes the base prompt for the LLM and the evaluation metric.
 - `inputs`: The input data for the problem. This can be a filename ending in .json or .pickle, or comma-separated values.
-- `--model`: The name of the language model (or models) to use. Default is "codestral-latest", which uses the Mistral api. Format: "model1*count1*key1,model2*count2*key2",...etc
+- `--model`: The name of the language model (or models) to use. Default is "codestral-latest", which uses the Mistral api. Format: `model1*count1*key1,model2*count2*key2`,...etc
 - `--sandbox`: The type of sandbox to use for code execution. Default for multithreaded is "ExternalProcessSandbox".
 - `--output_path`: The directory where logs and data will be stored. Default is "./data/".
 - `--load_backup`: Path to a backup file of a previous program database to continue from a previous run: e.g. "./data/backups/program_db_priority_identifier_0.pickle"
