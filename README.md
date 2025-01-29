@@ -3,7 +3,7 @@
 
 A high-performance implementation of program search using LLMs, built for discovering mathematical algorithms and solving optimization problems. We essentially run a genetic programming algorithm with LLMs as the mutation/breeding operator.
 
-This version adds parallel processing, updated tooling, and many more features to the original DeepMind implementation.
+This funsearch repo adds parallel processing, updated tooling, and many more features compared to the original *funsearch*. It should be relatively user-friendly.
 
 ## Features
 
