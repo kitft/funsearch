@@ -34,7 +34,7 @@ class ProgramsDatabaseConfig:
   functions_per_prompt: int = 2
   num_islands: int = 10  # Default value, can be overridden during initialization
   reset_period: int =  10 * 60 # Default value, can be overridden during initialization
-  cluster_sampling_temperature_init: float = 0.1#0.1
+  cluster_sampling_temperature_init: float = 0.1# - note that scores are normalised to be between 0 and 1, where 0 is the lowest score and 1 is the highest score on the island.
   cluster_sampling_temperature_period: int = 30_000
   length_sample_temperature: float = 1.0
   backup_period: int = 300
