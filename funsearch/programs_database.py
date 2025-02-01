@@ -351,6 +351,13 @@ class Island:
       raise Exception("No clusters found in island")
     cluster_scores = np.array(
         [self._clusters[signature].score for signature in signatures])
+    # normalise scores to be between 0 and 1
+    score_range = max(cluster_scores) - min(cluster_scores)
+    if score_range == 0:
+        # If all scores are equal, use uniform probabilities
+        cluster_scores = np.ones_like(cluster_scores)
+    else:
+        cluster_scores = (cluster_scores - min(cluster_scores)) / score_range
 
     #print("Island: Cluster scores: ", cluster_scores)
 
