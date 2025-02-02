@@ -430,15 +430,14 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
             p.kill()
         logging.info("All evaluator processes have terminated; waiting %d seconds for result queue to drain (length: %d)", database_shutdown_timeout, result_queue.qsize())
         result_queue.put(None)
-            
         try:
-            await asyncio.wait_for(db_worker, timeout=database_shutdown_timeout)
-            logging.info("Database worker finished")
-        except asyncio.TimeoutError:
-            logging.warning("Database worker timed out during shutdown, final queue length: %d", result_queue.qsize())
+            async with asyncio.timeout(database_shutdown_timeout):
+                await db_worker
+                logging.info("Database worker finished")
+        except (asyncio.TimeoutError, asyncio.CancelledError):
+            logging.warning("Database worker timed out or cancelled during shutdown")
             db_worker.cancel()
-        db_worker.cancel()
-
+            
         logging.info(f"Total programs processed: {database.orig_database._program_counter}") ## non-mutable type, refer to original database
         logging.info(f"Best scores per island: {database._best_score_per_island}")
 
@@ -450,6 +449,16 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
         except Exception as e:
             logging.warning(f"Error while closing wandb: {e}")
 
+        try:
+            eval_queue.close()
+            eval_queue.join_thread()
+            result_queue.close()
+            result_queue.join_thread()
+        except Exception as e:
+            logging.warning(f"Error during queue cleanup: {e}")
+            # Force cleanup if needed
+            eval_queue._close()
+            result_queue._close()
         logging.info("Shutdown complete.")
                 # Add additional cleanup for wandb
 
