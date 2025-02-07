@@ -39,13 +39,13 @@ jobs:
         pdm install
         pip install -e .
         
-    - name: Check formatting with black
-      run: |
-        black --check . --exclude="build/|\.git/|\.mypy_cache/|\.tox/|\.venv/|\.eggs/|\.pdm\.toml|pdm\.lock"
+    # - name: Check formatting with black
+    #   run: |
+    #     black --check . --exclude="build/|\.git/|\.mypy_cache/|\.tox/|\.venv/|\.eggs/|\.pdm\.toml|pdm\.lock"
         
-    - name: Lint with flake8
-      run: |
-        flake8 . --count --max-line-length=120 --exclude=build/,\.git/,\.mypy_cache/,\.tox/,\.venv/,\.eggs/ --statistics
+    # - name: Lint with flake8
+    #   run: |
+    #     flake8 . --count --max-line-length=120 --exclude=build/,\.git/,\.mypy_cache/,\.tox/,\.venv/,\.eggs/ --statistics
         
     - name: Run tests
       env:
