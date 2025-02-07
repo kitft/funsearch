@@ -1,30 +1,24 @@
 FROM docker.io/python:3.11.6
 
-
 WORKDIR /workspace
 
-# Install PDM and other essential tools
-RUN pip install pdm
+# Copy build and dependency files first for better layer caching
+COPY pyproject.toml README.md ./
+COPY requirements*.txt ./
 
-# Copy dependency files
-COPY pyproject.toml README.md pdm.lock ./
+# Install dependencies using either uv or pip based on build arg
+# Build with: docker build --build-arg USE_UV=true -t funsearch .
+ARG USE_UV=false
+RUN if [ "$USE_UV" = "true" ]; then \
+        pip install --upgrade pip && \
+        pip install uv && \
+        uv pip install --system -r requirements.txt; \
+    else \
+        pip install --upgrade pip && \
+        pip install -r requirements.txt; \
+    fi
 
-# Install dependencies
-ENV PATH="/workspace/.venv/bin:$PATH"
-RUN pdm install --no-self
-RUN pip install mistralai wandb
-RUN pip install torch --extra-index-url https://download.pytorch.org/whl/cpu
-RUN pip install matplotlib pandas
-RUN pip install anthropic google-generativeai
-RUN pip install openai>=1.2 
-RUN pip install click
-RUN pip install cloudpickle
-RUN pip install scipy
-RUN pip install absl-py
-RUN pip install shortuuid
-RUN pip install aiohttp
-
-# Create necessary subfolders in data directory if they don't exist
+# Create necessary subfolders in data directory  
 RUN mkdir -p ./data && \
     cd ./data && \
     mkdir -p scores graphs backups && \
@@ -35,19 +29,11 @@ COPY examples ./examples
 COPY funsearch ./funsearch
 
 # Install the application
-RUN pip install --no-deps . && rm -r ./funsearch ./build
-
-
-# Uncomment if needed - will instead be installed in the container when plotting commands are run
-#RUN pip install pandas matplotlib
-#RUN pip install llm-mistral
-
-# Set Mistral API key
-#CMD echo '{"mistral": "'$MISTRAL_API_KEY'"}' > $(llm keys path); /bin/bash
-
-
-#EXPOSE 6006
+RUN if [ "$USE_UV" = "true" ]; then \
+        uv pip install --system --no-deps .; \
+    else \
+        pip install --no-deps .; \
+    fi && \
+    rm -r ./funsearch ./build
 
 CMD ["bash"]
-
-

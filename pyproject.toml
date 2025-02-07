@@ -5,10 +5,14 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools]
 packages = ["funsearch", "funsearch.container", "funsearch.utilities"]
 
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
 [project]
 name = "funsearch"
 dynamic = [
   "version",
+  "dependencies"
 ]
 description = "FunSearch algorithm: Mathematical discoveries from program search with large language models"
 readme = "README.md"
@@ -19,14 +23,6 @@ classifiers = [
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
   "Topic :: Scientific/Engineering :: Artificial Intelligence",
-]
-dependencies = [
-  "absl-py==2.0.0",
-  "click==8.1",
-  "cloudpickle==3.0.0",
-  "python-dotenv==1.0.0",
-  "scipy==1.11.4",
-  "numpy==1.26.2",
 ]
 
 [project.scripts]
