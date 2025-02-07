@@ -404,7 +404,7 @@ def plotscores(name, output_path = "./data"):
 
     # Read the CSV file
     timestamp = str(name)
-    csv_filename = f"./data/scores/scores_log_{name}.csv"
+    csv_filename = os.path.join(output_path, "scores", f"scores_log_{name}.csv")
     df = pd.read_csv(csv_filename)
 
     # Convert Time to seconds (assuming it's already in seconds)
