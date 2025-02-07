@@ -127,7 +127,7 @@ class LLMModel:
 
     async def complete(self, prompt_text):
         usage_stats = None
-        if self.provider == "mock":
+        if self.provider == "mock_model":
             chat_response = '''def priority_v0(n):
     return n + 1'''
             usage_stats = logging_stats.UsageStats(

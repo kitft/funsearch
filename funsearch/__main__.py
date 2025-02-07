@@ -298,7 +298,7 @@ def mock_test(duration, samplers, evaluators, output_path):
         runAsync.callback(
             spec_file=open(spec_path, 'r'),
             inputs="8",  # Standard test input for cap_set_spec
-            model="mock",
+            model="mock_model",
             output_path=output_path,
             load_backup=None,
             iterations=-1,
