@@ -63,7 +63,7 @@ class LLMModel:
         if keynum > 0:
             keyname += str(keynum)
         self.key = os.environ.get(keyname)
-        if not self.key and self.provider != "mock":
+        if not self.key and self.provider != "mock_model":
             raise ValueError(f"{keyname} environment variable is not set")
         if self.provider == "mistral":
             self.client = Mistral(api_key=self.key)
