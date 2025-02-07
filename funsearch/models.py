@@ -17,8 +17,8 @@ from funsearch import logging_stats
 
 
 def get_model_provider(model_name):
-    if model_name.lower() == "mock":
-        return "mock"
+    if model_name.lower() == "mock_model":
+        return "mock_model"
     elif "/" in model_name.lower():
         return "openrouter"
     elif "codestral" in model_name.lower() or "mistral" in model_name.lower():

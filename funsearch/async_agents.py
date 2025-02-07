@@ -200,7 +200,7 @@ async def validate_all_models(lm_list):
             valid_models.append(lm)
             continue
             
-        print(f"Testing {model_name}...")  # Add progress indicator
+        print(f"Testing model: {model_name}...")  # Add progress indicator
         if await validate_model(lm):
             valid_models.append(lm)
             validated_model_names.add(model_name)
