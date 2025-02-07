@@ -264,12 +264,16 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
     else:
         logging.info(f"Logging to wandb to entity: {entity}")
     
-    logging.info(f"Initialising wandb with name: {name_for_saving_to_wandb}, tagged as: {portable_config.tag}")
+    # Add problem name and model types to tags
+    tags = [portable_config.tag, portable_config.problem_name]
+    tags.extend(list(set([lm.model.model for lm in portable_config.lm])))
+    
+    logging.info(f"Initialising wandb with name: {name_for_saving_to_wandb}, tagged as: {tags}")
     wandb.init(
         entity=entity,
-        project="funsearch",
+        project="funsearch", 
         name=name_for_saving_to_wandb,
-        tags=[portable_config.tag],
+        tags=tags,
         config={
             "model_names": [lm.model.model for lm in portable_config.lm],
             "num_cores": num_cores,
