@@ -172,7 +172,7 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
             database.load(load_backup)
         else:
             # If it's a string/number or partial path, search in backups folder
-            backup_dir = "./data/backups"
+            backup_dir = os.path.join(output_path, "backups")
             matching_files = []
             for root, dirs, files in os.walk(backup_dir):
                 for file in files:
@@ -219,19 +219,42 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
             # No running event loop
             pass
         # make plots
-        plotscores(problem_identifier)
+        plotscores(problem_identifier, output_path)
         #raise Exception("STOP AND I MEAN STOP")
-
 @main.command()
-@click.argument("db_file", type=click.File("rb"))
+@click.argument("db_file")
 def ls(db_file):
-    """List programs from a stored database (usually in data/backups/)"""
+    """List programs from a stored database.
+
+    DB_FILE: Path to database file or partial name to search in data/backups/
+    
+    Lists the best program from each island.
+    """
     conf = config.Config(num_evaluators=1)
 
-    # Initialize the programs database.
+    # Initialize the programs database
     database = programs_database.ProgramsDatabase(
         conf.programs_database, None, "", identifier="")
-    database.load(db_file)
+
+    # If it's a file that exists, load it directly
+    if os.path.exists(db_file):
+        database.load(db_file)
+    else:
+        # Search in backups folder for partial matches
+        backup_dir = os.path.join("./data", "backups")
+        matching_files = []
+        for root, dirs, files in os.walk(backup_dir):
+            for file in files:
+                if db_file in file:
+                    matching_files.append(os.path.join(root, file))
+        
+        if matching_files:
+            # Get most recently modified matching file
+            latest_file = max(matching_files, key=os.path.getmtime)
+            logging.info(f"Found backup file: {latest_file}")
+            database.load(latest_file)
+        else:
+            raise FileNotFoundError(f"Could not find backup file matching '{db_file}' in {backup_dir}")
 
     best_programs = database.get_best_programs_per_island()
     print(f"Found {len(best_programs)} programs")
@@ -256,6 +279,43 @@ def oeis(a_number: str, save_path: Optional[str], max_terms: Optional[int]):
     except Exception as e:
         print(f"Error: {str(e)}")
         raise click.Abort()
+
+@main.command()
+@click.option('--duration', default=5, type=click.INT, help='Duration in seconds')
+@click.option('--samplers', default=1, type=click.INT, help='Number of samplers')
+@click.option('--evaluators', default=1, type=click.INT, help='Number of evaluators')
+@click.option('--output_path', default="./data/tests/", type=click.Path(file_okay=False), help='Path for logs and data')
+def mock_test(duration, samplers, evaluators, output_path):
+    """Run a test with mock model for validation using cap_set_spec."""
+    os.environ["WANDB_MODE"] = "disabled"
+    
+    spec_path = "examples/cap_set_spec.py"
+    if not os.path.exists(spec_path):
+        raise click.ClickException("cap_set_spec.py not found in examples directory")
+    
+    try:
+        # Call runAsync's implementation directly
+        runAsync.callback(
+            spec_file=open(spec_path, 'r'),
+            inputs="8",  # Standard test input for cap_set_spec
+            model="mock",
+            output_path=output_path,
+            load_backup=None,
+            iterations=-1,
+            sandbox="ExternalProcessSandbox",
+            samplers=samplers,
+            evaluators=evaluators,
+            islands=1,
+            reset=60,
+            duration=duration,
+            temperature="0.8",
+            team=None,
+            envfile=None,
+            name=None,
+            tag="test"
+        )
+    except Exception as e:
+        raise click.ClickException(str(e))
 
 if __name__ == "__main__":
     main()
@@ -333,7 +393,7 @@ if __name__ == "__main__":
 #     subprocess.check_call(["pip", "install", "pandas", "matplotlib"])
 #     generate_score_graph(timestamp)
 
-def plotscores(name):
+def plotscores(name, output_path = "./data"):
     """Generate a graph of best overall score and best scores per island over time."""
     #install dependencies
     # import subprocess
@@ -378,8 +438,8 @@ def plotscores(name):
     # Save the best scores graph
     
     import os
-    os.makedirs('./data/graphs', exist_ok=True)
-    plt.savefig(f'./data/graphs/best_scores_over_time_{timestamp}.png', bbox_inches='tight')
+    os.makedirs(os.path.join(output_path, 'graphs'), exist_ok=True)
+    plt.savefig(os.path.join(output_path, 'graphs', f'best_scores_over_time_{timestamp}.png'), bbox_inches='tight')
     plt.close()
 
     print(f"Best scores graph saved as best_scores_over_time_{timestamp}.png")
@@ -409,7 +469,7 @@ def plotscores(name):
     plt.tight_layout()
 
     # Save the average scores graph
-    plt.savefig(f'./data/graphs/average_scores_over_time_{timestamp}.png', bbox_inches='tight')
+    plt.savefig(os.path.join(output_path, 'graphs', f'average_scores_over_time_{timestamp}.png'), bbox_inches='tight')
     plt.close()
 
     print(f"Average scores graph saved as average_scores_over_time_{timestamp}.png")

@@ -250,19 +250,22 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
     db_worker = asyncio.create_task(database_worker(result_queue, database))
 
     # Check if WANDB_API_KEY is set in environment variables
-    wandb_api_key = os.environ.get('WANDB_API_KEY')
-    if wandb_api_key:
-        logging.info("Logging into wandb with env API key")
-        wandb.login(key=wandb_api_key)
-    # Get wandb entity from user
-    if team==None:
-        entity = select_wandb_entity(team)
+    if os.environ.get('WANDB_MODE') not in ['disabled', 'offline']:
+        wandb_api_key = os.environ.get('WANDB_API_KEY')
+        if wandb_api_key:
+            logging.info("Logging into wandb with env API key")
+            wandb.login(key=wandb_api_key)
+        # Get wandb entity from user
+        if team==None:
+            entity = select_wandb_entity(team)
+        else:
+            entity = team
+        if entity==None:
+            logging.info("Logging to wandb to default entity (typically personal account)")
+        else:
+            logging.info(f"Logging to wandb to entity: {entity}")
     else:
-        entity = team
-    if entity==None:
-        logging.info("Logging to wandb to default entity (typically personal account)")
-    else:
-        logging.info(f"Logging to wandb to entity: {entity}")
+        entity = None
     
     # Add problem name and model types to tags
     tags = [portable_config.tag, portable_config.problem_name]
@@ -281,8 +284,8 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
             "run_duration": config.run_duration,
             "num_islands": len(database._islands),
             "problem_name": portable_config.problem_name,
-            "temperatures": [lm.model.temperature for lm in portable_config.lm]
-
+            "temperatures": [lm.model.temperature for lm in portable_config.lm],
+            "cluster_sampling_temperature_init": config.programs_database.cluster_sampling_temperature_init
         }
     )
 

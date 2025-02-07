@@ -17,7 +17,9 @@ from funsearch import logging_stats
 
 
 def get_model_provider(model_name):
-    if "/" in model_name.lower():
+    if model_name.lower() == "mock":
+        return "mock"
+    elif "/" in model_name.lower():
         return "openrouter"
     elif "codestral" in model_name.lower() or "mistral" in model_name.lower():
         return "mistral"
@@ -61,7 +63,7 @@ class LLMModel:
         if keynum > 0:
             keyname += str(keynum)
         self.key = os.environ.get(keyname)
-        if not self.key:
+        if not self.key and self.provider != "mock":
             raise ValueError(f"{keyname} environment variable is not set")
         if self.provider == "mistral":
             self.client = Mistral(api_key=self.key)
@@ -125,7 +127,22 @@ class LLMModel:
 
     async def complete(self, prompt_text):
         usage_stats = None
-        if self.provider == "mistral":
+        if self.provider == "mock":
+            chat_response = '''def priority_v0(n):
+    return n + 1'''
+            usage_stats = logging_stats.UsageStats(
+                id="mock-123",
+                model=self.model,
+                provider=self.provider,
+                total_tokens=15,
+                tokens_prompt=10,
+                tokens_completion=5,
+                instance_id=self.id,
+                prompt=prompt_text,
+                response=chat_response
+            )
+            return chat_response, usage_stats
+        elif self.provider == "mistral":
             response = await self.client.chat.complete_async(
                 model=self.model,
                 messages=[
