@@ -12,6 +12,9 @@ def test_mock_run():
     
     runner = CliRunner()
     with tempfile.TemporaryDirectory() as temp_dir:
+        # Create required directories
+        os.makedirs(os.path.join(temp_dir, "data/scores"), exist_ok=True)
+        
         result = runner.invoke(mock_test, [
             '--duration', '5',
             '--samplers', '1',
@@ -19,10 +22,13 @@ def test_mock_run():
             '--output_path', temp_dir
         ])
         
+        # Print output for debugging
+        print(f"Mock test output: {result.output}")
+        
         assert result.exit_code == 0, f"Mock test failed with error: {result.output}"
         
         # Check if score files were created
-        scores_dir = os.path.join(temp_dir, "cap_set_spec")  # Now using cap_set_spec
+        scores_dir = os.path.join(temp_dir, "cap_set_spec")
         assert os.path.exists(scores_dir), "Test directory should exist"
         
         # Should have at least one timestamp directory
@@ -33,4 +39,4 @@ def test_mock_run():
         data_scores = os.path.join(temp_dir, "data/scores")
         assert os.path.exists(data_scores), "Scores directory should exist"
         score_files = [f for f in os.listdir(data_scores) if f.endswith('.csv')]
-        assert len(score_files) > 0, "Should have created at least one score file" 
+        assert len(score_files) > 0, "Should have created at least one score file"
