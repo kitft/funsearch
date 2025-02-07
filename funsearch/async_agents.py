@@ -27,6 +27,7 @@ from funsearch import sandbox
 class PortableSystemConfig:
   """Portable configuration class"""
   log_path: str
+  output_path: str
   sandbox_class: type[sandbox.DummySandbox]
   parsed_inputs: list
   template: None
@@ -289,8 +290,8 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
         }
     )
 
-    os.makedirs(portable_config.log_path, exist_ok=True)
-    csv_filename = os.path.join(portable_config.log_path, "scores", f"scores_log_{problem_identifier}.csv")
+    os.makedirs(os.path.join(portable_config.output_path, "scores"), exist_ok=True)
+    csv_filename = os.path.join(portable_config.output_path, "scores", f"scores_log_{problem_identifier}.csv")
     with open(csv_filename, 'w', newline='') as csvfile:
         csv_writer = csv.writer(csvfile)
         csv_writer.writerow(['Time', 'Island', 'Best Score', 'Average Score'])

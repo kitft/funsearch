@@ -190,7 +190,7 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
     parsed_inputs = parse_input(inputs)
     sandbox_class = next(c for c in SANDBOX_TYPES if c.__name__ == sandbox)
 
-    portable_config = async_agents.PortableSystemConfig(log_path=log_path, sandbox_class=sandbox_class, parsed_inputs=parsed_inputs,
+    portable_config = async_agents.PortableSystemConfig(log_path=log_path, output_path=output_path,sandbox_class=sandbox_class, parsed_inputs=parsed_inputs,
                                                     template=template, function_to_evolve=function_to_evolve, function_to_run=function_to_run, 
                                                     lm=lm,model_identifier=model_identifier,problem_name=problem_name,timestamp=timestamp,name_for_saving=name_for_saving,problem_identifier=problem_identifier,tag=tag)
 
@@ -437,7 +437,6 @@ def plotscores(name, output_path = "./data"):
 
     # Save the best scores graph
     
-    import os
     os.makedirs(os.path.join(output_path, 'graphs'), exist_ok=True)
     plt.savefig(os.path.join(output_path, 'graphs', f'best_scores_over_time_{timestamp}.png'), bbox_inches='tight')
     plt.close()
