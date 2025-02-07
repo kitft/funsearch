@@ -13,7 +13,7 @@ def test_mock_run():
     runner = CliRunner()
     with tempfile.TemporaryDirectory() as temp_dir:
         # Create required directories
-        os.makedirs(os.path.join(temp_dir, "data/scores"), exist_ok=True)
+        os.makedirs(os.path.join(temp_dir, "scores"), exist_ok=True)
         
         result = runner.invoke(mock_test, [
             '--duration', '5',
@@ -36,7 +36,7 @@ def test_mock_run():
         assert len(timestamp_dirs) > 0, "Should have created a timestamp directory"
         
         # Check for scores file
-        data_scores = os.path.join(temp_dir, "data/scores")
+        data_scores = os.path.join(temp_dir, "scores")
         assert os.path.exists(data_scores), "Scores directory should exist"
         score_files = [f for f in os.listdir(data_scores) if f.endswith('.csv')]
         assert len(score_files) > 0, "Should have created at least one score file"
