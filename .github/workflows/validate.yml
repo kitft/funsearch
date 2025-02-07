@@ -1,0 +1,62 @@
+name: Project Validation
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11"]
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 1
+        
+    - name: Ensure examples directory exists
+      run: |
+        mkdir -p examples
+        if [ ! -f examples/cap_set_spec.py ]; then
+          echo "cap_set_spec.py not found, downloading from repository"
+          curl -o examples/cap_set_spec.py https://raw.githubusercontent.com/kitft/funsearch/main/examples/cap_set_spec.py || echo "Failed to download cap_set_spec.py"
+        fi
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install black flake8 pytest pytest-asyncio
+        pdm install
+        pip install -e .
+        
+    - name: Check formatting with black
+      run: |
+        black --check . --exclude="build/|\.git/|\.mypy_cache/|\.tox/|\.venv/|\.eggs/|\.pdm\.toml|pdm\.lock"
+        
+    - name: Lint with flake8
+      run: |
+        flake8 . --count --max-line-length=120 --exclude=build/,\.git/,\.mypy_cache/,\.tox/,\.venv/,\.eggs/ --statistics
+        
+    - name: Run tests
+      env:
+        WANDB_MODE: disabled
+        PYTHONPATH: ${{ github.workspace }}
+      run: |
+        python -m pytest tests/ -v
+        
+    - name: Verify imports
+      run: |
+        python -c "import funsearch; print('Package can be imported successfully')" || exit 1
+        
+    - name: Verify CLI
+      run: |
+        funsearch --help || exit 1 
