@@ -2,9 +2,9 @@ name: Project Validation
 
 on:
   push:
-    branches: [ main test-actions]
+    branches: [ main, test-actions]
   pull_request:
-    branches: [ main test-actions]
+    branches: [ main, test-actions]
 
 jobs:
   validate:
