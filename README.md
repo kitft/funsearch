@@ -37,7 +37,7 @@ For implementation details and example problems, see the examples directory, par
 
 ### Using Docker (Recommended)
 
-1. Install Docker. Make sure the docker service is running.
+1. Install Docker and python 3.10+. Make sure the docker service is running.
    
 2. Clone the repository and navigate to the project directory
 

@@ -16,7 +16,7 @@ class UsageStats:
     total_cost: Optional[float] = None
     generation_time: Optional[float] = None
     instance_id: Optional[str] = None
-    timestamp: str = datetime.datetime.now(datetime.UTC).isoformat()
+    timestamp: str = datetime.datetime.now().replace(tzinfo=datetime.timezone.utc).isoformat()
     island_id: Optional[str] = None
     island_version: Optional[str] = None
     version_generated: Optional[str] = None
@@ -47,7 +47,7 @@ class UsageLogger:
         self.log_dir = Path(log_dir)
         self.log_dir.mkdir(parents=True, exist_ok=True)
         self.id = id
-        self.current_date = datetime.datetime.now(datetime.UTC).date()
+        self.current_date = datetime.datetime.now(datetime.timezone.utc).date()
         self.buffer = []
         #self.model_name = model_name
         self.total_requests = 0
