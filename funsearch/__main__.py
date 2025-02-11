@@ -343,7 +343,9 @@ def mock_test(duration, samplers, evaluators, output_path):
             team=None,
             envfile=None,
             name=None,
-            tag="test"
+            tag="test",
+            token_limit=None,
+            relative_cost_of_input_tokens=1.0
         )
 
         # Run minimal test with just required params
@@ -360,7 +362,13 @@ def mock_test(duration, samplers, evaluators, output_path):
             islands=1,
             reset=2,
             duration=duration,
-            temperature="0.8"
+            temperature="0.8",
+            team=None,
+            envfile=None,
+            name=None,
+            tag=None,
+            token_limit=None,
+            relative_cost_of_input_tokens=1.0
         )
     except Exception as e:
         raise click.ClickException(str(e))
