@@ -76,7 +76,9 @@ def main(ctx):
 @click.option('--envfile', default=None, type= str, help='path to .env file')
 @click.option('--name', default=None, help='Unique ID for wandb. Default is timestamp')
 @click.option('--tag', default=None, type=str, help='Tag for wandb. Default is None')
-def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, sandbox, samplers, evaluators, islands, reset, duration, temperature, team, envfile, name, tag):
+@click.option('--token_limit', default=None, type=click.INT, help='Number of (equivalent) output tokens after which the search will be terminated. Default is None')
+@click.option('--relative_cost_of_input_tokens', default=1.0, type=click.FLOAT, help='Cost of input tokens divided by cost of output tokens (i.e. 0.5 means input tokens are half as expensive as output tokens). Default is 1.0')
+def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, sandbox, samplers, evaluators, islands, reset, duration, temperature, team, envfile, name, tag, token_limit, relative_cost_of_input_tokens):
     """Execute the function-search algorithm.
 
     SPEC_FILE: A Python module providing the basis of the LLM prompt and the evaluation metric.
@@ -150,7 +152,7 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
     logging.info(f"Sampling with {model_counts} copies of model(s): {model_list}")
     logging.info(f"Using LLM temperature(s): {temperature}")
 
-    conf = config.Config(sandbox=sandbox, num_samplers=samplers, num_evaluators=evaluators, num_islands=islands, reset_period=reset, run_duration=duration,llm_temperature=temperature_list)
+    conf = config.Config(sandbox=sandbox, num_samplers=samplers, num_evaluators=evaluators, num_islands=islands, reset_period=reset, run_duration=duration,llm_temperature=temperature_list,token_limit=token_limit,relative_cost_of_input_tokens=relative_cost_of_input_tokens)
     logging.info(f"run_duration = {conf.run_duration}, reset_period = {conf.reset_period}")
 
     temperature_list = sum([model_counts[i]*[float(temperature_list[i])] for i in range(len(model_list))],[])

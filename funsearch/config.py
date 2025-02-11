@@ -72,18 +72,19 @@ class Config:
         can execute in parallel as part of a distributed system.
     samples_per_prompt: How many independently sampled program continuations to
         obtain for each prompt.
-    num_islands: Number of islands to maintain as a diversity mechanism.
+    num_islands: Number of islands to maintain as a diversity mechanism. Must be set via constructor.
+    reset_period: How often (in seconds) the weakest islands should be reset. Must be set via constructor.
     llm_temperature: Temperature for the LLM.
   """
-  num_islands: int = 10
+  num_islands: int = 10  # Default value, must be set via constructor
   programs_database: ProgramsDatabaseConfig = dataclasses.field(
       default_factory=ProgramsDatabaseConfig)
   num_samplers: int = 15
   num_evaluators: int = 10
   samples_per_prompt: int = 4
-  num_batches=2
-  run_duration: int = 86400
-  reset_period: int = 3600
+  num_batches = 2
+  run_duration: int = 86400  # Default 24 hours
+  reset_period: int = 3600  # Default 1 hour
   top_p: float = 0.95
   llm_temperature: float = 1.0
   logging_info_interval: int = 10
@@ -91,12 +92,16 @@ class Config:
   api_call_timeout: int = 120
   api_call_max_retries: int = 10
   ratelimit_backoff: int = 30
+  token_limit: int = None  # Number of (equivalent) output tokens after which the search will be terminated
+  relative_cost_of_input_tokens: float = None  # Cost ratio of input/output tokens (e.g. 0.5 means input tokens cost half)
 
   def __init__(self, **kwargs):
+    # Set attributes from kwargs
     for key, value in kwargs.items():
       if hasattr(self, key):
         object.__setattr__(self, key, value)
-    object.__setattr__(self, 'programs_database', ProgramsDatabaseConfig(num_islands=self.num_islands,reset_period=self.reset_period))
+    # Initialize programs_database with num_islands and reset_period
+    object.__setattr__(self, 'programs_database', ProgramsDatabaseConfig(num_islands=self.num_islands, reset_period=self.reset_period))
 
 
 

@@ -394,28 +394,43 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
                             'time': current_time
                         })
 
-                    
+                
                 # total_prompt_tokens=
                 # Log overall metrics to wandb
+                total_tokens = sum(stats["total_tokens"] for stats in database.orig_database.database_worker_counter_dict.values())
+                total_prompt_tokens = sum(stats["tokens_prompt"] for stats in database.orig_database.database_worker_counter_dict.values())
+                total_completion_tokens = sum(stats["tokens_completion"] for stats in database.orig_database.database_worker_counter_dict.values())
+                output_token_equivalents = total_prompt_tokens * config.relative_cost_of_input_tokens + total_completion_tokens
+
                 wandb.log({
                     'Overall/Best Score': best_score_overall,
                     'Overall/Average Score': avg_score_overall,
                     'Queue Sizes/Eval Queue': eval_queue_size,
                     'Queue Sizes/Result Queue': result_queue_size,
-                    'Programs Processed': database.orig_database._program_counter,# non-mutable type, refer to original database
+                    'Programs Processed': database.orig_database._program_counter,
                     'API Responses': sum(sampler.api_responses for sampler in samplers),
+                    'Tokens/Prompt tokens': total_prompt_tokens,
+                    'Tokens/Response tokens': total_completion_tokens,
+                    'Tokens/Total': total_tokens,
+                    'Tokens/Output token equivalents': output_token_equivalents,
                     'time': current_time
                 })
 
+                # Check if token limit exceeded
+                if hasattr(config, 'token_limit') and config.token_limit and output_token_equivalents > config.token_limit:
+                    logging.warning(f"Output token equivalent limit ({config.token_limit:,}) exceeded ({output_token_equivalents:,} output token equivalents), which is {total_prompt_tokens:,} prompt tokens and {total_completion_tokens:,} response tokens, where output tokens are worth {config.relative_cost_of_input_tokens} input tokens each.")
+                    logging.warning("Initiating shutdown. Note this may take a few minutes to complete!")
+                    raise asyncio.CancelledError()
+
             await asyncio.sleep(logging_info_interval)
             if eval_queue.qsize() > 500:
-                logging.warning("Eval queue size exceeded 500. Initiating shutdown.")
+                logging.warning("Eval queue size exceeded 500. Initiating shutdown. Note this may take a few minutes to complete!")
                 break
             if result_queue.qsize() > 50:
-                logging.warning("Result queue size exceeded 50. Initiating shutdown.")
+                logging.warning("Result queue size exceeded 50. Initiating shutdown. Note this may take a few minutes to complete!")
                 break
     except asyncio.CancelledError:
-        logging.info("Cancellation requested. Shutting down gracefully.")
+        logging.info("Cancellation requested. Shutting down gracefully. Note this may take a few minutes to complete!")
     finally:
         for task in sampler_tasks:
             task.cancel()
@@ -457,6 +472,7 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
             
         logging.info(f"Total programs processed: {database.orig_database._program_counter}") ## non-mutable type, refer to original database
         logging.info(f"Best scores per island: {database._best_score_per_island}")
+        logging.info(f'Shutting down wandb - note this may take a few minutes to complete!')
 
         print_usage_summary(database, run_start_time)
         try:
