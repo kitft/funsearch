@@ -6,6 +6,7 @@ import pickle
 import time
 import asyncio
 from typing import Union, Optional
+import multiprocessing
 
 import click
 #import llm
@@ -226,11 +227,29 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
             pass
         # make plots
         plotscores(problem_identifier, output_path)
-        # Ensure process termination
-        logging.info("Shutting down gracefully...")
-        time.sleep(3)  # Brief pause to allow final cleanup
-        import sys
-        sys.exit(0)  # Exit with error code 1 to indicate non-normal termination
+        # Try graceful shutdown first
+        # Handle event loop shutdown
+        try:
+            loop = asyncio.get_event_loop()
+            if loop.is_running():
+                logging.info("Attempting graceful event loop shutdown...")
+                for task in asyncio.all_tasks():
+                    task.cancel()
+        except RuntimeError:
+            pass  # No event loop running
+
+        # Handle multiprocessing shutdown
+        try:
+            if multiprocessing.active_children():
+                logging.info("Terminating child processes...")
+                for p in multiprocessing.active_children():
+                    p.terminate()
+        except Exception as e:
+            logging.error(f"Error terminating processes: {e}")
+
+        # As last resort, force exit
+        logging.info("Exiting...")
+        os._exit(0)
 @main.command()
 @click.argument("db_file")
 def ls(db_file):
