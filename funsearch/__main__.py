@@ -211,15 +211,25 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
             loop = asyncio.get_running_loop()
             for task in asyncio.all_tasks(loop=loop):
                 task.cancel()
-            # Wait for all tasks to be cancelled
-            loop.run_until_complete(
-                asyncio.gather(*asyncio.all_tasks(loop=loop), return_exceptions=True)
-            )
+            # Wait up to 30s for tasks to cancel gracefully
+            try:
+                loop.run_until_complete(
+                    asyncio.wait_for(
+                        asyncio.gather(*asyncio.all_tasks(loop=loop), return_exceptions=True),
+                        timeout=30
+                    )
+                )
+            except asyncio.TimeoutError:
+                logging.warning("Tasks did not cancel within 30s - forcing exit")
         except RuntimeError:
             # No running event loop
             pass
         # make plots
         plotscores(problem_identifier, output_path)
+        # Ensure process termination
+        time.sleep(60)  # Wait 60 seconds before killing
+        import signal
+        os.kill(os.getpid(), signal.SIGKILL)
         #raise Exception("STOP AND I MEAN STOP")
 @main.command()
 @click.argument("db_file")
@@ -274,8 +284,8 @@ def oeis(a_number: str, save_path: Optional[str], max_terms: Optional[int]):
     SAVE_PATH: Optional path to save the pickle file. Defaults to ./examples/oeis_data/<seqname>.pkl
     """
     try:
-        file_path, sequence = oeis_util.save_oeis_sequence(a_number, save_path, max_terms)
-        print(f"Successfully saved sequence to {file_path}: first few elements are {sequence[:10]}")
+        file_path, json_path, sequence = oeis_util.save_oeis_sequence(a_number, save_path, max_terms)
+        print(f"Successfully saved sequence to {file_path} (and also saved to {json_path}): first few elements are {sequence[:10]}")
     except Exception as e:
         print(f"Error: {str(e)}")
         raise click.Abort()

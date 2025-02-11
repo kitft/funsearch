@@ -46,17 +46,16 @@ def fetch_oeis_sequence(a_number: str, max_terms: Optional[int] = None) -> List[
         sequence = sequence[:max_terms]
     
     return sequence
-
 def save_oeis_sequence(a_number: str, save_path: Optional[str] = None, max_terms: Optional[int] = None) -> str:
-    """Fetch and save an OEIS sequence to a pickle file.
+    """Fetch and save an OEIS sequence to pickle and json files.
     
     Args:
         a_number: The A-number of the sequence (e.g. 'A001011')
-        save_path: Path to save the pickle file. If None, uses ./examples/oeis_data/<seqname>.pkl
+        save_path: Path to save the files. If None, uses ./examples/oeis_data/<seqname>.[pkl|json]
         max_terms: Maximum number of terms to save. If None, saves all terms.
     
     Returns:
-        Path where the sequence was saved
+        Tuple of (pickle_path, json_path, sequence)
     """
     # Get the sequence
     sequence = fetch_oeis_sequence(a_number, max_terms)
@@ -73,11 +72,16 @@ def save_oeis_sequence(a_number: str, save_path: Optional[str] = None, max_terms
     # Create directory if it doesn't exist
     Path(save_path).mkdir(parents=True, exist_ok=True)
     
-    # Create full file path
-    file_path = os.path.join(save_path, f"{a_number}.pkl")
+    # Create full file paths
+    pkl_path = os.path.join(save_path, f"{a_number}.pkl")
+    json_path = os.path.join(save_path, f"{a_number}.json")
     
-    # Save the sequence
-    with open(file_path, 'wb') as f:
+    # Save as pickle
+    with open(pkl_path, 'wb') as f:
         pickle.dump(sequence, f)
+        
+    # Save as JSON
+    with open(json_path, 'w') as f:
+        json.dump(sequence, f)
     
-    return file_path, sequence
+    return pkl_path, json_path, sequence

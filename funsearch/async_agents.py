@@ -270,6 +270,7 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
     
     # Add problem name and model types to tags
     tags = [portable_config.tag, portable_config.problem_name]
+    tags = [t for t in tags if t is not None]
     tags.extend(list(set([lm.model.model for lm in portable_config.lm])))
     
     logging.info(f"Initialising wandb with name: {name_for_saving_to_wandb}, tagged as: {tags}")
@@ -467,6 +468,7 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
             eval_queue._close()
             result_queue._close()
         logging.info("Shutdown complete.")
+        
                 # Add additional cleanup for wandb
 
     return database.get_best_programs_per_island()

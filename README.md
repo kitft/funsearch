@@ -275,7 +275,7 @@ The project includes functionality to fetch and save sequences from the Online E
 
 ### Using the OEIS Command
 
-You can fetch and save OEIS sequences using the CLI:
+You can fetch and save OEIS sequences using the CLI. This saves a `*.pkl` file and a `*.json` file in the `./examples/oeis_data/` directory.
 
 ```bash
 # Basic usage - saves to ./examples/oeis_data/A001011.pkl
@@ -301,7 +301,7 @@ def solve(n: int):
        sequence = pickle.load(f)
    # Use sequence as needed
 
-If you want each element of the sequence to have performance logged separately, use the pkl file as your input to the funsearch runasync command.
+If you want each element of the sequence to have performance logged separately, use the pkl file (or its equivalent json) as your input to the funsearch runasync command.
 
 ```
 
