@@ -450,26 +450,48 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
         logging.info(f"Best scores per island: {database._best_score_per_island}")
 
         print_usage_summary(database, run_start_time)
-        
         try:
             if wandb.run is not None:
                 wandb.finish()
         except Exception as e:
             logging.warning(f"Error while closing wandb: {e}")
-
         try:
+            # Set timeout for queue cleanup
+            timeout = 10  # 10 second timeout
+            start = time.time()
+            
+            # Close queues first
             eval_queue.close()
-            eval_queue.join_thread()
             result_queue.close()
-            result_queue.join_thread()
+            
+            # Join threads with timeout
+            while time.time() - start < timeout:
+                try:
+                    eval_queue.join_thread(timeout=0.1)
+                    result_queue.join_thread(timeout=0.1)
+                    break
+                except (AttributeError, ValueError) as e:
+                    logging.warning(f"Error joining queue threads: {e}")
+                    break
+                except Exception as e:
+                    logging.debug(f"Retrying queue join: {e}")
+                    continue
+
+            if time.time() - start >= timeout:
+                logging.warning("Queue cleanup timed out after %d seconds", timeout)
+                
         except Exception as e:
             logging.warning(f"Error during queue cleanup: {e}")
-            # Force cleanup if needed
-            eval_queue._close()
-            result_queue._close()
+        finally:
+            # Ensure queues are closed even if errors occur
+            try:
+                if hasattr(eval_queue, '_close') and callable(eval_queue._close):
+                    eval_queue._close()
+                if hasattr(result_queue, '_close') and callable(result_queue._close):
+                    result_queue._close()
+            except Exception as e:
+                logging.warning(f"Error force closing queues: {e}")
         logging.info("Shutdown complete.")
-        
-                # Add additional cleanup for wandb
 
     return database.get_best_programs_per_island()
 

@@ -304,10 +304,31 @@ def mock_test(duration, samplers, evaluators, output_path):
         raise click.ClickException("cap_set_spec.py not found in examples directory")
     
     try:
-        # Call runAsync's implementation directly
+        # Run test with all params specified
         runAsync.callback(
             spec_file=open(spec_path, 'r'),
             inputs="8",  # Standard test input for cap_set_spec
+            model="mock_model",
+            output_path=output_path,
+            load_backup=None,
+            iterations=-1,
+            sandbox="ExternalProcessSandbox", 
+            samplers=samplers,
+            evaluators=evaluators,
+            islands=1,
+            reset=2,
+            duration=duration,
+            temperature="0.8",
+            team=None,
+            envfile=None,
+            name=None,
+            tag="test"
+        )
+
+        # Run minimal test with just required params
+        runAsync.callback(
+            spec_file=open(spec_path, 'r'),
+            inputs="8",
             model="mock_model",
             output_path=output_path,
             load_backup=None,
@@ -316,13 +337,9 @@ def mock_test(duration, samplers, evaluators, output_path):
             samplers=samplers,
             evaluators=evaluators,
             islands=1,
-            reset=60,
+            reset=2,
             duration=duration,
-            temperature="0.8",
-            team=None,
-            envfile=None,
-            name=None,
-            tag="test"
+            temperature="0.8"
         )
     except Exception as e:
         raise click.ClickException(str(e))
