@@ -227,11 +227,10 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
         # make plots
         plotscores(problem_identifier, output_path)
         # Ensure process termination
-        logging.info("Waiting for 10 seconds before killing")
-        time.sleep(10)  # Wait 60 seconds before killing
-        import signal
-        os.kill(os.getpid(), signal.SIGKILL)
-        #raise Exception("STOP AND I MEAN STOP")
+        logging.info("Shutting down gracefully...")
+        time.sleep(3)  # Brief pause to allow final cleanup
+        import sys
+        sys.exit(0)  # Exit with error code 1 to indicate non-normal termination
 @main.command()
 @click.argument("db_file")
 def ls(db_file):
