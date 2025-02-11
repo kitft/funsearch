@@ -250,7 +250,7 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
             logging.error(f"Error terminating processes: {e}")
 
         # As last resort, force exit
-        logging.info("Exiting...")
+        logging.info("All done! Exiting...")
         os._exit(0)
 @main.command()
 @click.argument("db_file")
