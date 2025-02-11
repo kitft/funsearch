@@ -318,7 +318,7 @@ def oeis(a_number: str, save_path: Optional[str], max_terms: Optional[int]):
 @click.option('--output_path', default="./data/tests/", type=click.Path(file_okay=False), help='Path for logs and data')
 def mock_test(duration, samplers, evaluators, output_path):
     """Run a test with mock model for validation using cap_set_spec."""
-    os.environ["WANDB_MODE"] = "disabled"
+    os.environ["WANDB_MODE"] = "offline"
     
     spec_path = "examples/cap_set_spec.py"
     if not os.path.exists(spec_path):
