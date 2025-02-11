@@ -227,7 +227,8 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
         # make plots
         plotscores(problem_identifier, output_path)
         # Ensure process termination
-        time.sleep(60)  # Wait 60 seconds before killing
+        logging.info("Waiting for 10 seconds before killing")
+        time.sleep(10)  # Wait 60 seconds before killing
         import signal
         os.kill(os.getpid(), signal.SIGKILL)
         #raise Exception("STOP AND I MEAN STOP")
