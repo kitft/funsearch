@@ -118,10 +118,13 @@ Key options:
 - `--duration`: Run duration in seconds (default: 3600)
 - `--team`: Wandb team/entity for logging (optional)
 - `--name`: Wandb ID for run
+- `--tag`: Wandb tag for run
+- `--token_limit`: Maximum number of output tokens (default: None)# add this if you want to limit by number of tokens used
+- `--relative_cost_of_input_tokens`: Cost ratio of input/output tokens (default: 1.0)# add this if you want to limit by number of tokens used. Typically this number will be less than one.
 
 Example command:
 ```bash
-funsearch runasync /workspace/examples/cap_set_spec.py 8 --sandbox ExternalProcessSandbox --model mistralai/codestral-mamba --samplers 20 --islands 10 --duration 3000 --team <team> --tag <tag>
+funsearch runasync /workspace/examples/cap_set_spec.py 8 --sandbox ExternalProcessSandbox --model mistralai/codestral-mamba --samplers 20 --islands 10 --duration 3000 --team <team> --tag <tag> --token_limit 1000000 --relative_cost_of_input_tokens 0.5
 ```
 
 ### Weights & Biases Integration
@@ -190,7 +193,8 @@ Here are the available run parameters:
 - `--temperature`: LLM temperature. Default is 1.0. Can also give a list of temperatures - one for each entry in --model. Format: "temperature1,temperature2,..."
 - `--team`: Wandb team/entity for logging (optional)
 - `--envfile`: Path to a .env file to load environment variables from. This is only useful if you are running the search outside of a container.
-
+- `--token_limit`: Maximum number of output tokens (default: None)# add this if you want to limit by number of tokens used
+- `--relative_cost_of_input_tokens`: Cost ratio of input/output tokens (default: 1.0)# add this if you want to limit by number of tokens used. Typically this number will be less than one.
 
 ## Example
 Here, we are searching for the algorithm to find maximum cap sets for dimension 11.
