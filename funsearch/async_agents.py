@@ -118,16 +118,25 @@ async def database_worker(result_queue: multiprocessing.Queue, database: AsyncPr
 async def sampler_worker(sampler: sampler.Sampler, eval_queue: multiprocessing.Queue, database: AsyncProgramsDatabase, config: config_lib.Config):
     #wait a random amount of time to avoid synchronisation issues and API ratelimits
     await asyncio.sleep(np.random.rand()*config.num_samplers*0.5)
+    base_sleep = 0.1  # Base sleep time in seconds
+    max_sleep = 60    # Maximum sleep time in seconds
+    backoff_factor = 1.5  # Exponential backoff multiplier
+    current_sleep = base_sleep
+    
     while True:
-        #logging.info('Sampling with sampler %d', sampler.label)
         prompt = await database.get_prompt()
         await sampler.sample(prompt, eval_queue)
-        # Adaptive sleep based on queue size
+        
+        # Exponential backoff based on queue size
         queue_size = eval_queue.qsize()
-        sleep_time = min(0.1 * (queue_size), 60)  # Cap at 5 seconds
-        if sleep_time > 0.5:
-            logging.info('Slowed down sampling to %f seconds', sleep_time)
-        await asyncio.sleep(sleep_time)
+        if queue_size > 10:
+            current_sleep = min(current_sleep * backoff_factor, max_sleep)
+            if current_sleep > 0.5:
+                logging.info('Slowed down sampling to %.2f seconds', current_sleep)
+        else:
+            current_sleep = base_sleep
+            
+        await asyncio.sleep(current_sleep)
 
 def countdown_timer(seconds,team=None):
     """Display a countdown timer."""
