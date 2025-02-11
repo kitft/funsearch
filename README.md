@@ -121,7 +121,7 @@ Key options:
 
 Example command:
 ```bash
-funsearch runasync /workspace/examples/cap_set_spec.py 8 --sandbox ExternalProcessSandbox --model mistralai/codestral-mamba --samplers 20 --islands 10 --duration 3000 --team <team>
+funsearch runasync /workspace/examples/cap_set_spec.py 8 --sandbox ExternalProcessSandbox --model mistralai/codestral-mamba --samplers 20 --islands 10 --duration 3000 --team <team> --tag <tag>
 ```
 
 ### Weights & Biases Integration
