@@ -208,6 +208,7 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
     except Exception as e:
         logging.error(f"An error occurred: {str(e)}")
     finally:
+        logging.info("Backing up database")
         database.backup()
         # Ensure all pending tasks are cancelled
         try:
@@ -228,6 +229,7 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
             # No running event loop
             pass
         # make plots
+        logging.info("Making plots")
         plotscores(problem_identifier, output_path)
         # Try graceful shutdown first
         # Handle event loop shutdown

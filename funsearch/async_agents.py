@@ -478,8 +478,8 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
         try:
             await asyncio.wait_for(db_worker, timeout=database_shutdown_timeout)
             logging.info("Database worker finished")
-        except (asyncio.TimeoutError, asyncio.CancelledError):
-            logging.warning("Database worker timed out or cancelled during shutdown")
+        except (asyncio.TimeoutError, asyncio.CancelledError) as e:
+            logging.warning("Database worker timed out (or cancelled) during shutdown: %s", e)
             # Force wait a bit to ensure cancellation propagates
             await asyncio.sleep(1.0)
 
@@ -494,7 +494,7 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
                 logging.info("Wandb shutdown complete")
         except Exception as e:
             logging.warning(f"Error while closing wandb: {e}")
-        print("Closing queues")
+        logging.info("Closing queues")
         try:
             # Force close queues immediately since database worker is already done
             eval_queue.close()
