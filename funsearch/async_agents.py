@@ -496,36 +496,19 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
             logging.warning(f"Error while closing wandb: {e}")
         print("Closing queues")
         try:
-            # Set timeout for queue cleanup
-            timeout = 10  # 10 second timeout
-            start = time.time()
-            
-            # Close queues first
+            # Force close queues immediately since database worker is already done
             eval_queue.close()
             result_queue.close()
             
-            # Join threads with timeout
-            while time.time() - start < timeout:
-                try:
-                    eval_queue.join_thread(timeout=0.1)
-                    result_queue.join_thread(timeout=0.1)
-                    break
-                except (AttributeError, ValueError) as e:
-                    logging.warning(f"Error joining queue threads: {e}")
-                    break
-                except Exception as e:
-                    logging.debug(f"Retrying queue join: {e}")
-                    continue
-
-            if time.time() - start >= timeout:
-                try:
-                    result_size = result_queue.qsize() if result_queue else "None" 
-                except Exception as e:
-                    result_size = f"Unknown (qsize not supported), error: {e}"
-                try:
-                    eval_size = eval_queue.qsize() if eval_queue else "None"
-                except Exception as e:
-                    eval_size = f"Unknown (qsize not supported), error: {e}"
+            # Try to get final queue sizes for logging
+            try:
+                result_size = result_queue.qsize() if result_queue else "None"
+            except Exception as e:
+                result_size = f"Unknown (qsize not supported), error: {e}"
+            try:
+                eval_size = eval_queue.qsize() if eval_queue else "None" 
+            except Exception as e:
+                eval_size = f"Unknown (qsize not supported), error: {e}"
                     
                 logging.warning("Queue cleanup timed out after %d seconds. Remaining result queue size: %s. Remaining eval queue size: %s", timeout, result_size, eval_size)
                 
