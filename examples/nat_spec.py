@@ -27,9 +27,6 @@ def solve(n: int) -> list:
   map = [True] * (n+1)
   P = primes(n)
   for p in P:
-    rs = {i % p for i in range(n+1) if map[i]}
-    if len(rs) < p:
-      continue
     r = priority(p,n) % p
     for i in range(r,n+1,p):
       map[i] = False   
