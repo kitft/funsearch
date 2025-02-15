@@ -510,7 +510,7 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
             except Exception as e:
                 eval_size = f"Unknown (qsize not supported), error: {e}"
                     
-                logging.warning("Queue cleanup timed out after %d seconds. Remaining result queue size: %s. Remaining eval queue size: %s", timeout, result_size, eval_size)
+            logging.warning("Attempted queue cleanup via .close(),  Remaining result queue size: %s. Remaining eval queue size: %s", result_size, eval_size)
                 
         except Exception as e:
             logging.warning(f"Error during queue cleanup: {e}")
