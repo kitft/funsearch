@@ -523,7 +523,7 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
                     result_queue._close()
             except Exception as e:
                 logging.warning(f"Error force closing queues: {e}")
-        logging.info("Async_agents loop ended.")
+        logging.info("run_agents loop ended.")
 
     return database.get_best_programs_per_island()
 

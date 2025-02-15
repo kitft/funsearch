@@ -206,7 +206,13 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
         if pending:
             for t in pending:
                 t.cancel()
-            await asyncio.gather(*pending, return_exceptions=True)
+            try:
+                await asyncio.wait_for(
+                    asyncio.gather(*pending, return_exceptions=True),
+                    timeout=10.0
+                )
+            except asyncio.TimeoutError:
+                logging.warning("Timeout while waiting for tasks to cancel")
 
     try:
         asyncio.run(initiate_search())
@@ -217,30 +223,37 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
     finally:
         logging.info("Backing up database")
         database.backup()
-        # make plots
+        # Cancel pending async tasks with timeout
+        try:
+            loop = asyncio.get_running_loop()
+            pending = [t for t in asyncio.all_tasks(loop=loop) if t is not asyncio.current_task(loop)]
+            for t in pending:
+                t.cancel()
+            try:
+                loop.run_until_complete(
+                    asyncio.wait_for(
+                        asyncio.gather(*pending, return_exceptions=True),
+                        timeout=10
+                    )
+                )
+            except asyncio.TimeoutError:
+                logging.warning("Timeout during pending tasks cancellation")
+        except RuntimeError:
+            pass  # no running loop
+
         logging.info("Making plots")
         plotscores(problem_identifier, output_path)
-        # Try graceful shutdown first
-        # Handle event loop shutdown
+        
+        # Terminate any multiprocessing children explicitly
         try:
-            loop = asyncio.get_event_loop()
-            if loop.is_running():
-                logging.info("Attempting graceful event loop shutdown...")
-                for task in asyncio.all_tasks():
-                    task.cancel()
-        except RuntimeError:
-            pass  # No event loop running
-
-        # Handle multiprocessing shutdown
-        try:
-            if multiprocessing.active_children():
-                logging.info("Terminating child processes...")
-                for p in multiprocessing.active_children():
-                    p.terminate()
+            children = multiprocessing.active_children()
+            for p in children:
+                logging.info(f"Terminating child process {p.pid}")
+                p.terminate()
+                p.join(timeout=5)
         except Exception as e:
             logging.error(f"Error terminating processes: {e}")
 
-        # As last resort, force exit
         logging.info("All done! Exiting...")
         os._exit(0)
 @main.command()
