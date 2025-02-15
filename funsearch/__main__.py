@@ -199,7 +199,14 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
 
     async def initiate_search():
         async_database = async_agents.AsyncProgramsDatabase(database)
+        # Run agents and capture spawned tasks if needed
         await async_agents.run_agents(conf, async_database, portable_config, team)
+        # Optionally, cancel any tasks that you know may linger
+        pending = [t for t in asyncio.all_tasks() if t is not asyncio.current_task()]
+        if pending:
+            for t in pending:
+                t.cancel()
+            await asyncio.gather(*pending, return_exceptions=True)
 
     try:
         asyncio.run(initiate_search())
@@ -210,24 +217,6 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
     finally:
         logging.info("Backing up database")
         database.backup()
-        # Ensure all pending tasks are cancelled
-        try:
-            loop = asyncio.get_running_loop()
-            for task in asyncio.all_tasks(loop=loop):
-                task.cancel()
-            # Wait up to 30s for tasks to cancel gracefully
-            try:
-                loop.run_until_complete(
-                    asyncio.wait_for(
-                        asyncio.gather(*asyncio.all_tasks(loop=loop), return_exceptions=True),
-                        timeout=30
-                    )
-                )
-            except asyncio.TimeoutError:
-                logging.warning("Tasks did not cancel within 30s - forcing exit")
-        except RuntimeError:
-            # No running event loop
-            pass
         # make plots
         logging.info("Making plots")
         plotscores(problem_identifier, output_path)
