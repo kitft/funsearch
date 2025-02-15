@@ -100,19 +100,22 @@ def evaluator_process(eval_queue: Queue, result_queue: Queue, config: config_lib
 
 async def database_worker(result_queue: multiprocessing.Queue, database: AsyncProgramsDatabase):
     logging.info("database worker start")
+    loop = asyncio.get_running_loop()
+    
     while True:
         try:
-            result = result_queue.get_nowait()
+            # Run queue operations in thread pool to keep event loop responsive
+            result = await loop.run_in_executor(None, result_queue.get_nowait)
             if result is None:
                 logging.info("Database worker received shutdown signal")
                 break
+                
             new_function_or_error, scores_per_test, usage_stats = result
-            #model_name = usage_stats.model
-            # else:
-            #    logging.info("reduced result queue size to %d"%(result_queue.qsize()))
-            await database.register_program(new_function_or_error,scores_per_test,usage_stats)
+            await database.register_program(new_function_or_error, scores_per_test, usage_stats)
+            
         except multiprocessing.queues.Empty:
             await asyncio.sleep(0.1)
+            
     logging.info("Database worker end")
 
 async def sampler_worker(sampler: sampler.Sampler, eval_queue: multiprocessing.Queue, database: AsyncProgramsDatabase, config: config_lib.Config):
@@ -488,8 +491,10 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
         try:
             if wandb.run is not None:
                 wandb.finish()
+                logging.info("Wandb shutdown complete")
         except Exception as e:
             logging.warning(f"Error while closing wandb: {e}")
+        print("Closing queues")
         try:
             # Set timeout for queue cleanup
             timeout = 10  # 10 second timeout
@@ -564,7 +569,7 @@ def print_usage_summary(database,start_time):
     total_did_not_run = 0
     total_unsafe = 0
     total_time = time.time() - start_time
-    amount_to_pad = max(max(len(key) for key in usage_by_model.keys()), 20)+2
+    amount_to_pad = max(max(len(key) for key in usage_by_model.keys()) if usage_by_model else 0, 20)+2
     logging.info(f"Total time: {total_time:.2f} seconds")
     
     # First table - Request statistics
