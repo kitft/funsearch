@@ -457,19 +457,29 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
                     p.join(timeout=0.1)  # Small timeout to check frequently
                     
         # Kill any remaining processes
+        import signal
         for p in remaining_processes:
             logging.warning(f"Evaluator process {p.pid} did not terminate within timeout, killing it")
             p.kill()
+            # Ensure process is terminated
+            try:
+                p.join(timeout=1.0)
+                if p.is_alive():
+                    os.kill(p.pid, signal.SIGKILL)
+            except Exception as e:
+                logging.warning(f"Error force killing process {p.pid}: {e}")
         logging.info("All evaluator processes have terminated; waiting %d seconds for result queue to drain (length: %d)", database_shutdown_timeout, result_queue.qsize())
         result_queue.put(None)
+
+        # Force timeout on database worker
         try:
-            async with asyncio.timeout(database_shutdown_timeout):
-                await db_worker
-                logging.info("Database worker finished")
+            await asyncio.wait_for(db_worker, timeout=database_shutdown_timeout)
+            logging.info("Database worker finished")
         except (asyncio.TimeoutError, asyncio.CancelledError):
             logging.warning("Database worker timed out or cancelled during shutdown")
-            db_worker.cancel()
-            
+            # Force wait a bit to ensure cancellation propagates
+            await asyncio.sleep(1.0)
+
         logging.info(f"Total programs processed: {database.orig_database._program_counter}") ## non-mutable type, refer to original database
         logging.info(f"Best scores per island: {database._best_score_per_island}")
         logging.info(f'Shutting down wandb - note this may take a few minutes to complete!')
