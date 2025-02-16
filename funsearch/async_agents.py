@@ -325,7 +325,7 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
 
     try:
         start_time = time.time()
-        logging_info_interval = config.logging_info_interval
+        logging_info_interval = config.logging_info_inqerval
         while time.time() - start_time < config.run_duration:
             # Add wandb run state check
             if not wandb.run:
@@ -498,8 +498,20 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
             logging.warning(f"Error while closing wandb: {e}")
         logging.info("Closing queues")
         try:
-            # Force close queues immediately since database worker is already done
+            # Empty queues before closing
+            while True:
+                try:
+                    eval_queue.get_nowait()
+                except multiprocessing.queues.Empty:
+                    break
             eval_queue.close()
+            await asyncio.sleep(1)
+            while True:
+                try:
+                    result_queue.get_nowait() 
+                except multiprocessing.queues.Empty:
+                    break
+            # Now close the emptied queues
             result_queue.close()
             
             # Try to get final queue sizes for logging
