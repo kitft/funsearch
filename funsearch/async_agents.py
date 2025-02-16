@@ -325,7 +325,7 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
 
     try:
         start_time = time.time()
-        logging_info_interval = config.logging_info_inqerval
+        logging_info_interval = config.logging_info_interval
         while time.time() - start_time < config.run_duration:
             # Add wandb run state check
             if not wandb.run:
