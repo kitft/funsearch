@@ -199,20 +199,14 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
 
     async def initiate_search():
         async_database = async_agents.AsyncProgramsDatabase(database)
-        # Run agents and capture spawned tasks if needed
+        # Run agents
         await async_agents.run_agents(conf, async_database, portable_config, team)
-        # Optionally, cancel any tasks that you know may linger
+        # Cancel lingering tasks but do not wait for them to finish
         pending = [t for t in asyncio.all_tasks() if t is not asyncio.current_task()]
         if pending:
             for t in pending:
                 t.cancel()
-            try:
-                await asyncio.wait_for(
-                    asyncio.gather(*pending, return_exceptions=True),
-                    timeout=10.0
-                )
-            except asyncio.TimeoutError:
-                logging.warning("Timeout while waiting for tasks to cancel")
+            logging.warning("Cancelled pending tasks without awaiting cleanup")
 
     try:
         asyncio.run(initiate_search())
@@ -223,24 +217,6 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
     finally:
         logging.info("Backing up database")
         database.backup()
-        # Cancel pending async tasks with timeout
-        try:
-            loop = asyncio.get_running_loop()
-            pending = [t for t in asyncio.all_tasks(loop=loop) if t is not asyncio.current_task(loop)]
-            for t in pending:
-                t.cancel()
-            try:
-                loop.run_until_complete(
-                    asyncio.wait_for(
-                        asyncio.gather(*pending, return_exceptions=True),
-                        timeout=10
-                    )
-                )
-            except asyncio.TimeoutError:
-                logging.warning("Timeout during pending tasks cancellation")
-        except RuntimeError:
-            pass  # no running loop
-
         logging.info("Making plots")
         plotscores(problem_identifier, output_path)
         
@@ -250,11 +226,14 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
             for p in children:
                 logging.info(f"Terminating child process {p.pid}")
                 p.terminate()
-                p.join(timeout=5)
+                try:
+                    p.join(timeout=5)
+                except Exception as e:
+                    logging.error(f"Error terminating process {p.pid}: {e}")
         except Exception as e:
             logging.error(f"Error terminating processes: {e}")
-
-        logging.info("All done! Exiting...")
+        
+        logging.info("Forcing exit")
         os._exit(0)
 @main.command()
 @click.argument("db_file")
