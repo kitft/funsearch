@@ -240,6 +240,8 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
     logging.info("Number of cores/evaluators to be used: %d", num_cores)
     eval_queue = multiprocessing.Queue()
     result_queue = multiprocessing.Queue()
+    eval_queue.cancel_join_thread()# do not wait for the queue to be emptied before closing
+    result_queue.cancel_join_thread() # do not wait for the queue to be emptied before closing
 
     # Validate models before starting
     valid_lm = await validate_all_models(portable_config.lm)
