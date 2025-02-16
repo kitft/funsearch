@@ -251,7 +251,7 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
     # Start evaluator processes
     evaluator_processes = []
     for id in range(num_cores):
-        p = Process(target=evaluator_process, args=(eval_queue, result_queue, config, portable_config, id))
+        p = Process(target=evaluator_process, args=(eval_queue, result_queue, config, portable_config, id), daemon=True)
         p.start()
         evaluator_processes.append(p)
 
