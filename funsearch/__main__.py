@@ -233,7 +233,7 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
         except Exception as e:
             logging.error(f"Error terminating processes: {e}")
         
-        logging.info("Forcing exit")
+        logging.info("All done! exiting...")
         os._exit(0)
 @main.command()
 @click.argument("db_file")
@@ -252,7 +252,7 @@ def ls(db_file):
 
     # If it's a file that exists, load it directly
     if os.path.exists(db_file):
-        database.load(db_file)
+        database.load(open(db_file, 'rb'))
     else:
         # Search in backups folder for partial matches
         backup_dir = os.path.join("./data", "backups")
@@ -261,12 +261,11 @@ def ls(db_file):
             for file in files:
                 if db_file in file:
                     matching_files.append(os.path.join(root, file))
-        
         if matching_files:
             # Get most recently modified matching file
             latest_file = max(matching_files, key=os.path.getmtime)
             logging.info(f"Found backup file: {latest_file}")
-            database.load(latest_file)
+            database.load(open(latest_file, 'rb'))
         else:
             raise FileNotFoundError(f"Could not find backup file matching '{db_file}' in {backup_dir}")
 
