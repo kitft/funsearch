@@ -3,6 +3,7 @@
 import logging
 import pickle
 import sys
+import cloudpickle
 
 
 def main(prog_file: str, input_file: str, output_file: str):
@@ -10,7 +11,7 @@ def main(prog_file: str, input_file: str, output_file: str):
   and writes the output data to another file."""
   logging.debug(f"Running main(): {prog_file}, {input_file}, {output_file}")
   with open(prog_file, "rb") as f:
-    func = pickle.load(f)
+    func = cloudpickle.load(f)
 
     with open(input_file, "rb") as input_f:
       input_data = pickle.load(input_f)
