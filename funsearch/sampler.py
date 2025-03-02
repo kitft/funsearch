@@ -103,6 +103,7 @@ class Sampler:
       usage_stats.island_id = prompt.island_id
       usage_stats.version_generated = prompt.version_generated
       usage_stats.island_version = prompt.island_version
+      usage_stats.parent_signatures = prompt.parent_signatures
       eval_queue.put((sample,  usage_stats))
       #chosen_evaluator.analyse(
       #    sample, prompt.island_id, prompt.version_generated, self.label)

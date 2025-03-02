@@ -76,7 +76,7 @@ class Prompt:
   version_generated: int
   island_id: int
   island_version: int
-
+  parent_signatures: list
 
 class ProgramsDatabase:
   """A collection of programs, organized as islands."""
@@ -155,14 +155,12 @@ class ProgramsDatabase:
       self.save(f)
     self._backups_done += 1
 
-  def get_prompt(self) -> Prompt:
+  def get_prompt(self) -> tuple[Prompt, list]:
     """Returns a prompt containing implementations from one chosen island."""
     island_id = np.random.randint(len(self._islands))
-    #print("Getting prompt from island: ", island_id)
-    code, version_generated = self._islands[island_id].get_prompt()
+    code, version_generated, parent_signatures = self._islands[island_id].get_prompt()
     island_version = self._islands[island_id]._island_version
-    #print("Prompt: ", code)
-    return Prompt(code, version_generated, island_id, island_version)
+    return Prompt(code, version_generated, island_id, island_version, parent_signatures)
 
   def _register_program_in_island(
       self,
@@ -350,7 +348,7 @@ class Island:
       self._clusters[signature].register_program(program)
     self._num_programs += 1
 
-  def get_prompt(self) -> tuple[str, int]:
+  def get_prompt(self) -> tuple[str, int, list]:
     """Constructs a prompt containing functions from this island."""
     #print("Island: Getting prompt from island: ", self._num_programs)
     signatures = list(self._clusters.keys())
@@ -404,7 +402,7 @@ class Island:
     indices = np.argsort(scores)
     sorted_implementations = [implementations[i] for i in indices]
     version_generated = len(sorted_implementations) + 1
-    return self._generate_prompt(sorted_implementations), version_generated
+    return self._generate_prompt(sorted_implementations), version_generated, chosen_signatures
 
   def _generate_prompt(
       self,

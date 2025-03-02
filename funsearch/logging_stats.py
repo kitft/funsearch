@@ -31,6 +31,7 @@ class UsageStats:
     time_to_response: Optional[float] = None
     time_of_response: Optional[float] = None
     time_of_eval: Optional[float] = None
+    parent_signatures: Optional[list] = None
 
 
     def to_dict(self):

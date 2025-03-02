@@ -596,8 +596,8 @@ def do_logging(database, samplers, config, current_time, eval_queue_size, result
         avg_scores_per_island.append(avg_score)
     
     # Calculate best score overall and average score overall
-    best_score_overall = max(best_scores_per_island) if best_scores_per_island else 0
-    avg_score_overall = sum(avg_scores_per_island) / len(avg_scores_per_island) if avg_scores_per_island else 0
+    best_score_overall = max(best_scores_per_island) if best_scores_per_island else None
+    avg_score_overall = sum(avg_scores_per_island) / len(avg_scores_per_island) if avg_scores_per_island else None
 
     logging.info(f"Time: {current_time:.2f}s, best score: {best_score_overall:.2f}, average score: {avg_score_overall:.2f}, Eval Queue size: {eval_queue_size}, Result Queue size: {result_queue_size}")
 
@@ -674,7 +674,7 @@ def do_logging(database, samplers, config, current_time, eval_queue_size, result
         'time': current_time,
     })
 
-    if not hasattr(database, '_last_logged_best_score') or best_score_overall > database._last_logged_best_score:
+    if not hasattr(database, '_last_logged_best_score') or (best_score_overall is not None and best_score_overall > database._last_logged_best_score):
         if best_program_overall is not None:
             wandb.log({
                 'Best Program': wandb.Html(f"<pre>Score: {best_score_overall}\n\n{best_program_overall}</pre>"),
