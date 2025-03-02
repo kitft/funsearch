@@ -27,7 +27,7 @@ This funsearch repo adds parallel processing, updated tooling, and many more fea
 - Sandboxed code execution (container or process-based), code checked before runtime for safety. NB - not fully 'safe' when multithreaded.
 - Model validation before search starts/graceful handling of API failures
 
-For implementation details and example problems, see the examples directory, particularly the section on *Adding additional programs*.
+For implementation details and example problems, see the examples directory, particularly the section on *Adding additional programs*. Remember to modify the system prompt and user prompts in the spec file!
 
 
 
@@ -167,7 +167,7 @@ The number of islands is controlled via --islands. 10 is typically a good defaul
 
 Any parameters not listed here can be modified in `funsearch/config.py`. Particular parameters of interest are the LLM top_p, temperature (as distinct from the temperature used for sampling from the islands). We set these to the same values as the original funsearch paper: 0.95 and 1.0 respectively. This probably requires some tuning for different problems/LLM models.
 
-You may be interested in modifying the system prompt in `funsearch/config.py`.
+You may be interested in modifying the system prompt in the spec file, or the default system prompt in `funsearch/config.py`, which is used if no system prompt is specified in the spec file.
 
 The search will automatically stop if:
 - The eval queue size exceeds 500 items
@@ -326,11 +326,6 @@ To add additional programs, add .py files to the examples/ directory. These shou
 PLEASE ENSURE YOU HAVE UPDATED TO THE LATEST VERSION OF THIS REPO
 
 If you are getting OPENAI Async doesn't exist errors, run `pip install openai>=1.2` in your Docker environment. This should happen on Dockerfile creation, but could be a problem if you have some legacy docker/pdm files.
-
-
-# Adding additional programs:
-To add additional programs, add .py files to the examples/ directory. These should follow the same structure as the other examples - a priority function with an @funsearch.evolve decorator, and an evaluation function which returns a score decorated with @funsearch.run. See `examples/cap_set_spec.py` for a simple example, and see `examples/Example_Implementation_SPEC.py` for template which you can fill in. I have also been writing playground `*.ipynb` files in the `examples/playgrounds/` directory, where new environments can be developed and tested.
-
 
 ---
 # Original Google DeepMind FunSearch Repository Data

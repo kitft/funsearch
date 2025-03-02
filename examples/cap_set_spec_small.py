@@ -1,13 +1,6 @@
-### SYSTEM PROMPT # if this is not present, the default system prompt from config.py will be used.
-"""You are a state-of-the-art python code completion system that will be used as part of a genetic algorithm.
-You will be given a list of functions, and you should improve the incomplete last function in the list.
-1. Make only small changes but be sure to make some change.
-2. Try to keep the code short and any comments concise.
-3. Your response should be an implementation of the function priority_v# (where # is the current iteration number); do not include any examples or extraneous functions.
-4. You may use numpy and itertools.
-The code you generate will be appended to the user prompt and run as a python program."""
-### END SYSTEM PROMPT
-"""Finds large cap sets (sets of n-dimensional vectors over F_3 that do not contain 3 points on a line)."""
+"""Finds small cap sets (sets of n-dimensional vectors over F_3 that do not contain 3 points on a line).
+The cap sets must be maximal, meaning no additional vector can be included without forming a line, yet the size of each set should remain as small as possible.
+The cap set is constructed iteratively, at each step selecting the next admissible vector with the highest priority."""
 
 import itertools
 import numpy as np
@@ -17,7 +10,7 @@ import funsearch
 def evaluate(n: int) -> int:
   """Returns the size of an `n`-dimensional cap set."""
   capset = solve(n)
-  return len(capset)
+  return -len(capset)
 
 def solve(n: int) -> np.ndarray:
   """Returns a large cap set in `n` dimensions."""
@@ -27,6 +20,8 @@ def solve(n: int) -> np.ndarray:
   powers = 3 ** np.arange(n - 1, -1, -1)
   # Precompute all priorities.
   priorities = np.array([priority(tuple(vector), n) for vector in all_vectors],dtype=float)
+  # Replace -inf priorities with smallest possible float, to prevent cheating.
+  priorities[priorities == -np.inf] = np.finfo(float).min
   # Build `capset` greedily, using priorities for prioritization.
   capset = np.empty(shape=(0, n), dtype=np.int32)
   while np.any(priorities != -np.inf):

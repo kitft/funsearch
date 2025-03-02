@@ -1,5 +1,13 @@
-####<<<<<ENSURE YOU ALSO MODIFY THE SYSTEM PROMPT IF NECESSARY! LOCATED IN CONFIG.PY.
-#### THE SYSTEM PROMPT ALSO LISTS PACKAGES THAT CAN BE USED >>>>>>
+### SYSTEM PROMPT <<<< MODIFY everything contained in the triple quotes, OR SIMPLY DON'T INCLUDE IT TO USE THE DEFAULT SYSTEM PROMPT FROM CONFIG.PY. THE SYSTEM PROMPT ALSO LISTS PACKAGES THAT CAN BE USED >>>>>>
+"""You are a state-of-the-art python code completion system that will be used as part of a genetic algorithm to evolve cap sets.
+You will be given a list of functions, and you should improve the incomplete last function in the list.
+1. Make only small changes but be sure to make some change.
+2. Try to keep the code short and any comments concise.
+3. Your response should be an implementation of the function priority_v# (where # is the current iteration number); do not include any examples or extraneous functions.
+4. You may use numpy and itertools.
+The code you generate will be appended to the user prompt and run as a python program."""
+### END SYSTEM PROMPT
+### <<<< user prompt: will be added to the final prompt>>>>>
 """<<<E.g. Finds EXAMPLE_PROBLEMS. A brief description of the problem you're solving might be a 
 good idea to include here, as it will go in to the prompt>>>
 """
@@ -31,5 +39,33 @@ def priority(el: tuple[int, ...], n: int) -> float: ### <<<MODIFY THE TYPE SIGNA
     el is a tuple of length n with values 0-2.
     """
     pass  # TODO: Implement the priority function
+
+##### SYSTEM PROMPT - modify in CONFIG.PY, or at the top of the spec file
+##### THE USER PROMPT WILL BE FORMED AS FOLLOWS:
+# === PROMPT ===
+# """Finds large cap sets (sets of n-dimensional vectors over F_3 that do not contain 3 points on a line)."""
+#
+# import itertools
+# import numpy as np
+# import funsearch
+#
+# @funsearch.run
+# def priority_v0(v: tuple[int, ...], n: int) -> float:
+#   """Returns the priority, as a floating point number, of the vector `v` of length `n`. The vector 'v' is a tuple of values in {0,1,2}.
+#       The cap set will be constructed by adding vectors that do not create a line in order by priority.
+#   """
+#   return 0
+#
+# def priority_v1(v: tuple[int, ...], n: int) -> float:
+#   """Improved version of `priority_v0`.
+#   """
+#   return 1
+#
+# def priority_v2(v: tuple[int, ...], n: int) -> float:
+#   """Improved version of `priority_v1`.
+#   """
+#   return 2
+# === END PROMPT ===
+
 
 

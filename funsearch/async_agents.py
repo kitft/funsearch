@@ -531,6 +531,17 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
         finally:
             # Ensure queues are closed even if errors occur
             try:
+                # Properly close multiprocessing queues
+                if hasattr(eval_queue, 'join_thread') and callable(eval_queue.join_thread):
+                    eval_queue.join_thread()
+                if hasattr(result_queue, 'join_thread') and callable(result_queue.join_thread):
+                    result_queue.join_thread()
+                # try closing again
+                if hasattr(eval_queue, 'close') and callable(eval_queue.close):
+                    eval_queue.close()
+                if hasattr(result_queue, 'close') and callable(result_queue.close):
+                    result_queue.close()
+                                # Force close if needed as fallback
                 if hasattr(eval_queue, '_close') and callable(eval_queue._close):
                     eval_queue._close()
                 if hasattr(result_queue, '_close') and callable(result_queue._close):

@@ -13,7 +13,7 @@ import click
 from dotenv import load_dotenv
 
 from funsearch import async_agents, config, core, sandbox, sampler, programs_database, code_manipulation, models, logging_stats
-from funsearch.utilities import oeis_util
+from funsearch.utilities import oeis_util, parse_specfile
 
 LOGLEVEL = os.environ.get('LOGLEVEL', 'INFO').upper()
 logging.basicConfig(format='%(asctime)s.%(msecs)03d:%(levelname)s:%(message)s',level=LOGLEVEL,datefmt='%Y-%m-%d-%H-%M-%S')
@@ -151,8 +151,12 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
             i = (i+1) % len(model_counts)
     logging.info(f"Sampling with {model_counts} copies of model(s): {model_list}")
     logging.info(f"Using LLM temperature(s): {temperature}")
+    # Read the spec file content
+    spec_file.seek(0)  # Reset file pointer to beginning
+    spec_content = spec_file.read()
+    system_prompt_custom, specification = parse_specfile.extract_system_prompt(spec_content) #extract system prompt from spec file, remove it from specification
 
-    conf = config.Config(sandbox=sandbox, num_samplers=samplers, num_evaluators=evaluators, num_islands=islands, reset_period=reset, run_duration=duration,llm_temperature=temperature_list,token_limit=token_limit,relative_cost_of_input_tokens=relative_cost_of_input_tokens)
+    conf = config.Config(sandbox=sandbox, num_samplers=samplers, num_evaluators=evaluators, num_islands=islands, reset_period=reset, run_duration=duration,llm_temperature=temperature_list,token_limit=token_limit,relative_cost_of_input_tokens=relative_cost_of_input_tokens, system_prompt=system_prompt_custom)
     logging.info(f"run_duration = {conf.run_duration}, reset_period = {conf.reset_period}")
 
     temperature_list = sum([model_counts[i]*[float(temperature_list[i])] for i in range(len(model_list))],[])
@@ -163,7 +167,6 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
     lm = [sampler.LLM(conf.samples_per_prompt, models.LLMModel(model_name=model_list[i], top_p=conf.top_p,
         temperature=temperature_list[i], keynum=keynum_list[i],id = i,log_path=log_path,system_prompt=conf.system_prompt), log_path=log_path,api_call_timeout=conf.api_call_timeout,api_call_max_retries=conf.api_call_max_retries,ratelimit_backoff=conf.ratelimit_backoff) for i in range(len(model_list))]
 
-    specification = spec_file.read()
     function_to_evolve, function_to_run = core._extract_function_names(specification)
     template = code_manipulation.text_to_program(specification)
 
@@ -232,6 +235,20 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
                     logging.error(f"Error terminating process {p.pid}: {e}")
         except Exception as e:
             logging.error(f"Error terminating processes: {e}")
+
+        # Print top 3 programs
+        try:
+            logging.info("Printing top 3 programs:")
+            best_programs = database.get_best_programs_per_island()
+            # Sort programs by score in descending order
+            sorted_programs = sorted(best_programs, key=lambda x: x[1], reverse=True)
+            # Print top 3 or fewer if less than 3 are available
+            for i, (prog, score) in enumerate(sorted_programs[:3]):
+                logging.info(f"Rank {i+1}: Program with score {score}")
+                logging.info(prog)
+                logging.info("-" * 40)
+        except Exception as e:
+            logging.error(f"Error printing top programs: {e}")
         
         logging.info("All done! exiting...")
         os._exit(0)
