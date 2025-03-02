@@ -117,6 +117,13 @@ class ProgramsDatabase:
   def get_best_programs_per_island(self) -> Iterable[Tuple[code_manipulation.Function | None]]:
     return sorted(zip(self._best_program_per_island, self._best_score_per_island), key=lambda t: t[1], reverse=True)
 
+  def get_best_program_overall(self) -> Tuple[code_manipulation.Function | None, float]:
+    """Returns the best program overall and its score."""
+    best_programs = self.get_best_programs_per_island()
+    if not best_programs:
+      return None, -float('inf')
+    return best_programs[0]
+
   def save(self, file):
     """Save database to a file"""
     data = {}

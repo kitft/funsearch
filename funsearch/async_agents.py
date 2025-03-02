@@ -123,7 +123,7 @@ async def sampler_worker(sampler: sampler.Sampler, eval_queue: multiprocessing.Q
     await asyncio.sleep(np.random.rand()*config.num_samplers*0.5)
     base_sleep = 0.1  # Base sleep time in seconds
     max_sleep = 60    # Maximum sleep time in seconds
-    backoff_factor = 1.5  # Exponential backoff multiplier
+    backoff_factor = 2  # Exponential backoff multiplier
     current_sleep = base_sleep
     
     while True:
@@ -336,96 +336,20 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
             if current_time >= logging_info_interval * (current_time // logging_info_interval):
                 eval_queue_size = eval_queue.qsize()
                 result_queue_size = result_queue.qsize()
-                best_scores_per_island = database._best_score_per_island
+                do_logging(database, samplers, config, current_time, eval_queue_size, result_queue_size, csv_filename)
                 
-                # Calculate average scores per island
-                avg_scores_per_island = []
-                for island in database._islands:
-                    island_scores = [cluster.score for cluster in island._clusters.values()]
-                    avg_score = sum(island_scores) / len(island_scores) if island_scores else 0
-                    avg_scores_per_island.append(avg_score)
-                # Calculate best score overall and average score overall
-                best_score_overall = max(best_scores_per_island) if best_scores_per_island else 0
-                avg_score_overall = sum(avg_scores_per_island) / len(avg_scores_per_island) if avg_scores_per_island else 0
-
-                logging.info(f"Time: {current_time:.2f}s, best score: {best_score_overall:.2f}, average score: {avg_score_overall:.2f}, Eval Queue size: {eval_queue_size}, Result Queue size: {result_queue_size}")
-
-                # Log best test scores across all islands
-                # Only log per-input scores if there are multiple inputs
-                if len(database._best_scores_per_test_per_island[0]) > 1:
-                    best_scores_by_test = {}
-                    for scores_per_test in database._best_scores_per_test_per_island:
-                        if scores_per_test is not None:
-                            for test_key, test_score in scores_per_test.items():
-                                if test_key not in best_scores_by_test or test_score > best_scores_by_test[test_key]:
-                                    best_scores_by_test[test_key] = test_score
-                    
-                    # Log all best test scores at once
-                    wandb.log({
-                        f'Best scores by input/Input {test_key}': score 
-                        for test_key, score in best_scores_by_test.items()
-                    } | {'time': current_time})
-
-                # Log scores to CSV
-                with open(csv_filename, 'a', newline='') as csvfile:
-                    csv_writer = csv.writer(csvfile)
-                    for island, best_score, avg_score in zip(range(len(best_scores_per_island)), best_scores_per_island, avg_scores_per_island):
-                        csv_writer.writerow([f"{current_time:.2f}", island, best_score, avg_score])
-                        
-                        # Log to wandb
-                        wandb.log({
-                            f'Best Score/Island {island}': best_score,
-                            f'Average Score/Island {island}': avg_score,
-                            'time': current_time
-                        })
-                stats_per_model = database.get_stats_per_model()
-                if len(stats_per_model["success_rates"])==1:
-                    # For single model case, log rates without model name in path
-                    model = next(iter(stats_per_model["success_rates"]))
-                    wandb.log({
-                        'Rate/Success': stats_per_model["success_rates"][model],
-                        'Rate/Parse Failed': stats_per_model["parse_failed_rates"][model], 
-                        'Rate/Did Not Run': stats_per_model["did_not_run_rates"][model],
-                        'Rate/Unsafe': stats_per_model["unsafe_rates"][model],
-                        'time': current_time
-                    })
-                elif len(stats_per_model["success_rates"])>1:
-                    for model in stats_per_model["success_rates"]:
-                        wandb.log({
-                            f'Rate/Success/{model}': stats_per_model["success_rates"][model],
-                            f'Rate/Parse Failed/{model}': stats_per_model["parse_failed_rates"][model],
-                            f'Rate/Did Not Run/{model}': stats_per_model["did_not_run_rates"][model],
-                            f'Unsafe Rate/{model}': stats_per_model["unsafe_rates"][model],
-                            'time': current_time
-                        })
-
-                
-                # total_prompt_tokens=
-                # Log overall metrics to wandb
+                # Check if token limit exceeded
                 total_tokens = sum(stats["total_tokens"] for stats in database.orig_database.database_worker_counter_dict.values())
                 total_prompt_tokens = sum(stats["tokens_prompt"] for stats in database.orig_database.database_worker_counter_dict.values())
                 total_completion_tokens = sum(stats["tokens_completion"] for stats in database.orig_database.database_worker_counter_dict.values())
                 output_token_equivalents = total_prompt_tokens * config.relative_cost_of_input_tokens + total_completion_tokens
-
-                wandb.log({
-                    'Overall/Best Score': best_score_overall,
-                    'Overall/Average Score': avg_score_overall,
-                    'Queue Sizes/Eval Queue': eval_queue_size,
-                    'Queue Sizes/Result Queue': result_queue_size,
-                    'Programs Processed': database.orig_database._program_counter,
-                    'API Responses': sum(sampler.api_responses for sampler in samplers),
-                    'Tokens/Prompt tokens': total_prompt_tokens,
-                    'Tokens/Response tokens': total_completion_tokens,
-                    'Tokens/Total': total_tokens,
-                    'Tokens/Output token equivalents': output_token_equivalents,
-                    'time': current_time
-                })
-
-                # Check if token limit exceeded
+                
                 if hasattr(config, 'token_limit') and config.token_limit and output_token_equivalents > config.token_limit:
                     logging.warning(f"Output token equivalent limit ({config.token_limit:,}) exceeded ({output_token_equivalents:,} output token equivalents), which is {total_prompt_tokens:,} prompt tokens and {total_completion_tokens:,} response tokens, where output tokens are worth {config.relative_cost_of_input_tokens} input tokens each.")
                     logging.warning("Initiating shutdown. Note this may take a few minutes to complete!")
                     raise asyncio.CancelledError()
+
+                
 
             await asyncio.sleep(logging_info_interval)
             if eval_queue.qsize() > 500:
@@ -435,7 +359,7 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
                 logging.warning("Result queue size exceeded 50. Initiating shutdown. Note this may take a few minutes to complete!")
                 break
     except asyncio.CancelledError:
-        logging.info("Cancellation requested. Shutting down gracefully. Note this may take a few minutes to complete!")
+        logging.info("\033[91mCancellation requested. Shutting down gracefully. Note this may take a few minutes to complete!\033[0m")
     finally:
         for task in sampler_tasks:
             task.cancel()
@@ -448,11 +372,11 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
             eval_queue.put(None)
         evaluator_shutdown_timeout = 60
         database_shutdown_timeout = 30
-        logging.info("All evaluator workers requested to shut down - waiting %d seconds for them to finish", evaluator_shutdown_timeout)
+        logging.info("\033[91mAll evaluator workers requested to shut down - waiting %d seconds for them to finish\033[0m", evaluator_shutdown_timeout)
         # Wait up to 60 seconds total for all evaluator processes to finish
         start_time = time.time()
         remaining_processes = list(evaluator_processes)
-        
+
         while remaining_processes and (time.time() - start_time < evaluator_shutdown_timeout):
             for p in remaining_processes[:]:  # Iterate over copy to allow removal
                 if not p.is_alive():
@@ -473,7 +397,7 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
                     os.kill(p.pid, signal.SIGKILL)
             except Exception as e:
                 logging.warning(f"Error force killing process {p.pid}: {e}")
-        logging.info("All evaluator processes have terminated; waiting %d seconds for result queue to drain (length: %d)", database_shutdown_timeout, result_queue.qsize())
+        logging.info("\033[91mAll evaluator processes have terminated; waiting %d seconds for result queue to drain (length: %d)\033[0m", database_shutdown_timeout, result_queue.qsize())
         result_queue.put(None)
 
         # Force timeout on database worker
@@ -489,6 +413,11 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
         logging.info(f"Best scores per island: {database._best_score_per_island}")
         logging.info(f'Shutting down wandb - note this may take a few minutes to complete!')
 
+        current_time = time.time() - start_time
+        eval_queue_size = eval_queue.qsize()
+        result_queue_size = result_queue.qsize()
+        print("Doing final logging")
+        do_logging(database, samplers, config, current_time, eval_queue_size, result_queue_size, csv_filename)
         print_usage_summary(database, run_start_time)
         try:
             if wandb.run is not None:
@@ -653,3 +582,102 @@ def print_usage_summary(database,start_time):
         counts = [stats['counts_each'][id] for id in sampler_ids]
         logging.info(f"{model} samplers: {sampler_ids}, counts: {counts}")
     logging.info("-" * 80)
+
+
+def do_logging(database, samplers, config, current_time, eval_queue_size, result_queue_size, csv_filename):
+    """Log metrics to console, CSV, and wandb."""
+    best_scores_per_island = database._best_score_per_island
+
+    # Calculate average scores per island
+    avg_scores_per_island = []
+    for island in database._islands:
+        island_scores = [cluster.score for cluster in island._clusters.values()]
+        avg_score = sum(island_scores) / len(island_scores) if island_scores else 0
+        avg_scores_per_island.append(avg_score)
+    
+    # Calculate best score overall and average score overall
+    best_score_overall = max(best_scores_per_island) if best_scores_per_island else 0
+    avg_score_overall = sum(avg_scores_per_island) / len(avg_scores_per_island) if avg_scores_per_island else 0
+
+    logging.info(f"Time: {current_time:.2f}s, best score: {best_score_overall:.2f}, average score: {avg_score_overall:.2f}, Eval Queue size: {eval_queue_size}, Result Queue size: {result_queue_size}")
+
+    # Log best test scores across all islands
+    # Only log per-input scores if there are multiple inputs
+    if len(database._best_scores_per_test_per_island[0]) > 1:
+        best_scores_by_test = {}
+        for scores_per_test in database._best_scores_per_test_per_island:
+            if scores_per_test is not None:
+                for test_key, test_score in scores_per_test.items():
+                    if test_key not in best_scores_by_test or test_score > best_scores_by_test[test_key]:
+                        best_scores_by_test[test_key] = test_score
+        
+        # Log all best test scores at once
+        wandb.log({
+            f'Best scores by input/Input {test_key}': score 
+            for test_key, score in best_scores_by_test.items()
+        } | {'time': current_time})
+
+    # Log scores to CSV
+    with open(csv_filename, 'a', newline='') as csvfile:
+        csv_writer = csv.writer(csvfile)
+        for island, best_score, avg_score in zip(range(len(best_scores_per_island)), best_scores_per_island, avg_scores_per_island):
+            csv_writer.writerow([f"{current_time:.2f}", island, best_score, avg_score])
+            
+            # Log to wandb
+            wandb.log({
+                f'Best Score/Island {island}': best_score,
+                f'Average Score/Island {island}': avg_score,
+                'time': current_time
+            })
+            
+    stats_per_model = database.get_stats_per_model()
+    if len(stats_per_model["success_rates"])==1:
+        # For single model case, log rates without model name in path
+        model = next(iter(stats_per_model["success_rates"]))
+        wandb.log({
+            'Rate/Success': stats_per_model["success_rates"][model],
+            'Rate/Parse Failed': stats_per_model["parse_failed_rates"][model], 
+            'Rate/Did Not Run': stats_per_model["did_not_run_rates"][model],
+            'Rate/Unsafe': stats_per_model["unsafe_rates"][model],
+            'time': current_time
+        })
+    elif len(stats_per_model["success_rates"])>1:
+        for model in stats_per_model["success_rates"]:
+            wandb.log({
+                f'Rate/Success/{model}': stats_per_model["success_rates"][model],
+                f'Rate/Parse Failed/{model}': stats_per_model["parse_failed_rates"][model],
+                f'Rate/Did Not Run/{model}': stats_per_model["did_not_run_rates"][model],
+                f'Unsafe Rate/{model}': stats_per_model["unsafe_rates"][model],
+                'time': current_time
+            })
+
+    # Log overall metrics to wandb
+    total_tokens = sum(stats["total_tokens"] for stats in database.orig_database.database_worker_counter_dict.values())
+    total_prompt_tokens = sum(stats["tokens_prompt"] for stats in database.orig_database.database_worker_counter_dict.values())
+    total_completion_tokens = sum(stats["tokens_completion"] for stats in database.orig_database.database_worker_counter_dict.values())
+    output_token_equivalents = total_prompt_tokens * config.relative_cost_of_input_tokens + total_completion_tokens
+                        
+    # Track if best score has increased and log program to wandb
+    best_program_overall, best_score_overall = database.get_best_program_overall()
+
+    wandb.log({
+        'Overall/Best Score': best_score_overall,
+        'Overall/Average Score': avg_score_overall,
+        'Queue Sizes/Eval Queue': eval_queue_size,
+        'Queue Sizes/Result Queue': result_queue_size,
+        'Programs Processed': database.orig_database._program_counter,
+        'API Responses': sum(sampler.api_responses for sampler in samplers),
+        'Tokens/Prompt tokens': total_prompt_tokens,
+        'Tokens/Response tokens': total_completion_tokens,
+        'Tokens/Total': total_tokens,
+        'Tokens/Output token equivalents': output_token_equivalents,
+        'time': current_time,
+    })
+
+    if not hasattr(database, '_last_logged_best_score') or best_score_overall > database._last_logged_best_score:
+        if best_program_overall is not None:
+            wandb.log({
+                'Best Program': wandb.Html(f"<pre>Score: {best_score_overall}\n\n{best_program_overall}</pre>"),
+            })
+            logging.info(f"Current best overall program found with score {best_score_overall}, logged to wandb.")
+        database._last_logged_best_score = best_score_overall
