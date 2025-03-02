@@ -416,7 +416,7 @@ async def run_agents(config: config_lib.Config, database: AsyncProgramsDatabase,
         current_time = time.time() - start_time
         eval_queue_size = eval_queue.qsize()
         result_queue_size = result_queue.qsize()
-        print("Doing final logging")
+        logging.info("Doing final logging")
         do_logging(database, samplers, config, current_time, eval_queue_size, result_queue_size, csv_filename)
         print_usage_summary(database, run_start_time)
         try:
@@ -679,5 +679,5 @@ def do_logging(database, samplers, config, current_time, eval_queue_size, result
             wandb.log({
                 'Best Program': wandb.Html(f"<pre>Score: {best_score_overall}\n\n{best_program_overall}</pre>"),
             })
-            logging.info(f"Current best overall program found with score {best_score_overall}, logged to wandb.")
+            logging.info(f"\033[92mCurrent best overall program found with score {best_score_overall}, logged to wandb.\033[0m")
         database._last_logged_best_score = best_score_overall
