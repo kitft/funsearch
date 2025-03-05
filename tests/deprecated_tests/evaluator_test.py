@@ -37,7 +37,7 @@ class EvaluatorTest(parameterized.TestCase):
   return 0
 
 '''
-    actual = evaluator._trim_function_body(code)
+    actual = evaluator._trim_function_body(code, 'priority')
     self.assertEqual(desired, actual)
 
   def test_trim_function_body_function(self):
@@ -48,13 +48,13 @@ def new_f():'''
   return 0
 
 '''
-    actual = evaluator._trim_function_body(code)
+    actual = evaluator._trim_function_body(code, 'priority')
     self.assertEqual(desired, actual)
 
   def test_trim_function_body_empty(self):
     code = '''  return 0\n'''
     desired = '''  return 0\n\n'''
-    actual = evaluator._trim_function_body(code)
+    actual = evaluator._trim_function_body(code, 'priority')
     self.assertEqual(desired, actual)
 
   def test_trim_function_indentation_corner_case(self):
@@ -71,7 +71,7 @@ def new_f():'''
 
         '''
     )
-    actual = evaluator._trim_function_body(code)
+    actual = evaluator._trim_function_body(code, 'priority')
     self.assertEqual(desired, actual)
 
   def test_trim_function_backlash_corner_case(self):
@@ -84,7 +84,7 @@ def new_f():'''
 
         '''
     )
-    actual = evaluator._trim_function_body(code)
+    actual = evaluator._trim_function_body(code, 'priority')
     self.assertEqual(actual, code)
 
 
@@ -94,7 +94,7 @@ def new_f():'''
     for f in files:
       name = f.name
       response = f.read_text()
-      actual = evaluator._trim_function_body(response)
+      actual = evaluator._trim_function_body(response, 'priority')
       expected = (TESTS_FOLDER / "example_response_parsed" / name).read_text()
       self.assertEqual(expected, actual, f"{name}: Parsed code does not match")
 

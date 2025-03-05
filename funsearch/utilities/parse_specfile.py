@@ -2,7 +2,7 @@ import logging
 from funsearch import config
 import re
 
-def extract_system_prompt(spec_content):
+def extract_system_prompt(spec_content, function_to_evolve):
     """Extract system prompt from spec file content if present."""
     system_prompt_custom = None
     specification = spec_content
@@ -47,16 +47,35 @@ def extract_system_prompt(spec_content):
                 specification = (before_part + "\n" + after_part) if before_part else after_part
             logging.info("System prompt extracted from spec file:")
             logging.info(system_prompt_custom)
+            
+            # Check if system prompt contains priority_v but function_to_evolve is not priority
+            if function_to_evolve != 'priority' and 'priority_v' in system_prompt_custom:
+                import time
+                logging.warning(f"WARNING: System prompt contains the string 'priority_v' but the function to evolve is '{function_to_evolve}'. Please update your system prompt, as you may confuse the LLM.")
+                logging.warning("Continuing in 10 seconds...")
+                time.sleep(10)
+                
         except Exception as e:
             logging.warning(f"Error extracting system prompt from spec file: {e}")
             logging.info("Using default system prompt")
             
     
     if system_prompt_custom is None:
-        system_prompt_custom = config.system_prompt
+        system_prompt_custom = config.get_system_prompt(function_to_evolve)
         logging.info("No system prompt found in spec file, using default:")
         logging.info(system_prompt_custom)
         # No need to modify the specification as there's no system prompt to remove
         specification = spec_content
+    
+    # Check if user prompt contains priority_v but function_to_evolve is not priority
+    if function_to_evolve != 'priority':
+        # Try to find the first triple-quoted string in the user prompt
+        user_prompt = specification
+        triple_quote_match = re.search(r'"""(.*?)"""', user_prompt, re.DOTALL)
+        if triple_quote_match and 'priority_v' in triple_quote_match.group(1):
+            import time
+            logging.warning(f"WARNING: User prompt contains the string 'priority_v' but the function to evolve is '{function_to_evolve}'. Please update your user prompt, as you may confuse the LLM.")
+            logging.warning("Continuing in 10 seconds...")
+            time.sleep(10)
         
     return system_prompt_custom, specification

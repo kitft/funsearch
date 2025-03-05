@@ -28,15 +28,17 @@ from funsearch import programs_database
 from funsearch import sandbox
 from funsearch import logging_stats
 """
-  Regex to find all methods named 'priority_vX'.
-  With each match, start from the 'def priority_vX(' and continue until there's a new line with any of
+  Regex to find all methods named '{function_to_evolve}_vX'.
+  With each match, start from the 'def {function_to_evolve}_vX(' and continue until there's a new line with any of
   - a new 'def'
   - ` or ' or # without indentation
+  
+  Pattern is created dynamically in _find_method_implementation based on the function name.
 """
 #METHOD_MATCHER = re.compile(r"def priority_v\d\(.*?\) -> float:(?:\s*(?:[ \t]*(?!def|#|`|').*(?:\n|$)))+")
 # DDED ANY TYPE SIGNATURE OUTPUT, NOT JUST FLOAT
-METHOD_MATCHER = re.compile(r"def priority_v\d\(.*?\)(?:\s*->.*?)?:(?:\s*(?:[ \t]*(?!def|#|`|').*(?:\n|$)))+")
-METHOD_NAME_MATCHER = re.compile(r"priority_v\d+")
+#METHOD_MATCHER = re.compile(r"def priority_v\d\(.*?\)(?:\s*->.*?)?:(?:\s*(?:[ \t]*(?!def|#|`|').*(?:\n|$)))+")
+#METHOD_NAME_MATCHER = re.compile(r"priority_v\d+")
 
 ALLOWED_FUNCTIONS = {'itertools', 'numpy', 'np', 'math', 'functools', 'collections', 'random'}
 ALLOWED_FUNCTIONS = {'itertools', 'numpy', 'np', 'math', 'functools', 'collections', 'random'}
@@ -172,21 +174,35 @@ class _FunctionLineVisitor(ast.NodeVisitor):
     return self._function_end_line
 
 
-def _find_method_implementation(generated_code: str) -> Tuple[str, str]:
-  """Find the last 'def priority_vX()' method from generated code.
+def _find_method_implementation(generated_code: str, function_name_prefix: str) -> Tuple[str, str]:
+  """Find the last 'def {function_name_prefix}_vX()' method from generated code.
+
+  Args:
+    generated_code: The code to search in.
+    function_name_prefix: The prefix of the function name to search for (without _v suffix).
 
   Return the code and the name of the method.
   """
-  matches = METHOD_MATCHER.findall(generated_code)
+  # Create dynamic regex patterns based on the function name
+  method_matcher = re.compile(
+      fr"def {function_name_prefix}_v\d\(.*?\)(?:\s*->.*?)?:(?:\s*(?:[ \t]*(?!def|#|`|').*(?:\n|$)))+")
+  method_name_matcher = re.compile(fr"{function_name_prefix}_v\d+")
+  
+  matches = method_matcher.findall(generated_code)
   if not matches:
     return "", ""
   last_match = matches[-1]
-  name = METHOD_NAME_MATCHER.search(last_match).group()
+  name = method_name_matcher.search(last_match).group()
   return last_match, name
 
 
-def _trim_function_body(generated_code: str) -> str:
-  """Extracts the body of the generated function, trimming anything after it. Includes docstring."""
+def _trim_function_body(generated_code: str, function_to_evolve: str) -> str:
+  """Extracts the body of the generated function, trimming anything after it. Includes docstring.
+  
+  Args:
+    generated_code: The code to process.
+    function_to_evolve: Name of the function being evolved.
+  """
   if not generated_code:
     return ''
   if not type(generated_code) is str:
@@ -200,8 +216,8 @@ def _trim_function_body(generated_code: str) -> str:
 
   method_name = "fake_function_header"
   # Check is the response only a continuation for our prompt or full method implementation with header
-  if "def priority_v" in generated_code:
-    code, method_name = _find_method_implementation(generated_code)
+  if f"def {function_to_evolve}_v" in generated_code:
+    code, method_name = _find_method_implementation(generated_code, function_to_evolve)
   else:
     code = f'def {method_name}():\n{generated_code}' #this is temporary and doesn't matter that it's incorrect typing?
 
@@ -230,7 +246,7 @@ def _sample_to_program(
     function_to_evolve: str,
 ) -> tuple[code_manipulation.Function, str]:
   """Returns the compiled generated function and the full runnable program."""
-  doc_and_body = _trim_function_body(generated_code)
+  doc_and_body = _trim_function_body(generated_code, function_to_evolve)
   if not doc_and_body:
     return None, None
   if version_generated is not None:

@@ -113,7 +113,9 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
 
     names_of_models = model
     timestamp = str(int(time.time()))
-    problem_name = spec_file.name.split("/")[-1].split(".")[0]
+    # Extract problem name from spec file, ensuring it's a valid filename (no spaces or special chars)
+    problem_name = os.path.basename(spec_file.name).split(".")[0]
+    problem_name = ''.join(c if c.isalnum() or c == '_' else '_' for c in problem_name)
 
     if name == None:
         timestamp = timestamp
@@ -154,7 +156,10 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
     # Read the spec file content
     spec_file.seek(0)  # Reset file pointer to beginning
     spec_content = spec_file.read()
-    system_prompt_custom, specification = parse_specfile.extract_system_prompt(spec_content) #extract system prompt from spec file, remove it from specification
+    function_to_evolve, function_to_run = core._extract_function_names(spec_content)
+    system_prompt_custom, specification = parse_specfile.extract_system_prompt(spec_content, function_to_evolve) #extract system prompt from spec file, remove it from specification
+
+    template = code_manipulation.text_to_program(specification)
 
     conf = config.Config(sandbox=sandbox, num_samplers=samplers, num_evaluators=evaluators, num_islands=islands, reset_period=reset, run_duration=duration,llm_temperature=temperature_list,token_limit=token_limit,relative_cost_of_input_tokens=relative_cost_of_input_tokens, system_prompt=system_prompt_custom)
     logging.info(f"run_duration = {conf.run_duration}, reset_period = {conf.reset_period}")
@@ -167,8 +172,6 @@ def runAsync(spec_file, inputs, model, output_path, load_backup, iterations, san
     lm = [sampler.LLM(conf.samples_per_prompt, models.LLMModel(model_name=model_list[i], top_p=conf.top_p,
         temperature=temperature_list[i], keynum=keynum_list[i],id = i,log_path=log_path,system_prompt=conf.system_prompt), log_path=log_path,api_call_timeout=conf.api_call_timeout,api_call_max_retries=conf.api_call_max_retries,ratelimit_backoff=conf.ratelimit_backoff) for i in range(len(model_list))]
 
-    function_to_evolve, function_to_run = core._extract_function_names(specification)
-    template = code_manipulation.text_to_program(specification)
 
     database = programs_database.ProgramsDatabase(
         conf.programs_database, template, function_to_evolve, identifier=timestamp)

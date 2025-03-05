@@ -8,7 +8,7 @@ This funsearch repo adds parallel processing, updated tooling, and many more fea
 ## Features
 
 ### Modified to support non-priority-function program search
-- Search for any type signature, not just priority functions
+- Search for any type signature, not just priority functions. E.g., searching for a bool-valued `is_member` function, or a matrix multiplication algorithm.
 - Runs on multiple inputs at once (e.g. n=8,9,10 for cap sets)
 
 ### Integration with Weights & Biases
@@ -88,7 +88,7 @@ For implementation details and example problems, see the examples directory, par
 - Another great one might be deepseek/deepseek-chat, which is competitive with claude-3-5-sonnet and much cheaper.
 - Either model is still relatively cheap: with codestral, 1 million output tokens is $0.6.
 - You can also pass in a model name from OpenAI or Anthropic, etc. If this doesn't work, have a look at models.py
-- One should be careful what functions are imorted at the start of the SPEC file, as this will be available to the priority function written by the LLM. You can change which functions and packages are allowed/blacklisted by changing evolve.py.
+- One should be careful what functions are imorted at the start of the SPEC file, as this will be available to the evolving function written by the LLM. You can change which functions and packages are allowed/blacklisted by changing evolve.py.
 -- By default, the following packages are allowed: 'itertools', 'numpy', 'np', 'math', 'functools', 'collections', 'random'
 -- By default the following functions are blacklisted: '\_\_import\_\_', 'breakpoint', 'compile', 'open', 'dir', 'eval', 'exec', 'globals', 'input', 'repr', 'np.savetxt', 'np.loadtxt', 'np.genfromtxt', 'np.fromfile', 'np.tofile', 'np.frombuffer', 'np.save', 'np.savez', 'np.savez_compressed', 'np.load'
 
@@ -319,7 +319,7 @@ If you are getting OPENAI Async doesn't exist errors, run `pip install openai>=1
 Logging and debugging: can be set by running `export LOGGING_LEVEL=DEBUG` in the terminal before running funsearch.
 
 # Adding additional programs:
-To add additional programs, add .py files to the examples/ directory. These should follow the same structure as the other examples - a priority function with an @funsearch.evolve decorator, and an evaluation function which returns a score decorated with @funsearch.run. See `examples/cap_set_spec.py` for a simple example, and see `examples/Example_Implementation_SPEC.py` for template which you can fill in. I have also been writing playground `*.ipynb` files in the `examples/playgrounds/` directory, where new environments can be developed and tested.
+To add additional programs, add .py files to the examples/ directory. These should follow the same structure as the other examples - a function with an @funsearch.evolve decorator, and an evaluation function which returns a score decorated with @funsearch.run. See `examples/cap_set_spec.py` for a simple example, and see `examples/Example_Implementation_SPEC.py` for template which you can fill in. I have also been writing playground `*.ipynb` files in the `examples/playgrounds/` directory, where new environments can be developed and tested.
 
 # ERRORS
 

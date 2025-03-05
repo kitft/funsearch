@@ -49,11 +49,12 @@ class ProgramsDatabaseConfig:
         object.__setattr__(self, key, value)
 
 
-system_prompt ="""You are a state-of-the-art python code completion system that will be used as part of a genetic algorithm.
+def get_system_prompt(function_to_evolve: str):
+  return f"""You are a state-of-the-art python code completion system that will be used as part of a genetic algorithm.
 You will be given a list of functions, and you should improve the incomplete last function in the list.
 1. Make only small changes but be sure to make some change.
 2. Try to keep the code short and any comments concise.
-3. Your response should be an implementation of the function priority_v# (where # is the current iteration number); do not include any examples or extraneous functions.
+3. Your response should be an implementation of the function {function_to_evolve}_v# (where # is the current iteration number); do not include any examples or extraneous functions.
 4. You may use numpy and itertools.
 The code you generate will be appended to the user prompt and run as a python program.
 """
@@ -88,7 +89,7 @@ class Config:
   top_p: float = 0.95
   llm_temperature: float = 1.0
   logging_info_interval: int = 10
-  system_prompt: str = system_prompt
+  system_prompt: str = None # if you wish to modify the default system prompt, modify "get_system_prompt" above
   api_call_timeout: int = 120
   api_call_max_retries: int = 10
   ratelimit_backoff: int = 30

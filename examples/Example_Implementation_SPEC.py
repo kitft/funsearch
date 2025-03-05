@@ -3,7 +3,7 @@
 You will be given a list of functions, and you should improve the incomplete last function in the list.
 1. Make only small changes but be sure to make some change.
 2. Try to keep the code short and any comments concise.
-3. Your response should be an implementation of the function priority_v# (where # is the current iteration number); do not include any examples or extraneous functions.
+3. Your response should be an implementation of the function function_to_evolve_v# (where # is the current iteration number); do not include any examples or extraneous functions.
 4. You may use numpy and itertools.
 The code you generate will be appended to the user prompt and run as a python program."""
 ### END SYSTEM PROMPT
@@ -18,7 +18,7 @@ import funsearch
 @funsearch.run #####<<<< THIS IS THE ENTRY POINT for funsearchy, and returns the score!>>>######
 def evaluate(n: int) -> int:
     """Returns the size of an `n`-dimensional EXAMPLE_PROBLEM"""
-    import pickle #### <<<<IF NECESSARY. IMPORT ANY POTENTIALLY DANGEROUS IMPORTS HERE, SO THAT THE PRIORITY FUNCTION HAS NO ACCESS>>>>>
+    import pickle #### <<<<IF NECESSARY. IMPORT ANY POTENTIALLY DANGEROUS IMPORTS HERE, SO THAT THE EVOLVING FUNCTION HAS NO ACCESS TO THEM>>>>>
     example_output = solve(n)
     return len(example_output)#### <<<<<THIS OUTPUT BECOMES THE SCORE>>>>>>
 
@@ -26,16 +26,17 @@ def evaluate(n: int) -> int:
 #### Again, you will need to import any necessary packages inside their namespace.
 
 def solve(n: int) -> np.ndarray:
-    import pickle #### <<<<IF NECESSARY. IMPORT ANY POTENTIALLY DANGEROUS IMPORTS HERE, SO THAT THE PRIORITY FUNCTION HAS NO ACCESS>>>>>
+    import pickle #### <<<<IF NECESSARY. IMPORT ANY POTENTIALLY DANGEROUS IMPORTS HERE, SO THAT THE EVOLVING FUNCTION HAS NO ACCESS TO THEM>>>>>
     """Returns an EXAMPLE in `n` dimensions."""
-    ####<<<AT SOME POINT YOU SHOULD CALL "priority(<whatever type you've specified below>)">>>
+    ####<<<AT SOME POINT YOU SHOULD CALL "function_to_evolve(<whatever type you've specified below>)">>>
     pass  # TODO: Implement the solve function
 
 @funsearch.evolve ####<<<< THIS TELLS FUNSEARCH WHAT TO EVOLVE>>>######
-def priority(el: tuple[int, ...], n: int) -> float: ### <<<MODIFY THE TYPE SIGNATURE IF NECESSARY. 
+def function_to_evolve(el: tuple[int, ...], n: int, anything_else_with_type_hints: str) -> float: ### <<<MODIFY THE TYPE SIGNATURE IF NECESSARY. Any type signature is supported, although it should all be on one line.
     #### THE EVO algorithm doesn't care what the type sig is, as it simply calls evaluate() to get the score>>>
-    #### HOWEVER, this function should still be called 'priority'
-    """Returns the priority with which we want to add `element` to the EXAMPLE_PROBLEM, as a floating point number. <<BRIEF DESCRIPTION OF THE SPECIFIC PRIORITY PROBLEM IS A GOOD IDEA HERE>>>
+    #### The function can be called anything you like. If you use the default system prompt, it will be automatically updated to include the new function name.
+    """If it's a priority function, returns the priority with which we want to add `element` to the EXAMPLE_PROBLEM, as a floating point number. 
+    <<BRIEF DESCRIPTION OF THE SPECIFIC PROBLEM YOU'RE SOLVING IS A GOOD IDEA HERE>>>
     el is a tuple of length n with values 0-2.
     """
     pass  # TODO: Implement the priority function
